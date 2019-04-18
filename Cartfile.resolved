@@ -1,0 +1,3 @@
+github "LoopKit/LoopKit" "076a864bf32547da5afb76ee4cee3e07eab1e14d"
+github "ReactiveX/RxSwift" "4.5.0"
+github "tristanhimmelman/ObjectMapper" "3.4.2"
