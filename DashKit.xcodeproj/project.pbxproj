@@ -15,6 +15,7 @@
 		C107D11722692D9D00D63775 /* LocalizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D11622692D9D00D63775 /* LocalizedString.swift */; };
 		C107D11922692E6B00D63775 /* DashPumpManagerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D11822692E6B00D63775 /* DashPumpManagerState.swift */; };
 		C107D11B22692FC400D63775 /* TimeZone.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D11A22692FC400D63775 /* TimeZone.swift */; };
+		C107D15722694B9C00D63775 /* DashKitUI.h in Headers */ = {isa = PBXBuildFile; fileRef = C107D15522694B9C00D63775 /* DashKitUI.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C1E753E3226928F700A0BC48 /* DashKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; };
 		C1E753E8226928F700A0BC48 /* DashKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E753E7226928F700A0BC48 /* DashKitTests.swift */; };
 		C1E753EA226928F700A0BC48 /* DashKit.h in Headers */ = {isa = PBXBuildFile; fileRef = C1E753DC226928F700A0BC48 /* DashKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -39,6 +40,9 @@
 		C107D11622692D9D00D63775 /* LocalizedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedString.swift; sourceTree = "<group>"; };
 		C107D11822692E6B00D63775 /* DashPumpManagerState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashPumpManagerState.swift; sourceTree = "<group>"; };
 		C107D11A22692FC400D63775 /* TimeZone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeZone.swift; sourceTree = "<group>"; };
+		C107D15322694B9C00D63775 /* DashKitUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DashKitUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C107D15522694B9C00D63775 /* DashKitUI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DashKitUI.h; sourceTree = "<group>"; };
+		C107D15622694B9C00D63775 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C1E753D9226928F700A0BC48 /* DashKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DashKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1E753DC226928F700A0BC48 /* DashKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DashKit.h; sourceTree = "<group>"; };
 		C1E753DD226928F700A0BC48 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -48,6 +52,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		C107D15022694B9C00D63775 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C1E753D6226928F700A0BC48 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -87,14 +98,24 @@
 			path = Common;
 			sourceTree = "<group>";
 		};
+		C107D15422694B9C00D63775 /* DashKitUI */ = {
+			isa = PBXGroup;
+			children = (
+				C107D15522694B9C00D63775 /* DashKitUI.h */,
+				C107D15622694B9C00D63775 /* Info.plist */,
+			);
+			path = DashKitUI;
+			sourceTree = "<group>";
+		};
 		C1E753CF226928F700A0BC48 = {
 			isa = PBXGroup;
 			children = (
 				C107D11322692BC300D63775 /* Common */,
 				C1E753DB226928F700A0BC48 /* DashKit */,
 				C1E753E6226928F700A0BC48 /* DashKitTests */,
-				C1E753DA226928F700A0BC48 /* Products */,
+				C107D15422694B9C00D63775 /* DashKitUI */,
 				C107D10C22692AE700D63775 /* Frameworks */,
+				C1E753DA226928F700A0BC48 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
@@ -103,6 +124,7 @@
 			children = (
 				C1E753D9226928F700A0BC48 /* DashKit.framework */,
 				C1E753E2226928F700A0BC48 /* DashKitTests.xctest */,
+				C107D15322694B9C00D63775 /* DashKitUI.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -131,6 +153,14 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		C107D14E22694B9C00D63775 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C107D15722694B9C00D63775 /* DashKitUI.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C1E753D4226928F700A0BC48 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -142,6 +172,24 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		C107D15222694B9C00D63775 /* DashKitUI */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C107D15C22694B9C00D63775 /* Build configuration list for PBXNativeTarget "DashKitUI" */;
+			buildPhases = (
+				C107D14E22694B9C00D63775 /* Headers */,
+				C107D14F22694B9C00D63775 /* Sources */,
+				C107D15022694B9C00D63775 /* Frameworks */,
+				C107D15122694B9C00D63775 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DashKitUI;
+			productName = DashKitUI;
+			productReference = C107D15322694B9C00D63775 /* DashKitUI.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 		C1E753D8226928F700A0BC48 /* DashKit */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = C1E753ED226928F700A0BC48 /* Build configuration list for PBXNativeTarget "DashKit" */;
@@ -188,6 +236,9 @@
 				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = Tidepool;
 				TargetAttributes = {
+					C107D15222694B9C00D63775 = {
+						CreatedOnToolsVersion = 10.2;
+					};
 					C1E753D8226928F700A0BC48 = {
 						CreatedOnToolsVersion = 10.2;
 						LastSwiftMigration = 1020;
@@ -203,6 +254,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = C1E753CF226928F700A0BC48;
 			productRefGroup = C1E753DA226928F700A0BC48 /* Products */;
@@ -211,11 +263,19 @@
 			targets = (
 				C1E753D8226928F700A0BC48 /* DashKit */,
 				C1E753E1226928F700A0BC48 /* DashKitTests */,
+				C107D15222694B9C00D63775 /* DashKitUI */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		C107D15122694B9C00D63775 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C1E753D7226928F700A0BC48 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -233,6 +293,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		C107D14F22694B9C00D63775 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C1E753D5226928F700A0BC48 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -265,6 +332,56 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		C107D15D22694B9C00D63775 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 75U4X84TEG;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = DashKitUI/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.tidepool.DashKitUI;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C107D15E22694B9C00D63775 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 75U4X84TEG;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = DashKitUI/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.tidepool.DashKitUI;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		C1E753EB226928F700A0BC48 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -491,6 +608,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		C107D15C22694B9C00D63775 /* Build configuration list for PBXNativeTarget "DashKitUI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C107D15D22694B9C00D63775 /* Debug */,
+				C107D15E22694B9C00D63775 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		C1E753D3226928F700A0BC48 /* Build configuration list for PBXProject "DashKit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
