@@ -15,6 +15,8 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
 
     public static let version = 1
 
+    public var hasActivePod = false
+
     public var timeZone: TimeZone
 
     public init(timeZone: TimeZone) {

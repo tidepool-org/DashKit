@@ -9,19 +9,41 @@
 /* Begin PBXBuildFile section */
 		C107D10B22692A1700D63775 /* DashPumpManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D10A22692A1700D63775 /* DashPumpManager.swift */; };
 		C107D10E22692AE700D63775 /* LoopKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C107D10D22692AE700D63775 /* LoopKit.framework */; };
-		C107D11022692AFA00D63775 /* PodSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C107D10F22692AFA00D63775 /* PodSDK.framework */; };
 		C107D11222692B7200D63775 /* Pod.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D11122692B7200D63775 /* Pod.swift */; };
 		C107D11522692BDE00D63775 /* TimeInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D11422692BDE00D63775 /* TimeInterval.swift */; };
 		C107D11722692D9D00D63775 /* LocalizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D11622692D9D00D63775 /* LocalizedString.swift */; };
 		C107D11922692E6B00D63775 /* DashPumpManagerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D11822692E6B00D63775 /* DashPumpManagerState.swift */; };
 		C107D11B22692FC400D63775 /* TimeZone.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D11A22692FC400D63775 /* TimeZone.swift */; };
 		C107D15722694B9C00D63775 /* DashKitUI.h in Headers */ = {isa = PBXBuildFile; fileRef = C107D15522694B9C00D63775 /* DashKitUI.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C107D161226A0DCF00D63775 /* DashPumpManager+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D160226A0DCF00D63775 /* DashPumpManager+UI.swift */; };
+		C107D163226A0E1B00D63775 /* DashPumpManagerSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D162226A0E1B00D63775 /* DashPumpManagerSetupViewController.swift */; };
+		C107D166226A0EED00D63775 /* DashPumpManager.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C107D165226A0EED00D63775 /* DashPumpManager.storyboard */; };
+		C107D16A226A12B900D63775 /* RegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D169226A12B900D63775 /* RegistrationViewController.swift */; };
+		C107D16D226A143A00D63775 /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D16C226A143A00D63775 /* UIViewController.swift */; };
+		C107D16F226A14A100D63775 /* LoopKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C107D16E226A14A100D63775 /* LoopKit.framework */; };
+		C107D171226A1AD100D63775 /* PodSettingsSetupViewControllers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D170226A1AD100D63775 /* PodSettingsSetupViewControllers.swift */; };
+		C107D173226A1B6100D63775 /* DashSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D172226A1B6100D63775 /* DashSettingsViewController.swift */; };
+		C107D175226A1C7800D63775 /* DashHUDProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D174226A1C7800D63775 /* DashHUDProvider.swift */; };
+		C107D176226A22BF00D63775 /* LocalizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D11622692D9D00D63775 /* LocalizedString.swift */; };
+		C107D17A226A241200D63775 /* IdentifiableClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D179226A241200D63775 /* IdentifiableClass.swift */; };
+		C107D17C226A243A00D63775 /* UITableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D17B226A243A00D63775 /* UITableViewCell.swift */; };
+		C107D17D226A24CE00D63775 /* TimeZone.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D11A22692FC400D63775 /* TimeZone.swift */; };
+		C1542418228085BF006754B3 /* PodSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1542417228085BF006754B3 /* PodSDK.framework */; };
+		C15424192280877C006754B3 /* DashKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; };
+		C154241A22808790006754B3 /* PodSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1542417228085BF006754B3 /* PodSDK.framework */; };
 		C1E753E3226928F700A0BC48 /* DashKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; };
 		C1E753E8226928F700A0BC48 /* DashKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E753E7226928F700A0BC48 /* DashKitTests.swift */; };
 		C1E753EA226928F700A0BC48 /* DashKit.h in Headers */ = {isa = PBXBuildFile; fileRef = C1E753DC226928F700A0BC48 /* DashKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		C107D177226A239500D63775 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C1E753D0226928F700A0BC48 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C1E753D8226928F700A0BC48;
+			remoteInfo = DashKit;
+		};
 		C1E753E4226928F700A0BC48 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C1E753D0226928F700A0BC48 /* Project object */;
@@ -34,7 +56,6 @@
 /* Begin PBXFileReference section */
 		C107D10A22692A1700D63775 /* DashPumpManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashPumpManager.swift; sourceTree = "<group>"; };
 		C107D10D22692AE700D63775 /* LoopKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LoopKit.framework; path = Carthage/Build/iOS/LoopKit.framework; sourceTree = "<group>"; };
-		C107D10F22692AFA00D63775 /* PodSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PodSDK.framework; path = "dash-sdk-ios/PodSDK.framework"; sourceTree = "<group>"; };
 		C107D11122692B7200D63775 /* Pod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pod.swift; sourceTree = "<group>"; };
 		C107D11422692BDE00D63775 /* TimeInterval.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeInterval.swift; sourceTree = "<group>"; };
 		C107D11622692D9D00D63775 /* LocalizedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedString.swift; sourceTree = "<group>"; };
@@ -43,6 +64,18 @@
 		C107D15322694B9C00D63775 /* DashKitUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DashKitUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C107D15522694B9C00D63775 /* DashKitUI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DashKitUI.h; sourceTree = "<group>"; };
 		C107D15622694B9C00D63775 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C107D160226A0DCF00D63775 /* DashPumpManager+UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DashPumpManager+UI.swift"; sourceTree = "<group>"; };
+		C107D162226A0E1B00D63775 /* DashPumpManagerSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashPumpManagerSetupViewController.swift; sourceTree = "<group>"; };
+		C107D165226A0EED00D63775 /* DashPumpManager.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = DashPumpManager.storyboard; sourceTree = "<group>"; };
+		C107D169226A12B900D63775 /* RegistrationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationViewController.swift; sourceTree = "<group>"; };
+		C107D16C226A143A00D63775 /* UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
+		C107D16E226A14A100D63775 /* LoopKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LoopKit.framework; path = ../../Build/iOS/LoopKit.framework; sourceTree = "<group>"; };
+		C107D170226A1AD100D63775 /* PodSettingsSetupViewControllers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodSettingsSetupViewControllers.swift; sourceTree = "<group>"; };
+		C107D172226A1B6100D63775 /* DashSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashSettingsViewController.swift; sourceTree = "<group>"; };
+		C107D174226A1C7800D63775 /* DashHUDProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashHUDProvider.swift; sourceTree = "<group>"; };
+		C107D179226A241200D63775 /* IdentifiableClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifiableClass.swift; sourceTree = "<group>"; };
+		C107D17B226A243A00D63775 /* UITableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITableViewCell.swift; sourceTree = "<group>"; };
+		C1542417228085BF006754B3 /* PodSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PodSDK.framework; path = "dash-sdk-ios/PodSDK.framework"; sourceTree = "<group>"; };
 		C1E753D9226928F700A0BC48 /* DashKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DashKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1E753DC226928F700A0BC48 /* DashKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DashKit.h; sourceTree = "<group>"; };
 		C1E753DD226928F700A0BC48 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -56,6 +89,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C154241A22808790006754B3 /* PodSDK.framework in Frameworks */,
+				C15424192280877C006754B3 /* DashKit.framework in Frameworks */,
+				C107D16F226A14A100D63775 /* LoopKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -63,7 +99,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C107D11022692AFA00D63775 /* PodSDK.framework in Frameworks */,
+				C1542418228085BF006754B3 /* PodSDK.framework in Frameworks */,
 				C107D10E22692AE700D63775 /* LoopKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -82,7 +118,8 @@
 		C107D10C22692AE700D63775 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				C107D10F22692AFA00D63775 /* PodSDK.framework */,
+				C1542417228085BF006754B3 /* PodSDK.framework */,
+				C107D16E226A14A100D63775 /* LoopKit.framework */,
 				C107D10D22692AE700D63775 /* LoopKit.framework */,
 			);
 			name = Frameworks;
@@ -94,6 +131,7 @@
 				C107D11422692BDE00D63775 /* TimeInterval.swift */,
 				C107D11622692D9D00D63775 /* LocalizedString.swift */,
 				C107D11A22692FC400D63775 /* TimeZone.swift */,
+				C107D179226A241200D63775 /* IdentifiableClass.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -101,10 +139,43 @@
 		C107D15422694B9C00D63775 /* DashKitUI */ = {
 			isa = PBXGroup;
 			children = (
+				C107D16B226A142500D63775 /* Extensions */,
+				C107D168226A121D00D63775 /* ViewControllers */,
+				C107D167226A121200D63775 /* PumpManager */,
 				C107D15522694B9C00D63775 /* DashKitUI.h */,
 				C107D15622694B9C00D63775 /* Info.plist */,
+				C107D165226A0EED00D63775 /* DashPumpManager.storyboard */,
 			);
 			path = DashKitUI;
+			sourceTree = "<group>";
+		};
+		C107D167226A121200D63775 /* PumpManager */ = {
+			isa = PBXGroup;
+			children = (
+				C107D160226A0DCF00D63775 /* DashPumpManager+UI.swift */,
+				C107D174226A1C7800D63775 /* DashHUDProvider.swift */,
+			);
+			path = PumpManager;
+			sourceTree = "<group>";
+		};
+		C107D168226A121D00D63775 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				C107D162226A0E1B00D63775 /* DashPumpManagerSetupViewController.swift */,
+				C107D169226A12B900D63775 /* RegistrationViewController.swift */,
+				C107D170226A1AD100D63775 /* PodSettingsSetupViewControllers.swift */,
+				C107D172226A1B6100D63775 /* DashSettingsViewController.swift */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		C107D16B226A142500D63775 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				C107D16C226A143A00D63775 /* UIViewController.swift */,
+				C107D17B226A243A00D63775 /* UITableViewCell.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		C1E753CF226928F700A0BC48 = {
@@ -184,6 +255,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				C107D178226A239500D63775 /* PBXTargetDependency */,
 			);
 			name = DashKitUI;
 			productName = DashKitUI;
@@ -238,6 +310,7 @@
 				TargetAttributes = {
 					C107D15222694B9C00D63775 = {
 						CreatedOnToolsVersion = 10.2;
+						LastSwiftMigration = 1020;
 					};
 					C1E753D8226928F700A0BC48 = {
 						CreatedOnToolsVersion = 10.2;
@@ -273,6 +346,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C107D166226A0EED00D63775 /* DashPumpManager.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -297,6 +371,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C107D16A226A12B900D63775 /* RegistrationViewController.swift in Sources */,
+				C107D171226A1AD100D63775 /* PodSettingsSetupViewControllers.swift in Sources */,
+				C107D175226A1C7800D63775 /* DashHUDProvider.swift in Sources */,
+				C107D163226A0E1B00D63775 /* DashPumpManagerSetupViewController.swift in Sources */,
+				C107D17D226A24CE00D63775 /* TimeZone.swift in Sources */,
+				C107D16D226A143A00D63775 /* UIViewController.swift in Sources */,
+				C107D17C226A243A00D63775 /* UITableViewCell.swift in Sources */,
+				C107D161226A0DCF00D63775 /* DashPumpManager+UI.swift in Sources */,
+				C107D176226A22BF00D63775 /* LocalizedString.swift in Sources */,
+				C107D173226A1B6100D63775 /* DashSettingsViewController.swift in Sources */,
+				C107D17A226A241200D63775 /* IdentifiableClass.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -324,6 +409,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		C107D178226A239500D63775 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C1E753D8226928F700A0BC48 /* DashKit */;
+			targetProxy = C107D177226A239500D63775 /* PBXContainerItemProxy */;
+		};
 		C1E753E5226928F700A0BC48 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = C1E753D8226928F700A0BC48 /* DashKit */;
@@ -335,6 +425,7 @@
 		C107D15D22694B9C00D63775 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
@@ -342,6 +433,13 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)/dash-sdk-ios",
+					"$(PROJECT_DIR)/dash-sdk-ios/PodSDK.framework/Frameworks",
+				);
 				INFOPLIST_FILE = DashKitUI/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -352,6 +450,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = org.tidepool.DashKitUI;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -360,6 +459,7 @@
 		C107D15E22694B9C00D63775 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
@@ -367,6 +467,13 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)/dash-sdk-ios",
+					"$(PROJECT_DIR)/dash-sdk-ios/PodSDK.framework/Frameworks",
+				);
 				INFOPLIST_FILE = DashKitUI/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -515,10 +622,12 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 					"$(PROJECT_DIR)/dash-sdk-ios",
+					"$(PROJECT_DIR)/dash-sdk-ios/PodSDK.framework/Frameworks",
 				);
 				INFOPLIST_FILE = DashKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -547,10 +656,12 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 					"$(PROJECT_DIR)/dash-sdk-ios",
+					"$(PROJECT_DIR)/dash-sdk-ios/PodSDK.framework/Frameworks",
 				);
 				INFOPLIST_FILE = DashKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";

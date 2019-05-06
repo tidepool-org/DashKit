@@ -9,6 +9,7 @@
 import Foundation
 import HealthKit
 import LoopKit
+import PodSDK
 
 public class DashPumpManager: PumpManager {
 
@@ -48,6 +49,10 @@ public class DashPumpManager: PumpManager {
 
     public var pumpReservoirCapacity: Double {
         return Pod.reservoirCapacity
+    }
+
+    public var hasActivePod: Bool {
+        return state.hasActivePod
     }
 
     public private(set) var state: DashPumpManagerState {
@@ -93,7 +98,29 @@ public class DashPumpManager: PumpManager {
     }
 
     public func enactBolus(units: Double, at startDate: Date, willRequest: @escaping (DoseEntry) -> Void, completion: @escaping (PumpManagerResult<DoseEntry>) -> Void) {
-        // TODO
+        do {
+            let program = ProgramType.bolus(bolus: try Bolus(immediateVolume: Int(round(units * 100))))
+
+            // Round to nearest supported volume
+            let enactUnits = roundToSupportedBolusVolume(units: units)
+
+            let date = Date()
+            let endDate = date.addingTimeInterval(enactUnits / Pod.bolusDeliveryRate)
+            let dose = DoseEntry(type: .bolus, startDate: date, endDate: endDate, value: enactUnits, unit: .units)
+
+            willRequest(dose)
+
+            PodCommManager.shared.sendProgram(programType: program, beepOption: nil) { (result) in
+                switch(result) {
+                case .success( _):
+                    completion(.success(dose))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        } catch let error {
+            completion(.failure(error))
+        }
     }
 
     public func cancelBolus(completion: @escaping (PumpManagerResult<DoseEntry?>) -> Void) {
