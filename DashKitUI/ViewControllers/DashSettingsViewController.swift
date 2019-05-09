@@ -19,7 +19,7 @@ class DashSettingsViewController: UITableViewController {
 
         super.init(style: .grouped)
 
-        pumpManager.addStatusObserver(self)
+        pumpManager.addStatusObserver(self, queue: .main)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -29,7 +29,6 @@ class DashSettingsViewController: UITableViewController {
 }
 
 extension DashSettingsViewController: PumpManagerStatusObserver {
-    func pumpManager(_ pumpManager: PumpManager, didUpdate status: PumpManagerStatus) {
-
+    func pumpManager(_ pumpManager: PumpManager, didUpdate status: PumpManagerStatus, oldStatus: PumpManagerStatus) {
     }
 }

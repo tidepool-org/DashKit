@@ -13,6 +13,9 @@ import PodSDK
 
 public class DashPumpManager: PumpManager {
 
+    public var delegateQueue: DispatchQueue!
+
+
     public static var managerIdentifier = "OmnipodDash"
 
     public static let localizedTitle = LocalizedString("Omnipod DASH", comment: "Generic title of the omnipod DASH pump manager")
@@ -78,14 +81,14 @@ public class DashPumpManager: PumpManager {
         return PumpManagerStatus.init(timeZone: state.timeZone, device: device, pumpBatteryChargeRemaining: nil, basalDeliveryState: .active, bolusState: .none)
     }
 
-    private var statusObservers = WeakSet<PumpManagerStatusObserver>()
+    private var statusObservers = WeakSynchronizedSet<PumpManagerStatusObserver>()
 
-    public func addStatusObserver(_ observer: PumpManagerStatusObserver) {
-        self.statusObservers.insert(observer)
+    public func addStatusObserver(_ observer: PumpManagerStatusObserver, queue: DispatchQueue) {
+        self.statusObservers.insert(observer, queue: queue)
     }
 
     public func removeStatusObserver(_ observer: PumpManagerStatusObserver) {
-        self.statusObservers.remove(observer)
+        self.statusObservers.removeElement(observer)
     }
 
     public func assertCurrentPumpData() {
@@ -131,7 +134,7 @@ public class DashPumpManager: PumpManager {
         // TODO
     }
 
-    public func updateBLEHeartbeatPreference() {
+    public func setMustProvideBLEHeartbeat(_ mustProvideBLEHeartbeat: Bool) {
         // TODO
     }
 

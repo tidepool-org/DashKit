@@ -8,6 +8,7 @@
 
 import Foundation
 import LoopKit
+import PodSDK
 
 public struct DashPumpManagerState: RawRepresentable, Equatable {
 
@@ -19,14 +20,23 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
 
     public var timeZone: TimeZone
 
-    public init(timeZone: TimeZone) {
+    public var basalProgram: BasalProgram
+
+    public init(timeZone: TimeZone, basalProgram: BasalProgram) {
         self.timeZone = timeZone
+        self.basalProgram = basalProgram
     }
 
     public init?(rawValue: [String : Any]) {
-        guard let _ = rawValue["version"] as? Int else {
+        guard
+            let _ = rawValue["version"] as? Int,
+            let rawBasalProgram = rawValue["basalProgram"] as? BasalProgram.RawValue,
+            let basalProgram = BasalProgram(rawValue: rawBasalProgram)
+            else {
             return nil
         }
+
+        self.basalProgram = basalProgram
 
         let timeZone: TimeZone
         if let timeZoneSeconds = rawValue["timeZone"] as? Int,
@@ -35,14 +45,15 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
         } else {
             timeZone = TimeZone.currentFixed
         }
-
         self.timeZone = timeZone
+
     }
 
     public var rawValue: RawValue {
         return [
             "version": DashPumpManagerState.version,
             "timeZone": timeZone.secondsFromGMT(),
+            "basalProgram": basalProgram.rawValue,
         ]
     }
 

@@ -31,6 +31,13 @@
 		C1542418228085BF006754B3 /* PodSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1542417228085BF006754B3 /* PodSDK.framework */; };
 		C15424192280877C006754B3 /* DashKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; };
 		C154241A22808790006754B3 /* PodSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1542417228085BF006754B3 /* PodSDK.framework */; };
+		C154242F2280BFF6006754B3 /* ActivationFlowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C154242E2280BFF6006754B3 /* ActivationFlowViewController.swift */; };
+		C15424312280C575006754B3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C15424302280C575006754B3 /* Assets.xcassets */; };
+		C15424332280C75E006754B3 /* PodStatusExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C15424322280C75D006754B3 /* PodStatusExtension.swift */; };
+		C15424342280CE9B006754B3 /* PodStatusExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C15424322280C75D006754B3 /* PodStatusExtension.swift */; };
+		C1D68E302284849D00019CAE /* BasalProgram.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D68E2F2284849D00019CAE /* BasalProgram.swift */; };
+		C1D68E312284B4DA00019CAE /* BasalProgram.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D68E2F2284849D00019CAE /* BasalProgram.swift */; };
+		C1D68E322284B50300019CAE /* TimeInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D11422692BDE00D63775 /* TimeInterval.swift */; };
 		C1E753E3226928F700A0BC48 /* DashKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; };
 		C1E753E8226928F700A0BC48 /* DashKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E753E7226928F700A0BC48 /* DashKitTests.swift */; };
 		C1E753EA226928F700A0BC48 /* DashKit.h in Headers */ = {isa = PBXBuildFile; fileRef = C1E753DC226928F700A0BC48 /* DashKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -76,6 +83,10 @@
 		C107D179226A241200D63775 /* IdentifiableClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifiableClass.swift; sourceTree = "<group>"; };
 		C107D17B226A243A00D63775 /* UITableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITableViewCell.swift; sourceTree = "<group>"; };
 		C1542417228085BF006754B3 /* PodSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PodSDK.framework; path = "dash-sdk-ios/PodSDK.framework"; sourceTree = "<group>"; };
+		C154242E2280BFF6006754B3 /* ActivationFlowViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivationFlowViewController.swift; sourceTree = "<group>"; };
+		C15424302280C575006754B3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = DashKitUI/Assets.xcassets; sourceTree = "<group>"; };
+		C15424322280C75D006754B3 /* PodStatusExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodStatusExtension.swift; sourceTree = "<group>"; };
+		C1D68E2F2284849D00019CAE /* BasalProgram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasalProgram.swift; sourceTree = "<group>"; };
 		C1E753D9226928F700A0BC48 /* DashKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DashKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1E753DC226928F700A0BC48 /* DashKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DashKit.h; sourceTree = "<group>"; };
 		C1E753DD226928F700A0BC48 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -128,6 +139,7 @@
 		C107D11322692BC300D63775 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				C1D68E2F2284849D00019CAE /* BasalProgram.swift */,
 				C107D11422692BDE00D63775 /* TimeInterval.swift */,
 				C107D11622692D9D00D63775 /* LocalizedString.swift */,
 				C107D11A22692FC400D63775 /* TimeZone.swift */,
@@ -165,6 +177,7 @@
 				C107D169226A12B900D63775 /* RegistrationViewController.swift */,
 				C107D170226A1AD100D63775 /* PodSettingsSetupViewControllers.swift */,
 				C107D172226A1B6100D63775 /* DashSettingsViewController.swift */,
+				C154242E2280BFF6006754B3 /* ActivationFlowViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -178,10 +191,19 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
+		C1D68E2E2284848A00019CAE /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		C1E753CF226928F700A0BC48 = {
 			isa = PBXGroup;
 			children = (
+				C15424302280C575006754B3 /* Assets.xcassets */,
 				C107D11322692BC300D63775 /* Common */,
+				C1D68E2E2284848A00019CAE /* Extensions */,
 				C1E753DB226928F700A0BC48 /* DashKit */,
 				C1E753E6226928F700A0BC48 /* DashKitTests */,
 				C107D15422694B9C00D63775 /* DashKitUI */,
@@ -208,6 +230,7 @@
 				C107D11822692E6B00D63775 /* DashPumpManagerState.swift */,
 				C1E753DD226928F700A0BC48 /* Info.plist */,
 				C107D11122692B7200D63775 /* Pod.swift */,
+				C15424322280C75D006754B3 /* PodStatusExtension.swift */,
 			);
 			path = DashKit;
 			sourceTree = "<group>";
@@ -346,6 +369,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C15424312280C575006754B3 /* Assets.xcassets in Resources */,
 				C107D166226A0EED00D63775 /* DashPumpManager.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -372,15 +396,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				C107D16A226A12B900D63775 /* RegistrationViewController.swift in Sources */,
+				C1D68E322284B50300019CAE /* TimeInterval.swift in Sources */,
 				C107D171226A1AD100D63775 /* PodSettingsSetupViewControllers.swift in Sources */,
+				C154242F2280BFF6006754B3 /* ActivationFlowViewController.swift in Sources */,
 				C107D175226A1C7800D63775 /* DashHUDProvider.swift in Sources */,
 				C107D163226A0E1B00D63775 /* DashPumpManagerSetupViewController.swift in Sources */,
 				C107D17D226A24CE00D63775 /* TimeZone.swift in Sources */,
 				C107D16D226A143A00D63775 /* UIViewController.swift in Sources */,
 				C107D17C226A243A00D63775 /* UITableViewCell.swift in Sources */,
+				C1D68E312284B4DA00019CAE /* BasalProgram.swift in Sources */,
 				C107D161226A0DCF00D63775 /* DashPumpManager+UI.swift in Sources */,
 				C107D176226A22BF00D63775 /* LocalizedString.swift in Sources */,
 				C107D173226A1B6100D63775 /* DashSettingsViewController.swift in Sources */,
+				C15424342280CE9B006754B3 /* PodStatusExtension.swift in Sources */,
 				C107D17A226A241200D63775 /* IdentifiableClass.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -389,8 +417,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C1D68E302284849D00019CAE /* BasalProgram.swift in Sources */,
 				C107D11B22692FC400D63775 /* TimeZone.swift in Sources */,
 				C107D10B22692A1700D63775 /* DashPumpManager.swift in Sources */,
+				C15424332280C75E006754B3 /* PodStatusExtension.swift in Sources */,
 				C107D11522692BDE00D63775 /* TimeInterval.swift in Sources */,
 				C107D11722692D9D00D63775 /* LocalizedString.swift in Sources */,
 				C107D11922692E6B00D63775 /* DashPumpManagerState.swift in Sources */,
@@ -631,6 +661,7 @@
 				);
 				INFOPLIST_FILE = DashKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -665,6 +696,7 @@
 				);
 				INFOPLIST_FILE = DashKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
