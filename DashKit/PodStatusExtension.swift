@@ -146,7 +146,7 @@ public extension PodCommError {
 
 extension ActivationStep1Event : Equatable {
 
-    var description : String {
+    public var description : String {
         switch self {
         case .connecting:
             return " Pod is connecting"
@@ -218,9 +218,9 @@ extension ActivationStep1Event : Equatable {
     }
 }
 
-extension ActivationStep2Event : Equatable{
+extension ActivationStep2Event : Equatable {
 
-    var description : String {
+    public var description : String {
         switch self {
         case .connecting:
             return "Pod is connecting"

@@ -11,10 +11,12 @@ import HealthKit
 import LoopKit
 import PodSDK
 
+// This is for internal observers, like the HUD, so they can have full access to state updates
+public protocol DashPumpManagerStateObserver: class {
+    func didUpdatePumpManagerState(_ state: DashPumpManagerState)
+}
+
 public class DashPumpManager: PumpManager {
-
-    public var delegateQueue: DispatchQueue!
-
 
     public static var managerIdentifier = "OmnipodDash"
 
@@ -46,7 +48,25 @@ public class DashPumpManager: PumpManager {
         return Pod.minimumBasalScheduleEntryDuration
     }
 
-    public var pumpManagerDelegate: PumpManagerDelegate?
+    private let pumpDelegate = WeakSynchronizedDelegate<PumpManagerDelegate>()
+
+    public var pumpManagerDelegate: PumpManagerDelegate? {
+        get {
+            return pumpDelegate.delegate
+        }
+        set {
+            pumpDelegate.delegate = newValue
+        }
+    }
+
+    public var delegateQueue: DispatchQueue! {
+        get {
+            return pumpDelegate.queue
+        }
+        set {
+            pumpDelegate.queue = newValue
+        }
+    }
 
     public var pumpRecordsBasalProfileStartEvents = false
 
@@ -58,10 +78,47 @@ public class DashPumpManager: PumpManager {
         return state.hasActivePod
     }
 
-    public private(set) var state: DashPumpManagerState {
-        didSet {
-            pumpManagerDelegate?.pumpManagerDidUpdateState(self)
+    public let stateObservers = WeakSynchronizedSet<DashPumpManagerStateObserver>()
+
+    private(set) public var state: DashPumpManagerState {
+        get {
+            return lockedState.value
         }
+        set {
+            let oldValue = lockedState.value
+            let oldStatus = status
+            lockedState.value = newValue
+
+            // PumpManagerStatus may have changed
+            if oldValue.timeZone != newValue.timeZone
+            {
+                notifyStatusObservers(oldStatus: oldStatus)
+            }
+
+            if oldValue != newValue {
+                pumpDelegate.notify { (delegate) in
+                    delegate?.pumpManagerDidUpdateState(self)
+                }
+                stateObservers.forEach { (observer) in
+                    observer.didUpdatePumpManagerState(newValue)
+                }
+            }
+        }
+    }
+    private let lockedState: Locked<DashPumpManagerState>
+
+    private func notifyStatusObservers(oldStatus: PumpManagerStatus) {
+        let status = self.status
+        pumpDelegate.notify { (delegate) in
+            delegate?.pumpManager(self, didUpdate: status, oldStatus: oldStatus)
+        }
+        statusObservers.forEach { (observer) in
+            observer.pumpManager(self, didUpdate: status, oldStatus: oldStatus)
+        }
+    }
+
+    public var basalProgram: BasalProgram {
+        return BasalProgram(basalSchedule: state.basalSchedule)
     }
 
     private var device: HKDevice {
@@ -146,14 +203,17 @@ public class DashPumpManager: PumpManager {
         // TODO
     }
 
-    public required init?(rawState: PumpManager.RawStateValue) {
+    public init(state: DashPumpManagerState) {
+        self.lockedState = Locked(state)
+    }
 
+    public required init?(rawState: PumpManager.RawStateValue) {
         guard let state = DashPumpManagerState(rawValue: rawState) else
         {
             return nil
         }
 
-        self.state = state
+        self.lockedState = Locked(state)
     }
 
     public var rawState: PumpManager.RawStateValue {

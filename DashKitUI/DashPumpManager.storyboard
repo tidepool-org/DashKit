@@ -155,7 +155,7 @@
                     </tableView>
                     <navigationItem key="navigationItem" id="hxb-Ml-X03"/>
                     <connections>
-                        <segue destination="eKZ-RP-z0B" kind="show" identifier="Continue" id="Dpf-vn-DJ9"/>
+                        <segue destination="dIF-Mh-pOr" kind="show" identifier="Continue" id="Mh1-Sq-7SV"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CYg-n3-ovV" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -181,7 +181,7 @@
         <!--Activation Flow View Controller-->
         <scene sceneID="6pQ-Zs-d65">
             <objects>
-                <viewController storyboardIdentifier="ActivationPod" id="eKZ-RP-z0B" customClass="ActivationFlowViewController" customModule="SampleApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ActivationPod" id="eKZ-RP-z0B" customClass="ActivationFlowViewController" customModule="DashKitUI" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" ambiguous="YES" id="asn-DK-n7w">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -309,11 +309,124 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VG7-Dz-MI9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1055" y="777"/>
+            <point key="canvasLocation" x="700" y="1543"/>
+        </scene>
+        <!--Pair Pod-->
+        <scene sceneID="pjO-kc-2fc">
+            <objects>
+                <tableViewController title="Pump Setup" id="dIF-Mh-pOr" userLabel="Pair Pod" customClass="PairPodSetupViewController" customModule="OmniKitUI" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="static" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" id="47k-93-zA1">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <sections>
+                            <tableViewSection id="gEH-Tl-eW2" userLabel="Pod Image Section">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="124" id="rju-k8-U5y">
+                                        <rect key="frame" x="0.0" y="35" width="414" height="124"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="rju-k8-U5y" id="oWs-bW-DCf">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="124"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="PodBottom" translatesAutoresizingMaskIntoConstraints="NO" id="GAM-2y-obL">
+                                                    <rect key="frame" x="199" y="0.0" width="16" height="113"/>
+                                                </imageView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="bottomMargin" secondItem="GAM-2y-obL" secondAttribute="bottom" id="GKV-Zi-1OP"/>
+                                                <constraint firstItem="GAM-2y-obL" firstAttribute="top" secondItem="oWs-bW-DCf" secondAttribute="top" id="GYE-iI-JUP"/>
+                                                <constraint firstItem="GAM-2y-obL" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="oWs-bW-DCf" secondAttribute="leadingMargin" id="KPH-eD-IhZ"/>
+                                                <constraint firstItem="GAM-2y-obL" firstAttribute="centerX" secondItem="oWs-bW-DCf" secondAttribute="centerX" id="VHF-Xx-7zr"/>
+                                                <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="GAM-2y-obL" secondAttribute="trailing" id="n1C-0z-AQV"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="Prepare Pod" footerTitle="NOTE: Do not remove the pod's needle cap at this time." id="mwt-Td-ERU" userLabel="Instructions Section">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" textLabel="xMr-6b-3ag" rowHeight="45" style="IBUITableViewCellStyleDefault" id="dAg-2G-mrD" userLabel="Instructions">
+                                        <rect key="frame" x="0.0" y="222.5" width="414" height="45"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="dAg-2G-mrD" id="T6R-ef-ynI">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="45"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Fill a new pod with insulin (leave blue Pod needle cap on). Listen for 2 beeps, then tap Continue." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="xMr-6b-3ag">
+                                                    <rect key="frame" x="20" y="0.0" width="374" height="45"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection id="rop-Ag-RYa" userLabel="Status Section">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="50" id="ljA-gl-suF">
+                                        <rect key="frame" x="0.0" y="315" width="414" height="50"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ljA-gl-suF" id="Nlk-Qt-6Zz">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="50"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <view contentMode="scaleToFill" placeholderIntrinsicWidth="50" placeholderIntrinsicHeight="50" translatesAutoresizingMaskIntoConstraints="NO" id="ua5-Au-wfu" customClass="SetupIndicatorView" customModule="LoopKitUI">
+                                                    <rect key="frame" x="10" y="0.0" width="394" height="50"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </view>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="ua5-Au-wfu" secondAttribute="trailing" constant="10" id="44a-LN-SJs"/>
+                                                <constraint firstAttribute="bottom" secondItem="ua5-Au-wfu" secondAttribute="bottom" id="7Q9-8i-Bwq"/>
+                                                <constraint firstItem="ua5-Au-wfu" firstAttribute="centerX" secondItem="Nlk-Qt-6Zz" secondAttribute="centerX" id="HkP-vc-9Hp"/>
+                                                <constraint firstItem="ua5-Au-wfu" firstAttribute="leading" secondItem="Nlk-Qt-6Zz" secondAttribute="leading" constant="10" id="fqd-Pa-z8R"/>
+                                                <constraint firstItem="ua5-Au-wfu" firstAttribute="top" secondItem="Nlk-Qt-6Zz" secondAttribute="top" id="jcL-CT-c3k"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" textLabel="FRy-jW-kyN" style="IBUITableViewCellStyleDefault" id="dG0-Cn-Zof">
+                                        <rect key="frame" x="0.0" y="365" width="414" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="dG0-Cn-Zof" id="r4S-E9-uDL">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="FRy-jW-kyN">
+                                                    <rect key="frame" x="20" y="0.0" width="374" height="44"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="dIF-Mh-pOr" id="KUD-yJ-PH8"/>
+                            <outlet property="delegate" destination="dIF-Mh-pOr" id="d9j-i4-6gg"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Pod Pairing" id="VlM-AU-7oR"/>
+                    <connections>
+                        <outlet property="activityIndicator" destination="ua5-Au-wfu" id="nv5-eu-EvT"/>
+                        <outlet property="loadingLabel" destination="FRy-jW-kyN" id="Ces-kr-NoR"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="grS-Nc-2Cc" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1033" y="777"/>
         </scene>
     </scenes>
     <resources>
         <image name="Pod-StartActivation" width="612" height="792"/>
+        <image name="PodBottom" width="16" height="16"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="5RZ-8F-2rM"/>

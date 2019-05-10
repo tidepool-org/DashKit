@@ -38,6 +38,8 @@ class ActivationFlowViewController: UIViewController {
     @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var activationButton: UIButton!
 
+    var pumpManager: DashPumpManager?
+
     override func viewDidLoad() {
         super.viewDidLoad()
         configureLayout(.startActivation)
@@ -102,29 +104,31 @@ class ActivationFlowViewController: UIViewController {
             }
 
         case 1:
-            let basalProgram = try! BasalProgram(basalSegments: [try! BasalSegment(startTime: 0, endTime: 48, basalRate: 100)])
-            let autoOffAlert = try! AutoOffAlert.init(enable: true, interval: 4 * 60 * 60)
-            PodCommManager.shared.finishPodActivation(basalProgram: basalProgram, autoOffAlert: autoOffAlert) { (activationStatus) in
-                switch(activationStatus) {
-                case .error(let error):
-                    self.eventLogTextView.text = (self.eventLogTextView.text ?? "").appending("\nActivation Error: \(error)")
-                    self.errorOnActivation(error: error)
+            if let pumpManager = pumpManager {
+                let basalProgram = pumpManager.basalProgram
+                let autoOffAlert = try! AutoOffAlert.init(enable: true, interval: 4 * 60 * 60)
+                PodCommManager.shared.finishPodActivation(basalProgram: basalProgram, autoOffAlert: autoOffAlert) { (activationStatus) in
+                    switch(activationStatus) {
+                    case .error(let error):
+                        self.eventLogTextView.text = (self.eventLogTextView.text ?? "").appending("\nActivation Error: \(error)")
+                        self.errorOnActivation(error: error)
 
-                case .event(let event):
-                    switch(event) {
-                    case .podStatus(let status):
-                        self.eventLogTextView.text = (self.eventLogTextView.text ?? "").appending("\nPod status: \(status.podState)")
+                    case .event(let event):
+                        switch(event) {
+                        case .podStatus(let status):
+                            self.eventLogTextView.text = (self.eventLogTextView.text ?? "").appending("\nPod status: \(status.podState)")
 
-                    default:
-                        self.eventLogTextView.text = (self.eventLogTextView.text ?? "").appending("\nEvent: \(event.description)")
-                        if(event == .step2Completed) {
-                            self.presentOkDialog(title: "",
-                                                 message: "Pod Activation completed!",
-                                                 okButtonHandler: {_ in
-                                                    if let tabViewController = self.storyboard?.instantiateViewController(withIdentifier: "TabBarController") as? UITabBarController {
-                                                        self.present(tabViewController, animated: true, completion: nil)
-                                                    }
-                            })
+                        default:
+                            self.eventLogTextView.text = (self.eventLogTextView.text ?? "").appending("\nEvent: \(event.description)")
+                            if(event == .step2Completed) {
+                                self.presentOkDialog(title: "",
+                                                     message: "Pod Activation completed!",
+                                                     okButtonHandler: {_ in
+                                                        if let tabViewController = self.storyboard?.instantiateViewController(withIdentifier: "TabBarController") as? UITabBarController {
+                                                            self.present(tabViewController, animated: true, completion: nil)
+                                                        }
+                                })
+                            }
                         }
                     }
                 }

@@ -9,10 +9,11 @@
 import Foundation
 import LoopKit
 import LoopKitUI
-import DashKit
 import PodSDK
+import DashKit
 
 public class DashPumpManagerSetupViewController: UINavigationController, PumpManagerSetupViewController, UINavigationControllerDelegate, CompletionNotifying {
+
     public var setupDelegate: PumpManagerSetupViewControllerDelegate?
 
     public var maxBasalRateUnitsPerHour: Double?
@@ -23,6 +24,8 @@ public class DashPumpManagerSetupViewController: UINavigationController, PumpMan
 
     public var completionDelegate: CompletionDelegate?
 
+    private(set) var pumpManager: DashPumpManager?
+
     class func instantiateFromStoryboard() -> DashPumpManagerSetupViewController {
         let storyboard = UIStoryboard(name: "DashPumpManager", bundle: Bundle(for: DashPumpManagerSetupViewController.self))
         if RegistrationManager.shared.isRegistered() {
@@ -31,6 +34,13 @@ public class DashPumpManagerSetupViewController: UINavigationController, PumpMan
             return storyboard.instantiateViewController(withIdentifier: "SetupWithRegistration") as! DashPumpManagerSetupViewController
         }
     }
+
+    open override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        delegate = self
+    }
+
 
     /*
      1. Registration (if needed)
@@ -46,15 +56,12 @@ public class DashPumpManagerSetupViewController: UINavigationController, PumpMan
         // Set state values
         switch viewController {
         case let vc as ActivationFlowViewController:
-            if let basalSchedule = basalSchedule {
-                let pumpManagerState = DashPumpManagerState(timeZone: .currentFixed, basalProgram: BasalProgram(schedule: basalSchedule))
-//                let pumpManagerState = OmnipodPumpManagerState(podState: nil, timeZone: .currentFixed, basalSchedule: schedule, rileyLinkConnectionManagerState: connectionManagerState)
-//                let pumpManager = OmnipodPumpManager(
-//                    state: pumpManagerState,
-//                    rileyLinkDeviceProvider: deviceProvider,
-//                    rileyLinkConnectionManager: rileyLinkPumpManager?.rileyLinkConnectionManager)
-//                vc.pumpManager = pumpManager
-//                setupDelegate?.pumpManagerSetupViewController(self, didSetUpPumpManager: pumpManager)
+            if let basalRateSchedule = basalSchedule {
+                let pumpManagerState = DashPumpManagerState(timeZone: .currentFixed, basalSchedule: BasalSchedule(rateSchedule: basalRateSchedule))
+                let pumpManager = DashPumpManager(state: pumpManagerState)
+                vc.pumpManager = pumpManager
+                self.pumpManager = pumpManager
+                setupDelegate?.pumpManagerSetupViewController(self, didSetUpPumpManager: pumpManager)
             }
 //        case let vc as InsertCannulaSetupViewController:
 //            vc.pumpManager = pumpManager
