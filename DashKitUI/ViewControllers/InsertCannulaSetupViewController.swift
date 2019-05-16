@@ -1,22 +1,21 @@
 //
-//  PairPodSetupViewController.swift
+//  InsertCannulaSetupViewController.swift
 //  DashKitUI
 //
-//  Created by Pete Schwamb on 5/10/19.
+//  Created by Pete Schwamb on 5/16/19.
 //  Copyright © 2019 Tidepool. All rights reserved.
 //
-
-import Foundation
-
 
 import UIKit
 import LoopKit
 import LoopKitUI
+import RileyLinkKit
 import DashKit
 import PodSDK
 import SwiftGif
 
-class PairPodSetupViewController: SetupTableViewController {
+
+class InsertCannulaSetupViewController: SetupTableViewController {
 
     var pumpManager: DashPumpManager!
 
@@ -39,32 +38,38 @@ class PairPodSetupViewController: SetupTableViewController {
         }
     }
 
+    private var cancelErrorCount = 0
+
     override func viewDidLoad() {
         super.viewDidLoad()
         continueState = .initial
 
-        if let dataAsset = NSDataAsset(name: "fillPod", bundle: Bundle(for: PairPodSetupViewController.self)) {
+        if let dataAsset = NSDataAsset(name: "prepPod", bundle: Bundle(for: PairPodSetupViewController.self)) {
             let image = UIImage.gif(data: dataAsset.data)
             imageView.image = image
         }
     }
 
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+    }
+
     // MARK: - UITableViewDelegate
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if case .pairing = continueState {
+        if case .startingInsertion = continueState {
             return
         }
 
         tableView.deselectRow(at: indexPath, animated: true)
     }
 
-    // MARK: - State
+    // MARK: - Navigation
 
     private enum State {
         case initial
-        case pairing
-        case priming(finishTime: TimeInterval)
+        case startingInsertion
+        case inserting(finishTime: CFTimeInterval)
         case fault
         case ready
     }
@@ -75,23 +80,15 @@ class PairPodSetupViewController: SetupTableViewController {
             case .initial:
                 activityIndicator.state = .hidden
                 footerView.primaryButton.isEnabled = true
-                if lastError == nil {
-                    footerView.primaryButton.setPairTitle()
-                } else {
-                    footerView.primaryButton.setTitle(LocalizedString("Retry", comment: "Button title to retry pairing"), for: .normal)
-                }
-            case .pairing:
+                footerView.primaryButton.setConnectTitle()
+            case .startingInsertion:
                 activityIndicator.state = .indeterminantProgress
                 footerView.primaryButton.isEnabled = false
-                footerView.primaryButton.setPairTitle()
                 lastError = nil
-                loadingText = LocalizedString("Pairing with Pod...", comment: "The text of the loading label when pairing")
-            case .priming(let finishTime):
+            case .inserting(let finishTime):
                 activityIndicator.state = .timedProgress(finishTime: CACurrentMediaTime() + finishTime)
                 footerView.primaryButton.isEnabled = false
-                footerView.primaryButton.setPairTitle()
                 lastError = nil
-                loadingText = LocalizedString("Priming Pod...", comment: "The text of the loading label when priming")
             case .fault:
                 activityIndicator.state = .hidden
                 footerView.primaryButton.isEnabled = true
@@ -101,7 +98,6 @@ class PairPodSetupViewController: SetupTableViewController {
                 footerView.primaryButton.isEnabled = true
                 footerView.primaryButton.resetTitle()
                 lastError = nil
-                loadingText = LocalizedString("Primed", comment: "The text of the loading label when pod is primed")
             }
         }
     }
@@ -125,20 +121,15 @@ class PairPodSetupViewController: SetupTableViewController {
             loadingText = errorText
 
             // If we have an error, update the continue state
-            if let podCommsError = lastError as? PodCommError {
-                switch podCommsError {
-                case .podIsInAlarm:
-                    continueState = .fault
-                default:
-                    continueState = .initial
-                }
+            if let podCommsError = lastError as? PodCommError,
+                case PodCommError.podIsInAlarm = podCommsError
+            {
+                continueState = .fault
             } else if lastError != nil {
                 continueState = .initial
             }
         }
     }
-
-    // MARK: - Navigation
 
     private func navigateToReplacePod() {
         performSegue(withIdentifier: "ReplacePod", sender: nil)
@@ -147,7 +138,8 @@ class PairPodSetupViewController: SetupTableViewController {
     override func continueButtonPressed(_ sender: Any) {
         switch continueState {
         case .initial:
-            pair()
+            continueState = .startingInsertion
+            insertCannula()
         case .ready:
             super.continueButtonPressed(sender)
         case .fault:
@@ -155,63 +147,65 @@ class PairPodSetupViewController: SetupTableViewController {
         default:
             break
         }
-
     }
 
     override func cancelButtonPressed(_ sender: Any) {
-//        switch PodCommManager.shared.podCommState {
-//        case .noPod:
-//            super.cancelButtonPressed(sender)
-//        default:
-            let confirmVC = UIAlertController(pumpDeletionHandler: {
-                self.navigateToReplacePod()
-            })
-            self.present(confirmVC, animated: true) {}
-//        }
+        let confirmVC = UIAlertController(pumpDeletionHandler: {
+            self.navigateToReplacePod()
+        })
+        present(confirmVC, animated: true) {}
     }
 
-    // MARK: -
-
-    func pair() {
-        self.continueState = .pairing
-
-        print("pre-pair pod id: \(PodCommManager.shared.getPodId())")
-        print("pre-pair pod state: \(PodCommManager.shared.podCommState)")
-
-        PodCommManager.shared.startPodActivation(lowReservoirAlert: try! LowReservoirAlert(reservoirVolumeBelow: 1000),
-                                                 podExpirationAlert: try! PodExpirationAlert(intervalBeforeExpiration: 4 * 60 * 60))
-        { (activationStatus) in
+    func insertCannula() {
+        let basalProgram = pumpManager.basalProgram
+        let autoOffAlert = try! AutoOffAlert.init(enable: true, interval: 4 * 60 * 60)
+        continueState = .startingInsertion
+        PodCommManager.shared.finishPodActivation(basalProgram: basalProgram, autoOffAlert: autoOffAlert) { (activationStatus) in
             switch(activationStatus) {
             case .error(let error):
                 self.lastError = error
+
             case .event(let event):
+                print("event: \(event)")
                 switch(event) {
                 case .podStatus(let status):
-                    print("Pod status: \(status)")
-                case .primingPod:
+                    print("status: \(status)")
+                case .insertingCannula:
                     let finishTime = TimeInterval(seconds: 15)
-                    self.continueState = .priming(finishTime: finishTime)
-                    DispatchQueue.main.asyncAfter(deadline: .now() + finishTime) {
+                    self.continueState = .inserting(finishTime: finishTime)
+                    let delay = finishTime
+                    if delay > 0 {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                            self.continueState = .ready
+                        }
+                    } else {
                         self.continueState = .ready
                     }
-                case .step1Completed:
-                    self.continueState = .ready
                 default:
-                    print("Ignoring event: \(event)")
+                    self.continueState = .ready
                 }
             }
         }
+//        pumpManager.insertCannula() { (result) in
+//            DispatchQueue.main.async {
+//                switch(result) {
+//                case .success(let finishTime):
+//                case .failure(let error):
+//                    self.lastError = error
+//                }
+//            }
+//        }
     }
 }
 
 private extension SetupButton {
-    func setPairTitle() {
-        setTitle(LocalizedString("Pair", comment: "Button title to pair with pod during setup"), for: .normal)
+    func setConnectTitle() {
+        setTitle(LocalizedString("Insert Cannula", comment: "Button title to insert cannula during setup"), for: .normal)
     }
-
     func setDeactivateTitle() {
         setTitle(LocalizedString("Deactivate", comment: "Button title to deactivate pod because of fault during setup"), for: .normal)
     }
+
 }
 
 private extension UIAlertController {
@@ -234,3 +228,4 @@ private extension UIAlertController {
         addAction(UIAlertAction(title: exit, style: .default, handler: nil))
     }
 }
+

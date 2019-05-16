@@ -208,12 +208,13 @@ public class DashPumpManager: PumpManager {
     }
 
     public required init?(rawState: PumpManager.RawStateValue) {
-        guard let state = DashPumpManagerState(rawValue: rawState) else
-        {
-            return nil
-        }
-
-        self.lockedState = Locked(state)
+        return nil
+//        guard let state = DashPumpManagerState(rawValue: rawState) else
+//        {
+//            return nil
+//        }
+//
+//        self.lockedState = Locked(state)
     }
 
     public var rawState: PumpManager.RawStateValue {

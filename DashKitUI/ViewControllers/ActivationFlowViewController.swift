@@ -85,7 +85,7 @@ class ActivationFlowViewController: UIViewController {
                                                      podExpirationAlert: try! PodExpirationAlert(intervalBeforeExpiration: 4 * 60 * 60)) { (activationStatus) in
                                                         switch(activationStatus) {
                                                         case .error(let pdmError):
-                                                            self.eventLogTextView.text = (self.eventLogTextView.text ?? "").appending("\nActivation Error: \(pdmError.description)")
+                                                            self.eventLogTextView.text = (self.eventLogTextView.text ?? "").appending("\nActivation Error: \(String(describing: pdmError.errorDescription))")
                                                             self.errorOnActivation(error: pdmError)
 
                                                         case .event(let event):

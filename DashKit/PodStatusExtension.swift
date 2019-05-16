@@ -84,8 +84,12 @@ public extension ActivationErrorCode {
     }
 }
 
-public extension PodCommError {
-    var description: String {
+extension PodAlarm: LocalizedError {
+    
+}
+
+extension PodCommError: LocalizedError {
+    public var errorDescription: String? {
         switch self {
         case .unknownError:
             return "Error not mapped"
@@ -112,7 +116,7 @@ public extension PodCommError {
             return "Message signinng failed"
 
         case .podNotAvailable:
-            return "Pod is not available"
+            return NSLocalizedString("Loop cannot locate Pod", comment: "Error when pod not available.")
 
         case .bluetoothOff:
             return "Bluetooth is off"
@@ -140,6 +144,15 @@ public extension PodCommError {
 
         case .invalidProgramStatus:
             return "Invalid Program status"
+        }
+    }
+
+    public var recoverySuggestion: String? {
+        switch self {
+        case .podNotAvailable:
+            return NSLocalizedString("Move to a new area, place your phone and Pod close to each other and tap Retry.", comment: "Recovery suggestion when pod not available.")
+        default:
+            return nil
         }
     }
 }

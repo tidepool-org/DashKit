@@ -37,7 +37,7 @@ public class DashPumpManagerSetupViewController: UINavigationController, PumpMan
 
     open override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         delegate = self
     }
 
@@ -53,9 +53,13 @@ public class DashPumpManagerSetupViewController: UINavigationController, PumpMan
      */
 
     public func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
-        // Set state values
+
+        if let setupViewController = viewController as? SetupTableViewController {
+            setupViewController.delegate = self
+        }
+
         switch viewController {
-        case let vc as ActivationFlowViewController:
+        case let vc as PairPodSetupViewController:
             if let basalRateSchedule = basalSchedule {
                 let pumpManagerState = DashPumpManagerState(timeZone: .currentFixed, basalSchedule: BasalSchedule(rateSchedule: basalRateSchedule))
                 let pumpManager = DashPumpManager(state: pumpManagerState)
@@ -63,14 +67,22 @@ public class DashPumpManagerSetupViewController: UINavigationController, PumpMan
                 self.pumpManager = pumpManager
                 setupDelegate?.pumpManagerSetupViewController(self, didSetUpPumpManager: pumpManager)
             }
-//        case let vc as InsertCannulaSetupViewController:
-//            vc.pumpManager = pumpManager
+        case let vc as InsertCannulaSetupViewController:
+            vc.pumpManager = pumpManager
+        case let vc as PodSetupCompleteViewController:
+            vc.pumpManager = pumpManager
         default:
             break
         }
 
     }
 
+    open func finishedSetup() {
+        if let pumpManager = pumpManager {
+            let settings = DashSettingsViewController(pumpManager: pumpManager)
+            setViewControllers([settings], animated: true)
+        }
+    }
 }
 
 extension DashPumpManagerSetupViewController: SetupTableViewControllerDelegate {
