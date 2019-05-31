@@ -47,6 +47,7 @@
 		C1ACF43522A03F0500F7DDB4 /* PodLifeHUDView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C1ACF43122A03F0500F7DDB4 /* PodLifeHUDView.xib */; };
 		C1ACF43722A04B4800F7DDB4 /* NumberFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ACF43622A04B4800F7DDB4 /* NumberFormatter.swift */; };
 		C1ACF43B22A173FF00F7DDB4 /* ReservoirLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ACF43A22A173FF00F7DDB4 /* ReservoirLevel.swift */; };
+		C1ACF43D22A1D00500F7DDB4 /* PodExpirationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ACF43C22A1D00500F7DDB4 /* PodExpirationTableViewCell.swift */; };
 		C1D68E302284849D00019CAE /* BasalSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D68E2F2284849D00019CAE /* BasalSchedule.swift */; };
 		C1D68E322284B50300019CAE /* TimeInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D11422692BDE00D63775 /* TimeInterval.swift */; };
 		C1D68E392284E0E000019CAE /* DashKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; };
@@ -106,6 +107,7 @@
 		C1ACF43122A03F0500F7DDB4 /* PodLifeHUDView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PodLifeHUDView.xib; sourceTree = "<group>"; };
 		C1ACF43622A04B4800F7DDB4 /* NumberFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberFormatter.swift; sourceTree = "<group>"; };
 		C1ACF43A22A173FF00F7DDB4 /* ReservoirLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReservoirLevel.swift; sourceTree = "<group>"; };
+		C1ACF43C22A1D00500F7DDB4 /* PodExpirationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodExpirationTableViewCell.swift; sourceTree = "<group>"; };
 		C1D68E2F2284849D00019CAE /* BasalSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasalSchedule.swift; sourceTree = "<group>"; };
 		C1E753D9226928F700A0BC48 /* DashKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DashKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1E753DC226928F700A0BC48 /* DashKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DashKit.h; sourceTree = "<group>"; };
@@ -228,6 +230,7 @@
 				C1ACF43122A03F0500F7DDB4 /* PodLifeHUDView.xib */,
 				C1941150228DBF2100E886DD /* ExpirationReminderDateTableViewCell.swift */,
 				C12C9C82229EDB7B00FF7632 /* InsulinStatusTableViewCell.swift */,
+				C1ACF43C22A1D00500F7DDB4 /* PodExpirationTableViewCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -440,6 +443,7 @@
 			files = (
 				C107D16A226A12B900D63775 /* RegistrationViewController.swift in Sources */,
 				C1D68E322284B50300019CAE /* TimeInterval.swift in Sources */,
+				C1ACF43D22A1D00500F7DDB4 /* PodExpirationTableViewCell.swift in Sources */,
 				C194113D2285D30A00E886DD /* PairPodSetupViewController.swift in Sources */,
 				C107D171226A1AD100D63775 /* PodSettingsSetupViewControllers.swift in Sources */,
 				C1941151228DBF2100E886DD /* ExpirationReminderDateTableViewCell.swift in Sources */,

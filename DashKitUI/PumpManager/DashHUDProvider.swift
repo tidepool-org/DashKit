@@ -62,9 +62,12 @@ internal class DashHUDProvider: NSObject, HUDProvider {
     }
 
     public func didTapOnHUDView(_ view: BaseHUDView) -> HUDTapAction? {
-        if pumpManager.needsNewPod {
+        switch pumpManager.podCommState {
+        case .noPod:
+            return HUDTapAction.presentViewController(PodReplacementNavigationController.instantiateNewPodFlow(pumpManager))
+        case .alarm:
             return HUDTapAction.presentViewController(PodReplacementNavigationController.instantiatePodReplacementFlow(pumpManager))
-        } else {
+        default:
             return HUDTapAction.presentViewController(pumpManager.settingsViewController())
         }
     }
@@ -149,7 +152,7 @@ internal class DashHUDProvider: NSObject, HUDProvider {
             return
         }
 
-        let lifetime = DashPumpManager.podLifetime
+        let lifetime = Pod.lifetime
 
         podLifeView.setPodLifeCycle(startTime: pumpManager.podActivatedAt, lifetime: lifetime)
     }

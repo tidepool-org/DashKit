@@ -32,4 +32,7 @@ public struct Pod {
 
     // Minimum duration of a single basal schedule entry
     public static let minimumBasalScheduleEntryDuration = TimeInterval.minutes(30)
+
+    // Time from pod activation until expiration
+    public static let lifetime = TimeInterval(hours: 72)
 }

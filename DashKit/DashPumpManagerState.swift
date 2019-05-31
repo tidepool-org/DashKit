@@ -81,6 +81,11 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
             rawValue["lastStatusDate"] = lastStatusDate
         }
 
+        if let podActivatedAt = podActivatedAt {
+            rawValue["podActivatedAt"] = podActivatedAt
+        }
+
+
         return rawValue
     }
 

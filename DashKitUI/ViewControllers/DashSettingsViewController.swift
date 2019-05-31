@@ -92,10 +92,16 @@ class DashSettingsViewController: UITableViewController {
         case .delivery:
             switch DeliveryRow(rawValue: indexPath.row)! {
             case .insulin:
-                let cell = tableView.dequeueReusableCell(withIdentifier: "InsulinCell", for: indexPath)
+                let cell = tableView.dequeueReusableCell(withIdentifier: "InsulinCell", for: indexPath) as! InsulinStatusTableViewCell
+                if let reservoirLevel = pumpManager.reservoirLevel, let lastStatusDate = pumpManager.lastStatusDate {
+                    cell.setReservoir(level: reservoirLevel, validAt: lastStatusDate)
+                }
                 return cell
             case .expiration:
-                let cell = tableView.dequeueReusableCell(withIdentifier: "ExpirationCell", for: indexPath)
+                let cell = tableView.dequeueReusableCell(withIdentifier: "ExpirationCell", for: indexPath) as! PodExpirationTableViewCell
+                if let podExpiresAt = pumpManager.podExpiresAt {
+                    cell.expirationDate = podExpiresAt
+                }
                 return cell
             }
         case .reminders:

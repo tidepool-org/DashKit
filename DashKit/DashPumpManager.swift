@@ -24,8 +24,6 @@ public class DashPumpManager: PumpManager {
 
     public static let localizedTitle = LocalizedString("Omnipod DASH", comment: "Generic title of the omnipod DASH pump manager")
 
-    public static let podLifetime = TimeInterval(hours: 72)
-
     public func roundToSupportedBasalRate(unitsPerHour: Double) -> Double {
          return supportedBasalRates.filter({$0 <= unitsPerHour}).max()!
     }
@@ -167,6 +165,10 @@ public class DashPumpManager: PumpManager {
         return state.podActivatedAt
     }
 
+    public var podExpiresAt: Date? {
+        return state.podActivatedAt?.addingTimeInterval(Pod.lifetime)
+    }
+
     // From last status response
     public var reservoirLevel: ReservoirLevel? {
         return state.reservoirLevel
@@ -182,10 +184,6 @@ public class DashPumpManager: PumpManager {
 
     public var isPodAlarming: Bool {
         return false // TODO
-    }
-
-    public var needsNewPod: Bool {
-        return podCommManager.podCommState == .noPod
     }
 
     public var lastStatusDate: Date? {

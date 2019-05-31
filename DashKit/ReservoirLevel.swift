@@ -13,14 +13,11 @@ fileprivate let aboveThresholdMagicNumber: Int = 5115
 public enum ReservoirLevel: RawRepresentable, Equatable {
     public typealias RawValue = Int
 
-    case empty
     case valid(Double)
     case aboveThreshold
 
     public func asPercentage() -> Double? {
         switch self {
-        case .empty:
-            return 0
         case .aboveThreshold:
             return nil
         case .valid(let value):
@@ -30,8 +27,6 @@ public enum ReservoirLevel: RawRepresentable, Equatable {
 
     public init(rawValue: RawValue) {
         switch rawValue {
-        case 0:
-            self = .empty
         case aboveThresholdMagicNumber:
             self = .aboveThreshold
         default:
@@ -41,8 +36,6 @@ public enum ReservoirLevel: RawRepresentable, Equatable {
 
     public var rawValue: RawValue {
         switch self {
-        case .empty:
-            return 0
         case .valid(let value):
             return Int(round(value * 100))
         case .aboveThreshold:

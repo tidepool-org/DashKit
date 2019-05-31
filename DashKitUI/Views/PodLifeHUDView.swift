@@ -106,6 +106,7 @@ public class PodLifeHUDView: BaseHUDView, NibLoadable {
         if let startTime = startTime, let lifetime = lifetime {
             let age = -startTime.timeIntervalSinceNow
             let progress = Double(age / lifetime)
+            progressRing.isHidden = false
             progressRing.progress = progress
             
             if progress < 0.75 {
@@ -127,18 +128,23 @@ public class PodLifeHUDView: BaseHUDView, NibLoadable {
                 caption.text = "Fault"
             } else if remaining > .hours(24) {
                 timeLabel.isHidden = true
-                caption.text = LocalizedString("Pod Age", comment: "Label describing pod age view")
+                caption.text = LocalizedString("Pod Age", comment: "Pod life hud view label describing pod age view")
             } else if remaining > 0 {
                 let remainingFlooredToHour = remaining > .hours(1) ? remaining - remaining.truncatingRemainder(dividingBy: .hours(1)) : remaining
                 if let timeString = timeFormatter.string(from: remainingFlooredToHour) {
                     timeLabel.isHidden = false
                     timeLabel.text = timeString
                 }
-                caption.text = LocalizedString("Remaining", comment: "Label describing time remaining view")
+                caption.text = LocalizedString("Remaining", comment: "Pod life hud view label describing time remaining view")
             } else {
                 timeLabel.isHidden = true
-                caption.text = LocalizedString("Replace Pod", comment: "Label indicating pod replacement necessary")
+                caption.text = LocalizedString("Replace Pod", comment: "Pod life hud view label indicating pod replacement necessary")
             }
+        } else {
+            progressRing.progress = 0
+            progressRing.isHidden = true
+            caption.text = LocalizedString("Pair Pod", comment: "Pod life hud view label indicating new pod pairing is necessary")
+            timeLabel.isHidden = true
         }
     }
 

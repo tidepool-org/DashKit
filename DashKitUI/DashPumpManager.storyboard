@@ -223,7 +223,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="45"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Fill a new pod with insulin (leave blue Pod needle cap on). Listen for 2 beeps." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="xMr-6b-3ag">
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Fill a new pod with U-100 insulin (leave blue Pod needle cap on). Listen for 2 beeps." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="xMr-6b-3ag">
                                                     <rect key="frame" x="20" y="0.0" width="374" height="45"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
@@ -294,7 +294,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="grS-Nc-2Cc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="909" y="777"/>
+            <point key="canvasLocation" x="2136" y="777"/>
         </scene>
         <!--Pod Replacement Navigation Controller-->
         <scene sceneID="NT7-UD-WAW">
@@ -310,7 +310,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="onv-wI-i4h" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-646" y="1721"/>
+            <point key="canvasLocation" x="622" y="1721"/>
         </scene>
         <!--Replace Pod-->
         <scene sceneID="nbi-qv-lIM">
@@ -424,7 +424,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KE0-SE-MII" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="142" y="1721"/>
+            <point key="canvasLocation" x="1351" y="1721"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="ZHr-Ml-kMY">
@@ -440,7 +440,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="q02-YC-hCt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="909" y="57"/>
+            <point key="canvasLocation" x="-646" y="-749"/>
         </scene>
         <!--Pod Status-->
         <scene sceneID="hIi-lr-SBe">
@@ -492,7 +492,7 @@
                                     <outlet property="recencyLabel" destination="qDt-gI-gaQ" id="b9Z-zD-e5e"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ExpirationCell" rowHeight="75" id="s8E-gR-glx">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ExpirationCell" rowHeight="75" id="s8E-gR-glx" customClass="PodExpirationTableViewCell" customModule="DashKitUI" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="150.5" width="414" height="75"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="s8E-gR-glx" id="exF-XL-THE">
@@ -532,6 +532,10 @@
                                         <constraint firstAttribute="trailingMargin" secondItem="dYz-Me-kk7" secondAttribute="trailing" id="yGg-UN-qPN"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="dateLabel" destination="dYz-Me-kk7" id="gCx-Kn-IEn"/>
+                                    <outlet property="timeLabel" destination="E57-wM-v19" id="pIs-qX-rDT"/>
+                                </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="RemindersCell" rowHeight="61" id="Qc9-Kp-z6Y">
                                 <rect key="frame" x="0.0" y="225.5" width="414" height="61"/>
@@ -560,7 +564,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="JSX-U8-XmB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1648" y="57"/>
+            <point key="canvasLocation" x="171" y="-749"/>
         </scene>
         <!--Insert Cannula-->
         <scene sceneID="xf6-Cy-k7X">
@@ -696,7 +700,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ewz-sr-zqZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1648" y="777"/>
+            <point key="canvasLocation" x="2893" y="777"/>
         </scene>
         <!--Setup Complete-->
         <scene sceneID="v5g-ds-c9s">
@@ -846,7 +850,23 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="X9d-w0-1Jn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2372" y="777"/>
+            <point key="canvasLocation" x="3604" y="777"/>
+        </scene>
+        <!--Pod Replacement Navigation Controller-->
+        <scene sceneID="u67-1k-beT">
+            <objects>
+                <navigationController storyboardIdentifier="NewPodFlow" id="uEg-lg-ARU" customClass="PodReplacementNavigationController" customModule="DashKitUI" customModuleProvider="target" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="CZc-EM-yir">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="dIF-Mh-pOr" kind="relationship" relationship="rootViewController" id="qU3-zh-wUk"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ozu-qi-mOC" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1351" y="275"/>
         </scene>
     </scenes>
     <resources>
@@ -855,8 +875,8 @@
         <image name="Pod-StartActivation" width="612" height="792"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="leR-2Z-BRM"/>
-        <segue reference="aHy-fJ-ReA"/>
+        <segue reference="zNF-kE-9oQ"/>
+        <segue reference="qU3-zh-wUk"/>
         <segue reference="NVH-GB-bch"/>
     </inferredMetricsTieBreakers>
 </document>

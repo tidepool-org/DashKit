@@ -27,8 +27,6 @@ public final class OmnipodReservoirView: LevelHUDView, NibLoadable {
         }
     }
 
-    public var warningLevel: Double = 10
-    
     public class func instantiate() -> OmnipodReservoirView {
         return nib().instantiate(withOwner: nil, options: nil)[0] as! OmnipodReservoirView
     }
@@ -80,13 +78,6 @@ public final class OmnipodReservoirView: LevelHUDView, NibLoadable {
         return formatter
     }()
 
-    private let insulinFormatter: NumberFormatter = {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.maximumFractionDigits = 3
-        return formatter
-    }()
-
     private func updateViews() {
         if let reservoirLevel = reservoirLevel, let date = lastUpdateDate {
 
@@ -95,27 +86,29 @@ public final class OmnipodReservoirView: LevelHUDView, NibLoadable {
 
             switch(reservoirLevel) {
             case .aboveThreshold:
-                volumeLabel.isHidden = true
-                level = 1
-                if let maxReservoirReading = insulinFormatter.string(from: Pod.maximumReservoirReading) {
-                    accessibilityValue = String(format: LocalizedString("Greater than %1$@ units remaining at %2$@", comment: "Accessibility format string for (1: localized volume)(2: time)"), maxReservoirReading, time)
+                volumeLabel.isHidden = false
+                level = nil
+                if let units = numberFormatter.string(from: Pod.maximumReservoirReading) {
+                    volumeLabel.text = String(format: LocalizedString("%@+ U", comment: "Format string for reservoir volume when above maximum reading. (1: The maximum reading)"), units)
+                    accessibilityValue = String(format: LocalizedString("Greater than %1$@ units remaining at %2$@", comment: "Accessibility format string for (1: localized volume)(2: time)"), units, time)
                 }
-            case .empty:
-                level = 0
-                volumeLabel.textColor = .staleColor
-                volumeLabel.text = LocalizedString("Empty", comment: "Display string for empty reservoir.")
-                accessibilityValue = String(format: LocalizedString("Reservoir is empty at %1$@", comment: "Accessibility format string when reservoir is empty (1: time)"), time)
             case .valid(let value):
                 volumeLabel.isHidden = false
                 level = reservoirLevel.asPercentage()
-                if value <= warningLevel {
-                    volumeLabel.textColor = .staleColor
-                } else {
-                    volumeLabel.textColor = tintColor
+                // Image colors are controlled in LevelHUDView; this is for the volume label
+                switch level {
+                case .none:
+                    volumeLabel.textColor = stateColors?.unknown
+                case let x? where x > 0.25:
+                    volumeLabel.textColor = stateColors?.normal
+                case let x? where x > 0.10:
+                    volumeLabel.textColor = stateColors?.normal
+                default:
+                    volumeLabel.textColor = stateColors?.error
                 }
 
                 if let units = numberFormatter.string(from: value) {
-                    volumeLabel.text = String(format: LocalizedString("%@U", comment: "Format string for reservoir volume. (1: The localized volume)"), units)
+                    volumeLabel.text = String(format: LocalizedString("%@ U", comment: "Format string for reservoir volume. (1: The localized volume)"), units)
 
                     accessibilityValue = String(format: LocalizedString("%1$@ units remaining at %2$@", comment: "Accessibility format string for (1: localized volume)(2: time)"), units, time)
                 }
@@ -148,6 +141,7 @@ public final class OmnipodReservoirView: LevelHUDView, NibLoadable {
         self.reservoirLevel = level
         self.lastUpdateDate = date
         self.reservoirAlertState = reservoirAlertState
+        updateViews()
     }
 }
 

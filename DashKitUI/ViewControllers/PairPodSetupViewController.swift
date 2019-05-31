@@ -164,15 +164,15 @@ class PairPodSetupViewController: SetupTableViewController {
     }
 
     override func cancelButtonPressed(_ sender: Any) {
-//        switch PodCommManager.shared.podCommState {
-//        case .noPod:
-//            super.cancelButtonPressed(sender)
-//        default:
+        switch PodCommManager.shared.podCommState {
+        case .noPod:
+            super.cancelButtonPressed(sender)
+        default:
             let confirmVC = UIAlertController(pumpDeletionHandler: {
                 self.navigateToReplacePod()
             })
             self.present(confirmVC, animated: true) {}
-//        }
+        }
     }
 
     // MARK: -
