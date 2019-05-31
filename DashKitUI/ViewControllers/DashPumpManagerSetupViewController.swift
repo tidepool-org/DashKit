@@ -79,10 +79,16 @@ public class DashPumpManagerSetupViewController: UINavigationController, PumpMan
 
     open func finishedSetup() {
         if let pumpManager = pumpManager {
-            let settings = DashSettingsViewController(pumpManager: pumpManager)
+
+            let settings = DashSettingsViewController.instantiateFromStoryboard(pumpManager: pumpManager)
             setViewControllers([settings], animated: true)
         }
     }
+
+    public func finishedSettingsDisplay() {
+        completionDelegate?.completionNotifyingDidComplete(self)
+    }
+
 }
 
 extension DashPumpManagerSetupViewController: SetupTableViewControllerDelegate {

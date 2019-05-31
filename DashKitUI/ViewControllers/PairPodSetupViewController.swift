@@ -13,8 +13,8 @@ import UIKit
 import LoopKit
 import LoopKitUI
 import DashKit
-import PodSDK
 import SwiftGif
+import PodSDK
 
 class PairPodSetupViewController: SetupTableViewController {
 
@@ -43,7 +43,7 @@ class PairPodSetupViewController: SetupTableViewController {
         super.viewDidLoad()
         continueState = .initial
 
-        if let dataAsset = NSDataAsset(name: "fillPod", bundle: Bundle(for: PairPodSetupViewController.self)) {
+        if let dataAsset = NSDataAsset(name: "Fill Pod", bundle: Bundle(for: PairPodSetupViewController.self)) {
             let image = UIImage.gif(data: dataAsset.data)
             imageView.image = image
         }
@@ -106,7 +106,7 @@ class PairPodSetupViewController: SetupTableViewController {
         }
     }
 
-    private var lastError: Error? {
+    private var lastError: PodSDK.PodCommError? {
         didSet {
             guard oldValue != nil || lastError != nil else {
                 return
@@ -114,27 +114,32 @@ class PairPodSetupViewController: SetupTableViewController {
 
             var errorText = lastError?.localizedDescription
 
-            if let error = lastError as? LocalizedError {
+            if let error = lastError {
                 let localizedText = [error.errorDescription, error.failureReason, error.recoverySuggestion].compactMap({ $0 }).joined(separator: ". ") + "."
 
                 if !localizedText.isEmpty {
                     errorText = localizedText
                 }
-            }
 
-            loadingText = errorText
-
-            // If we have an error, update the continue state
-            if let podCommsError = lastError as? PodCommError {
-                switch podCommsError {
+                switch error {
                 case .podIsInAlarm:
                     continueState = .fault
+                case .activationError(let activationError):
+                    switch activationError {
+                    case .podIsLumpOfCoal1Hour, .podIsLumpOfCoal2Hours:
+                        continueState = .fault
+                    default:
+                        continueState = .initial
+                    }
                 default:
                     continueState = .initial
                 }
             } else if lastError != nil {
                 continueState = .initial
             }
+
+            loadingText = errorText
+
         }
     }
 
@@ -175,8 +180,14 @@ class PairPodSetupViewController: SetupTableViewController {
     func pair() {
         self.continueState = .pairing
 
-        print("pre-pair pod id: \(PodCommManager.shared.getPodId())")
-        print("pre-pair pod state: \(PodCommManager.shared.podCommState)")
+        // Shouldn't normally happen.  Testing
+        guard pumpManager.podCommState != .active else {
+            self.continueState = .ready
+            return
+        }
+
+        print("pre-pair pod id: \(pumpManager.podId)")
+        print("pre-pair pod state: \(pumpManager.podCommState)")
 
         PodCommManager.shared.startPodActivation(lowReservoirAlert: try! LowReservoirAlert(reservoirVolumeBelow: 1000),
                                                  podExpirationAlert: try! PodExpirationAlert(intervalBeforeExpiration: 4 * 60 * 60))

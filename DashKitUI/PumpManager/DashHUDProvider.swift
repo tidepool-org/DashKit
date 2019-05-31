@@ -10,6 +10,13 @@ import UIKit
 import LoopKit
 import LoopKitUI
 import DashKit
+import PodSDK
+
+public enum ReservoirAlertState {
+    case ok
+    case lowReservoir
+    case empty
+}
 
 internal class DashHUDProvider: NSObject, HUDProvider {
     var managerIdentifier: String {
@@ -17,6 +24,10 @@ internal class DashHUDProvider: NSObject, HUDProvider {
     }
 
     private let pumpManager: DashPumpManager
+
+    private var reservoirView: OmnipodReservoirView?
+    
+    private var podLifeView: PodLifeHUDView?
 
 //    private var reservoirView: OmnipodReservoirView?
 //
@@ -32,27 +43,126 @@ internal class DashHUDProvider: NSObject, HUDProvider {
 
     public init(pumpManager: DashPumpManager) {
         self.pumpManager = pumpManager
-        //self.podState = pumpManager.state.podState
         super.init()
-        //self.pumpManager.addPodStateObserver(self)
+        self.pumpManager.addPodStatusObserver(self, queue: .main)
     }
 
     public func createHUDViews() -> [BaseHUDView] {
-        return []
+        reservoirView = OmnipodReservoirView.instantiate()
+        updateReservoirView()
+
+        podLifeView = PodLifeHUDView.instantiate()
+
+        if visible {
+            updatePodLifeView()
+            updateFaultDisplay()
+        }
+
+        return [reservoirView, podLifeView].compactMap { $0 }
     }
 
     public func didTapOnHUDView(_ view: BaseHUDView) -> HUDTapAction? {
-        return nil
+        if pumpManager.needsNewPod {
+            return HUDTapAction.presentViewController(PodReplacementNavigationController.instantiatePodReplacementFlow(pumpManager))
+        } else {
+            return HUDTapAction.presentViewController(pumpManager.settingsViewController())
+        }
     }
 
     func hudDidAppear() {
+        updatePodLifeView()
+        updateReservoirView()
+        updateFaultDisplay()
+        pumpManager.refreshStatus()
     }
-
     public var hudViewsRawState: HUDProvider.HUDViewsRawState {
-        return [:]
+        var rawValue: HUDProvider.HUDViewsRawState = [:]
+
+        rawValue["podActivatedAt"] = pumpManager.podActivatedAt
+        rawValue["lastStatusDate"] = pumpManager.lastStatusDate
+
+        if let reservoirLevel = pumpManager.reservoirLevel {
+            rawValue["reservoirLevel"] = reservoirLevel.rawValue
+        }
+
+        return rawValue
     }
 
     public static func createHUDViews(rawValue: HUDProvider.HUDViewsRawState) -> [BaseHUDView] {
-        return []
+        guard let podActivatedAt = rawValue["podActivatedAt"] as? Date,
+            let lifetime = rawValue["lifetime"] as? Double,
+            let rawReservoirLevel = rawValue["reservoirLevel"] as? ReservoirLevel.RawValue else
+        {
+            return []
+        }
+
+        let reservoirView: OmnipodReservoirView?
+
+        let reservoirLevel = ReservoirLevel(rawValue: rawReservoirLevel)
+
+        if let validTime = rawValue["validTime"] as? Date
+        {
+            reservoirView = OmnipodReservoirView.instantiate()
+            reservoirView!.update(level: reservoirLevel, at: validTime, reservoirAlertState: .ok)
+        } else {
+            reservoirView = nil
+        }
+
+        let podLifeHUDView = PodLifeHUDView.instantiate()
+        podLifeHUDView.setPodLifeCycle(startTime: podActivatedAt, lifetime: lifetime)
+
+        return [reservoirView, podLifeHUDView].compactMap({ $0 })
+    }
+
+    private func updateReservoirView() {
+        guard let reservoirView = reservoirView,
+            let lastStatusDate = pumpManager.lastStatusDate else
+        {
+            return
+        }
+
+        let reservoirLevel = pumpManager.reservoirLevel
+
+        var reservoirAlertState: ReservoirAlertState = .ok
+
+        if pumpManager.isReservoirLow {
+            reservoirAlertState = .lowReservoir
+        }
+
+        reservoirView.update(level: reservoirLevel, at: lastStatusDate, reservoirAlertState: reservoirAlertState)
+    }
+
+    private func updateFaultDisplay() {
+        guard let podLifeView = podLifeView else {
+            return
+        }
+
+        if pumpManager.isPodAlarming {
+            podLifeView.alertState = .fault
+        } else {
+            podLifeView.alertState = .none
+        }
+    }
+
+    private func updatePodLifeView() {
+        guard let podLifeView = podLifeView else {
+            return
+        }
+
+        let lifetime = DashPumpManager.podLifetime
+
+        if let activatedAt = pumpManager.podActivatedAt {
+            podLifeView.setPodLifeCycle(startTime: activatedAt, lifetime: lifetime)
+        } else {
+            podLifeView.setPodLifeCycle(startTime: Date(), lifetime: 0)
+        }
+    }
+}
+
+extension DashHUDProvider: PodStatusObserver {
+    func didUpdatePodStatus() {
+        updatePodLifeView()
+        updateReservoirView()
+        updateFaultDisplay()
     }
 }

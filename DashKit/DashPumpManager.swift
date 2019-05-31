@@ -11,16 +11,20 @@ import HealthKit
 import LoopKit
 import PodSDK
 
-// This is for internal observers, like the HUD, so they can have full access to state updates
-public protocol DashPumpManagerStateObserver: class {
-    func didUpdatePumpManagerState(_ state: DashPumpManagerState)
+//
+public protocol PodStatusObserver: class {
+    func didUpdatePodStatus()
 }
 
 public class DashPumpManager: PumpManager {
 
     public static var managerIdentifier = "OmnipodDash"
 
+    let podCommManager: PodCommManager
+
     public static let localizedTitle = LocalizedString("Omnipod DASH", comment: "Generic title of the omnipod DASH pump manager")
+
+    public static let podLifetime = TimeInterval(hours: 72)
 
     public func roundToSupportedBasalRate(unitsPerHour: Double) -> Double {
          return supportedBasalRates.filter({$0 <= unitsPerHour}).max()!
@@ -78,8 +82,6 @@ public class DashPumpManager: PumpManager {
         return state.hasActivePod
     }
 
-    public let stateObservers = WeakSynchronizedSet<DashPumpManagerStateObserver>()
-
     private(set) public var state: DashPumpManagerState {
         get {
             return lockedState.value
@@ -98,9 +100,6 @@ public class DashPumpManager: PumpManager {
             if oldValue != newValue {
                 pumpDelegate.notify { (delegate) in
                     delegate?.pumpManagerDidUpdateState(self)
-                }
-                stateObservers.forEach { (observer) in
-                    observer.didUpdatePumpManagerState(newValue)
                 }
             }
         }
@@ -129,7 +128,7 @@ public class DashPumpManager: PumpManager {
             hardwareVersion: nil,
             firmwareVersion: "1.0",
             softwareVersion: String(DashKitVersionNumber),
-            localIdentifier: "podid",
+            localIdentifier: podCommManager.getPodId(),
             udiDeviceIdentifier: nil
         )
     }
@@ -146,6 +145,103 @@ public class DashPumpManager: PumpManager {
 
     public func removeStatusObserver(_ observer: PumpManagerStatusObserver) {
         self.statusObservers.removeElement(observer)
+    }
+
+    private var podStatusObservers = WeakSynchronizedSet<PodStatusObserver>()
+
+    public func addPodStatusObserver(_ observer: PodStatusObserver, queue: DispatchQueue) {
+        self.podStatusObservers.insert(observer, queue: queue)
+    }
+
+    public func removePodStatusObserver(_ observer: PodStatusObserver) {
+        self.podStatusObservers.removeElement(observer)
+    }
+
+    private func notifyPodStatusObservers() {
+        podStatusObservers.forEach { (observer) in
+            observer.didUpdatePodStatus()
+        }
+    }
+
+    public var podActivatedAt: Date? {
+        return state.podActivatedAt
+    }
+
+    // From last status response
+    public var reservoirLevel: ReservoirLevel? {
+        return state.reservoirLevel
+    }
+
+    public var reservoirWarningLevel: Double {
+        return 10 // TODO: Make configurable
+    }
+
+    public var isReservoirLow: Bool {
+        return false  // TODO
+    }
+
+    public var isPodAlarming: Bool {
+        return false // TODO
+    }
+
+    public var needsNewPod: Bool {
+        return podCommManager.podCommState == .noPod
+    }
+
+    public var lastStatusDate: Date? {
+        return state.lastStatusDate
+    }
+
+    public var podCommState: PodCommState {
+        return podCommManager.podCommState
+    }
+
+    public var podId: String? {
+        return podCommManager.getPodId()
+    }
+
+    private func updateStateFromPodStatus(status: PodStatus) {
+        state.lastStatusDate = Date()
+        state.reservoirLevel = ReservoirLevel(rawValue: status.reservoirUnitsRemaining)
+        state.podActivatedAt = Date().addingTimeInterval(TimeInterval(-status.timeSinceActivation))
+        notifyPodStatusObservers()
+    }
+
+    public func refreshStatus() {
+        podCommManager.getPodStatus { (response) in
+            switch response {
+            case .failure(let error):
+                print("Error fetching status: \(error)")
+            case .success(let status):
+                self.updateStateFromPodStatus(status: status)
+            }
+        }
+    }
+
+    public func startPodActivation(lowReservoirAlert: LowReservoirAlert?, podExpirationAlert: PodExpirationAlert?, eventListener: @escaping (ActivationStatus<ActivationStep1Event>) -> ())
+    {
+        return podCommManager.startPodActivation(lowReservoirAlert: lowReservoirAlert, podExpirationAlert: podExpirationAlert) { (activationStatus) in
+            if case .event(let event) = activationStatus, case .podStatus(let status) = event {
+                self.updateStateFromPodStatus(status: status)
+            }
+            eventListener(activationStatus)
+        }
+    }
+
+    public func discardPod(completion: @escaping (PodCommResult<Bool>) -> ()) {
+        podCommManager.discardPod { (result) in
+            self.state.podActivatedAt = nil
+            self.state.lastStatusDate = nil
+            self.state.reservoirLevel = nil
+            self.notifyPodStatusObservers()
+            completion(result)
+        }
+    }
+
+    public func deactivatePod(completion: @escaping (PodCommResult<PodStatus>) -> ()) {
+        podCommManager.deactivatePod { (result) in
+            completion(result)
+        }
     }
 
     public func assertCurrentPumpData() {
@@ -205,16 +301,17 @@ public class DashPumpManager: PumpManager {
 
     public init(state: DashPumpManagerState) {
         self.lockedState = Locked(state)
+        self.podCommManager = PodCommManager.shared
     }
 
     public required init?(rawState: PumpManager.RawStateValue) {
-        return nil
-//        guard let state = DashPumpManagerState(rawValue: rawState) else
-//        {
-//            return nil
-//        }
-//
-//        self.lockedState = Locked(state)
+        guard let state = DashPumpManagerState(rawValue: rawState) else
+        {
+            return nil
+        }
+
+        self.podCommManager = PodCommManager.shared
+        self.lockedState = Locked(state)
     }
 
     public var rawState: PumpManager.RawStateValue {

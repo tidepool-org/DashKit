@@ -27,6 +27,12 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
         self.basalSchedule = basalSchedule
     }
 
+    public var podActivatedAt: Date?
+
+    public var reservoirLevel: ReservoirLevel?
+
+    public var lastStatusDate: Date?
+
     public init?(rawValue: [String : Any]) {
         guard
             let _ = rawValue["version"] as? Int,
@@ -37,6 +43,13 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
         }
 
         self.basalSchedule = basalSchedule
+
+        self.podActivatedAt = rawValue["podActivatedAt"] as? Date
+        self.lastStatusDate = rawValue["lastStatusDate"] as? Date
+
+        if let rawReservoirLevel = rawValue["reservoirLevel"] as? ReservoirLevel.RawValue {
+            self.reservoirLevel = ReservoirLevel(rawValue: rawReservoirLevel)
+        }
 
         let timeZone: TimeZone
         if let timeZoneSeconds = rawValue["timeZone"] as? Int,
@@ -50,11 +63,25 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
     }
 
     public var rawValue: RawValue {
-        return [
+        var rawValue: RawValue = [
             "version": DashPumpManagerState.version,
             "timeZone": timeZone.secondsFromGMT(),
             "basalSchedule": basalSchedule.rawValue,
         ]
+
+        if let lastStatusDate = lastStatusDate {
+            rawValue["lastStatusDate"] = lastStatusDate
+        }
+
+        if let reservoirLevel = reservoirLevel {
+            rawValue["reservoirLevel"] = reservoirLevel.rawValue
+        }
+
+        if let lastStatusDate = lastStatusDate {
+            rawValue["lastStatusDate"] = lastStatusDate
+        }
+
+        return rawValue
     }
 
 }

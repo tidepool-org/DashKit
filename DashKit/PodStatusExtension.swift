@@ -116,7 +116,7 @@ extension PodCommError: LocalizedError {
             return "Message signinng failed"
 
         case .podNotAvailable:
-            return NSLocalizedString("Loop cannot locate Pod", comment: "Error when pod not available.")
+            return NSLocalizedString("Loop cannot locate Pod", comment: "Error text when pod not available.")
 
         case .bluetoothOff:
             return "Bluetooth is off"
@@ -124,11 +124,16 @@ extension PodCommError: LocalizedError {
         case .internalError:
             return "Internal error"
 
-        case .activationError:
-            return "Activation error"
+        case .activationError(let activationError):
+            switch activationError {
+            case .moreThanOnePodAvailable:
+                return NSLocalizedString("More than one Pod discovered", comment: "Error text when multiple pods detected.")
+            default:
+                return "Activation error"
+            }
 
-        case .nackReceived:
-            return "NACK received"
+        case .nackReceived(let nackCode):
+            return "NACK received: \(nackCode)"
 
         case .podIsInAlarm:
             return "Pod is in alarm"
@@ -151,6 +156,15 @@ extension PodCommError: LocalizedError {
         switch self {
         case .podNotAvailable:
             return NSLocalizedString("Move to a new area, place your phone and Pod close to each other and tap Retry.", comment: "Recovery suggestion when pod not available.")
+        case .activationError(let error):
+            switch error {
+            case .moreThanOnePodAvailable:
+                return NSLocalizedString("Please move to a new location and try again.", comment: "Recovery suggestion when multiple pods detected.")
+            case .podIsLumpOfCoal1Hour, .podIsLumpOfCoal2Hours:
+                return NSLocalizedString("Pod activation took too long. The pod was not activated within two hours after filling the reservoir and cannot be used.", comment: "Recovery suggestion when pod is lump of coal")
+            default:
+                return nil
+            }
         default:
             return nil
         }

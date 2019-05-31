@@ -23,7 +23,7 @@ extension DashPumpManager: PumpManagerUI {
     }
 
     public func settingsViewController() -> (UIViewController & CompletionNotifying) {
-        let settings = DashSettingsViewController(pumpManager: self)
+        let settings = DashSettingsViewController.instantiateFromStoryboard(pumpManager: self)
         let nav = SettingsNavigationViewController(rootViewController: settings)
         return nav
     }

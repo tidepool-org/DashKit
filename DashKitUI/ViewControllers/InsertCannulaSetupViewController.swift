@@ -44,7 +44,7 @@ class InsertCannulaSetupViewController: SetupTableViewController {
         super.viewDidLoad()
         continueState = .initial
 
-        if let dataAsset = NSDataAsset(name: "prepPod", bundle: Bundle(for: PairPodSetupViewController.self)) {
+        if let dataAsset = NSDataAsset(name: "Prep Pod", bundle: Bundle(for: PairPodSetupViewController.self)) {
             let image = UIImage.gif(data: dataAsset.data)
             imageView.image = image
         }
@@ -157,6 +157,13 @@ class InsertCannulaSetupViewController: SetupTableViewController {
     }
 
     func insertCannula() {
+
+        // Shouldn't normally happen.  Testing
+        guard PodCommManager.shared.podCommState != .active else {
+            self.continueState = .ready
+            return
+        }
+
         let basalProgram = pumpManager.basalProgram
         let autoOffAlert = try! AutoOffAlert.init(enable: true, interval: 4 * 60 * 60)
         continueState = .startingInsertion
@@ -186,15 +193,6 @@ class InsertCannulaSetupViewController: SetupTableViewController {
                 }
             }
         }
-//        pumpManager.insertCannula() { (result) in
-//            DispatchQueue.main.async {
-//                switch(result) {
-//                case .success(let finishTime):
-//                case .failure(let error):
-//                    self.lastError = error
-//                }
-//            }
-//        }
     }
 }
 

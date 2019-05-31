@@ -173,7 +173,7 @@ class ReplacePodViewController: SetupTableViewController {
     }
 
     func forgetPod() {
-        PodCommManager.shared.discardPod(completion: { (result) in
+        pumpManager.discardPod(completion: { (result) in
             // TODO: Do we need to dispatch back to main queue here?
             switch result {
             case .failure(let error):
@@ -188,7 +188,14 @@ class ReplacePodViewController: SetupTableViewController {
     func deactivate() {
         tryCount += 1
 
-        PodCommManager.shared.deactivatePod { (result) in
+        // Shouldn't happen normally. Remove when pairing is stablized.
+        if pumpManager.podCommState == .noPod {
+            pumpManager.discardPod { (response) in
+                self.continueState = .ready
+            }
+        }
+
+        pumpManager.deactivatePod { (result) in
             // TODO: Do we need to dispatch back to main queue here?
             switch result {
             case .failure(let error):

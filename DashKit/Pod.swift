@@ -32,5 +32,4 @@ public struct Pod {
 
     // Minimum duration of a single basal schedule entry
     public static let minimumBasalScheduleEntryDuration = TimeInterval.minutes(30)
-
 }
