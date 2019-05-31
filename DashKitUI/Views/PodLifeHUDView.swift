@@ -48,7 +48,7 @@ public class PodLifeHUDView: BaseHUDView, NibLoadable {
         return nib().instantiate(withOwner: nil, options: nil)[0] as! PodLifeHUDView
     }
     
-    public func setPodLifeCycle(startTime: Date, lifetime: TimeInterval) {
+    public func setPodLifeCycle(startTime: Date?, lifetime: TimeInterval) {
         self.startTime = startTime
         self.lifetime = lifetime
         updateProgressCircle()

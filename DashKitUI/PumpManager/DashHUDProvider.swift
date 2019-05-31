@@ -151,11 +151,7 @@ internal class DashHUDProvider: NSObject, HUDProvider {
 
         let lifetime = DashPumpManager.podLifetime
 
-        if let activatedAt = pumpManager.podActivatedAt {
-            podLifeView.setPodLifeCycle(startTime: activatedAt, lifetime: lifetime)
-        } else {
-            podLifeView.setPodLifeCycle(startTime: Date(), lifetime: 0)
-        }
+        podLifeView.setPodLifeCycle(startTime: pumpManager.podActivatedAt, lifetime: lifetime)
     }
 }
 
