@@ -191,6 +191,8 @@ class PairPodSetupViewController: SetupTableViewController {
 
         var expectingAnotherEvent = false
 
+        imageView.stopAnimating()
+
         PodCommManager.shared.startPodActivation(lowReservoirAlert: try! LowReservoirAlert(reservoirVolumeBelow: 1000),
                                                  podExpirationAlert: try! PodExpirationAlert(intervalBeforeExpiration: 4 * 60 * 60))
         { (activationStatus) in

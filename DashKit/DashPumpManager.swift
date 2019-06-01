@@ -13,7 +13,6 @@ import PodSDK
 import os.log
 
 
-//
 public protocol PodStatusObserver: class {
     func didUpdatePodStatus()
 }
@@ -137,7 +136,6 @@ public class DashPumpManager: PumpManager {
         pumpDelegate.notify { (delegate) in
             delegate?.pumpManager(self, didUpdate: status, oldStatus: oldStatus)
         }
-        print("Notifying bolusState: \(status.bolusState)")
         statusObservers.forEach { (observer) in
             observer.pumpManager(self, didUpdate: status, oldStatus: oldStatus)
         }
@@ -249,6 +247,15 @@ public class DashPumpManager: PumpManager {
     public func startPodActivation(lowReservoirAlert: LowReservoirAlert?, podExpirationAlert: PodExpirationAlert?, eventListener: @escaping (ActivationStatus<ActivationStep1Event>) -> ())
     {
         return podCommManager.startPodActivation(lowReservoirAlert: lowReservoirAlert, podExpirationAlert: podExpirationAlert) { (activationStatus) in
+            if case .event(let event) = activationStatus, case .podStatus(let status) = event {
+                self.updateStateFromPodStatus(status: status)
+            }
+            eventListener(activationStatus)
+        }
+    }
+
+    public func finishPodActivation(basalProgram: BasalProgram, autoOffAlert: AutoOffAlert?, eventListener: @escaping (ActivationStatus<ActivationStep2Event>) -> ()) {
+        podCommManager.finishPodActivation(basalProgram: basalProgram, autoOffAlert: autoOffAlert) { (activationStatus) in
             if case .event(let event) = activationStatus, case .podStatus(let status) = event {
                 self.updateStateFromPodStatus(status: status)
             }
@@ -396,13 +403,14 @@ public class DashPumpManager: PumpManager {
     }
 
     public required init?(rawState: PumpManager.RawStateValue) {
-        guard let state = DashPumpManagerState(rawValue: rawState) else
-        {
-            return nil
-        }
-
-        self.podCommManager = PodCommManager.shared
-        self.lockedState = Locked(state)
+        return nil
+//        guard let state = DashPumpManagerState(rawValue: rawState) else
+//        {
+//            return nil
+//        }
+//
+//        self.podCommManager = PodCommManager.shared
+//        self.lockedState = Locked(state)
     }
 
     public var rawState: PumpManager.RawStateValue {

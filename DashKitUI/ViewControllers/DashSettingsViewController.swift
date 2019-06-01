@@ -150,3 +150,9 @@ extension DashSettingsViewController: CompletionDelegate {
         }
     }
 }
+
+extension DashSettingsViewController: PodStatusObserver {
+    func didUpdatePodStatus() {
+        tableView.reloadData()
+    }
+}

@@ -167,29 +167,29 @@ class InsertCannulaSetupViewController: SetupTableViewController {
         let basalProgram = pumpManager.basalProgram
         let autoOffAlert = try! AutoOffAlert.init(enable: true, interval: 4 * 60 * 60)
         continueState = .startingInsertion
-        PodCommManager.shared.finishPodActivation(basalProgram: basalProgram, autoOffAlert: autoOffAlert) { (activationStatus) in
+        var expectingAnotherEvent = false
+        pumpManager.finishPodActivation(basalProgram: basalProgram, autoOffAlert: autoOffAlert) { (activationStatus) in
             switch(activationStatus) {
             case .error(let error):
+                expectingAnotherEvent = false
                 self.lastError = error
-
             case .event(let event):
                 print("event: \(event)")
                 switch(event) {
-                case .podStatus(let status):
-                    print("status: \(status)")
                 case .insertingCannula:
-                    let finishTime = TimeInterval(seconds: 15)
+                    expectingAnotherEvent = true
+                    let finishTime = TimeInterval(seconds: 10)
                     self.continueState = .inserting(finishTime: finishTime)
-                    let delay = finishTime
-                    if delay > 0 {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-                            self.continueState = .ready
+                    DispatchQueue.main.asyncAfter(deadline: .now() + finishTime + TimeInterval(seconds: 5)) {
+                        if expectingAnotherEvent {
+                            self.lastError = PodCommError.failToConnect
                         }
-                    } else {
-                        self.continueState = .ready
                     }
-                default:
+                case .step2Completed:
+                    expectingAnotherEvent = false
                     self.continueState = .ready
+                default:
+                    break
                 }
             }
         }

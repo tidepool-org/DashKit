@@ -188,7 +188,7 @@ class ReplacePodViewController: SetupTableViewController {
     func deactivate() {
         tryCount += 1
 
-        // Shouldn't happen normally. Remove when pairing is stablized.
+        // Shouldn't happen normally. Remove when pairing is stabilized.
         if pumpManager.podCommState == .noPod {
             pumpManager.discardPod { (response) in
                 self.continueState = .ready

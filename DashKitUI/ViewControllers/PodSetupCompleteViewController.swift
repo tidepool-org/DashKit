@@ -17,11 +17,11 @@ class PodSetupCompleteViewController: SetupTableViewController {
 
     var pumpManager: DashPumpManager! {
         didSet {
-//            if let expirationReminderDate = pumpManager.expirationReminderDate, let podState = pumpManager.state.podState {
-//                expirationReminderDateCell.date = expirationReminderDate
-//                expirationReminderDateCell.datePicker.maximumDate = podState.expiresAt?.addingTimeInterval(-Pod.expirationReminderAlertMinTimeBeforeExpiration)
-//                expirationReminderDateCell.datePicker.minimumDate = podState.expiresAt?.addingTimeInterval(-Pod.expirationReminderAlertMaxTimeBeforeExpiration)
-//            }
+            if let expirationDate = pumpManager.podExpiresAt {
+                expirationReminderDateCell.date = expirationDate.addingTimeInterval(TimeInterval(hours: -2))
+                expirationReminderDateCell.datePicker.maximumDate = expirationDate.addingTimeInterval(TimeInterval(hours: -2))
+                expirationReminderDateCell.datePicker.minimumDate = expirationDate.addingTimeInterval(TimeInterval(hours: -8))
+            }
         }
     }
 
@@ -63,6 +63,7 @@ class PodSetupCompleteViewController: SetupTableViewController {
 
 extension PodSetupCompleteViewController: DatePickerTableViewCellDelegate {
     func datePickerTableViewCellDidUpdateDate(_ cell: DatePickerTableViewCell) {
+        // TODO
         //pumpManager.expirationReminderDate = cell.date
     }
 }
