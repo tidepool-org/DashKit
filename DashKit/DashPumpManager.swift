@@ -10,6 +10,8 @@ import Foundation
 import HealthKit
 import LoopKit
 import PodSDK
+import os.log
+
 
 //
 public protocol PodStatusObserver: class {
@@ -21,6 +23,8 @@ public class DashPumpManager: PumpManager {
     public static var managerIdentifier = "OmnipodDash"
 
     let podCommManager: PodCommManager
+
+    public let log = OSLog(category: "DashPumpManager")
 
     public static let localizedTitle = LocalizedString("Omnipod DASH", comment: "Generic title of the omnipod DASH pump manager")
 
@@ -77,7 +81,30 @@ public class DashPumpManager: PumpManager {
     }
 
     public var hasActivePod: Bool {
-        return state.hasActivePod
+        return state.podActivatedAt != nil
+    }
+
+    private func status(for state: DashPumpManagerState) -> PumpManagerStatus {
+        return PumpManagerStatus(
+            timeZone: state.timeZone,
+            device: device(for: state),
+            pumpBatteryChargeRemaining: nil,
+            basalDeliveryState: basalDeliveryState(for: state),
+            bolusState: bolusState(for: state)
+        )
+    }
+
+    private func device(for state: DashPumpManagerState) -> HKDevice {
+        return HKDevice(
+            name: type(of: self).managerIdentifier,
+            manufacturer: "Insulet",
+            model: "DASH",
+            hardwareVersion: nil,
+            firmwareVersion: nil,
+            softwareVersion: String(DashKitVersionNumber),
+            localIdentifier: podCommManager.getPodId(),
+            udiDeviceIdentifier: nil
+        )
     }
 
     private(set) public var state: DashPumpManagerState {
@@ -86,12 +113,13 @@ public class DashPumpManager: PumpManager {
         }
         set {
             let oldValue = lockedState.value
-            let oldStatus = status
             lockedState.value = newValue
 
             // PumpManagerStatus may have changed
-            if oldValue.timeZone != newValue.timeZone
-            {
+            let oldStatus = status(for: oldValue)
+            let newStatus = status(for: state)
+
+            if oldStatus != newStatus {
                 notifyStatusObservers(oldStatus: oldStatus)
             }
 
@@ -109,6 +137,7 @@ public class DashPumpManager: PumpManager {
         pumpDelegate.notify { (delegate) in
             delegate?.pumpManager(self, didUpdate: status, oldStatus: oldStatus)
         }
+        print("Notifying bolusState: \(status.bolusState)")
         statusObservers.forEach { (observer) in
             observer.pumpManager(self, didUpdate: status, oldStatus: oldStatus)
         }
@@ -132,7 +161,7 @@ public class DashPumpManager: PumpManager {
     }
 
     public var status: PumpManagerStatus {
-        return PumpManagerStatus.init(timeZone: state.timeZone, device: device, pumpBatteryChargeRemaining: nil, basalDeliveryState: .active, bolusState: .none)
+        return status(for: state)
     }
 
     private var statusObservers = WeakSynchronizedSet<PumpManagerStatusObserver>()
@@ -205,7 +234,7 @@ public class DashPumpManager: PumpManager {
         notifyPodStatusObservers()
     }
 
-    public func refreshStatus() {
+    public func getPodStatus(completion: @escaping (PodCommResult<PodStatus>) -> ()) {
         podCommManager.getPodStatus { (response) in
             switch response {
             case .failure(let error):
@@ -213,6 +242,7 @@ public class DashPumpManager: PumpManager {
             case .success(let status):
                 self.updateStateFromPodStatus(status: status)
             }
+            completion(response)
         }
     }
 
@@ -242,21 +272,80 @@ public class DashPumpManager: PumpManager {
         }
     }
 
+    private var isPumpDataStale: Bool {
+        let pumpStatusAgeTolerance = TimeInterval(minutes: 6)
+        let pumpDataAge = -(state.lastStatusDate ?? .distantPast).timeIntervalSinceNow
+        return pumpDataAge > pumpStatusAgeTolerance
+    }
+
     public func assertCurrentPumpData() {
-        // TODO
+        guard hasActivePod else {
+            return
+        }
+
+        guard !isPumpDataStale else {
+            log.default("Fetching status because pumpData is too old")
+            getPodStatus { (response) in
+                self.pumpDelegate.notify({ (delegate) in
+                    switch response {
+                    case .success:
+                        self.log.default("Recommending Loop")
+                        delegate?.pumpManagerRecommendsLoop(self)
+                    case .failure(let error):
+                        self.log.default("Not recommending Loop because pump data is stale: %@", String(describing: error))
+                        delegate?.pumpManager(self, didError: PumpManagerError.communication(error))
+                    }
+                })
+            }
+            return
+        }
+
+        pumpDelegate.notify { (delegate) in
+            self.log.default("Recommending Loop")
+            delegate?.pumpManagerRecommendsLoop(self)
+        }
+    }
+
+    private func basalDeliveryState(for state: DashPumpManagerState) -> PumpManagerStatus.BasalDeliveryState {
+
+        switch state.suspendTransition {
+        case .suspending?:
+            return .suspending
+        case .resuming?:
+            return .resuming
+        case .none:
+            return state.suspended ? .suspended : .active
+        }
+    }
+
+    private func bolusState(for state: DashPumpManagerState) -> PumpManagerStatus.BolusState {
+
+        switch state.bolusTransition {
+        case .initiating?:
+            return .initiating
+        case .canceling?:
+            return .canceling
+        case .none:
+            if let bolus = state.unfinalizedBolus, !bolus.finished {
+                return .inProgress(DoseEntry(bolus))
+            } else {
+                return .none
+            }
+        }
     }
 
     public func createBolusProgressReporter(reportingOn dispatchQueue: DispatchQueue) -> DoseProgressReporter? {
-        // TODO
+        if case .inProgress(let dose) = bolusState(for: self.state) {
+            return PodDoseProgressEstimator(dose: dose, pumpManager: self, reportingQueue: dispatchQueue)
+        }
         return nil
     }
 
     public func enactBolus(units: Double, at startDate: Date, willRequest: @escaping (DoseEntry) -> Void, completion: @escaping (PumpManagerResult<DoseEntry>) -> Void) {
         do {
-            let program = ProgramType.bolus(bolus: try Bolus(immediateVolume: Int(round(units * 100))))
-
             // Round to nearest supported volume
             let enactUnits = roundToSupportedBolusVolume(units: units)
+            let program = ProgramType.bolus(bolus: try Bolus(immediateVolume: Int(round(enactUnits * 100))))
 
             let date = Date()
             let endDate = date.addingTimeInterval(enactUnits / Pod.bolusDeliveryRate)
@@ -264,9 +353,13 @@ public class DashPumpManager: PumpManager {
 
             willRequest(dose)
 
+            defer { self.state.bolusTransition = nil }
+            self.state.bolusTransition = .initiating
+
             PodCommManager.shared.sendProgram(programType: program, beepOption: nil) { (result) in
                 switch(result) {
                 case .success( _):
+                    self.state.unfinalizedBolus = UnfinalizedDose(bolusAmount: enactUnits, startTime: date, scheduledCertainty: .certain)
                     completion(.success(dose))
                 case .failure(let error):
                     completion(.failure(error))
@@ -282,7 +375,7 @@ public class DashPumpManager: PumpManager {
     }
 
     public func enactTempBasal(unitsPerHour: Double, for duration: TimeInterval, completion: @escaping (PumpManagerResult<DoseEntry>) -> Void) {
-        // TODO
+
     }
 
     public func setMustProvideBLEHeartbeat(_ mustProvideBLEHeartbeat: Bool) {

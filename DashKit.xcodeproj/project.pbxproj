@@ -48,6 +48,11 @@
 		C1ACF43722A04B4800F7DDB4 /* NumberFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ACF43622A04B4800F7DDB4 /* NumberFormatter.swift */; };
 		C1ACF43B22A173FF00F7DDB4 /* ReservoirLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ACF43A22A173FF00F7DDB4 /* ReservoirLevel.swift */; };
 		C1ACF43D22A1D00500F7DDB4 /* PodExpirationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ACF43C22A1D00500F7DDB4 /* PodExpirationTableViewCell.swift */; };
+		C1ACF43F22A1F9A700F7DDB4 /* OSLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ACF43E22A1F9A700F7DDB4 /* OSLog.swift */; };
+		C1ACF44022A1F9B400F7DDB4 /* OSLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ACF43E22A1F9A700F7DDB4 /* OSLog.swift */; };
+		C1ACF44222A1FC1F00F7DDB4 /* PodDoseProgressEstimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ACF44122A1FC1F00F7DDB4 /* PodDoseProgressEstimator.swift */; };
+		C1ACF44422A200B100F7DDB4 /* UnfinalizedDose.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ACF44322A200B100F7DDB4 /* UnfinalizedDose.swift */; };
+		C1ACF44522A200D700F7DDB4 /* NumberFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ACF43622A04B4800F7DDB4 /* NumberFormatter.swift */; };
 		C1D68E302284849D00019CAE /* BasalSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D68E2F2284849D00019CAE /* BasalSchedule.swift */; };
 		C1D68E322284B50300019CAE /* TimeInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D11422692BDE00D63775 /* TimeInterval.swift */; };
 		C1D68E392284E0E000019CAE /* DashKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; };
@@ -108,6 +113,9 @@
 		C1ACF43622A04B4800F7DDB4 /* NumberFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberFormatter.swift; sourceTree = "<group>"; };
 		C1ACF43A22A173FF00F7DDB4 /* ReservoirLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReservoirLevel.swift; sourceTree = "<group>"; };
 		C1ACF43C22A1D00500F7DDB4 /* PodExpirationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodExpirationTableViewCell.swift; sourceTree = "<group>"; };
+		C1ACF43E22A1F9A700F7DDB4 /* OSLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSLog.swift; sourceTree = "<group>"; };
+		C1ACF44122A1FC1F00F7DDB4 /* PodDoseProgressEstimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodDoseProgressEstimator.swift; sourceTree = "<group>"; };
+		C1ACF44322A200B100F7DDB4 /* UnfinalizedDose.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnfinalizedDose.swift; sourceTree = "<group>"; };
 		C1D68E2F2284849D00019CAE /* BasalSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasalSchedule.swift; sourceTree = "<group>"; };
 		C1E753D9226928F700A0BC48 /* DashKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DashKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1E753DC226928F700A0BC48 /* DashKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DashKit.h; sourceTree = "<group>"; };
@@ -167,6 +175,7 @@
 				C194114522861E9100E886DD /* UIColor.swift */,
 				C1941152228DBF8300E886DD /* NibLoadable.swift */,
 				C1ACF43622A04B4800F7DDB4 /* NumberFormatter.swift */,
+				C1ACF43E22A1F9A700F7DDB4 /* OSLog.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -276,6 +285,8 @@
 				C107D11122692B7200D63775 /* Pod.swift */,
 				C15424322280C75D006754B3 /* PodStatusExtension.swift */,
 				C1ACF43A22A173FF00F7DDB4 /* ReservoirLevel.swift */,
+				C1ACF44122A1FC1F00F7DDB4 /* PodDoseProgressEstimator.swift */,
+				C1ACF44322A200B100F7DDB4 /* UnfinalizedDose.swift */,
 			);
 			path = DashKit;
 			sourceTree = "<group>";
@@ -467,6 +478,7 @@
 				C107D176226A22BF00D63775 /* LocalizedString.swift in Sources */,
 				C107D173226A1B6100D63775 /* DashSettingsViewController.swift in Sources */,
 				C107D17A226A241200D63775 /* IdentifiableClass.swift in Sources */,
+				C1ACF43F22A1F9A700F7DDB4 /* OSLog.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -477,10 +489,14 @@
 				C1D68E302284849D00019CAE /* BasalSchedule.swift in Sources */,
 				C107D11B22692FC400D63775 /* TimeZone.swift in Sources */,
 				C107D10B22692A1700D63775 /* DashPumpManager.swift in Sources */,
+				C1ACF44222A1FC1F00F7DDB4 /* PodDoseProgressEstimator.swift in Sources */,
 				C15424332280C75E006754B3 /* PodStatusExtension.swift in Sources */,
+				C1ACF44022A1F9B400F7DDB4 /* OSLog.swift in Sources */,
 				C107D11522692BDE00D63775 /* TimeInterval.swift in Sources */,
 				C107D11722692D9D00D63775 /* LocalizedString.swift in Sources */,
+				C1ACF44422A200B100F7DDB4 /* UnfinalizedDose.swift in Sources */,
 				C107D11922692E6B00D63775 /* DashPumpManagerState.swift in Sources */,
+				C1ACF44522A200D700F7DDB4 /* NumberFormatter.swift in Sources */,
 				C1ACF43B22A173FF00F7DDB4 /* ReservoirLevel.swift in Sources */,
 				C107D11222692B7200D63775 /* Pod.swift in Sources */,
 			);

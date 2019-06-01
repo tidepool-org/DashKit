@@ -76,7 +76,7 @@ internal class DashHUDProvider: NSObject, HUDProvider {
         updatePodLifeView()
         updateReservoirView()
         updateFaultDisplay()
-        pumpManager.refreshStatus()
+        pumpManager.getPodStatus { (_) in }
     }
     public var hudViewsRawState: HUDProvider.HUDViewsRawState {
         var rawValue: HUDProvider.HUDViewsRawState = [:]
