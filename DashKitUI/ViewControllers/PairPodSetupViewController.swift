@@ -189,23 +189,31 @@ class PairPodSetupViewController: SetupTableViewController {
         print("pre-pair pod id: \(pumpManager.podId)")
         print("pre-pair pod state: \(pumpManager.podCommState)")
 
+        var expectingAnotherEvent = false
+
         PodCommManager.shared.startPodActivation(lowReservoirAlert: try! LowReservoirAlert(reservoirVolumeBelow: 1000),
                                                  podExpirationAlert: try! PodExpirationAlert(intervalBeforeExpiration: 4 * 60 * 60))
         { (activationStatus) in
             switch(activationStatus) {
             case .error(let error):
+                expectingAnotherEvent = false
                 self.lastError = error
             case .event(let event):
                 switch(event) {
                 case .podStatus(let status):
                     print("Pod status: \(status)")
                 case .primingPod:
-                    let finishTime = TimeInterval(seconds: 15)
+                    let finishTime = TimeInterval(seconds: 35)
                     self.continueState = .priming(finishTime: finishTime)
-                    DispatchQueue.main.asyncAfter(deadline: .now() + finishTime) {
-                        self.continueState = .ready
+                    expectingAnotherEvent = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + finishTime + TimeInterval(seconds: 10)) {
+                        // Haven't finished priming and 10s have gone past since we expected to finish.
+                        if expectingAnotherEvent {
+                            self.lastError = PodCommError.failToConnect
+                        }
                     }
                 case .step1Completed:
+                    expectingAnotherEvent = false
                     self.continueState = .ready
                 default:
                     print("Ignoring event: \(event)")
