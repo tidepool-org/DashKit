@@ -28,11 +28,11 @@ public class DashPumpManager: PumpManager {
     public static let localizedTitle = LocalizedString("Omnipod DASH", comment: "Generic title of the omnipod DASH pump manager")
 
     public func roundToSupportedBasalRate(unitsPerHour: Double) -> Double {
-         return supportedBasalRates.filter({$0 <= unitsPerHour}).max()!
+         return supportedBasalRates.filter({$0 <= unitsPerHour}).max() ?? 0
     }
 
     public func roundToSupportedBolusVolume(units: Double) -> Double {
-        return supportedBolusVolumes.filter({$0 <= units}).max()!
+        return supportedBolusVolumes.filter({$0 <= units}).max() ?? 0
     }
 
     public var supportedBolusVolumes: [Double] {
@@ -133,6 +133,8 @@ public class DashPumpManager: PumpManager {
 
     private func notifyStatusObservers(oldStatus: PumpManagerStatus) {
         let status = self.status
+        print("notifyStatusObservers: bolusState = \(status.bolusState)")
+
         pumpDelegate.notify { (delegate) in
             delegate?.pumpManager(self, didUpdate: status, oldStatus: oldStatus)
         }
@@ -403,14 +405,13 @@ public class DashPumpManager: PumpManager {
     }
 
     public required init?(rawState: PumpManager.RawStateValue) {
-        return nil
-//        guard let state = DashPumpManagerState(rawValue: rawState) else
-//        {
-//            return nil
-//        }
-//
-//        self.podCommManager = PodCommManager.shared
-//        self.lockedState = Locked(state)
+        guard let state = DashPumpManagerState(rawValue: rawState) else
+        {
+            return nil
+        }
+
+        self.podCommManager = PodCommManager.shared
+        self.lockedState = Locked(state)
     }
 
     public var rawState: PumpManager.RawStateValue {
