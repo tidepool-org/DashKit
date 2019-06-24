@@ -230,7 +230,7 @@ public class DashPumpManager: PumpManager {
     private func updateStateFromPodStatus(status: PodStatus) {
         state.lastStatusDate = Date()
         state.reservoirLevel = ReservoirLevel(rawValue: status.reservoirUnitsRemaining)
-        state.podActivatedAt = Date().addingTimeInterval(TimeInterval(-status.timeSinceActivation))
+        state.podActivatedAt = Date().addingTimeInterval(TimeInterval(-status.timeElapsedSinceActivation))
         notifyPodStatusObservers()
     }
 

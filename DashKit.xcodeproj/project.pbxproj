@@ -27,6 +27,9 @@
 		C107D17A226A241200D63775 /* IdentifiableClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D179226A241200D63775 /* IdentifiableClass.swift */; };
 		C107D17C226A243A00D63775 /* UITableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D17B226A243A00D63775 /* UITableViewCell.swift */; };
 		C107D17D226A24CE00D63775 /* TimeZone.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D11A22692FC400D63775 /* TimeZone.swift */; };
+		C12AD2E422C1741E00DF43EF /* INSSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C12AD2E322C1741E00DF43EF /* INSSDK.framework */; };
+		C12AD2E622C1742E00DF43EF /* PodSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C12AD2E522C1742E00DF43EF /* PodSDK.framework */; };
+		C12AD2E722C174D100DF43EF /* INSSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C12AD2E322C1741E00DF43EF /* INSSDK.framework */; };
 		C12C9C83229EDB7B00FF7632 /* InsulinStatusTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12C9C82229EDB7B00FF7632 /* InsulinStatusTableViewCell.swift */; };
 		C1542418228085BF006754B3 /* PodSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1542417228085BF006754B3 /* PodSDK.framework */; };
 		C154241A22808790006754B3 /* PodSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1542417228085BF006754B3 /* PodSDK.framework */; };
@@ -71,6 +74,20 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		C12AD27122C169EE00DF43EF /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 16;
+			files = (
+				C12AD2E622C1742E00DF43EF /* PodSDK.framework in CopyFiles */,
+				C12AD2E422C1741E00DF43EF /* INSSDK.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		C107D10A22692A1700D63775 /* DashPumpManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashPumpManager.swift; sourceTree = "<group>"; };
 		C107D10D22692AE700D63775 /* LoopKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LoopKit.framework; path = Carthage/Build/iOS/LoopKit.framework; sourceTree = "<group>"; };
@@ -93,6 +110,8 @@
 		C107D174226A1C7800D63775 /* DashHUDProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashHUDProvider.swift; sourceTree = "<group>"; };
 		C107D179226A241200D63775 /* IdentifiableClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifiableClass.swift; sourceTree = "<group>"; };
 		C107D17B226A243A00D63775 /* UITableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITableViewCell.swift; sourceTree = "<group>"; };
+		C12AD2E322C1741E00DF43EF /* INSSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = INSSDK.framework; path = "dash-sdk-ios/frameworks/INSSDK.framework"; sourceTree = "<group>"; };
+		C12AD2E522C1742E00DF43EF /* PodSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PodSDK.framework; path = "dash-sdk-ios/frameworks/PodSDK.framework"; sourceTree = "<group>"; };
 		C12C9C82229EDB7B00FF7632 /* InsulinStatusTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsulinStatusTableViewCell.swift; sourceTree = "<group>"; };
 		C1542417228085BF006754B3 /* PodSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PodSDK.framework; path = "dash-sdk-ios/PodSDK.framework"; sourceTree = "<group>"; };
 		C154242E2280BFF6006754B3 /* ActivationFlowViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivationFlowViewController.swift; sourceTree = "<group>"; };
@@ -141,6 +160,7 @@
 			files = (
 				C1542418228085BF006754B3 /* PodSDK.framework in Frameworks */,
 				C107D10E22692AE700D63775 /* LoopKit.framework in Frameworks */,
+				C12AD2E722C174D100DF43EF /* INSSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -254,6 +274,8 @@
 		C1E753CF226928F700A0BC48 = {
 			isa = PBXGroup;
 			children = (
+				C12AD2E522C1742E00DF43EF /* PodSDK.framework */,
+				C12AD2E322C1741E00DF43EF /* INSSDK.framework */,
 				C107D11322692BC300D63775 /* Common */,
 				C1D68E2E2284848A00019CAE /* Extensions */,
 				C1E753DB226928F700A0BC48 /* DashKit */,
@@ -348,6 +370,7 @@
 				C1E753D5226928F700A0BC48 /* Sources */,
 				C1E753D6226928F700A0BC48 /* Frameworks */,
 				C1E753D7226928F700A0BC48 /* Resources */,
+				C12AD27122C169EE00DF43EF /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -727,6 +750,7 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 					"$(PROJECT_DIR)/dash-sdk-ios",
 					"$(PROJECT_DIR)/dash-sdk-ios/PodSDK.framework/Frameworks",
+					"$(PROJECT_DIR)/dash-sdk-ios/frameworks",
 				);
 				INFOPLIST_FILE = DashKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -762,6 +786,7 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 					"$(PROJECT_DIR)/dash-sdk-ios",
 					"$(PROJECT_DIR)/dash-sdk-ios/PodSDK.framework/Frameworks",
+					"$(PROJECT_DIR)/dash-sdk-ios/frameworks",
 				);
 				INFOPLIST_FILE = DashKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";

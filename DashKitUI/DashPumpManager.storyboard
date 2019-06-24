@@ -34,15 +34,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="751" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Ex: 987654321" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="AJW-qp-rdn">
-                                <rect key="frame" x="20" y="433" width="374" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="6Xr-Vi-5T1"/>
-                                </constraints>
-                                <nil key="textColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="21"/>
-                                <textInputTraits key="textInputTraits" keyboardType="numberPad" returnKeyType="go"/>
-                            </textField>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="muQ-3E-bMh">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="59"/>
                                 <subviews>
@@ -65,7 +56,7 @@
                                     <constraint firstItem="eBS-8d-WVv" firstAttribute="top" secondItem="muQ-3E-bMh" secondAttribute="top" constant="22" id="ZQU-je-xHZ"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter the Phone number to register " textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="19" translatesAutoresizingMaskIntoConstraints="NO" id="N1Q-D2-BXT">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="This phone must be registered before using with Omnipod Dash" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="19" translatesAutoresizingMaskIntoConstraints="NO" id="N1Q-D2-BXT">
                                 <rect key="frame" x="20" y="101" width="374" height="126"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="126" id="fHS-tZ-x7V"/>
@@ -92,18 +83,14 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="muQ-3E-bMh" firstAttribute="top" secondItem="Zcw-ww-ZWD" secondAttribute="top" id="9GT-Gb-NOF"/>
-                            <constraint firstAttribute="trailing" secondItem="AJW-qp-rdn" secondAttribute="trailing" constant="20" id="CMt-FV-hbw"/>
                             <constraint firstItem="YlA-nh-p5N" firstAttribute="leading" secondItem="Zcw-ww-ZWD" secondAttribute="leading" constant="20" id="Eco-5b-006"/>
-                            <constraint firstItem="AJW-qp-rdn" firstAttribute="centerY" secondItem="Zcw-ww-ZWD" secondAttribute="centerY" id="GIO-mZ-Hup"/>
                             <constraint firstAttribute="bottom" secondItem="YlA-nh-p5N" secondAttribute="bottom" constant="50" id="NFi-IT-Vxo"/>
                             <constraint firstAttribute="trailing" secondItem="muQ-3E-bMh" secondAttribute="trailing" id="NnU-Ou-geC"/>
-                            <constraint firstItem="AJW-qp-rdn" firstAttribute="centerX" secondItem="Zcw-ww-ZWD" secondAttribute="centerX" id="QAJ-Eo-tZF"/>
                             <constraint firstItem="N1Q-D2-BXT" firstAttribute="top" secondItem="muQ-3E-bMh" secondAttribute="bottom" constant="42" id="Xha-kB-5yp"/>
                             <constraint firstItem="muQ-3E-bMh" firstAttribute="leading" secondItem="Zcw-ww-ZWD" secondAttribute="leading" id="fl7-OZ-lXY"/>
                             <constraint firstItem="N1Q-D2-BXT" firstAttribute="leading" secondItem="lEv-gZ-OjW" secondAttribute="leading" constant="20" id="ivt-RJ-NfN"/>
                             <constraint firstAttribute="trailing" secondItem="N1Q-D2-BXT" secondAttribute="trailing" constant="20" id="kMQ-EP-tsv"/>
                             <constraint firstAttribute="trailing" secondItem="YlA-nh-p5N" secondAttribute="trailing" constant="20" id="m3k-hC-mf4"/>
-                            <constraint firstItem="AJW-qp-rdn" firstAttribute="leading" secondItem="Zcw-ww-ZWD" secondAttribute="leading" constant="20" id="vkF-T6-rZ2"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="lEv-gZ-OjW"/>
                     </view>
@@ -111,7 +98,6 @@
                     <connections>
                         <outlet property="phoneRegistration" destination="YlA-nh-p5N" id="Mdf-kC-eWO"/>
                         <outlet property="userDataLabel" destination="N1Q-D2-BXT" id="6lA-wZ-kcn"/>
-                        <outlet property="verificationCode" destination="AJW-qp-rdn" id="mYB-JJ-t2J"/>
                         <segue destination="ztc-qC-nUQ" kind="show" identifier="Continue" id="5RZ-8F-2rM"/>
                     </connections>
                 </viewController>
@@ -197,7 +183,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Pod-StartActivation" translatesAutoresizingMaskIntoConstraints="NO" id="GAM-2y-obL">
-                                                    <rect key="frame" x="199" y="0.0" width="16" height="113"/>
+                                                    <rect key="frame" x="20" y="0.0" width="374" height="113"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" relation="lessThanOrEqual" constant="180" id="zjQ-mC-Vfy"/>
                                                     </constraints>
@@ -459,16 +445,16 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="252" text="Pod Insulin: 50 U+" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NX5-nA-pbW">
-                                            <rect key="frame" x="20" y="15" width="350" height="23"/>
+                                            <rect key="frame" x="20" y="15" width="208.5" height="23"/>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="19"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="252" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" verticalCompressionResistancePriority="749" image="Pod" translatesAutoresizingMaskIntoConstraints="NO" id="dzY-pU-4T3">
-                                            <rect key="frame" x="378" y="11" width="16" height="73"/>
+                                            <rect key="frame" x="236.5" y="11" width="157.5" height="73"/>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="(updated Yesterday, 9:29 pm) " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qDt-gI-gaQ">
-                                            <rect key="frame" x="20" y="46" width="350" height="28"/>
+                                            <rect key="frame" x="20" y="46" width="208.5" height="28"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                             <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
@@ -721,7 +707,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Pod" translatesAutoresizingMaskIntoConstraints="NO" id="zUQ-sT-H97">
-                                                    <rect key="frame" x="199" y="0.0" width="16" height="181"/>
+                                                    <rect key="frame" x="115" y="0.0" width="184.5" height="181"/>
                                                 </imageView>
                                             </subviews>
                                             <constraints>

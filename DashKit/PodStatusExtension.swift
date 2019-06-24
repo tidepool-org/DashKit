@@ -56,6 +56,9 @@ public extension InternalErrorCode {
 
         case .unexpectedMessageSequence:
             return "Unexpected message sequence"
+
+        case .invalidPodId:
+            return "Invalid POD ID"
         }
     }
 }
@@ -149,6 +152,15 @@ extension PodCommError: LocalizedError {
 
         case .invalidProgramStatus:
             return "Invalid Program status"
+
+        case .unacknowledgedCommandPendingRetry:
+            return "Unacknowledged Command Pending Retry"
+
+        case .noUnacknowledgedCommandToRetry:
+            return "No Unacknowledged Command To Retry"
+
+        case .podSDKExpired:
+            return "Pod SDK Expired"
         }
     }
 
