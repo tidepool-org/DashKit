@@ -9,8 +9,8 @@
 import Foundation
 import HealthKit
 import LoopKit
-import PodSDK
 import os.log
+import PodSDK
 
 
 public protocol PodStatusObserver: class {
@@ -21,7 +21,7 @@ public class DashPumpManager: PumpManager {
 
     public static var managerIdentifier = "OmnipodDash"
 
-    let podCommManager: PodCommManager
+    let podCommManager: PodCommManagerProtocol
 
     public let log = OSLog(category: "DashPumpManager")
 
@@ -240,6 +240,7 @@ public class DashPumpManager: PumpManager {
             case .failure(let error):
                 print("Error fetching status: \(error)")
             case .success(let status):
+                print("PodStatus json: \(String(describing: status.toJSONString(prettyPrint: true)))")
                 self.updateStateFromPodStatus(status: status)
             }
             completion(response)
