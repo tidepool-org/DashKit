@@ -284,7 +284,51 @@ public class DashPumpManager: PumpManager {
         return pumpDataAge > pumpStatusAgeTolerance
     }
 
+    private func finalizeAndStoreDoses() {
+        var dosesToStore: [UnfinalizedDose] = []
+
+        lockedState.mutate { (state) in
+            if let bolus = state.unfinalizedBolus, bolus.finished {
+                state.finalizedDoses.append(bolus)
+                state.unfinalizedBolus = nil
+            }
+
+            if let tempBasal = state.unfinalizedTempBasal, tempBasal.finished {
+                state.finalizedDoses.append(tempBasal)
+                state.unfinalizedTempBasal = nil
+            }
+
+            dosesToStore = state.finalizedDoses
+            if let unfinalizedTempBasal = state.unfinalizedTempBasal {
+                dosesToStore.append(unfinalizedTempBasal)
+            }
+            if let unfinalizedSuspend = state.unfinalizedSuspend {
+                dosesToStore.append(unfinalizedSuspend)
+            }
+        }
+
+        guard !dosesToStore.isEmpty else {
+            return
+        }
+
+        pumpDelegate.notify { (delegate) in
+            delegate?.pumpManager(self, didReadPumpEvents: dosesToStore.map { NewPumpEvent($0) }, completion: { (error) in
+                if let error = error {
+                    self.log.error("Error storing pod events: %@", String(describing: error))
+                } else {
+                    self.state.finalizedDoses.removeAll()
+                    self.log.error("Stored pod events: %@", String(describing: dosesToStore))
+                }
+            })
+        }
+    }
+
+    
+
     public func assertCurrentPumpData() {
+
+        finalizeAndStoreDoses()
+
         guard hasActivePod else {
             return
         }

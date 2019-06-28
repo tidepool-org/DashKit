@@ -22,6 +22,10 @@ class DashPumpManagerTests: XCTestCase {
 
     private var pumpManagerDelegateStateUpdateExpectation: XCTestExpectation?
 
+    private var lastPumpEvents: [NewPumpEvent] = []
+    private var pumpEventStorageExpectation: XCTestExpectation?
+
+
     private var pumpManager: DashPumpManager!
     private var podCommManager: MockPodCommManager!
 
@@ -42,10 +46,15 @@ class DashPumpManagerTests: XCTestCase {
         super.tearDown()
 
         stateUpdates.removeAll()
-        pumpManagerStatusUpdates.removeAll()
         stateUpdateExpectation = nil
+
+        pumpManagerStatusUpdates.removeAll()
         pumpManagerStatusUpdateExpectation = nil
+
         pumpManagerDelegateStateUpdateExpectation = nil
+
+        lastPumpEvents.removeAll()
+        pumpEventStorageExpectation = nil
     }
 
     func testSuccessfulBolus() {
@@ -168,7 +177,6 @@ class DashPumpManagerTests: XCTestCase {
 
         XCTAssert(!stateUpdates.isEmpty)
         let lastState = stateUpdates.last!
-        XCTAssertNil(lastState.bolusTransition)
 
         switch lastState.reservoirLevel {
         case .some(.valid(let value)):
@@ -176,6 +184,18 @@ class DashPumpManagerTests: XCTestCase {
         default:
             XCTFail("Expected reservoir value")
         }
+
+        pumpEventStorageExpectation = expectation(description: "pumpmanager dose storage")
+
+        pumpManager.assertCurrentPumpData()
+
+        waitForExpectations(timeout: 3)
+
+        XCTAssertEqual(1, lastPumpEvents.count)
+
+        let tempBasalEvent = lastPumpEvents.last!
+        XCTAssertEqual(1.0, tempBasalEvent.dose?.unitsPerHour)
+        XCTAssertEqual(PumpEventType.tempBasal, tempBasalEvent.type)
     }
 
     func testFailedTempBasal() {
@@ -229,6 +249,8 @@ extension DashPumpManagerTests: PumpManagerDelegate {
     }
 
     func pumpManager(_ pumpManager: PumpManager, didReadPumpEvents events: [NewPumpEvent], completion: @escaping (Error?) -> Void) {
+        pumpEventStorageExpectation?.fulfill()
+        lastPumpEvents = events
     }
 
     func pumpManager(_ pumpManager: PumpManager, didReadReservoirValue units: Double, at date: Date, completion: @escaping (PumpManagerResult<(newValue: ReservoirValue, lastValue: ReservoirValue?, areStoredValuesContinuous: Bool)>) -> Void) {
