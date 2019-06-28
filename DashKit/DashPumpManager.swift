@@ -133,7 +133,6 @@ public class DashPumpManager: PumpManager {
 
     private func notifyStatusObservers(oldStatus: PumpManagerStatus) {
         let status = self.status
-        print("notifyStatusObservers: bolusState = \(status.bolusState)")
 
         pumpDelegate.notify { (delegate) in
             delegate?.pumpManager(self, didUpdate: status, oldStatus: oldStatus)
@@ -224,9 +223,11 @@ public class DashPumpManager: PumpManager {
     }
 
     private func updateStateFromPodStatus(status: PodStatusProtocol) {
-        state.lastStatusDate = Date()
-        state.reservoirLevel = ReservoirLevel(rawValue: status.reservoirUnitsRemaining)
-        state.podActivatedAt = Date().addingTimeInterval(TimeInterval(-status.timeElapsedSinceActivation))
+        lockedState.mutate { (state) in
+            state.lastStatusDate = Date()
+            state.reservoirLevel = ReservoirLevel(rawValue: status.reservoirUnitsRemaining)
+            state.podActivatedAt = status.activationTime
+        }
         notifyPodStatusObservers()
     }
 
@@ -362,10 +363,13 @@ public class DashPumpManager: PumpManager {
 
             podCommManager.sendProgram(programType: program, beepOption: nil) { (result) in
                 switch(result) {
-                case .success( _):
+                case .success(let podStatus):
                     self.state.unfinalizedBolus = UnfinalizedDose(bolusAmount: enactUnits, startTime: startDate, scheduledCertainty: .certain)
+                    self.updateStateFromPodStatus(status: podStatus)
+                    self.state.bolusTransition = nil
                     completion(.success(dose))
                 case .failure(let error):
+                    self.state.bolusTransition = nil
                     completion(.failure(error))
                 }
             }

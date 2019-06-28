@@ -32,11 +32,13 @@ struct MockPodStatus: PodStatusProtocol {
     func hasAlerts() -> Bool {
         return !activeAlerts.isEmpty
     }
-
-
 }
 
 class MockPodCommManager: PodCommManagerProtocol {
+
+    var lastBolusVolume: Int?
+    var lastBasalProgram: BasalProgram?
+    var lastTempBasal: TempBasal?
 
     var podStatus: MockPodStatus
 
@@ -79,6 +81,14 @@ class MockPodCommManager: PodCommManagerProtocol {
     }
 
     func sendProgram(programType: ProgramType, beepOption: BeepOption?, completion: @escaping (PodCommResult<PodStatusProtocol>) -> ()) {
+        switch programType {
+        case .basalProgram(let program):
+            lastBasalProgram = program
+        case .bolus(let bolus):
+            lastBolusVolume = bolus.immediateVolume
+        case .tempBasal(let tempBasal):
+            lastTempBasal = tempBasal
+        }
         completion(.success(podStatus))
     }
 
