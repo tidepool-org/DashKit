@@ -164,7 +164,7 @@ class InsertCannulaSetupViewController: SetupTableViewController {
             return
         }
 
-        let basalProgram = pumpManager.basalProgram
+        let basalProgram = pumpManager.state.basalProgram
         let autoOffAlert = try! AutoOffAlert.init(enable: true, interval: 4 * 60 * 60)
         continueState = .startingInsertion
         var expectingAnotherEvent = false

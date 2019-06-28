@@ -10,6 +10,43 @@ import Foundation
 import PodSDK
 import ObjectMapper
 
+public protocol PodStatusProtocol {
+    ///Current pod state
+    var podState: PodSDK.PodState! { get }
+
+    ///Current program status
+    var programStatus: PodSDK.ProgramStatus! { get }
+
+    ///Current active alerts
+    var activeAlerts: PodSDK.PodAlerts! { get }
+
+    ///Whether occlusion alert active
+    var isOcclusionAlertActive: Bool! { get }
+
+    /**
+     If bolus is running, the number of bolus units(1U = 100) remaining.
+     */
+    var bolusUnitsRemaining: Int { get }
+
+    /**
+     The total number of units(1U = 100) been delivered since pod activation.
+     */
+    var totalUnitsDelivered: Int { get }
+
+    /**
+     The number of units(1U = 100) remaining in reservoir.
+     */
+    var reservoirUnitsRemaining: Int { get }
+
+    ///Time elapsed since activation
+    var timeElapsedSinceActivation: TimeInterval { get }
+
+    ///Time when Pod is activated
+    var activationTime: Date { get }
+
+    func hasAlerts() -> Bool
+}
+
 public protocol PodCommManagerProtocol {
 
     /**
@@ -98,7 +135,7 @@ public protocol PodCommManagerProtocol {
      - completion: a closure to be called when `PodCommResult` is issued by the comm. layer
      - result: If successful, result is `PodCommResult.success(...)` or in case of an error, result is `PodCommResult.failure(...)`
      */
-    func deactivatePod(completion: @escaping (PodSDK.PodCommResult<PodSDK.PodStatus>) -> ())
+    func deactivatePod(completion: @escaping (PodSDK.PodCommResult<PodStatusProtocol>) -> ())
 
     /**
      Sends a command to the Pod to retrieve its status.
@@ -107,7 +144,7 @@ public protocol PodCommManagerProtocol {
      - completion: a closure to be called when `PodCommResult` is issued by the comm. layer
      - result: If successful, result is `PodCommResult.success(...)` or in case of an error, result is `PodCommResult.failure(...)`
      */
-    func getPodStatus(completion: @escaping (PodSDK.PodCommResult<PodStatus>) -> ())
+    func getPodStatus(completion: @escaping (PodSDK.PodCommResult<PodStatusProtocol>) -> ())
 
     /**
      Sends a command to the Pod to retrieve time of alerts.
@@ -127,7 +164,7 @@ public protocol PodCommManagerProtocol {
      - result: If successful, result is `PodCommResult.success(...)` or in case of an error, result is  `PodCommResult.failure(...)`
 
      */
-    func playTestBeeps(completion: @escaping (PodSDK.PodCommResult<PodSDK.PodStatus>) -> ())
+    func playTestBeeps(completion: @escaping (PodSDK.PodCommResult<PodStatusProtocol>) -> ())
 
     /**
      Activates a basal, a temp basal, or a bolus program on the Pod.
@@ -143,7 +180,7 @@ public protocol PodCommManagerProtocol {
      - Sending temp basal/basal program while Pod is running temp basal
 
      */
-    func sendProgram(programType: PodSDK.ProgramType, beepOption: PodSDK.BeepOption?, completion: @escaping (PodSDK.PodCommResult<PodSDK.PodStatus>) -> ())
+    func sendProgram(programType: PodSDK.ProgramType, beepOption: PodSDK.BeepOption?, completion: @escaping (PodSDK.PodCommResult<PodStatusProtocol>) -> ())
 
     /**
      Stops an active bolus or a temp basal program, or suspends insulin delivery by the Pod. Any 'active' insulin delivery program is completely stopped.
@@ -157,7 +194,7 @@ public protocol PodCommManagerProtocol {
      - If bolus is sent after insulin is suspended, bolus can be delivered without a basal program
      - If temp basal is sent after insulin is suspended, temp basal will be running without a basal program.
      */
-    func stopProgram(programType: PodSDK.StopProgramType, completion: @escaping (PodSDK.PodCommResult<PodSDK.PodStatus>) -> ())
+    func stopProgram(programType: PodSDK.StopProgramType, completion: @escaping (PodSDK.PodCommResult<PodStatusProtocol>) -> ())
 
     /**
      Programs or updates Pod alerts.
@@ -167,7 +204,7 @@ public protocol PodCommManagerProtocol {
      - completion: a closure to be called when `PodCommResult` is issued by the comm. layer
      - result: a `PodCommResult.success(...)` if success or `PodCommResult.failure(...)` in case of an error
      */
-    func updateAlertSetting(alertSetting: PodAlertSetting, completion: @escaping (PodSDK.PodCommResult<PodSDK.PodStatus>) -> ())
+    func updateAlertSetting(alertSetting: PodAlertSetting, completion: @escaping (PodSDK.PodCommResult<PodStatusProtocol>) -> ())
 
     /**
      Silence Pod alerts.
@@ -177,7 +214,7 @@ public protocol PodCommManagerProtocol {
      - completion: a closure to be called when `PodCommResult`s are issued by the comm. layer
      - result: a `PodCommResult.success(...)` if success or `PodCommResult.failure(...)` in case of an error
      */
-    func silenceAlerts(alert: PodSDK.PodAlerts, completion: @escaping (PodSDK.PodCommResult<PodSDK.PodStatus>) -> ())
+    func silenceAlerts(alert: PodSDK.PodAlerts, completion: @escaping (PodSDK.PodCommResult<PodStatusProtocol>) -> ())
 
     /**
      Resends unacknowledged command. The previous command has been sent without acknowledgement.
@@ -190,7 +227,7 @@ public protocol PodCommManagerProtocol {
      or discard Pod
      or allow user to ignore the command by calling `clearUnacknowledgedCommand` function.
      */
-    func retryUnacknowledgedCommand(completion: @escaping (PodSDK.PodCommResult<PodSDK.PodStatus>) -> ())
+    func retryUnacknowledgedCommand(completion: @escaping (PodSDK.PodCommResult<PodStatusProtocol>) -> ())
 
     /**
      Clears an unacknowledged command. The previous command that has been sent without acknowledgement will be discarded.

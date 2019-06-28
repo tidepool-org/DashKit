@@ -143,10 +143,6 @@ public class DashPumpManager: PumpManager {
         }
     }
 
-    public var basalProgram: BasalProgram {
-        return BasalProgram(basalSchedule: state.basalSchedule)
-    }
-
     private var device: HKDevice {
         return HKDevice(
             name: type(of: self).managerIdentifier,
@@ -227,20 +223,19 @@ public class DashPumpManager: PumpManager {
         return podCommManager.getPodId()
     }
 
-    private func updateStateFromPodStatus(status: PodStatus) {
+    private func updateStateFromPodStatus(status: PodStatusProtocol) {
         state.lastStatusDate = Date()
         state.reservoirLevel = ReservoirLevel(rawValue: status.reservoirUnitsRemaining)
         state.podActivatedAt = Date().addingTimeInterval(TimeInterval(-status.timeElapsedSinceActivation))
         notifyPodStatusObservers()
     }
 
-    public func getPodStatus(completion: @escaping (PodCommResult<PodStatus>) -> ()) {
+    public func getPodStatus(completion: @escaping (PodCommResult<PodStatusProtocol>) -> ()) {
         podCommManager.getPodStatus { (response) in
             switch response {
             case .failure(let error):
                 print("Error fetching status: \(error)")
             case .success(let status):
-                print("PodStatus json: \(String(describing: status.toJSONString(prettyPrint: true)))")
                 self.updateStateFromPodStatus(status: status)
             }
             completion(response)
@@ -276,7 +271,7 @@ public class DashPumpManager: PumpManager {
         }
     }
 
-    public func deactivatePod(completion: @escaping (PodCommResult<PodStatus>) -> ()) {
+    public func deactivatePod(completion: @escaping (PodCommResult<PodStatusProtocol>) -> ()) {
         podCommManager.deactivatePod { (result) in
             completion(result)
         }
@@ -357,19 +352,18 @@ public class DashPumpManager: PumpManager {
             let enactUnits = roundToSupportedBolusVolume(units: units)
             let program = ProgramType.bolus(bolus: try Bolus(immediateVolume: Int(round(enactUnits * 100))))
 
-            let date = Date()
-            let endDate = date.addingTimeInterval(enactUnits / Pod.bolusDeliveryRate)
-            let dose = DoseEntry(type: .bolus, startDate: date, endDate: endDate, value: enactUnits, unit: .units)
+            let endDate = startDate.addingTimeInterval(enactUnits / Pod.bolusDeliveryRate)
+            let dose = DoseEntry(type: .bolus, startDate: startDate, endDate: endDate, value: enactUnits, unit: .units)
 
             willRequest(dose)
 
             defer { self.state.bolusTransition = nil }
             self.state.bolusTransition = .initiating
 
-            PodCommManager.shared.sendProgram(programType: program, beepOption: nil) { (result) in
+            podCommManager.sendProgram(programType: program, beepOption: nil) { (result) in
                 switch(result) {
                 case .success( _):
-                    self.state.unfinalizedBolus = UnfinalizedDose(bolusAmount: enactUnits, startTime: date, scheduledCertainty: .certain)
+                    self.state.unfinalizedBolus = UnfinalizedDose(bolusAmount: enactUnits, startTime: startDate, scheduledCertainty: .certain)
                     completion(.success(dose))
                 case .failure(let error):
                     completion(.failure(error))
@@ -400,19 +394,18 @@ public class DashPumpManager: PumpManager {
         // TODO
     }
 
-    public init(state: DashPumpManagerState) {
+    public init(state: DashPumpManagerState, podCommManager: PodCommManagerProtocol = PodCommManager.shared) {
         self.lockedState = Locked(state)
-        self.podCommManager = PodCommManager.shared
+        self.podCommManager = podCommManager
     }
 
-    public required init?(rawState: PumpManager.RawStateValue) {
+    public convenience required init?(rawState: PumpManager.RawStateValue) {
         guard let state = DashPumpManagerState(rawValue: rawState) else
         {
             return nil
         }
 
-        self.podCommManager = PodCommManager.shared
-        self.lockedState = Locked(state)
+        self.init(state: state)
     }
 
     public var rawState: PumpManager.RawStateValue {

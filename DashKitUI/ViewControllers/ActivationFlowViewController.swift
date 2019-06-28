@@ -56,22 +56,24 @@ class ActivationFlowViewController: UIViewController {
     }
 
     func deactivatePod(){
-        self.showSpinner(onView: self.view)
-        PodCommManager.shared.deactivatePod { (result) in
-            switch(result) {
-            case .failure(let pdmError):
-                self.presentOkDialog(title: "",
-                                     message: "Deactivate Pod error: \(pdmError). Do you want to discard Pod?",
-                    okButtonHandler: {_ in
-                        self.discardPod()
-                        self.removeSpinner()
-                })
-            case .success(let status):
-                self.presentOkDialog(title: "",
-                                     message: "Pod deactivated with \(status.podState)",
-                    okButtonHandler: {_ in
-                        self.removeSpinner()
-                })
+        if let pumpManager = pumpManager {
+            self.showSpinner(onView: self.view)
+            pumpManager.deactivatePod { (result) in
+                switch(result) {
+                case .failure(let pdmError):
+                    self.presentOkDialog(title: "",
+                                         message: "Deactivate Pod error: \(pdmError). Do you want to discard Pod?",
+                        okButtonHandler: {_ in
+                            self.discardPod()
+                            self.removeSpinner()
+                    })
+                case .success(let status):
+                    self.presentOkDialog(title: "",
+                                         message: "Pod deactivated with \(String(describing: status.podState))",
+                        okButtonHandler: {_ in
+                            self.removeSpinner()
+                    })
+                }
             }
         }
     }
@@ -91,7 +93,7 @@ class ActivationFlowViewController: UIViewController {
                                                         case .event(let event):
                                                             switch(event) {
                                                             case .podStatus(let status):
-                                                                self.eventLogTextView.text = (self.eventLogTextView.text ?? "").appending("\nPod status: \(status.podState)")
+                                                                self.eventLogTextView.text = (self.eventLogTextView.text ?? "").appending("\nPod status: \(String(describing: status.podState))")
 
                                                             default:
                                                                 self.eventLogTextView.text = (self.eventLogTextView.text ?? "").appending("\nEvent: \(event.description)")
@@ -105,7 +107,7 @@ class ActivationFlowViewController: UIViewController {
 
         case 1:
             if let pumpManager = pumpManager {
-                let basalProgram = pumpManager.basalProgram
+                let basalProgram = pumpManager.state.basalProgram
                 let autoOffAlert = try! AutoOffAlert.init(enable: true, interval: 4 * 60 * 60)
                 PodCommManager.shared.finishPodActivation(basalProgram: basalProgram, autoOffAlert: autoOffAlert) { (activationStatus) in
                     switch(activationStatus) {
@@ -116,7 +118,7 @@ class ActivationFlowViewController: UIViewController {
                     case .event(let event):
                         switch(event) {
                         case .podStatus(let status):
-                            self.eventLogTextView.text = (self.eventLogTextView.text ?? "").appending("\nPod status: \(status.podState)")
+                            self.eventLogTextView.text = (self.eventLogTextView.text ?? "").appending("\nPod status: \(String(describing: status.podState))")
 
                         default:
                             self.eventLogTextView.text = (self.eventLogTextView.text ?? "").appending("\nEvent: \(event.description)")

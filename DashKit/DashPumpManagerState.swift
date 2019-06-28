@@ -18,7 +18,7 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
 
     public var timeZone: TimeZone
 
-    public var basalSchedule: BasalSchedule
+    public var basalProgram: BasalProgram
 
     public var podActivatedAt: Date?
 
@@ -51,9 +51,9 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
 
     internal var bolusTransition: BolusTransition?
 
-    public init(timeZone: TimeZone, basalSchedule: BasalSchedule) {
+    public init(timeZone: TimeZone, basalProgram: BasalProgram) {
         self.timeZone = timeZone
-        self.basalSchedule = basalSchedule
+        self.basalProgram = basalProgram
         self.finalizedDoses = []
         self.suspended = false
     }
@@ -62,13 +62,13 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
     public init?(rawValue: [String : Any]) {
         guard
             let _ = rawValue["version"] as? Int,
-            let rawBasalSchedule = rawValue["basalSchedule"] as? BasalSchedule.RawValue,
-            let basalSchedule = BasalSchedule(rawValue: rawBasalSchedule)
+            let rawBasalProgram = rawValue["basalProgram"] as? BasalProgram.RawValue,
+            let basalProgram = BasalProgram(rawValue: rawBasalProgram)
             else {
             return nil
         }
 
-        self.basalSchedule = basalSchedule
+        self.basalProgram = basalProgram
 
         self.podActivatedAt = rawValue["podActivatedAt"] as? Date
         self.lastStatusDate = rawValue["lastStatusDate"] as? Date
@@ -136,7 +136,7 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
             "version": DashPumpManagerState.version,
             "timeZone": timeZone.secondsFromGMT(),
             "finalizedDoses": finalizedDoses.map( { $0.rawValue }),
-            "basalSchedule": basalSchedule.rawValue,
+            "basalProgram": basalProgram.rawValue,
             "suspended": suspended,
         ]
 

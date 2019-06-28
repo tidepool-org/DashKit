@@ -10,17 +10,9 @@ import Foundation
 import PodSDK
 import LoopKit
 
-
-public struct BasalSchedule {
-
-    let entries: [BasalScheduleEntry]
-
-    init(entries: [BasalScheduleEntry]) {
-        self.entries = entries
-    }
-
-    public init(rateSchedule: BasalRateSchedule) {
-        var entries = [BasalScheduleEntry]()
+extension BasalProgram {
+    public init?(rateSchedule: BasalRateSchedule) {
+        var basalSegments = [BasalSegment]()
 
         let rates = rateSchedule.items.map { $0.value }
         let startTimes = rateSchedule.items.map { $0.startTime }
@@ -30,20 +22,24 @@ public struct BasalSchedule {
         let segmentUnit = Pod.minimumBasalScheduleEntryDuration
         for (rate,(start,end)) in zip(rates,zip(startTimes,endTimes)) {
             let podRate = Int(round(rate * 100))
-            entries.append(BasalScheduleEntry(startTime: Int(round(start/segmentUnit)), endTime: Int(round(end/segmentUnit)), basalRate: podRate))
+
+            do {
+                let segment = try BasalSegment(startTime: Int(round(start/segmentUnit)), endTime: Int(round(end/segmentUnit)), basalRate: podRate)
+                basalSegments.append(segment)
+            } catch {
+                return nil
+            }
         }
 
-        self.init(entries: entries)
+        do {
+            try self.init(basalSegments: basalSegments)
+        } catch {
+            return nil
+        }
     }
 }
 
-public struct BasalScheduleEntry {
-    let startTime: Int
-    let endTime: Int
-    let basalRate: Int
-}
-
-extension BasalScheduleEntry: RawRepresentable {
+extension BasalSegment: RawRepresentable {
     public typealias RawValue = [String: Any]
 
     public init?(rawValue: RawValue) {
@@ -54,7 +50,11 @@ extension BasalScheduleEntry: RawRepresentable {
             else {
                 return nil
         }
-        self.init(startTime: startTime, endTime: endTime, basalRate: basalRate)
+        do {
+            try self.init(startTime: startTime, endTime: endTime, basalRate: basalRate)
+        } catch {
+            return nil
+        }
     }
 
     public var rawValue: RawValue {
@@ -66,54 +66,39 @@ extension BasalScheduleEntry: RawRepresentable {
     }
 }
 
+extension BasalSegment: Equatable {
+    public static func == (lhs: BasalSegment, rhs: BasalSegment) -> Bool {
+        return lhs.startTime == rhs.startTime &&
+            lhs.endTime == rhs.endTime &&
+            lhs.basalRate == rhs.basalRate
+    }
+}
 
-extension BasalSchedule: RawRepresentable {
+extension BasalProgram: RawRepresentable {
     public typealias RawValue = [String: Any]
 
     public init?(rawValue: RawValue) {
-        guard let entriesRaw = rawValue["entries"] as? [BasalScheduleEntry.RawValue] else {
+        guard let entriesRaw = rawValue["basalSegments"] as? [BasalSegment.RawValue] else {
             return nil
         }
 
-        self.init(entries: entriesRaw.compactMap { BasalScheduleEntry(rawValue: $0) })
+        do {
+            try self.init(basalSegments: entriesRaw.compactMap { BasalSegment(rawValue: $0) })
+        } catch {
+            return nil
+        }
     }
 
     public var rawValue: RawValue {
         return [
-            "entries": entries.map { $0.rawValue }
+            "basalSegments": basalSegments.map { $0.rawValue }
         ]
     }
 }
 
-extension BasalScheduleEntry: Equatable {
-    public static func == (lhs: BasalScheduleEntry, rhs: BasalScheduleEntry) -> Bool {
-        return
-            lhs.basalRate == rhs.basalRate &&
-            lhs.startTime == lhs.startTime &&
-            lhs.endTime   == rhs.endTime
-    }
-}
-
-extension BasalSchedule: Equatable {
-    public static func == (lhs: BasalSchedule, rhs: BasalSchedule) -> Bool {
-        return zip(lhs.entries, rhs.entries).allSatisfy { $0.0 == $0.1 }
+extension BasalProgram: Equatable {
+    public static func == (lhs: BasalProgram, rhs: BasalProgram) -> Bool {
+        return zip(lhs.basalSegments, rhs.basalSegments).allSatisfy { $0.0 == $0.1 }
    }
-}
-
-extension BasalSegment {
-    init(entry: BasalScheduleEntry) throws {
-        try self.init(startTime: entry.startTime, endTime: entry.endTime, basalRate: entry.basalRate)
-    }
-}
-
-extension BasalProgram {
-    init(basalSchedule: BasalSchedule) {
-        do {
-            let segments = try basalSchedule.entries.map { try BasalSegment(entry: $0) }
-            try self.init(basalSegments: segments)
-        } catch {
-            fatalError("Could not convert basal schedule \(basalSchedule) to BasalProgram: \(error)")
-        }
-    }
 }
 
