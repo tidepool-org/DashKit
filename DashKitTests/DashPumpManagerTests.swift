@@ -1,6 +1,6 @@
 //
-//  DashKitTests.swift
-//  DashKitTests
+//  DashPumpManagerTests.swift
+//  DashPumpManagerTests
 //
 //  Created by Pete Schwamb on 4/18/19.
 //  Copyright © 2019 Tidepool. All rights reserved.
@@ -12,7 +12,7 @@ import LoopKit
 import UserNotifications
 @testable import DashKit
 
-class DashKitTests: XCTestCase {
+class DashPumpManagerTests: XCTestCase {
 
     private var stateUpdates: [DashPumpManagerState] = []
     private var stateUpdateExpectation: XCTestExpectation?
@@ -83,6 +83,14 @@ class DashKitTests: XCTestCase {
         }
         waitForExpectations(timeout: 3)
 
+        guard case .inProgress(let dose) = pumpManager.status.bolusState else {
+            XCTFail("Expected no bolus in progress")
+            return
+        }
+
+        XCTAssertEqual(1, dose.units)
+        XCTAssertEqual(startDate, dose.startDate)
+
         XCTAssert(!stateUpdates.isEmpty)
         let lastState = stateUpdates.last!
         XCTAssertNil(lastState.bolusTransition)
@@ -94,23 +102,58 @@ class DashKitTests: XCTestCase {
             XCTFail("Expected reservoir value")
         }
     }
+
+    func testFailedBolus() {
+
+        XCTAssertEqual(pumpManager.hasActivePod, true)
+
+        let bolusCallbacks = expectation(description: "bolus callbacks")
+        bolusCallbacks.expectedFulfillmentCount = 2
+
+        let startDate = Date()
+
+        pumpManagerStatusUpdateExpectation = expectation(description: "pumpmanager status updates")
+        pumpManagerStatusUpdateExpectation?.expectedFulfillmentCount = 2
+
+        pumpManagerDelegateStateUpdateExpectation = expectation(description: "pumpmanager delegate state updates")
+        pumpManagerDelegateStateUpdateExpectation?.expectedFulfillmentCount = 2
+
+        podCommManager.sendProgramFailureError = .podNotAvailable
+
+        pumpManager.enactBolus(units: 1, at: startDate, willRequest: { (dose) in
+            bolusCallbacks.fulfill()
+            XCTAssertEqual(startDate, dose.startDate)
+        }) { (result) in
+            bolusCallbacks.fulfill()
+            guard case .failure(PodCommError.podNotAvailable) = result else {
+                XCTFail("Expected podNotAvailable error")
+                return
+            }
+        }
+        waitForExpectations(timeout: 3)
+
+        guard case .none = pumpManager.status.bolusState else {
+            XCTFail("Expected no bolus in progress")
+            return
+        }
+    }
 }
 
-extension DashKitTests: PodStatusObserver {
+extension DashPumpManagerTests: PodStatusObserver {
     func didUpdatePodStatus() {
         stateUpdateExpectation?.fulfill()
         stateUpdates.append(pumpManager.state)
     }
 }
 
-extension DashKitTests: PumpManagerStatusObserver {
+extension DashPumpManagerTests: PumpManagerStatusObserver {
     func pumpManager(_ pumpManager: PumpManager, didUpdate status: PumpManagerStatus, oldStatus: PumpManagerStatus) {
         pumpManagerStatusUpdateExpectation?.fulfill()
         pumpManagerStatusUpdates.append(status)
     }
 }
 
-extension DashKitTests: PumpManagerDelegate {
+extension DashPumpManagerTests: PumpManagerDelegate {
     func pumpManagerBLEHeartbeatDidFire(_ pumpManager: PumpManager) {
     }
 

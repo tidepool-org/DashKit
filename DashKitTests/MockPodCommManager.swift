@@ -42,6 +42,8 @@ class MockPodCommManager: PodCommManagerProtocol {
 
     var podStatus: MockPodStatus
 
+    var sendProgramFailureError: PodCommError?
+
     var delegate: PodCommManagerDelegate?
 
     func setLogger(logger: LoggingProtocol) {
@@ -81,15 +83,19 @@ class MockPodCommManager: PodCommManagerProtocol {
     }
 
     func sendProgram(programType: ProgramType, beepOption: BeepOption?, completion: @escaping (PodCommResult<PodStatusProtocol>) -> ()) {
-        switch programType {
-        case .basalProgram(let program):
-            lastBasalProgram = program
-        case .bolus(let bolus):
-            lastBolusVolume = bolus.immediateVolume
-        case .tempBasal(let tempBasal):
-            lastTempBasal = tempBasal
+        if let error = sendProgramFailureError {
+            completion(.failure(error))
+        } else {
+            switch programType {
+            case .basalProgram(let program):
+                lastBasalProgram = program
+            case .bolus(let bolus):
+                lastBolusVolume = bolus.immediateVolume
+            case .tempBasal(let tempBasal):
+                lastTempBasal = tempBasal
+            }
+            completion(.success(podStatus))
         }
-        completion(.success(podStatus))
     }
 
     func stopProgram(programType: StopProgramType, completion: @escaping (PodCommResult<PodStatusProtocol>) -> ()) {

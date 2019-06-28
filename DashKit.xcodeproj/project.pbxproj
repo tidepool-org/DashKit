@@ -64,7 +64,7 @@
 		C1D68E322284B50300019CAE /* TimeInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D11422692BDE00D63775 /* TimeInterval.swift */; };
 		C1D68E392284E0E000019CAE /* DashKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; };
 		C1E753E3226928F700A0BC48 /* DashKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; };
-		C1E753E8226928F700A0BC48 /* DashKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E753E7226928F700A0BC48 /* DashKitTests.swift */; };
+		C1E753E8226928F700A0BC48 /* DashPumpManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E753E7226928F700A0BC48 /* DashPumpManagerTests.swift */; };
 		C1E753EA226928F700A0BC48 /* DashKit.h in Headers */ = {isa = PBXBuildFile; fileRef = C1E753DC226928F700A0BC48 /* DashKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
@@ -149,7 +149,7 @@
 		C1E753DC226928F700A0BC48 /* DashKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DashKit.h; sourceTree = "<group>"; };
 		C1E753DD226928F700A0BC48 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C1E753E2226928F700A0BC48 /* DashKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DashKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		C1E753E7226928F700A0BC48 /* DashKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashKitTests.swift; sourceTree = "<group>"; };
+		C1E753E7226928F700A0BC48 /* DashPumpManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashPumpManagerTests.swift; sourceTree = "<group>"; };
 		C1E753E9226928F700A0BC48 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -338,7 +338,7 @@
 		C1E753E6226928F700A0BC48 /* DashKitTests */ = {
 			isa = PBXGroup;
 			children = (
-				C1E753E7226928F700A0BC48 /* DashKitTests.swift */,
+				C1E753E7226928F700A0BC48 /* DashPumpManagerTests.swift */,
 				C1E753E9226928F700A0BC48 /* Info.plist */,
 				C1D46D6522C56C2300978E59 /* MockPodCommManager.swift */,
 			);
@@ -554,7 +554,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C1E753E8226928F700A0BC48 /* DashKitTests.swift in Sources */,
+				C1E753E8226928F700A0BC48 /* DashPumpManagerTests.swift in Sources */,
 				C1D46D6622C56C2400978E59 /* MockPodCommManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
