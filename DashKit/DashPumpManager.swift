@@ -358,7 +358,6 @@ public class DashPumpManager: PumpManager {
 
             willRequest(dose)
 
-            defer { self.state.bolusTransition = nil }
             self.state.bolusTransition = .initiating
 
             podCommManager.sendProgram(programType: program, beepOption: nil) { (result) in
@@ -383,7 +382,30 @@ public class DashPumpManager: PumpManager {
     }
 
     public func enactTempBasal(unitsPerHour: Double, for duration: TimeInterval, completion: @escaping (PumpManagerResult<DoseEntry>) -> Void) {
+        do {
+            // Round to nearest supported volume
+            let enactRate = roundToSupportedBasalRate(unitsPerHour: unitsPerHour)
 
+            let tempBasal = try TempBasal(value: .flatRate(Int(round(enactRate * 100))), duration: duration)
+            let program = ProgramType.tempBasal(tempBasal: tempBasal)
+
+            let startDate = Date()
+
+            let dose = DoseEntry(type: .tempBasal, startDate: startDate, endDate: startDate.addingTimeInterval(duration), value: enactRate, unit: .unitsPerHour)
+
+            podCommManager.sendProgram(programType: program, beepOption: nil) { (result) in
+                switch(result) {
+                case .success(let podStatus):
+                    self.state.unfinalizedTempBasal = UnfinalizedDose(tempBasalRate: enactRate, startTime: startDate, duration: duration, scheduledCertainty: .certain)
+                    self.updateStateFromPodStatus(status: podStatus)
+                    completion(.success(dose))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        } catch let error {
+            completion(.failure(error))
+        }
     }
 
     public func setMustProvideBLEHeartbeat(_ mustProvideBLEHeartbeat: Bool) {

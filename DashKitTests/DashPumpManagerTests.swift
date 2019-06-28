@@ -78,13 +78,16 @@ class DashPumpManagerTests: XCTestCase {
                 XCTFail("enactBolus failed with error: \(error)")
             case .success(let dose):
                 XCTAssertEqual(startDate, dose.startDate)
+                XCTAssertEqual(DoseType.bolus, dose.type)
+                XCTAssertEqual(DoseUnit.units, dose.unit)
+                XCTAssertEqual(1.0, dose.units)
                 XCTAssertEqual(100, self.podCommManager.lastBolusVolume)
             }
         }
         waitForExpectations(timeout: 3)
 
         guard case .inProgress(let dose) = pumpManager.status.bolusState else {
-            XCTFail("Expected no bolus in progress")
+            XCTFail("Expected bolus in progress")
             return
         }
 
@@ -137,6 +140,61 @@ class DashPumpManagerTests: XCTestCase {
             return
         }
     }
+
+    func testSuccessfulTempBasal() {
+        XCTAssertEqual(pumpManager.hasActivePod, true)
+
+        let tempBasalCallbackExpectation = expectation(description: "temp basal callbacks")
+
+        stateUpdateExpectation = expectation(description: "pod state updates")
+
+        pumpManagerDelegateStateUpdateExpectation = expectation(description: "pumpmanager delegate state updates")
+
+        // Set a new reservoir value to make sure the result of the set program is used (5U)
+        podCommManager.podStatus.reservoirUnitsRemaining = 500
+
+        pumpManager.enactTempBasal(unitsPerHour: 1, for: .minutes(30)) { (result) in
+            tempBasalCallbackExpectation.fulfill()
+            switch result {
+            case .failure(let error):
+                XCTFail("enactTempBasal failed with error: \(error)")
+            case .success(let dose):
+                XCTAssertEqual(DoseType.tempBasal, dose.type)
+                XCTAssertEqual(DoseUnit.unitsPerHour, dose.unit)
+                XCTAssertEqual(1.0, dose.unitsPerHour)
+            }
+        }
+        waitForExpectations(timeout: 3)
+
+        XCTAssert(!stateUpdates.isEmpty)
+        let lastState = stateUpdates.last!
+        XCTAssertNil(lastState.bolusTransition)
+
+        switch lastState.reservoirLevel {
+        case .some(.valid(let value)):
+            XCTAssertEqual(5.0, value, accuracy: 0.01)
+        default:
+            XCTFail("Expected reservoir value")
+        }
+    }
+
+    func testFailedTempBasal() {
+        XCTAssertEqual(pumpManager.hasActivePod, true)
+
+        let tempBasalCallbackExpectation = expectation(description: "temp basal callbacks")
+
+        podCommManager.sendProgramFailureError = .podNotAvailable
+
+        pumpManager.enactTempBasal(unitsPerHour: 1, for: .minutes(30)) { (result) in
+            tempBasalCallbackExpectation.fulfill()
+            guard case .failure(PodCommError.podNotAvailable) = result else {
+                XCTFail("Expected podNotAvailable error")
+                return
+            }
+        }
+        waitForExpectations(timeout: 3)
+    }
+
 }
 
 extension DashPumpManagerTests: PodStatusObserver {
