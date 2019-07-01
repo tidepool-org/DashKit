@@ -23,8 +23,13 @@ extension DashPumpManager: PumpManagerUI {
     }
 
     public func settingsViewController() -> (UIViewController & CompletionNotifying) {
-        let settings = DashSettingsViewController.instantiateFromStoryboard(pumpManager: self)
-        let nav = SettingsNavigationViewController(rootViewController: settings)
+        let rootViewController: UIViewController
+        if hasActivePod {
+            rootViewController = DashSettingsViewController.instantiateFromStoryboard(pumpManager: self)
+        } else {
+            rootViewController = NoActivePodViewController.instantiateFromStoryboard(pumpManager: self)
+        }
+        let nav = SettingsNavigationViewController(rootViewController: rootViewController)
         return nav
     }
 

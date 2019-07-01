@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -854,15 +855,97 @@
             </objects>
             <point key="canvasLocation" x="1351" y="275"/>
         </scene>
+        <!--Pod Replacement Navigation Controller-->
+        <scene sceneID="Kvr-rq-04X">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="OCd-qq-tgE" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <navigationController storyboardIdentifier="DashSettingsNoPod" id="BiB-y7-lPV" customClass="PodReplacementNavigationController" customModule="DashKitUI" customModuleProvider="target" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="TTK-QF-P6Y">
+                        <rect key="frame" x="0.0" y="44" width="414" height="96"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="Fzv-E3-GOf" kind="relationship" relationship="rootViewController" id="x4m-5t-2Ht"/>
+                    </connections>
+                </navigationController>
+            </objects>
+            <point key="canvasLocation" x="1397" y="-749"/>
+        </scene>
+        <!--No Active Pod-->
+        <scene sceneID="j6M-bT-uvv">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="jU4-z7-ij5" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController storyboardIdentifier="NoActivePod" id="Fzv-E3-GOf" customClass="NoActivePodViewController" customModule="DashKitUI" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Klg-qS-ubE">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="NoPod" translatesAutoresizingMaskIntoConstraints="NO" id="kFa-TE-BYa">
+                                <rect key="frame" x="49" y="181" width="320" height="206"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="206" id="qpt-yL-EOd"/>
+                                </constraints>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gmw-lO-KJ9" customClass="SetupButton">
+                                <rect key="frame" x="47" y="801" width="320" height="41"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="41" id="CLy-q2-UDB"/>
+                                </constraints>
+                                <state key="normal" title="Stop using Omnipod with Loop">
+                                    <color key="titleColor" name="Delete"/>
+                                </state>
+                                <connections>
+                                    <action selector="deletePumpManagerButtonPressed:" destination="Fzv-E3-GOf" eventType="touchUpInside" id="zHv-nV-DXU"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sgk-V9-eog">
+                                <rect key="frame" x="192" y="801" width="30" height="30"/>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zsg-su-6eB" customClass="SetupButton" customModule="LoopKitUI">
+                                <rect key="frame" x="47" y="752" width="320" height="41"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="41" id="iMi-7l-XCQ"/>
+                                </constraints>
+                                <state key="normal" title="Set up new Pod"/>
+                                <connections>
+                                    <action selector="newPodButtonPressed:" destination="Fzv-E3-GOf" eventType="touchUpInside" id="Oq5-ub-K5j"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="Gmw-lO-KJ9" firstAttribute="top" secondItem="Zsg-su-6eB" secondAttribute="bottom" constant="8" symbolic="YES" id="608-t2-x8H"/>
+                            <constraint firstItem="Gmw-lO-KJ9" firstAttribute="bottom" secondItem="umX-wZ-N5q" secondAttribute="bottom" constant="-20" id="Eym-on-hkI"/>
+                            <constraint firstItem="umX-wZ-N5q" firstAttribute="trailing" secondItem="kFa-TE-BYa" secondAttribute="trailing" constant="45" id="H1e-q8-xYs"/>
+                            <constraint firstItem="Zsg-su-6eB" firstAttribute="centerX" secondItem="sgk-V9-eog" secondAttribute="centerX" id="M3X-7o-vZT"/>
+                            <constraint firstItem="kFa-TE-BYa" firstAttribute="leading" secondItem="umX-wZ-N5q" secondAttribute="leading" constant="49" id="XRA-cm-Ekq"/>
+                            <constraint firstItem="kFa-TE-BYa" firstAttribute="top" secondItem="umX-wZ-N5q" secondAttribute="top" constant="41" id="alU-4B-NCH"/>
+                            <constraint firstItem="Zsg-su-6eB" firstAttribute="trailing" secondItem="Gmw-lO-KJ9" secondAttribute="trailing" id="eOK-LS-s3Z"/>
+                            <constraint firstItem="Zsg-su-6eB" firstAttribute="leading" secondItem="Gmw-lO-KJ9" secondAttribute="leading" id="pdH-rE-cDx"/>
+                            <constraint firstItem="umX-wZ-N5q" firstAttribute="bottom" secondItem="sgk-V9-eog" secondAttribute="bottom" constant="31" id="vws-ae-1G3"/>
+                            <constraint firstItem="Zsg-su-6eB" firstAttribute="centerX" secondItem="Klg-qS-ubE" secondAttribute="centerX" id="xiz-I5-OmQ"/>
+                            <constraint firstItem="Zsg-su-6eB" firstAttribute="leading" secondItem="umX-wZ-N5q" secondAttribute="leading" constant="47" id="zHm-zH-Z9Z"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="umX-wZ-N5q"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="No Active Pod" id="mgh-za-OmY"/>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="2211.594202898551" y="-749.33035714285711"/>
+        </scene>
     </scenes>
     <resources>
+        <image name="NoPod" width="227" height="129"/>
         <image name="Pod" width="184.5" height="106.5"/>
         <image name="Pod-FinishActivation" width="612" height="792"/>
         <image name="Pod-StartActivation" width="612" height="792"/>
+        <namedColor name="Delete">
+            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="leR-2Z-BRM"/>
         <segue reference="qU3-zh-wUk"/>
-        <segue reference="NVH-GB-bch"/>
+        <segue reference="5RZ-8F-2rM"/>
     </inferredMetricsTieBreakers>
 </document>

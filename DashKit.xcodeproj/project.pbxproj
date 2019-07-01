@@ -33,6 +33,7 @@
 		C12AD2E622C1742E00DF43EF /* PodSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C12AD2E522C1742E00DF43EF /* PodSDK.framework */; };
 		C12AD2E722C174D100DF43EF /* INSSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C12AD2E322C1741E00DF43EF /* INSSDK.framework */; };
 		C12C9C83229EDB7B00FF7632 /* InsulinStatusTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12C9C82229EDB7B00FF7632 /* InsulinStatusTableViewCell.swift */; };
+		C14D46F222CA85C000656FE0 /* NoActivePodViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14D46F122CA85C000656FE0 /* NoActivePodViewController.swift */; };
 		C1542418228085BF006754B3 /* PodSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1542417228085BF006754B3 /* PodSDK.framework */; };
 		C154241A22808790006754B3 /* PodSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1542417228085BF006754B3 /* PodSDK.framework */; };
 		C154242F2280BFF6006754B3 /* ActivationFlowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C154242E2280BFF6006754B3 /* ActivationFlowViewController.swift */; };
@@ -119,6 +120,7 @@
 		C12AD2E322C1741E00DF43EF /* INSSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = INSSDK.framework; path = "dash-sdk-ios/frameworks/INSSDK.framework"; sourceTree = "<group>"; };
 		C12AD2E522C1742E00DF43EF /* PodSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PodSDK.framework; path = "dash-sdk-ios/frameworks/PodSDK.framework"; sourceTree = "<group>"; };
 		C12C9C82229EDB7B00FF7632 /* InsulinStatusTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsulinStatusTableViewCell.swift; sourceTree = "<group>"; };
+		C14D46F122CA85C000656FE0 /* NoActivePodViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoActivePodViewController.swift; sourceTree = "<group>"; };
 		C1542417228085BF006754B3 /* PodSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PodSDK.framework; path = "dash-sdk-ios/PodSDK.framework"; sourceTree = "<group>"; };
 		C154242E2280BFF6006754B3 /* ActivationFlowViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivationFlowViewController.swift; sourceTree = "<group>"; };
 		C15424302280C575006754B3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -249,6 +251,7 @@
 				C1941147228DA42C00E886DD /* InsertCannulaSetupViewController.swift */,
 				C194114D228DBEC000E886DD /* PodSetupCompleteViewController.swift */,
 				C1941154228DD32A00E886DD /* PodReplacementNavigationController.swift */,
+				C14D46F122CA85C000656FE0 /* NoActivePodViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -507,6 +510,7 @@
 				C154242F2280BFF6006754B3 /* ActivationFlowViewController.swift in Sources */,
 				C1ACF43422A03F0500F7DDB4 /* PodLifeHUDView.swift in Sources */,
 				C194114622861E9100E886DD /* UIColor.swift in Sources */,
+				C14D46F222CA85C000656FE0 /* NoActivePodViewController.swift in Sources */,
 				C1941155228DD32A00E886DD /* PodReplacementNavigationController.swift in Sources */,
 				C12C9C83229EDB7B00FF7632 /* InsulinStatusTableViewCell.swift in Sources */,
 				C107D175226A1C7800D63775 /* DashHUDProvider.swift in Sources */,
