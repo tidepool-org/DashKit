@@ -38,7 +38,7 @@ class ActivationFlowViewController: UIViewController {
     @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var activationButton: UIButton!
 
-    var pumpManager: DashPumpManager?
+    var pumpManager: DashPumpManager!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,24 +56,22 @@ class ActivationFlowViewController: UIViewController {
     }
 
     func deactivatePod(){
-        if let pumpManager = pumpManager {
-            self.showSpinner(onView: self.view)
-            pumpManager.deactivatePod { (result) in
-                switch(result) {
-                case .failure(let pdmError):
-                    self.presentOkDialog(title: "",
-                                         message: "Deactivate Pod error: \(pdmError). Do you want to discard Pod?",
-                        okButtonHandler: {_ in
-                            self.discardPod()
-                            self.removeSpinner()
-                    })
-                case .success(let status):
-                    self.presentOkDialog(title: "",
-                                         message: "Pod deactivated with \(String(describing: status.podState))",
-                        okButtonHandler: {_ in
-                            self.removeSpinner()
-                    })
-                }
+        self.showSpinner(onView: self.view)
+        pumpManager.deactivatePod { (result) in
+            switch(result) {
+            case .failure(let pdmError):
+                self.presentOkDialog(title: "",
+                                     message: "Deactivate Pod error: \(pdmError). Do you want to discard Pod?",
+                    okButtonHandler: {_ in
+                        self.discardPod()
+                        self.removeSpinner()
+                })
+            case .success(let status):
+                self.presentOkDialog(title: "",
+                                     message: "Pod deactivated with \(String(describing: status.podState))",
+                    okButtonHandler: {_ in
+                        self.removeSpinner()
+                })
             }
         }
     }
@@ -83,54 +81,52 @@ class ActivationFlowViewController: UIViewController {
         continueButton.isHidden = true
         switch(sender.tag) {
         case 0:
-            PodCommManager.shared.startPodActivation(lowReservoirAlert: try! LowReservoirAlert(reservoirVolumeBelow: 1000),
-                                                     podExpirationAlert: try! PodExpirationAlert(intervalBeforeExpiration: 4 * 60 * 60)) { (activationStatus) in
-                                                        switch(activationStatus) {
-                                                        case .error(let pdmError):
-                                                            self.eventLogTextView.text = (self.eventLogTextView.text ?? "").appending("\nActivation Error: \(String(describing: pdmError.errorDescription))")
-                                                            self.errorOnActivation(error: pdmError)
+            pumpManager.startPodActivation(lowReservoirAlert: try! LowReservoirAlert(reservoirVolumeBelow: 1000),
+                                           podExpirationAlert: try! PodExpirationAlert(intervalBeforeExpiration: 4 * 60 * 60)) { (activationStatus) in
+                                            switch(activationStatus) {
+                                            case .error(let pdmError):
+                                                self.eventLogTextView.text = (self.eventLogTextView.text ?? "").appending("\nActivation Error: \(String(describing: pdmError.errorDescription))")
+                                                self.errorOnActivation(error: pdmError)
 
-                                                        case .event(let event):
-                                                            switch(event) {
-                                                            case .podStatus(let status):
-                                                                self.eventLogTextView.text = (self.eventLogTextView.text ?? "").appending("\nPod status: \(String(describing: status.podState))")
+                                            case .event(let event):
+                                                switch(event) {
+                                                case .podStatus(let status):
+                                                    self.eventLogTextView.text = (self.eventLogTextView.text ?? "").appending("\nPod status: \(String(describing: status.podState))")
 
-                                                            default:
-                                                                self.eventLogTextView.text = (self.eventLogTextView.text ?? "").appending("\nEvent: \(event.description)")
-                                                                if(event == .step1Completed) {
-                                                                    self.continueButton.isHidden = false
-                                                                    sender.tag = 1
-                                                                }
-                                                            }
-                                                        }
+                                                default:
+                                                    self.eventLogTextView.text = (self.eventLogTextView.text ?? "").appending("\nEvent: \(event.description)")
+                                                    if(event == .step1Completed) {
+                                                        self.continueButton.isHidden = false
+                                                        sender.tag = 1
+                                                    }
+                                                }
+                                            }
             }
 
         case 1:
-            if let pumpManager = pumpManager {
-                let basalProgram = pumpManager.state.basalProgram
-                let autoOffAlert = try! AutoOffAlert.init(enable: true, interval: 4 * 60 * 60)
-                PodCommManager.shared.finishPodActivation(basalProgram: basalProgram, autoOffAlert: autoOffAlert) { (activationStatus) in
-                    switch(activationStatus) {
-                    case .error(let error):
-                        self.eventLogTextView.text = (self.eventLogTextView.text ?? "").appending("\nActivation Error: \(error)")
-                        self.errorOnActivation(error: error)
+            let basalProgram = pumpManager.state.basalProgram
+            let autoOffAlert = try! AutoOffAlert.init(enable: true, interval: 4 * 60 * 60)
+            pumpManager.finishPodActivation(basalProgram: basalProgram, autoOffAlert: autoOffAlert) { (activationStatus) in
+                switch(activationStatus) {
+                case .error(let error):
+                    self.eventLogTextView.text = (self.eventLogTextView.text ?? "").appending("\nActivation Error: \(error)")
+                    self.errorOnActivation(error: error)
 
-                    case .event(let event):
-                        switch(event) {
-                        case .podStatus(let status):
-                            self.eventLogTextView.text = (self.eventLogTextView.text ?? "").appending("\nPod status: \(String(describing: status.podState))")
+                case .event(let event):
+                    switch(event) {
+                    case .podStatus(let status):
+                        self.eventLogTextView.text = (self.eventLogTextView.text ?? "").appending("\nPod status: \(String(describing: status.podState))")
 
-                        default:
-                            self.eventLogTextView.text = (self.eventLogTextView.text ?? "").appending("\nEvent: \(event.description)")
-                            if(event == .step2Completed) {
-                                self.presentOkDialog(title: "",
-                                                     message: "Pod Activation completed!",
-                                                     okButtonHandler: {_ in
-                                                        if let tabViewController = self.storyboard?.instantiateViewController(withIdentifier: "TabBarController") as? UITabBarController {
-                                                            self.present(tabViewController, animated: true, completion: nil)
-                                                        }
-                                })
-                            }
+                    default:
+                        self.eventLogTextView.text = (self.eventLogTextView.text ?? "").appending("\nEvent: \(event.description)")
+                        if(event == .step2Completed) {
+                            self.presentOkDialog(title: "",
+                                                 message: "Pod Activation completed!",
+                                                 okButtonHandler: {_ in
+                                                    if let tabViewController = self.storyboard?.instantiateViewController(withIdentifier: "TabBarController") as? UITabBarController {
+                                                        self.present(tabViewController, animated: true, completion: nil)
+                                                    }
+                            })
                         }
                     }
                 }
@@ -142,7 +138,7 @@ class ActivationFlowViewController: UIViewController {
     }
 
     func discardPod() {
-        PodCommManager.shared.discardPod { (result) in
+        pumpManager.discardPod { (result) in
             self.eventLogTextView.text = (self.eventLogTextView.text ?? "").appending("\nDiscarding Pod")
             switch(result) {
             case .failure(let pdmError):

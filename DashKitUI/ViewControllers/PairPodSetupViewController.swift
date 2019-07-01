@@ -164,7 +164,7 @@ class PairPodSetupViewController: SetupTableViewController {
     }
 
     override func cancelButtonPressed(_ sender: Any) {
-        switch PodCommManager.shared.podCommState {
+        switch pumpManager.podCommState {
         case .noPod:
             super.cancelButtonPressed(sender)
         default:
@@ -186,12 +186,9 @@ class PairPodSetupViewController: SetupTableViewController {
             return
         }
 
-        print("pre-pair pod id: \(pumpManager.podId)")
-        print("pre-pair pod state: \(pumpManager.podCommState)")
-
         var expectingAnotherEvent = false
 
-        PodCommManager.shared.startPodActivation(lowReservoirAlert: try! LowReservoirAlert(reservoirVolumeBelow: 1000),
+        pumpManager.startPodActivation(lowReservoirAlert: try! LowReservoirAlert(reservoirVolumeBelow: 1000),
                                                  podExpirationAlert: try! PodExpirationAlert(intervalBeforeExpiration: 4 * 60 * 60))
         { (activationStatus) in
             switch(activationStatus) {

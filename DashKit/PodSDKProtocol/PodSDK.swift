@@ -50,11 +50,8 @@ extension PodCommManager: PodCommManagerProtocol {
     public func silenceAlerts(alert: PodAlerts, completion: @escaping (PodCommResult<PodStatusProtocol>) -> ()) {
         silenceAlerts(alert: alert, completion: mapPodStatus(completion))
     }
-
-    public func retryUnacknowledgedCommand(completion: @escaping (PodCommResult<PodStatusProtocol>) -> ()) {
-        retryUnacknowledgedCommand(completion: mapPodStatus(completion))
-    }
 }
 
-extension PodStatus: PodStatusProtocol {}
+extension PodStatus: PodStatusProtocol {
+}
 

@@ -159,7 +159,7 @@ class InsertCannulaSetupViewController: SetupTableViewController {
     func insertCannula() {
 
         // Shouldn't normally happen.  Testing
-        guard PodCommManager.shared.podCommState != .active else {
+        guard pumpManager.podCommState != .active else {
             self.continueState = .ready
             return
         }

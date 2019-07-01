@@ -40,7 +40,7 @@ class ReplacePodViewController: SetupTableViewController {
 
     var pumpManager: DashPumpManager! {
         didSet {
-            let podState = PodCommManager.shared.podCommState
+            let podState = pumpManager.podCommState
             switch podState {
             case .alarm:
                 self.replacementReason = .fault

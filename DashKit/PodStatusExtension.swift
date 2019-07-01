@@ -51,9 +51,6 @@ public extension InternalErrorCode {
         case .incompatibleProductId:
             return "Incompatible product Id"
 
-        case .unexpectedResponse:
-            return "Unexpected response"
-
         case .unexpectedMessageSequence:
             return "Unexpected message sequence"
 

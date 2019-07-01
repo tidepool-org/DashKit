@@ -245,7 +245,10 @@ public class DashPumpManager: PumpManager {
 
     public func startPodActivation(lowReservoirAlert: LowReservoirAlert?, podExpirationAlert: PodExpirationAlert?, eventListener: @escaping (ActivationStatus<ActivationStep1Event>) -> ())
     {
+
+        print("Going to startPodActivation. Registration status = \(RegistrationManager.shared.isRegistered())")
         return podCommManager.startPodActivation(lowReservoirAlert: lowReservoirAlert, podExpirationAlert: podExpirationAlert) { (activationStatus) in
+            print("ActivationStatus: \(activationStatus)")
             if case .event(let event) = activationStatus, case .podStatus(let status) = event {
                 self.updateStateFromPodStatus(status: status)
             }
@@ -422,10 +425,38 @@ public class DashPumpManager: PumpManager {
     }
 
     public func cancelBolus(completion: @escaping (PumpManagerResult<DoseEntry?>) -> Void) {
-        // TODO
+        podCommManager.stopProgram(programType: .bolus) { (result) in
+            switch result {
+            case .success(let status):
+                self.state.unfinalizedBolus?.cancel(at: Date())
+                self.updateStateFromPodStatus(status: status)
+                completion(.success(self.state.unfinalizedBolus?.doseEntry()))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+
+    public func cancelTempBasal(completion: @escaping (PumpManagerResult<DoseEntry>) -> Void) {
+        podCommManager.stopProgram(programType: .tempBasal) { (result) in
+            switch result {
+            case .success(let status):
+                self.state.unfinalizedTempBasal?.cancel(at: Date())
+                self.updateStateFromPodStatus(status: status)
+
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
     }
 
     public func enactTempBasal(unitsPerHour: Double, for duration: TimeInterval, completion: @escaping (PumpManagerResult<DoseEntry>) -> Void) {
+
+        guard duration > 0 else {
+            cancelTempBasal(completion: completion)
+            return
+        }
+
         do {
             // Round to nearest supported volume
             let enactRate = roundToSupportedBasalRate(unitsPerHour: unitsPerHour)

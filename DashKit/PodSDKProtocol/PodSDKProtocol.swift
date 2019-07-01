@@ -12,16 +12,16 @@ import ObjectMapper
 
 public protocol PodStatusProtocol {
     ///Current pod state
-    var podState: PodSDK.PodState! { get }
+    var podState: PodSDK.PodState { get }
 
     ///Current program status
-    var programStatus: PodSDK.ProgramStatus! { get }
+    var programStatus: PodSDK.ProgramStatus { get }
 
     ///Current active alerts
-    var activeAlerts: PodSDK.PodAlerts! { get }
+    var activeAlerts: PodSDK.PodAlerts  { get }
 
     ///Whether occlusion alert active
-    var isOcclusionAlertActive: Bool! { get }
+    var isOcclusionAlertActive: Bool { get }
 
     /**
      If bolus is running, the number of bolus units(1U = 100) remaining.
@@ -37,9 +37,6 @@ public protocol PodStatusProtocol {
      The number of units(1U = 100) remaining in reservoir.
      */
     var reservoirUnitsRemaining: Int { get }
-
-    ///Time elapsed since activation
-    var timeElapsedSinceActivation: TimeInterval { get }
 
     ///Time when Pod is activated
     var activationTime: Date { get }
@@ -215,19 +212,6 @@ public protocol PodCommManagerProtocol {
      - result: a `PodCommResult.success(...)` if success or `PodCommResult.failure(...)` in case of an error
      */
     func silenceAlerts(alert: PodSDK.PodAlerts, completion: @escaping (PodSDK.PodCommResult<PodStatusProtocol>) -> ())
-
-    /**
-     Resends unacknowledged command. The previous command has been sent without acknowledgement.
-
-     - parameters:
-     - completion: a closure to be called when `PodCommResult` is issued by the comm. layer
-     - result: a `PodCommResult.success(...)` if success or `PodCommResult.failure(...)` in case of an error
-
-     - Note: App should either notify user to move closer to the Pod, and then retry the same command until success,
-     or discard Pod
-     or allow user to ignore the command by calling `clearUnacknowledgedCommand` function.
-     */
-    func retryUnacknowledgedCommand(completion: @escaping (PodSDK.PodCommResult<PodStatusProtocol>) -> ())
 
     /**
      Clears an unacknowledged command. The previous command that has been sent without acknowledgement will be discarded.

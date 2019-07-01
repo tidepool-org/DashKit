@@ -60,7 +60,7 @@ class RegistrationViewController: UIViewController {
         RegistrationManager.shared.startRegistration { (status) in
             switch(status) {
             case .registered, .alreadyRegistered:
-                self.presentOkDialog(title: "Error", message: "Phone already registered.")
+                self.performSegue(withIdentifier: "Continue", sender: nil)
             default:
                 self.presentOkDialog(title: "Error", message: "Phone registration error \(status)")
             }

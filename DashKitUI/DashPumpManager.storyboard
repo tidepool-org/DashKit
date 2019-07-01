@@ -14,8 +14,8 @@
         <scene sceneID="rAY-07-ofb">
             <objects>
                 <navigationController storyboardIdentifier="SetupWithRegistration" id="Zjn-qM-vVY" customClass="DashPumpManagerSetupViewController" customModule="DashKitUI" customModuleProvider="target" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="5Xe-i2-KAi">
-                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="5Xe-i2-KAi">
+                        <rect key="frame" x="0.0" y="44" width="414" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -152,8 +152,8 @@
         <scene sceneID="58G-sr-aZj">
             <objects>
                 <navigationController storyboardIdentifier="SetupWithoutRegistration" id="6jv-Xq-Ufu" customClass="DashPumpManagerSetupViewController" customModule="DashKitUI" customModuleProvider="target" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="jab-fb-4Qt">
-                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="jab-fb-4Qt">
+                        <rect key="frame" x="0.0" y="44" width="414" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -286,8 +286,8 @@
         <scene sceneID="NT7-UD-WAW">
             <objects>
                 <navigationController storyboardIdentifier="PodReplacementFlow" id="wdy-CX-lrz" customClass="PodReplacementNavigationController" customModule="DashKitUI" customModuleProvider="target" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="A5b-Ax-OVz">
-                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="A5b-Ax-OVz">
+                        <rect key="frame" x="0.0" y="44" width="414" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -416,8 +416,8 @@
         <scene sceneID="ZHr-Ml-kMY">
             <objects>
                 <navigationController storyboardIdentifier="DashSettings" id="WzZ-VB-Txd" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="YoN-Cf-vG3">
-                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="YoN-Cf-vG3">
+                        <rect key="frame" x="0.0" y="44" width="414" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -842,8 +842,8 @@
         <scene sceneID="u67-1k-beT">
             <objects>
                 <navigationController storyboardIdentifier="NewPodFlow" id="uEg-lg-ARU" customClass="PodReplacementNavigationController" customModule="DashKitUI" customModuleProvider="target" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="CZc-EM-yir">
-                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="CZc-EM-yir">
+                        <rect key="frame" x="0.0" y="44" width="414" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -861,7 +861,7 @@
         <image name="Pod-StartActivation" width="612" height="792"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="zNF-kE-9oQ"/>
+        <segue reference="leR-2Z-BRM"/>
         <segue reference="qU3-zh-wUk"/>
         <segue reference="NVH-GB-bch"/>
     </inferredMetricsTieBreakers>

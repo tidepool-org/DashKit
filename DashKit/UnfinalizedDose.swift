@@ -239,3 +239,9 @@ extension DoseEntry {
         }
     }
 }
+
+extension UnfinalizedDose {
+    func doseEntry() -> DoseEntry {
+        return DoseEntry(self)
+    }
+}
