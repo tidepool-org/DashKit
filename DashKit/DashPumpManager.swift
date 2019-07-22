@@ -498,6 +498,8 @@ public class DashPumpManager: PumpManager {
     public init(state: DashPumpManagerState, podCommManager: PodCommManagerProtocol = PodCommManager.shared) {
         self.lockedState = Locked(state)
         self.podCommManager = podCommManager
+
+        podCommManager.enableAutoConnection(launchOptions: [:])
     }
 
     public convenience required init?(rawState: PumpManager.RawStateValue) {

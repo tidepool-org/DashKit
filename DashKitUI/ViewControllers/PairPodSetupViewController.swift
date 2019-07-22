@@ -121,19 +121,15 @@ class PairPodSetupViewController: SetupTableViewController {
                     errorText = localizedText
                 }
 
-                switch error {
-                case .podIsInAlarm:
-                    continueState = .fault
-                case .activationError(let activationError):
-                    switch activationError {
-                    case .podIsLumpOfCoal1Hour, .podIsLumpOfCoal2Hours:
-                        continueState = .fault
-                    default:
-                        continueState = .initial
-                    }
-                default:
-                    continueState = .initial
+                if case .podNotAvailable = error {
+                    continueState = .initial // Always retry
+                } else if case .activationError(.moreThanOnePodAvailable) = error {
+                    continueState = .initial // Always retry
+                } else {
+                    // On first error: retry. On second, fault (discard pod)
+                    continueState = oldValue == nil ? State.initial : State.fault
                 }
+
             } else if lastError != nil {
                 continueState = .initial
             }
@@ -186,14 +182,14 @@ class PairPodSetupViewController: SetupTableViewController {
             return
         }
 
-        var expectingAnotherEvent = false
+        var timeoutHandler: DispatchWorkItem?
 
         pumpManager.startPodActivation(lowReservoirAlert: try! LowReservoirAlert(reservoirVolumeBelow: 1000),
                                                  podExpirationAlert: try! PodExpirationAlert(intervalBeforeExpiration: 4 * 60 * 60))
         { (activationStatus) in
             switch(activationStatus) {
             case .error(let error):
-                expectingAnotherEvent = false
+                timeoutHandler?.cancel()
                 self.lastError = error
             case .event(let event):
                 switch(event) {
@@ -202,15 +198,11 @@ class PairPodSetupViewController: SetupTableViewController {
                 case .primingPod:
                     let finishTime = TimeInterval(seconds: 35)
                     self.continueState = .priming(finishTime: finishTime)
-                    expectingAnotherEvent = true
-                    DispatchQueue.main.asyncAfter(deadline: .now() + finishTime + TimeInterval(seconds: 10)) {
-                        // Haven't finished priming and 10s have gone past since we expected to finish.
-                        if expectingAnotherEvent {
-                            self.lastError = PodCommError.failToConnect
-                        }
+                    timeoutHandler = DispatchWorkItem {
+                        self.lastError = PodCommError.failToConnect
                     }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + finishTime + TimeInterval(seconds: 10), execute: timeoutHandler!)
                 case .step1Completed:
-                    expectingAnotherEvent = false
                     self.continueState = .ready
                 default:
                     print("Ignoring event: \(event)")

@@ -36,7 +36,6 @@
 		C14D46F222CA85C000656FE0 /* NoActivePodViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14D46F122CA85C000656FE0 /* NoActivePodViewController.swift */; };
 		C1542418228085BF006754B3 /* PodSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1542417228085BF006754B3 /* PodSDK.framework */; };
 		C154241A22808790006754B3 /* PodSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1542417228085BF006754B3 /* PodSDK.framework */; };
-		C154242F2280BFF6006754B3 /* ActivationFlowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C154242E2280BFF6006754B3 /* ActivationFlowViewController.swift */; };
 		C15424312280C575006754B3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C15424302280C575006754B3 /* Assets.xcassets */; };
 		C15424332280C75E006754B3 /* PodStatusExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C15424322280C75D006754B3 /* PodStatusExtension.swift */; };
 		C194113D2285D30A00E886DD /* PairPodSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C194113C2285D30A00E886DD /* PairPodSetupViewController.swift */; };
@@ -122,7 +121,6 @@
 		C12C9C82229EDB7B00FF7632 /* InsulinStatusTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsulinStatusTableViewCell.swift; sourceTree = "<group>"; };
 		C14D46F122CA85C000656FE0 /* NoActivePodViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoActivePodViewController.swift; sourceTree = "<group>"; };
 		C1542417228085BF006754B3 /* PodSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PodSDK.framework; path = "dash-sdk-ios/PodSDK.framework"; sourceTree = "<group>"; };
-		C154242E2280BFF6006754B3 /* ActivationFlowViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivationFlowViewController.swift; sourceTree = "<group>"; };
 		C15424302280C575006754B3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C15424322280C75D006754B3 /* PodStatusExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodStatusExtension.swift; sourceTree = "<group>"; };
 		C194113C2285D30A00E886DD /* PairPodSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairPodSetupViewController.swift; sourceTree = "<group>"; };
@@ -245,7 +243,6 @@
 				C107D169226A12B900D63775 /* RegistrationViewController.swift */,
 				C107D170226A1AD100D63775 /* PodSettingsSetupViewControllers.swift */,
 				C107D172226A1B6100D63775 /* DashSettingsViewController.swift */,
-				C154242E2280BFF6006754B3 /* ActivationFlowViewController.swift */,
 				C194113C2285D30A00E886DD /* PairPodSetupViewController.swift */,
 				C19411432286164E00E886DD /* ReplacePodViewController.swift */,
 				C1941147228DA42C00E886DD /* InsertCannulaSetupViewController.swift */,
@@ -507,7 +504,6 @@
 				C194113D2285D30A00E886DD /* PairPodSetupViewController.swift in Sources */,
 				C107D171226A1AD100D63775 /* PodSettingsSetupViewControllers.swift in Sources */,
 				C1941151228DBF2100E886DD /* ExpirationReminderDateTableViewCell.swift in Sources */,
-				C154242F2280BFF6006754B3 /* ActivationFlowViewController.swift in Sources */,
 				C1ACF43422A03F0500F7DDB4 /* PodLifeHUDView.swift in Sources */,
 				C194114622861E9100E886DD /* UIColor.swift in Sources */,
 				C14D46F222CA85C000656FE0 /* NoActivePodViewController.swift in Sources */,
