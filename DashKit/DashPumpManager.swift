@@ -310,9 +310,9 @@ public class DashPumpManager: PumpManager {
             }
         }
 
-        guard !dosesToStore.isEmpty else {
-            return
-        }
+//        guard !dosesToStore.isEmpty else {
+//            return
+//        }
 
         pumpDelegate.notify { (delegate) in
             delegate?.pumpManager(self, didReadPumpEvents: dosesToStore.map { NewPumpEvent($0) }, completion: { (error) in
@@ -339,16 +339,19 @@ public class DashPumpManager: PumpManager {
         guard !isPumpDataStale else {
             log.default("Fetching status because pumpData is too old")
             getPodStatus { (response) in
-                self.pumpDelegate.notify({ (delegate) in
-                    switch response {
-                    case .success:
-                        self.log.default("Recommending Loop")
+                switch response {
+                case .success:
+                    self.log.default("Recommending Loop")
+                    self.finalizeAndStoreDoses()
+                    self.pumpDelegate.notify({ (delegate) in
                         delegate?.pumpManagerRecommendsLoop(self)
-                    case .failure(let error):
-                        self.log.default("Not recommending Loop because pump data is stale: %@", String(describing: error))
+                    })
+                case .failure(let error):
+                    self.log.default("Not recommending Loop because pump data is stale: %@", String(describing: error))
+                    self.pumpDelegate.notify({ (delegate) in
                         delegate?.pumpManager(self, didError: PumpManagerError.communication(error))
-                    }
-                })
+                    })
+                }
             }
             return
         }
