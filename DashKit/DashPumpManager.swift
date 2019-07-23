@@ -440,15 +440,15 @@ public class DashPumpManager: PumpManager {
         }
     }
 
-    public func cancelTempBasal(completion: @escaping (PumpManagerResult<DoseEntry>) -> Void) {
+    public func cancelTempBasal(completion: @escaping (PodCommError?) -> Void) {
         podCommManager.stopProgram(programType: .tempBasal) { (result) in
             switch result {
             case .success(let status):
                 self.state.unfinalizedTempBasal?.cancel(at: Date())
                 self.updateStateFromPodStatus(status: status)
-
+                completion(nil)
             case .failure(let error):
-                completion(.failure(error))
+                completion(error)
             }
         }
     }
@@ -456,11 +456,27 @@ public class DashPumpManager: PumpManager {
     public func enactTempBasal(unitsPerHour: Double, for duration: TimeInterval, completion: @escaping (PumpManagerResult<DoseEntry>) -> Void) {
 
         guard duration > 0 else {
-            cancelTempBasal(completion: completion)
+            cancelTempBasal { (error) in
+                if let error = error {
+                    completion(.failure(error))
+                } else {
+                    let date = Date()
+                    completion(.success(DoseEntry(type: .tempBasal, startDate: date, endDate: date, value: 0, unit: .unitsPerHour)))
+                }
+            }
             return
         }
 
         do {
+            // Cancel any existing temp basal
+            if self.state.unfinalizedTempBasal?.finished == false {
+                let semaphore = DispatchSemaphore(value: 0)
+                cancelTempBasal { (dose) in
+                    semaphore.signal()
+                }
+                semaphore.wait()
+            }
+
             // Round to nearest supported volume
             let enactRate = roundToSupportedBasalRate(unitsPerHour: unitsPerHour)
 

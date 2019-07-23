@@ -62,14 +62,7 @@ internal class DashHUDProvider: NSObject, HUDProvider {
     }
 
     public func didTapOnHUDView(_ view: BaseHUDView) -> HUDTapAction? {
-        switch pumpManager.podCommState {
-        case .noPod:
-            return HUDTapAction.presentViewController(PodReplacementNavigationController.instantiateNewPodFlow(pumpManager))
-        case .alarm:
-            return HUDTapAction.presentViewController(PodReplacementNavigationController.instantiatePodReplacementFlow(pumpManager))
-        default:
-            return HUDTapAction.presentViewController(pumpManager.settingsViewController())
-        }
+        return HUDTapAction.presentViewController(pumpManager.settingsViewController())
     }
 
     func hudDidAppear() {

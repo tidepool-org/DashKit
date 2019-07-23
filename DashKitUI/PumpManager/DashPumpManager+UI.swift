@@ -23,14 +23,21 @@ extension DashPumpManager: PumpManagerUI {
     }
 
     public func settingsViewController() -> (UIViewController & CompletionNotifying) {
-        let rootViewController: UIViewController
-        if hasActivePod {
-            rootViewController = DashSettingsViewController.instantiateFromStoryboard(pumpManager: self)
-        } else {
-            rootViewController = NoActivePodViewController.instantiateFromStoryboard(pumpManager: self)
+        switch podCommState {
+        case .noPod:
+            return PodReplacementNavigationController.instantiateNewPodFlow(self)
+        case .alarm:
+            return PodReplacementNavigationController.instantiatePodReplacementFlow(self)
+        default:
+            let rootViewController: UIViewController
+            if hasActivePod {
+                rootViewController = DashSettingsViewController.instantiateFromStoryboard(pumpManager: self)
+            } else {
+                rootViewController = NoActivePodViewController.instantiateFromStoryboard(pumpManager: self)
+            }
+            let nav = SettingsNavigationViewController(rootViewController: rootViewController)
+            return nav
         }
-        let nav = SettingsNavigationViewController(rootViewController: rootViewController)
-        return nav
     }
 
     public var smallImage: UIImage? {
