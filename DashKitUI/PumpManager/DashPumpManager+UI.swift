@@ -15,7 +15,6 @@ public enum DashPumpManagerError: Error {
     case missingSettings
 }
 
-
 extension DashPumpManager: PumpManagerUI {
 
     static public func setupViewController() -> (UIViewController & PumpManagerSetupViewController & CompletionNotifying) {

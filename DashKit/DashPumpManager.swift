@@ -487,7 +487,7 @@ public class DashPumpManager: PumpManager {
 
             let dose = DoseEntry(type: .tempBasal, startDate: startDate, endDate: startDate.addingTimeInterval(duration), value: enactRate, unit: .unitsPerHour)
 
-            podCommManager.sendProgram(programType: program, beepOption: nil) { (result) in
+            podCommManager.sendProgram(programType: program, beepOption: .init(beepAtEnd: false)) { (result) in
                 switch(result) {
                 case .success(let podStatus):
                     self.state.unfinalizedTempBasal = UnfinalizedDose(tempBasalRate: enactRate, startTime: startDate, duration: duration, scheduledCertainty: .certain)
