@@ -12,16 +12,16 @@ import ObjectMapper
 
 public protocol PodStatusProtocol {
     ///Current pod state
-    var podState: PodSDK.PodState { get }
+    var podState: PodSDK.PodState! { get }
 
     ///Current program status
-    var programStatus: PodSDK.ProgramStatus { get }
+    var programStatus: PodSDK.ProgramStatus! { get }
 
     ///Current active alerts
-    var activeAlerts: PodSDK.PodAlerts  { get }
+    var activeAlerts: PodSDK.PodAlerts!  { get }
 
     ///Whether occlusion alert active
-    var isOcclusionAlertActive: Bool { get }
+    var isOcclusionAlertActive: Bool! { get }
 
     /**
      If bolus is running, the number of bolus units(1U = 100) remaining.

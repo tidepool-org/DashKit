@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		C107D10B22692A1700D63775 /* DashPumpManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D10A22692A1700D63775 /* DashPumpManager.swift */; };
-		C107D10E22692AE700D63775 /* LoopKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C107D10D22692AE700D63775 /* LoopKit.framework */; };
 		C107D11222692B7200D63775 /* Pod.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D11122692B7200D63775 /* Pod.swift */; };
 		C107D11522692BDE00D63775 /* TimeInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D11422692BDE00D63775 /* TimeInterval.swift */; };
 		C107D11722692D9D00D63775 /* LocalizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D11622692D9D00D63775 /* LocalizedString.swift */; };
@@ -38,6 +37,14 @@
 		C154241A22808790006754B3 /* PodSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1542417228085BF006754B3 /* PodSDK.framework */; };
 		C15424312280C575006754B3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C15424302280C575006754B3 /* Assets.xcassets */; };
 		C15424332280C75E006754B3 /* PodStatusExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C15424322280C75D006754B3 /* PodStatusExtension.swift */; };
+		C16DA83522E7C6B4008624C2 /* LoopKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C107D10D22692AE700D63775 /* LoopKit.framework */; };
+		C16DA83622E7C6F2008624C2 /* DashKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; };
+		C16DA83722E8C6F2008624C2 /* LoopKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C107D10D22692AE700D63775 /* LoopKit.framework */; };
+		C16DA83922E8D253008624C2 /* PodSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C12AD2E522C1742E00DF43EF /* PodSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C16DA83A22E8D253008624C2 /* INSSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C12AD2E322C1741E00DF43EF /* INSSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C16DA83B22E8D253008624C2 /* ObjectMapper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1D46D5F22C568F600978E59 /* ObjectMapper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C16DA83C22E8D253008624C2 /* RxSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1D46D5E22C568F600978E59 /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C16DA83D22E8D253008624C2 /* DashKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C194113D2285D30A00E886DD /* PairPodSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C194113C2285D30A00E886DD /* PairPodSetupViewController.swift */; };
 		C19411442286164E00E886DD /* ReplacePodViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19411432286164E00E886DD /* ReplacePodViewController.swift */; };
 		C194114622861E9100E886DD /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C194114522861E9100E886DD /* UIColor.swift */; };
@@ -46,6 +53,7 @@
 		C1941151228DBF2100E886DD /* ExpirationReminderDateTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1941150228DBF2100E886DD /* ExpirationReminderDateTableViewCell.swift */; };
 		C1941153228DBF8300E886DD /* NibLoadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1941152228DBF8300E886DD /* NibLoadable.swift */; };
 		C1941155228DD32A00E886DD /* PodReplacementNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1941154228DD32A00E886DD /* PodReplacementNavigationController.swift */; };
+		C19BB3F022E7C64A00EA5C2E /* DashKitPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19BB3EF22E7C64A00EA5C2E /* DashKitPlugin.swift */; };
 		C1ACF43222A03F0500F7DDB4 /* OmnipodReservoirView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ACF42E22A03F0400F7DDB4 /* OmnipodReservoirView.swift */; };
 		C1ACF43322A03F0500F7DDB4 /* OmnipodReservoirView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C1ACF42F22A03F0500F7DDB4 /* OmnipodReservoirView.xib */; };
 		C1ACF43422A03F0500F7DDB4 /* PodLifeHUDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ACF43022A03F0500F7DDB4 /* PodLifeHUDView.swift */; };
@@ -90,6 +98,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C16DA83822E8D208008624C2 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				C16DA83922E8D253008624C2 /* PodSDK.framework in Embed Frameworks */,
+				C16DA83A22E8D253008624C2 /* INSSDK.framework in Embed Frameworks */,
+				C16DA83B22E8D253008624C2 /* ObjectMapper.framework in Embed Frameworks */,
+				C16DA83C22E8D253008624C2 /* RxSwift.framework in Embed Frameworks */,
+				C16DA83D22E8D253008624C2 /* DashKit.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -108,7 +131,6 @@
 		C107D165226A0EED00D63775 /* DashPumpManager.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = DashPumpManager.storyboard; sourceTree = "<group>"; };
 		C107D169226A12B900D63775 /* RegistrationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationViewController.swift; sourceTree = "<group>"; };
 		C107D16C226A143A00D63775 /* UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
-		C107D16E226A14A100D63775 /* LoopKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LoopKit.framework; path = ../../Build/iOS/LoopKit.framework; sourceTree = "<group>"; };
 		C107D170226A1AD100D63775 /* PodSettingsSetupViewControllers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodSettingsSetupViewControllers.swift; sourceTree = "<group>"; };
 		C107D172226A1B6100D63775 /* DashSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashSettingsViewController.swift; sourceTree = "<group>"; };
 		C107D174226A1C7800D63775 /* DashHUDProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashHUDProvider.swift; sourceTree = "<group>"; };
@@ -131,6 +153,14 @@
 		C1941150228DBF2100E886DD /* ExpirationReminderDateTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpirationReminderDateTableViewCell.swift; sourceTree = "<group>"; };
 		C1941152228DBF8300E886DD /* NibLoadable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NibLoadable.swift; sourceTree = "<group>"; };
 		C1941154228DD32A00E886DD /* PodReplacementNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodReplacementNavigationController.swift; sourceTree = "<group>"; };
+		C19BB3D122E76DDF00EA5C2E /* DashKitBundle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DashKitBundle.h; sourceTree = "<group>"; };
+		C19BB3D222E76DDF00EA5C2E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C19BB3DB22E7769400EA5C2E /* DashKit.uiplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DashKit.uiplugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		C19BB3DD22E7769400EA5C2E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C19BB3E522E776AE00EA5C2E /* DashKit.deviceplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DashKit.deviceplugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		C19BB3E722E776AE00EA5C2E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C19BB3EE22E7C64900EA5C2E /* DashKitPlugin-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DashKitPlugin-Bridging-Header.h"; sourceTree = "<group>"; };
+		C19BB3EF22E7C64A00EA5C2E /* DashKitPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DashKitPlugin.swift; sourceTree = "<group>"; };
 		C1ACF42E22A03F0400F7DDB4 /* OmnipodReservoirView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OmnipodReservoirView.swift; sourceTree = "<group>"; };
 		C1ACF42F22A03F0500F7DDB4 /* OmnipodReservoirView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OmnipodReservoirView.xib; sourceTree = "<group>"; };
 		C1ACF43022A03F0500F7DDB4 /* PodLifeHUDView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PodLifeHUDView.swift; sourceTree = "<group>"; };
@@ -163,12 +193,28 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C19BB3D822E7769400EA5C2E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C19BB3E222E776AE00EA5C2E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C16DA83522E7C6B4008624C2 /* LoopKit.framework in Frameworks */,
+				C16DA83622E7C6F2008624C2 /* DashKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C1E753D6226928F700A0BC48 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C16DA83722E8C6F2008624C2 /* LoopKit.framework in Frameworks */,
 				C1542418228085BF006754B3 /* PodSDK.framework in Frameworks */,
-				C107D10E22692AE700D63775 /* LoopKit.framework in Frameworks */,
 				C12AD2E722C174D100DF43EF /* INSSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -191,7 +237,6 @@
 				C1D46D5F22C568F600978E59 /* ObjectMapper.framework */,
 				C1D46D5E22C568F600978E59 /* RxSwift.framework */,
 				C1542417228085BF006754B3 /* PodSDK.framework */,
-				C107D16E226A14A100D63775 /* LoopKit.framework */,
 				C107D10D22692AE700D63775 /* LoopKit.framework */,
 			);
 			name = Frameworks;
@@ -285,6 +330,33 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		C19BB3D022E76DDF00EA5C2E /* DashKitBundle */ = {
+			isa = PBXGroup;
+			children = (
+				C19BB3D122E76DDF00EA5C2E /* DashKitBundle.h */,
+				C19BB3D222E76DDF00EA5C2E /* Info.plist */,
+			);
+			path = DashKitBundle;
+			sourceTree = "<group>";
+		};
+		C19BB3DC22E7769400EA5C2E /* DashKitUIPlugin */ = {
+			isa = PBXGroup;
+			children = (
+				C19BB3DD22E7769400EA5C2E /* Info.plist */,
+			);
+			path = DashKitUIPlugin;
+			sourceTree = "<group>";
+		};
+		C19BB3E622E776AE00EA5C2E /* DashKitPlugin */ = {
+			isa = PBXGroup;
+			children = (
+				C19BB3EF22E7C64A00EA5C2E /* DashKitPlugin.swift */,
+				C19BB3E722E776AE00EA5C2E /* Info.plist */,
+				C19BB3EE22E7C64900EA5C2E /* DashKitPlugin-Bridging-Header.h */,
+			);
+			path = DashKitPlugin;
+			sourceTree = "<group>";
+		};
 		C1D68E2E2284848A00019CAE /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -302,6 +374,9 @@
 				C1E753DB226928F700A0BC48 /* DashKit */,
 				C1E753E6226928F700A0BC48 /* DashKitTests */,
 				C107D15422694B9C00D63775 /* DashKitUI */,
+				C19BB3D022E76DDF00EA5C2E /* DashKitBundle */,
+				C19BB3DC22E7769400EA5C2E /* DashKitUIPlugin */,
+				C19BB3E622E776AE00EA5C2E /* DashKitPlugin */,
 				C107D10C22692AE700D63775 /* Frameworks */,
 				C1E753DA226928F700A0BC48 /* Products */,
 			);
@@ -313,6 +388,8 @@
 				C1E753D9226928F700A0BC48 /* DashKit.framework */,
 				C1E753E2226928F700A0BC48 /* DashKitTests.xctest */,
 				C107D15322694B9C00D63775 /* DashKitUI.framework */,
+				C19BB3DB22E7769400EA5C2E /* DashKit.uiplugin */,
+				C19BB3E522E776AE00EA5C2E /* DashKit.deviceplugin */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -385,6 +462,41 @@
 			productReference = C107D15322694B9C00D63775 /* DashKitUI.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		C19BB3DA22E7769400EA5C2E /* DashKitUIPlugin */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C19BB3DE22E7769400EA5C2E /* Build configuration list for PBXNativeTarget "DashKitUIPlugin" */;
+			buildPhases = (
+				C19BB3D722E7769400EA5C2E /* Sources */,
+				C19BB3D822E7769400EA5C2E /* Frameworks */,
+				C19BB3D922E7769400EA5C2E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DashKitUIPlugin;
+			productName = DashKitUIPlugin;
+			productReference = C19BB3DB22E7769400EA5C2E /* DashKit.uiplugin */;
+			productType = "com.apple.product-type.bundle";
+		};
+		C19BB3E422E776AE00EA5C2E /* DashKitPlugin */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C19BB3E822E776AE00EA5C2E /* Build configuration list for PBXNativeTarget "DashKitPlugin" */;
+			buildPhases = (
+				C19BB3E122E776AE00EA5C2E /* Sources */,
+				C19BB3E222E776AE00EA5C2E /* Frameworks */,
+				C19BB3E322E776AE00EA5C2E /* Resources */,
+				C16DA83822E8D208008624C2 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DashKitPlugin;
+			productName = DashKitPlugin;
+			productReference = C19BB3E522E776AE00EA5C2E /* DashKit.deviceplugin */;
+			productType = "com.apple.product-type.bundle";
+		};
 		C1E753D8226928F700A0BC48 /* DashKit */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = C1E753ED226928F700A0BC48 /* Build configuration list for PBXNativeTarget "DashKit" */;
@@ -436,6 +548,13 @@
 						CreatedOnToolsVersion = 10.2;
 						LastSwiftMigration = 1020;
 					};
+					C19BB3DA22E7769400EA5C2E = {
+						CreatedOnToolsVersion = 10.3;
+					};
+					C19BB3E422E776AE00EA5C2E = {
+						CreatedOnToolsVersion = 10.3;
+						LastSwiftMigration = 1030;
+					};
 					C1E753D8226928F700A0BC48 = {
 						CreatedOnToolsVersion = 10.2;
 						LastSwiftMigration = 1020;
@@ -461,6 +580,8 @@
 				C1E753D8226928F700A0BC48 /* DashKit */,
 				C1E753E1226928F700A0BC48 /* DashKitTests */,
 				C107D15222694B9C00D63775 /* DashKitUI */,
+				C19BB3E422E776AE00EA5C2E /* DashKitPlugin */,
+				C19BB3DA22E7769400EA5C2E /* DashKitUIPlugin */,
 			);
 		};
 /* End PBXProject section */
@@ -474,6 +595,20 @@
 				C1ACF43322A03F0500F7DDB4 /* OmnipodReservoirView.xib in Resources */,
 				C1ACF43522A03F0500F7DDB4 /* PodLifeHUDView.xib in Resources */,
 				C107D166226A0EED00D63775 /* DashPumpManager.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C19BB3D922E7769400EA5C2E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C19BB3E322E776AE00EA5C2E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -525,6 +660,21 @@
 				C107D173226A1B6100D63775 /* DashSettingsViewController.swift in Sources */,
 				C107D17A226A241200D63775 /* IdentifiableClass.swift in Sources */,
 				C1ACF43F22A1F9A700F7DDB4 /* OSLog.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C19BB3D722E7769400EA5C2E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C19BB3E122E776AE00EA5C2E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C19BB3F022E7C64A00EA5C2E /* DashKitPlugin.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -634,6 +784,105 @@
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		C19BB3DF22E7769400EA5C2E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 75U4X84TEG;
+				INFOPLIST_FILE = DashKitUIPlugin/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				PRODUCT_BUNDLE_IDENTIFIER = org.tidepool.DashKitUIPlugin;
+				PRODUCT_NAME = DashKit;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				WRAPPER_EXTENSION = uiplugin;
+			};
+			name = Debug;
+		};
+		C19BB3E022E7769400EA5C2E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 75U4X84TEG;
+				INFOPLIST_FILE = DashKitUIPlugin/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				PRODUCT_BUNDLE_IDENTIFIER = org.tidepool.DashKitUIPlugin;
+				PRODUCT_NAME = DashKit;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				WRAPPER_EXTENSION = uiplugin;
+			};
+			name = Release;
+		};
+		C19BB3E922E776AE00EA5C2E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 75U4X84TEG;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
+				INFOPLIST_FILE = DashKitPlugin/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				PRODUCT_BUNDLE_IDENTIFIER = org.tidepool.DashKitPlugin;
+				PRODUCT_MODULE_NAME = DashKitPlugin;
+				PRODUCT_NAME = DashKit;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "DashKitPlugin/DashKitPlugin-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				WRAPPER_EXTENSION = deviceplugin;
+			};
+			name = Debug;
+		};
+		C19BB3EA22E776AE00EA5C2E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 75U4X84TEG;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
+				INFOPLIST_FILE = DashKitPlugin/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				PRODUCT_BUNDLE_IDENTIFIER = org.tidepool.DashKitPlugin;
+				PRODUCT_MODULE_NAME = DashKitPlugin;
+				PRODUCT_NAME = DashKit;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "DashKitPlugin/DashKitPlugin-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				WRAPPER_EXTENSION = deviceplugin;
 			};
 			name = Release;
 		};
@@ -886,6 +1135,24 @@
 			buildConfigurations = (
 				C107D15D22694B9C00D63775 /* Debug */,
 				C107D15E22694B9C00D63775 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C19BB3DE22E7769400EA5C2E /* Build configuration list for PBXNativeTarget "DashKitUIPlugin" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C19BB3DF22E7769400EA5C2E /* Debug */,
+				C19BB3E022E7769400EA5C2E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C19BB3E822E776AE00EA5C2E /* Build configuration list for PBXNativeTarget "DashKitPlugin" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C19BB3E922E776AE00EA5C2E /* Debug */,
+				C19BB3EA22E776AE00EA5C2E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
