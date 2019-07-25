@@ -9,7 +9,6 @@
 import UIKit
 import LoopKit
 import LoopKitUI
-import RileyLinkKit
 import DashKit
 import PodSDK
 import SwiftGif

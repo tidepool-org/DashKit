@@ -3,8 +3,8 @@
    LastUpgradeVersion = "1020"
    version = "1.3">
    <BuildAction
-      parallelizeBuildables = "YES"
-      buildImplicitDependencies = "YES">
+      parallelizeBuildables = "NO"
+      buildImplicitDependencies = "NO">
       <BuildActionEntries>
          <BuildActionEntry
             buildForTesting = "YES"
@@ -17,20 +17,6 @@
                BlueprintIdentifier = "C1E753D8226928F700A0BC48"
                BuildableName = "DashKit.framework"
                BlueprintName = "DashKit"
-               ReferencedContainer = "container:DashKit.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "C19BB3E422E776AE00EA5C2E"
-               BuildableName = "DashKit.loopplugin"
-               BlueprintName = "DashKitPlugin"
                ReferencedContainer = "container:DashKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -56,9 +42,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "C16DA84622E93387008624C2"
-               BuildableName = "DashKit.loopwatchplugin"
-               BlueprintName = "DashKitWatchPlugin"
+               BlueprintIdentifier = "C19BB3E422E776AE00EA5C2E"
+               BuildableName = "DashKit.loopplugin"
+               BlueprintName = "DashKitPlugin"
                ReferencedContainer = "container:DashKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>

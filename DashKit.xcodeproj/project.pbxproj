@@ -53,6 +53,8 @@
 		C16DA85022E93387008624C2 /* ObjectMapper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1D46D5F22C568F600978E59 /* ObjectMapper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C16DA85122E93387008624C2 /* RxSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1D46D5E22C568F600978E59 /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C16DA85222E93387008624C2 /* DashKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C16DA85822E93973008624C2 /* DashKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C107D15322694B9C00D63775 /* DashKitUI.framework */; };
+		C16DA85A22E93B93008624C2 /* LoopKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C16DA85922E93B93008624C2 /* LoopKitUI.framework */; };
 		C194113D2285D30A00E886DD /* PairPodSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C194113C2285D30A00E886DD /* PairPodSetupViewController.swift */; };
 		C19411442286164E00E886DD /* ReplacePodViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19411432286164E00E886DD /* ReplacePodViewController.swift */; };
 		C194114622861E9100E886DD /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C194114522861E9100E886DD /* UIColor.swift */; };
@@ -82,6 +84,8 @@
 		C1E753E3226928F700A0BC48 /* DashKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; };
 		C1E753E8226928F700A0BC48 /* DashPumpManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E753E7226928F700A0BC48 /* DashPumpManagerTests.swift */; };
 		C1E753EA226928F700A0BC48 /* DashKit.h in Headers */ = {isa = PBXBuildFile; fileRef = C1E753DC226928F700A0BC48 /* DashKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C1FE2E3522E940070035DCA0 /* SwiftGif.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E3322E940070035DCA0 /* SwiftGif.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C1FE2E3622E940070035DCA0 /* MKRingProgressView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E3422E940070035DCA0 /* MKRingProgressView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -112,6 +116,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				C1FE2E3522E940070035DCA0 /* SwiftGif.framework in Embed Frameworks */,
+				C1FE2E3622E940070035DCA0 /* MKRingProgressView.framework in Embed Frameworks */,
 				C16DA83922E8D253008624C2 /* PodSDK.framework in Embed Frameworks */,
 				C16DA83A22E8D253008624C2 /* INSSDK.framework in Embed Frameworks */,
 				C16DA83B22E8D253008624C2 /* ObjectMapper.framework in Embed Frameworks */,
@@ -170,6 +176,7 @@
 		C15424322280C75D006754B3 /* PodStatusExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodStatusExtension.swift; sourceTree = "<group>"; };
 		C16DA85622E93387008624C2 /* DashKit.loopwatchplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DashKit.loopwatchplugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		C16DA85722E93387008624C2 /* DashKitPlugin copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "DashKitPlugin copy-Info.plist"; path = "/Users/pete/dev/TidepoolLoopDashWorkspace/DashKit/DashKitPlugin copy-Info.plist"; sourceTree = "<absolute>"; };
+		C16DA85922E93B93008624C2 /* LoopKitUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LoopKitUI.framework; path = Carthage/Build/iOS/LoopKitUI.framework; sourceTree = "<group>"; };
 		C194113C2285D30A00E886DD /* PairPodSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairPodSetupViewController.swift; sourceTree = "<group>"; };
 		C19411432286164E00E886DD /* ReplacePodViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplacePodViewController.swift; sourceTree = "<group>"; };
 		C194114522861E9100E886DD /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
@@ -202,6 +209,8 @@
 		C1E753E2226928F700A0BC48 /* DashKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DashKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1E753E7226928F700A0BC48 /* DashPumpManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashPumpManagerTests.swift; sourceTree = "<group>"; };
 		C1E753E9226928F700A0BC48 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C1FE2E3322E940070035DCA0 /* SwiftGif.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftGif.framework; path = Carthage/Build/iOS/SwiftGif.framework; sourceTree = "<group>"; };
+		C1FE2E3422E940070035DCA0 /* MKRingProgressView.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MKRingProgressView.framework; path = Carthage/Build/iOS/MKRingProgressView.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -228,7 +237,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				C16DA83522E7C6B4008624C2 /* LoopKit.framework in Frameworks */,
+				C16DA85A22E93B93008624C2 /* LoopKitUI.framework in Frameworks */,
 				C16DA83622E7C6F2008624C2 /* DashKit.framework in Frameworks */,
+				C16DA85822E93973008624C2 /* DashKitUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -257,6 +268,7 @@
 		C107D10C22692AE700D63775 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C16DA85922E93B93008624C2 /* LoopKitUI.framework */,
 				C1D46D5F22C568F600978E59 /* ObjectMapper.framework */,
 				C1D46D5E22C568F600978E59 /* RxSwift.framework */,
 				C1542417228085BF006754B3 /* PodSDK.framework */,
@@ -366,6 +378,8 @@
 		C1E753CF226928F700A0BC48 = {
 			isa = PBXGroup;
 			children = (
+				C1FE2E3422E940070035DCA0 /* MKRingProgressView.framework */,
+				C1FE2E3322E940070035DCA0 /* SwiftGif.framework */,
 				C12AD2E522C1742E00DF43EF /* PodSDK.framework */,
 				C12AD2E322C1741E00DF43EF /* INSSDK.framework */,
 				C107D11322692BC300D63775 /* Common */,
@@ -803,7 +817,6 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				PRODUCT_BUNDLE_IDENTIFIER = org.tidepool.DashKitPlugin;
 				PRODUCT_MODULE_NAME = DashKitPlugin;
 				PRODUCT_NAME = DashKit;
@@ -837,7 +850,6 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				PRODUCT_BUNDLE_IDENTIFIER = org.tidepool.DashKitPlugin;
 				PRODUCT_MODULE_NAME = DashKitPlugin;
 				PRODUCT_NAME = DashKit;
@@ -854,7 +866,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 75U4X84TEG;
@@ -870,7 +881,6 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				PRODUCT_BUNDLE_IDENTIFIER = org.tidepool.DashKitPlugin;
 				PRODUCT_MODULE_NAME = DashKitPlugin;
 				PRODUCT_NAME = DashKit;
@@ -879,6 +889,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "DashKitPlugin/DashKitPlugin-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = loopplugin;
 			};
 			name = Debug;
@@ -887,7 +898,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 75U4X84TEG;
@@ -903,7 +913,6 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				PRODUCT_BUNDLE_IDENTIFIER = org.tidepool.DashKitPlugin;
 				PRODUCT_MODULE_NAME = DashKitPlugin;
 				PRODUCT_NAME = DashKit;
@@ -911,6 +920,7 @@
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "DashKitPlugin/DashKitPlugin-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = loopplugin;
 			};
 			name = Release;

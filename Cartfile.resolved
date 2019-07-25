@@ -1,3 +1,5 @@
 github "ReactiveX/RxSwift" "5.0.1"
-github "tidepool-org/LoopKit" "358e2e68317b31717a14572103caede8cf88d2eb"
+github "bahlo/SwiftGif" "v1.7.0"
+github "maxkonovalov/MKRingProgressView" "2.2.2"
+github "tidepool-org/LoopKit" "1075538584882c8fd290b6cc933065107a640ab0"
 github "tristanhimmelman/ObjectMapper" "3.5.1"

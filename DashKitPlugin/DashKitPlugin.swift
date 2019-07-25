@@ -7,21 +7,22 @@
 //
 
 import Foundation
+import LoopKitUI
 import DashKit
-import LoopKit
+import DashKitUI
 
-class DashKitPlugin: NSObject, LoopPlugin {
-    public var pumpManagerType: PumpManager.Type? {
+class DashKitPlugin: NSObject, LoopUIPlugin {
+    public var pumpManagerType: PumpManagerUI.Type? {
         return DashPumpManager.self
     }
 
-    public var cgmManagerType: CGMManager.Type? {
+    public var cgmManagerType: CGMManagerUI.Type? {
         return nil
     }
 
     override init() {
         super.init()
 
-        print("Loaded class")
+        print("Loaded DashKitPlugin class")
     }
 }

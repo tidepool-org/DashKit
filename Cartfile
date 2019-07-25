@@ -1,3 +1,5 @@
 github "tidepool-org/LoopKit" "loop-plugins"
 github "ReactiveX/RxSwift" ~> 5.0
 github "tristanhimmelman/ObjectMapper" ~> 3.5
+github "bahlo/SwiftGif" ~> 1.7.0
+github "maxkonovalov/MKRingProgressView" ~> 2.2
