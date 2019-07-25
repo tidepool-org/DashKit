@@ -56,9 +56,6 @@ public extension InternalErrorCode {
 
         case .invalidPodId:
             return "Invalid POD ID"
-
-        case .unexpectedResponse:
-            return "Unexpcted response"
         }
     }
 }

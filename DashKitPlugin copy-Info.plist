@@ -21,6 +21,6 @@
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2019 Tidepool. All rights reserved.</string>
 	<key>NSPrincipalClass</key>
-	<string></string>
+	<string>DashKitPlugin</string>
 </dict>
 </plist>

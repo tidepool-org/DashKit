@@ -45,6 +45,14 @@
 		C16DA83B22E8D253008624C2 /* ObjectMapper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1D46D5F22C568F600978E59 /* ObjectMapper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C16DA83C22E8D253008624C2 /* RxSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1D46D5E22C568F600978E59 /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C16DA83D22E8D253008624C2 /* DashKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C16DA84822E93387008624C2 /* DashKitPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19BB3EF22E7C64A00EA5C2E /* DashKitPlugin.swift */; };
+		C16DA84A22E93387008624C2 /* LoopKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C107D10D22692AE700D63775 /* LoopKit.framework */; };
+		C16DA84B22E93387008624C2 /* DashKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; };
+		C16DA84E22E93387008624C2 /* PodSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C12AD2E522C1742E00DF43EF /* PodSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C16DA84F22E93387008624C2 /* INSSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C12AD2E322C1741E00DF43EF /* INSSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C16DA85022E93387008624C2 /* ObjectMapper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1D46D5F22C568F600978E59 /* ObjectMapper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C16DA85122E93387008624C2 /* RxSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1D46D5E22C568F600978E59 /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C16DA85222E93387008624C2 /* DashKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C194113D2285D30A00E886DD /* PairPodSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C194113C2285D30A00E886DD /* PairPodSetupViewController.swift */; };
 		C19411442286164E00E886DD /* ReplacePodViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19411432286164E00E886DD /* ReplacePodViewController.swift */; };
 		C194114622861E9100E886DD /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C194114522861E9100E886DD /* UIColor.swift */; };
@@ -113,6 +121,21 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C16DA84D22E93387008624C2 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				C16DA84E22E93387008624C2 /* PodSDK.framework in Embed Frameworks */,
+				C16DA84F22E93387008624C2 /* INSSDK.framework in Embed Frameworks */,
+				C16DA85022E93387008624C2 /* ObjectMapper.framework in Embed Frameworks */,
+				C16DA85122E93387008624C2 /* RxSwift.framework in Embed Frameworks */,
+				C16DA85222E93387008624C2 /* DashKit.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -145,6 +168,8 @@
 		C1542417228085BF006754B3 /* PodSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PodSDK.framework; path = "dash-sdk-ios/PodSDK.framework"; sourceTree = "<group>"; };
 		C15424302280C575006754B3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C15424322280C75D006754B3 /* PodStatusExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodStatusExtension.swift; sourceTree = "<group>"; };
+		C16DA85622E93387008624C2 /* DashKit.loopwatchplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DashKit.loopwatchplugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		C16DA85722E93387008624C2 /* DashKitPlugin copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "DashKitPlugin copy-Info.plist"; path = "/Users/pete/dev/TidepoolLoopDashWorkspace/DashKit/DashKitPlugin copy-Info.plist"; sourceTree = "<absolute>"; };
 		C194113C2285D30A00E886DD /* PairPodSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairPodSetupViewController.swift; sourceTree = "<group>"; };
 		C19411432286164E00E886DD /* ReplacePodViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplacePodViewController.swift; sourceTree = "<group>"; };
 		C194114522861E9100E886DD /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
@@ -153,11 +178,7 @@
 		C1941150228DBF2100E886DD /* ExpirationReminderDateTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpirationReminderDateTableViewCell.swift; sourceTree = "<group>"; };
 		C1941152228DBF8300E886DD /* NibLoadable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NibLoadable.swift; sourceTree = "<group>"; };
 		C1941154228DD32A00E886DD /* PodReplacementNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodReplacementNavigationController.swift; sourceTree = "<group>"; };
-		C19BB3D122E76DDF00EA5C2E /* DashKitBundle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DashKitBundle.h; sourceTree = "<group>"; };
-		C19BB3D222E76DDF00EA5C2E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C19BB3DB22E7769400EA5C2E /* DashKit.uiplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DashKit.uiplugin; sourceTree = BUILT_PRODUCTS_DIR; };
-		C19BB3DD22E7769400EA5C2E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C19BB3E522E776AE00EA5C2E /* DashKit.deviceplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DashKit.deviceplugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		C19BB3E522E776AE00EA5C2E /* DashKit.loopplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DashKit.loopplugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		C19BB3E722E776AE00EA5C2E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C19BB3EE22E7C64900EA5C2E /* DashKitPlugin-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DashKitPlugin-Bridging-Header.h"; sourceTree = "<group>"; };
 		C19BB3EF22E7C64A00EA5C2E /* DashKitPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DashKitPlugin.swift; sourceTree = "<group>"; };
@@ -193,10 +214,12 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C19BB3D822E7769400EA5C2E /* Frameworks */ = {
+		C16DA84922E93387008624C2 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C16DA84A22E93387008624C2 /* LoopKit.framework in Frameworks */,
+				C16DA84B22E93387008624C2 /* DashKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -330,23 +353,6 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
-		C19BB3D022E76DDF00EA5C2E /* DashKitBundle */ = {
-			isa = PBXGroup;
-			children = (
-				C19BB3D122E76DDF00EA5C2E /* DashKitBundle.h */,
-				C19BB3D222E76DDF00EA5C2E /* Info.plist */,
-			);
-			path = DashKitBundle;
-			sourceTree = "<group>";
-		};
-		C19BB3DC22E7769400EA5C2E /* DashKitUIPlugin */ = {
-			isa = PBXGroup;
-			children = (
-				C19BB3DD22E7769400EA5C2E /* Info.plist */,
-			);
-			path = DashKitUIPlugin;
-			sourceTree = "<group>";
-		};
 		C19BB3E622E776AE00EA5C2E /* DashKitPlugin */ = {
 			isa = PBXGroup;
 			children = (
@@ -357,28 +363,19 @@
 			path = DashKitPlugin;
 			sourceTree = "<group>";
 		};
-		C1D68E2E2284848A00019CAE /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Extensions;
-			sourceTree = "<group>";
-		};
 		C1E753CF226928F700A0BC48 = {
 			isa = PBXGroup;
 			children = (
 				C12AD2E522C1742E00DF43EF /* PodSDK.framework */,
 				C12AD2E322C1741E00DF43EF /* INSSDK.framework */,
 				C107D11322692BC300D63775 /* Common */,
-				C1D68E2E2284848A00019CAE /* Extensions */,
 				C1E753DB226928F700A0BC48 /* DashKit */,
 				C1E753E6226928F700A0BC48 /* DashKitTests */,
 				C107D15422694B9C00D63775 /* DashKitUI */,
-				C19BB3D022E76DDF00EA5C2E /* DashKitBundle */,
-				C19BB3DC22E7769400EA5C2E /* DashKitUIPlugin */,
 				C19BB3E622E776AE00EA5C2E /* DashKitPlugin */,
 				C107D10C22692AE700D63775 /* Frameworks */,
 				C1E753DA226928F700A0BC48 /* Products */,
+				C16DA85722E93387008624C2 /* DashKitPlugin copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -388,8 +385,8 @@
 				C1E753D9226928F700A0BC48 /* DashKit.framework */,
 				C1E753E2226928F700A0BC48 /* DashKitTests.xctest */,
 				C107D15322694B9C00D63775 /* DashKitUI.framework */,
-				C19BB3DB22E7769400EA5C2E /* DashKit.uiplugin */,
-				C19BB3E522E776AE00EA5C2E /* DashKit.deviceplugin */,
+				C19BB3E522E776AE00EA5C2E /* DashKit.loopplugin */,
+				C16DA85622E93387008624C2 /* DashKit.loopwatchplugin */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -462,21 +459,22 @@
 			productReference = C107D15322694B9C00D63775 /* DashKitUI.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		C19BB3DA22E7769400EA5C2E /* DashKitUIPlugin */ = {
+		C16DA84622E93387008624C2 /* DashKitWatchPlugin */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C19BB3DE22E7769400EA5C2E /* Build configuration list for PBXNativeTarget "DashKitUIPlugin" */;
+			buildConfigurationList = C16DA85322E93387008624C2 /* Build configuration list for PBXNativeTarget "DashKitWatchPlugin" */;
 			buildPhases = (
-				C19BB3D722E7769400EA5C2E /* Sources */,
-				C19BB3D822E7769400EA5C2E /* Frameworks */,
-				C19BB3D922E7769400EA5C2E /* Resources */,
+				C16DA84722E93387008624C2 /* Sources */,
+				C16DA84922E93387008624C2 /* Frameworks */,
+				C16DA84C22E93387008624C2 /* Resources */,
+				C16DA84D22E93387008624C2 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = DashKitUIPlugin;
-			productName = DashKitUIPlugin;
-			productReference = C19BB3DB22E7769400EA5C2E /* DashKit.uiplugin */;
+			name = DashKitWatchPlugin;
+			productName = DashKitPlugin;
+			productReference = C16DA85622E93387008624C2 /* DashKit.loopwatchplugin */;
 			productType = "com.apple.product-type.bundle";
 		};
 		C19BB3E422E776AE00EA5C2E /* DashKitPlugin */ = {
@@ -494,7 +492,7 @@
 			);
 			name = DashKitPlugin;
 			productName = DashKitPlugin;
-			productReference = C19BB3E522E776AE00EA5C2E /* DashKit.deviceplugin */;
+			productReference = C19BB3E522E776AE00EA5C2E /* DashKit.loopplugin */;
 			productType = "com.apple.product-type.bundle";
 		};
 		C1E753D8226928F700A0BC48 /* DashKit */ = {
@@ -548,9 +546,6 @@
 						CreatedOnToolsVersion = 10.2;
 						LastSwiftMigration = 1020;
 					};
-					C19BB3DA22E7769400EA5C2E = {
-						CreatedOnToolsVersion = 10.3;
-					};
 					C19BB3E422E776AE00EA5C2E = {
 						CreatedOnToolsVersion = 10.3;
 						LastSwiftMigration = 1030;
@@ -581,7 +576,7 @@
 				C1E753E1226928F700A0BC48 /* DashKitTests */,
 				C107D15222694B9C00D63775 /* DashKitUI */,
 				C19BB3E422E776AE00EA5C2E /* DashKitPlugin */,
-				C19BB3DA22E7769400EA5C2E /* DashKitUIPlugin */,
+				C16DA84622E93387008624C2 /* DashKitWatchPlugin */,
 			);
 		};
 /* End PBXProject section */
@@ -598,7 +593,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C19BB3D922E7769400EA5C2E /* Resources */ = {
+		C16DA84C22E93387008624C2 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -663,10 +658,11 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C19BB3D722E7769400EA5C2E /* Sources */ = {
+		C16DA84722E93387008624C2 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C16DA84822E93387008624C2 /* DashKitPlugin.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -787,39 +783,70 @@
 			};
 			name = Release;
 		};
-		C19BB3DF22E7769400EA5C2E /* Debug */ = {
+		C16DA85422E93387008624C2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 75U4X84TEG;
-				INFOPLIST_FILE = DashKitUIPlugin/Info.plist;
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
+				INFOPLIST_FILE = "DashKitPlugin copy-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				PRODUCT_BUNDLE_IDENTIFIER = org.tidepool.DashKitUIPlugin;
+				PRODUCT_BUNDLE_IDENTIFIER = org.tidepool.DashKitPlugin;
+				PRODUCT_MODULE_NAME = DashKitPlugin;
 				PRODUCT_NAME = DashKit;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-				WRAPPER_EXTENSION = uiplugin;
+				SUPPORTED_PLATFORMS = "watchsimulator watchos";
+				SWIFT_OBJC_BRIDGING_HEADER = "DashKitPlugin/DashKitPlugin-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				WRAPPER_EXTENSION = loopwatchplugin;
 			};
 			name = Debug;
 		};
-		C19BB3E022E7769400EA5C2E /* Release */ = {
+		C16DA85522E93387008624C2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 75U4X84TEG;
-				INFOPLIST_FILE = DashKitUIPlugin/Info.plist;
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
+				INFOPLIST_FILE = "DashKitPlugin copy-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				PRODUCT_BUNDLE_IDENTIFIER = org.tidepool.DashKitUIPlugin;
+				PRODUCT_BUNDLE_IDENTIFIER = org.tidepool.DashKitPlugin;
+				PRODUCT_MODULE_NAME = DashKitPlugin;
 				PRODUCT_NAME = DashKit;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-				WRAPPER_EXTENSION = uiplugin;
+				SUPPORTED_PLATFORMS = "watchsimulator watchos";
+				SWIFT_OBJC_BRIDGING_HEADER = "DashKitPlugin/DashKitPlugin-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				WRAPPER_EXTENSION = loopwatchplugin;
 			};
 			name = Release;
 		};
@@ -831,6 +858,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 75U4X84TEG;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -851,7 +879,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "DashKitPlugin/DashKitPlugin-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
-				WRAPPER_EXTENSION = deviceplugin;
+				WRAPPER_EXTENSION = loopplugin;
 			};
 			name = Debug;
 		};
@@ -863,6 +891,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 75U4X84TEG;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -882,7 +911,7 @@
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "DashKitPlugin/DashKitPlugin-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
-				WRAPPER_EXTENSION = deviceplugin;
+				WRAPPER_EXTENSION = loopplugin;
 			};
 			name = Release;
 		};
@@ -1139,11 +1168,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C19BB3DE22E7769400EA5C2E /* Build configuration list for PBXNativeTarget "DashKitUIPlugin" */ = {
+		C16DA85322E93387008624C2 /* Build configuration list for PBXNativeTarget "DashKitWatchPlugin" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				C19BB3DF22E7769400EA5C2E /* Debug */,
-				C19BB3E022E7769400EA5C2E /* Release */,
+				C16DA85422E93387008624C2 /* Debug */,
+				C16DA85522E93387008624C2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

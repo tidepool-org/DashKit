@@ -20,6 +20,48 @@
                ReferencedContainer = "container:DashKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "C19BB3E422E776AE00EA5C2E"
+               BuildableName = "DashKit.loopplugin"
+               BlueprintName = "DashKitPlugin"
+               ReferencedContainer = "container:DashKit.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "C107D15222694B9C00D63775"
+               BuildableName = "DashKitUI.framework"
+               BlueprintName = "DashKitUI"
+               ReferencedContainer = "container:DashKit.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "C16DA84622E93387008624C2"
+               BuildableName = "DashKit.loopwatchplugin"
+               BlueprintName = "DashKitWatchPlugin"
+               ReferencedContainer = "container:DashKit.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
