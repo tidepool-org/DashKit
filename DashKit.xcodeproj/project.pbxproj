@@ -28,33 +28,20 @@
 		C107D17D226A24CE00D63775 /* TimeZone.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D11A22692FC400D63775 /* TimeZone.swift */; };
 		C10C758122C4041F00CCC20F /* PodSDKProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10C758022C4041F00CCC20F /* PodSDKProtocol.swift */; };
 		C10C758322C404B700CCC20F /* PodSDK.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10C758222C404B700CCC20F /* PodSDK.swift */; };
-		C12AD2E422C1741E00DF43EF /* INSSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C12AD2E322C1741E00DF43EF /* INSSDK.framework */; };
-		C12AD2E622C1742E00DF43EF /* PodSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C12AD2E522C1742E00DF43EF /* PodSDK.framework */; };
-		C12AD2E722C174D100DF43EF /* INSSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C12AD2E322C1741E00DF43EF /* INSSDK.framework */; };
 		C12C9C83229EDB7B00FF7632 /* InsulinStatusTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12C9C82229EDB7B00FF7632 /* InsulinStatusTableViewCell.swift */; };
 		C14D46F222CA85C000656FE0 /* NoActivePodViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14D46F122CA85C000656FE0 /* NoActivePodViewController.swift */; };
-		C1542418228085BF006754B3 /* PodSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1542417228085BF006754B3 /* PodSDK.framework */; };
-		C154241A22808790006754B3 /* PodSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1542417228085BF006754B3 /* PodSDK.framework */; };
 		C15424312280C575006754B3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C15424302280C575006754B3 /* Assets.xcassets */; };
 		C15424332280C75E006754B3 /* PodStatusExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C15424322280C75D006754B3 /* PodStatusExtension.swift */; };
-		C16DA83522E7C6B4008624C2 /* LoopKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C107D10D22692AE700D63775 /* LoopKit.framework */; };
 		C16DA83622E7C6F2008624C2 /* DashKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; };
-		C16DA83722E8C6F2008624C2 /* LoopKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C107D10D22692AE700D63775 /* LoopKit.framework */; };
-		C16DA83922E8D253008624C2 /* PodSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C12AD2E522C1742E00DF43EF /* PodSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C16DA83A22E8D253008624C2 /* INSSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C12AD2E322C1741E00DF43EF /* INSSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C16DA83B22E8D253008624C2 /* ObjectMapper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1D46D5F22C568F600978E59 /* ObjectMapper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C16DA83C22E8D253008624C2 /* RxSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1D46D5E22C568F600978E59 /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C16DA83D22E8D253008624C2 /* DashKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C16DA84822E93387008624C2 /* DashKitPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19BB3EF22E7C64A00EA5C2E /* DashKitPlugin.swift */; };
-		C16DA84A22E93387008624C2 /* LoopKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C107D10D22692AE700D63775 /* LoopKit.framework */; };
 		C16DA84B22E93387008624C2 /* DashKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; };
-		C16DA84E22E93387008624C2 /* PodSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C12AD2E522C1742E00DF43EF /* PodSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C16DA84F22E93387008624C2 /* INSSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C12AD2E322C1741E00DF43EF /* INSSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C16DA85022E93387008624C2 /* ObjectMapper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1D46D5F22C568F600978E59 /* ObjectMapper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C16DA85122E93387008624C2 /* RxSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1D46D5E22C568F600978E59 /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C16DA85222E93387008624C2 /* DashKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C16DA85822E93973008624C2 /* DashKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C107D15322694B9C00D63775 /* DashKitUI.framework */; };
-		C16DA85A22E93B93008624C2 /* LoopKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C16DA85922E93B93008624C2 /* LoopKitUI.framework */; };
 		C194113D2285D30A00E886DD /* PairPodSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C194113C2285D30A00E886DD /* PairPodSetupViewController.swift */; };
 		C19411442286164E00E886DD /* ReplacePodViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19411432286164E00E886DD /* ReplacePodViewController.swift */; };
 		C194114622861E9100E886DD /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C194114522861E9100E886DD /* UIColor.swift */; };
@@ -84,8 +71,23 @@
 		C1E753E3226928F700A0BC48 /* DashKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; };
 		C1E753E8226928F700A0BC48 /* DashPumpManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E753E7226928F700A0BC48 /* DashPumpManagerTests.swift */; };
 		C1E753EA226928F700A0BC48 /* DashKit.h in Headers */ = {isa = PBXBuildFile; fileRef = C1E753DC226928F700A0BC48 /* DashKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		C1FE2E3522E940070035DCA0 /* SwiftGif.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E3322E940070035DCA0 /* SwiftGif.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C1FE2E3622E940070035DCA0 /* MKRingProgressView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E3422E940070035DCA0 /* MKRingProgressView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C1FE2E3A22EA0B360035DCA0 /* LoopKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E3922EA0B360035DCA0 /* LoopKit.framework */; };
+		C1FE2E3C22EA0B360035DCA0 /* LoopKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E3B22EA0B360035DCA0 /* LoopKitUI.framework */; };
+		C1FE2E3D22EA0B570035DCA0 /* LoopKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E3922EA0B360035DCA0 /* LoopKit.framework */; };
+		C1FE2E3E22EA0B5A0035DCA0 /* LoopKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E3922EA0B360035DCA0 /* LoopKit.framework */; };
+		C1FE2E3F22EA0B5D0035DCA0 /* LoopKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E3B22EA0B360035DCA0 /* LoopKitUI.framework */; };
+		C1FE2E5322EA0DB90035DCA0 /* MKRingProgressView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E5222EA0DB90035DCA0 /* MKRingProgressView.framework */; };
+		C1FE2E5522EA0DCB0035DCA0 /* SwiftGif.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E5422EA0DCB0035DCA0 /* SwiftGif.framework */; };
+		C1FE2E5822EA0DDC0035DCA0 /* INSSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E5622EA0DDB0035DCA0 /* INSSDK.framework */; };
+		C1FE2E5922EA0DDC0035DCA0 /* PodSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E5722EA0DDB0035DCA0 /* PodSDK.framework */; };
+		C1FE2E5A22EA0DEA0035DCA0 /* INSSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E5622EA0DDB0035DCA0 /* INSSDK.framework */; };
+		C1FE2E5B22EA0DF00035DCA0 /* PodSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E5722EA0DDB0035DCA0 /* PodSDK.framework */; };
+		C1FE2E5C22EA0E0F0035DCA0 /* INSSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E5622EA0DDB0035DCA0 /* INSSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C1FE2E5D22EA0E150035DCA0 /* PodSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E5722EA0DDB0035DCA0 /* PodSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C1FE2E5E22EA0E190035DCA0 /* MKRingProgressView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E5222EA0DB90035DCA0 /* MKRingProgressView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C1FE2E5F22EA0E1D0035DCA0 /* SwiftGif.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E5422EA0DCB0035DCA0 /* SwiftGif.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C1FE2E6022EA0E370035DCA0 /* DashKitUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C107D15322694B9C00D63775 /* DashKitUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C1FE2E6122EA0E5A0035DCA0 /* PodSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E5722EA0DDB0035DCA0 /* PodSDK.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -105,8 +107,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
-				C12AD2E622C1742E00DF43EF /* PodSDK.framework in CopyFiles */,
-				C12AD2E422C1741E00DF43EF /* INSSDK.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -116,13 +116,14 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C1FE2E3522E940070035DCA0 /* SwiftGif.framework in Embed Frameworks */,
-				C1FE2E3622E940070035DCA0 /* MKRingProgressView.framework in Embed Frameworks */,
-				C16DA83922E8D253008624C2 /* PodSDK.framework in Embed Frameworks */,
-				C16DA83A22E8D253008624C2 /* INSSDK.framework in Embed Frameworks */,
 				C16DA83B22E8D253008624C2 /* ObjectMapper.framework in Embed Frameworks */,
 				C16DA83C22E8D253008624C2 /* RxSwift.framework in Embed Frameworks */,
+				C1FE2E5C22EA0E0F0035DCA0 /* INSSDK.framework in Embed Frameworks */,
+				C1FE2E5D22EA0E150035DCA0 /* PodSDK.framework in Embed Frameworks */,
+				C1FE2E5E22EA0E190035DCA0 /* MKRingProgressView.framework in Embed Frameworks */,
+				C1FE2E5F22EA0E1D0035DCA0 /* SwiftGif.framework in Embed Frameworks */,
 				C16DA83D22E8D253008624C2 /* DashKit.framework in Embed Frameworks */,
+				C1FE2E6022EA0E370035DCA0 /* DashKitUI.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -133,8 +134,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C16DA84E22E93387008624C2 /* PodSDK.framework in Embed Frameworks */,
-				C16DA84F22E93387008624C2 /* INSSDK.framework in Embed Frameworks */,
 				C16DA85022E93387008624C2 /* ObjectMapper.framework in Embed Frameworks */,
 				C16DA85122E93387008624C2 /* RxSwift.framework in Embed Frameworks */,
 				C16DA85222E93387008624C2 /* DashKit.framework in Embed Frameworks */,
@@ -146,7 +145,6 @@
 
 /* Begin PBXFileReference section */
 		C107D10A22692A1700D63775 /* DashPumpManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashPumpManager.swift; sourceTree = "<group>"; };
-		C107D10D22692AE700D63775 /* LoopKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LoopKit.framework; path = Carthage/Build/iOS/LoopKit.framework; sourceTree = "<group>"; };
 		C107D11122692B7200D63775 /* Pod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pod.swift; sourceTree = "<group>"; };
 		C107D11422692BDE00D63775 /* TimeInterval.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeInterval.swift; sourceTree = "<group>"; };
 		C107D11622692D9D00D63775 /* LocalizedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedString.swift; sourceTree = "<group>"; };
@@ -167,16 +165,12 @@
 		C107D17B226A243A00D63775 /* UITableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITableViewCell.swift; sourceTree = "<group>"; };
 		C10C758022C4041F00CCC20F /* PodSDKProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodSDKProtocol.swift; sourceTree = "<group>"; };
 		C10C758222C404B700CCC20F /* PodSDK.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodSDK.swift; sourceTree = "<group>"; };
-		C12AD2E322C1741E00DF43EF /* INSSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = INSSDK.framework; path = "dash-sdk-ios/frameworks/INSSDK.framework"; sourceTree = "<group>"; };
-		C12AD2E522C1742E00DF43EF /* PodSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PodSDK.framework; path = "dash-sdk-ios/frameworks/PodSDK.framework"; sourceTree = "<group>"; };
 		C12C9C82229EDB7B00FF7632 /* InsulinStatusTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsulinStatusTableViewCell.swift; sourceTree = "<group>"; };
 		C14D46F122CA85C000656FE0 /* NoActivePodViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoActivePodViewController.swift; sourceTree = "<group>"; };
-		C1542417228085BF006754B3 /* PodSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PodSDK.framework; path = "dash-sdk-ios/PodSDK.framework"; sourceTree = "<group>"; };
 		C15424302280C575006754B3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C15424322280C75D006754B3 /* PodStatusExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodStatusExtension.swift; sourceTree = "<group>"; };
 		C16DA85622E93387008624C2 /* DashKit.loopwatchplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DashKit.loopwatchplugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		C16DA85722E93387008624C2 /* DashKitPlugin copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "DashKitPlugin copy-Info.plist"; path = "/Users/pete/dev/TidepoolLoopDashWorkspace/DashKit/DashKitPlugin copy-Info.plist"; sourceTree = "<absolute>"; };
-		C16DA85922E93B93008624C2 /* LoopKitUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LoopKitUI.framework; path = Carthage/Build/iOS/LoopKitUI.framework; sourceTree = "<group>"; };
 		C194113C2285D30A00E886DD /* PairPodSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairPodSetupViewController.swift; sourceTree = "<group>"; };
 		C19411432286164E00E886DD /* ReplacePodViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplacePodViewController.swift; sourceTree = "<group>"; };
 		C194114522861E9100E886DD /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
@@ -209,8 +203,12 @@
 		C1E753E2226928F700A0BC48 /* DashKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DashKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1E753E7226928F700A0BC48 /* DashPumpManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashPumpManagerTests.swift; sourceTree = "<group>"; };
 		C1E753E9226928F700A0BC48 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C1FE2E3322E940070035DCA0 /* SwiftGif.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftGif.framework; path = Carthage/Build/iOS/SwiftGif.framework; sourceTree = "<group>"; };
-		C1FE2E3422E940070035DCA0 /* MKRingProgressView.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MKRingProgressView.framework; path = Carthage/Build/iOS/MKRingProgressView.framework; sourceTree = "<group>"; };
+		C1FE2E3922EA0B360035DCA0 /* LoopKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = LoopKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C1FE2E3B22EA0B360035DCA0 /* LoopKitUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = LoopKitUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C1FE2E5222EA0DB90035DCA0 /* MKRingProgressView.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MKRingProgressView.framework; path = Carthage/Build/iOS/MKRingProgressView.framework; sourceTree = "<group>"; };
+		C1FE2E5422EA0DCB0035DCA0 /* SwiftGif.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftGif.framework; path = Carthage/Build/iOS/SwiftGif.framework; sourceTree = "<group>"; };
+		C1FE2E5622EA0DDB0035DCA0 /* INSSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = INSSDK.framework; path = "dash-sdk-ios/frameworks/INSSDK.framework"; sourceTree = "<group>"; };
+		C1FE2E5722EA0DDB0035DCA0 /* PodSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PodSDK.framework; path = "dash-sdk-ios/frameworks/PodSDK.framework"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -219,7 +217,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				C1D68E392284E0E000019CAE /* DashKit.framework in Frameworks */,
-				C154241A22808790006754B3 /* PodSDK.framework in Frameworks */,
+				C1FE2E6122EA0E5A0035DCA0 /* PodSDK.framework in Frameworks */,
+				C1FE2E3E22EA0B5A0035DCA0 /* LoopKit.framework in Frameworks */,
+				C1FE2E3F22EA0B5D0035DCA0 /* LoopKitUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -227,7 +227,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C16DA84A22E93387008624C2 /* LoopKit.framework in Frameworks */,
 				C16DA84B22E93387008624C2 /* DashKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -236,8 +235,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C16DA83522E7C6B4008624C2 /* LoopKit.framework in Frameworks */,
-				C16DA85A22E93B93008624C2 /* LoopKitUI.framework in Frameworks */,
+				C1FE2E3A22EA0B360035DCA0 /* LoopKit.framework in Frameworks */,
+				C1FE2E5A22EA0DEA0035DCA0 /* INSSDK.framework in Frameworks */,
+				C1FE2E3C22EA0B360035DCA0 /* LoopKitUI.framework in Frameworks */,
+				C1FE2E5B22EA0DF00035DCA0 /* PodSDK.framework in Frameworks */,
 				C16DA83622E7C6F2008624C2 /* DashKit.framework in Frameworks */,
 				C16DA85822E93973008624C2 /* DashKitUI.framework in Frameworks */,
 			);
@@ -247,9 +248,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C16DA83722E8C6F2008624C2 /* LoopKit.framework in Frameworks */,
-				C1542418228085BF006754B3 /* PodSDK.framework in Frameworks */,
-				C12AD2E722C174D100DF43EF /* INSSDK.framework in Frameworks */,
+				C1FE2E5822EA0DDC0035DCA0 /* INSSDK.framework in Frameworks */,
+				C1FE2E5322EA0DB90035DCA0 /* MKRingProgressView.framework in Frameworks */,
+				C1FE2E3D22EA0B570035DCA0 /* LoopKit.framework in Frameworks */,
+				C1FE2E5522EA0DCB0035DCA0 /* SwiftGif.framework in Frameworks */,
+				C1FE2E5922EA0DDC0035DCA0 /* PodSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -268,11 +271,14 @@
 		C107D10C22692AE700D63775 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				C16DA85922E93B93008624C2 /* LoopKitUI.framework */,
+				C1FE2E5622EA0DDB0035DCA0 /* INSSDK.framework */,
+				C1FE2E5722EA0DDB0035DCA0 /* PodSDK.framework */,
+				C1FE2E5422EA0DCB0035DCA0 /* SwiftGif.framework */,
+				C1FE2E5222EA0DB90035DCA0 /* MKRingProgressView.framework */,
+				C1FE2E3922EA0B360035DCA0 /* LoopKit.framework */,
+				C1FE2E3B22EA0B360035DCA0 /* LoopKitUI.framework */,
 				C1D46D5F22C568F600978E59 /* ObjectMapper.framework */,
 				C1D46D5E22C568F600978E59 /* RxSwift.framework */,
-				C1542417228085BF006754B3 /* PodSDK.framework */,
-				C107D10D22692AE700D63775 /* LoopKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -378,10 +384,6 @@
 		C1E753CF226928F700A0BC48 = {
 			isa = PBXGroup;
 			children = (
-				C1FE2E3422E940070035DCA0 /* MKRingProgressView.framework */,
-				C1FE2E3322E940070035DCA0 /* SwiftGif.framework */,
-				C12AD2E522C1742E00DF43EF /* PodSDK.framework */,
-				C12AD2E322C1741E00DF43EF /* INSSDK.framework */,
 				C107D11322692BC300D63775 /* Common */,
 				C1E753DB226928F700A0BC48 /* DashKit */,
 				C1E753E6226928F700A0BC48 /* DashKitTests */,
@@ -747,6 +749,7 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 					"$(PROJECT_DIR)/dash-sdk-ios",
 					"$(PROJECT_DIR)/dash-sdk-ios/PodSDK.framework/Frameworks",
+					"$(PROJECT_DIR)/dash-sdk-ios/frameworks",
 				);
 				INFOPLIST_FILE = DashKitUI/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -781,6 +784,7 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 					"$(PROJECT_DIR)/dash-sdk-ios",
 					"$(PROJECT_DIR)/dash-sdk-ios/PodSDK.framework/Frameworks",
+					"$(PROJECT_DIR)/dash-sdk-ios/frameworks",
 				);
 				INFOPLIST_FILE = DashKitUI/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -873,6 +877,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)/dash-sdk-ios/frameworks",
 				);
 				INFOPLIST_FILE = DashKitPlugin/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
@@ -905,6 +910,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)/dash-sdk-ios/frameworks",
 				);
 				INFOPLIST_FILE = DashKitPlugin/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
