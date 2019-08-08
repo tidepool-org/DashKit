@@ -33,9 +33,6 @@
 		C15424312280C575006754B3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C15424302280C575006754B3 /* Assets.xcassets */; };
 		C15424332280C75E006754B3 /* PodStatusExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C15424322280C75D006754B3 /* PodStatusExtension.swift */; };
 		C16DA83622E7C6F2008624C2 /* DashKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; };
-		C16DA83B22E8D253008624C2 /* ObjectMapper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1D46D5F22C568F600978E59 /* ObjectMapper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C16DA83C22E8D253008624C2 /* RxSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1D46D5E22C568F600978E59 /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C16DA83D22E8D253008624C2 /* DashKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C16DA84822E93387008624C2 /* DashKitPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19BB3EF22E7C64A00EA5C2E /* DashKitPlugin.swift */; };
 		C16DA84B22E93387008624C2 /* DashKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; };
 		C16DA85022E93387008624C2 /* ObjectMapper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1D46D5F22C568F600978E59 /* ObjectMapper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -82,11 +79,6 @@
 		C1FE2E5922EA0DDC0035DCA0 /* PodSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E5722EA0DDB0035DCA0 /* PodSDK.framework */; };
 		C1FE2E5A22EA0DEA0035DCA0 /* INSSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E5622EA0DDB0035DCA0 /* INSSDK.framework */; };
 		C1FE2E5B22EA0DF00035DCA0 /* PodSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E5722EA0DDB0035DCA0 /* PodSDK.framework */; };
-		C1FE2E5C22EA0E0F0035DCA0 /* INSSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E5622EA0DDB0035DCA0 /* INSSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C1FE2E5D22EA0E150035DCA0 /* PodSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E5722EA0DDB0035DCA0 /* PodSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C1FE2E5E22EA0E190035DCA0 /* MKRingProgressView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E5222EA0DB90035DCA0 /* MKRingProgressView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C1FE2E5F22EA0E1D0035DCA0 /* SwiftGif.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E5422EA0DCB0035DCA0 /* SwiftGif.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C1FE2E6022EA0E370035DCA0 /* DashKitUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C107D15322694B9C00D63775 /* DashKitUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C1FE2E6122EA0E5A0035DCA0 /* PodSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E5722EA0DDB0035DCA0 /* PodSDK.framework */; };
 /* End PBXBuildFile section */
 
@@ -116,14 +108,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C16DA83B22E8D253008624C2 /* ObjectMapper.framework in Embed Frameworks */,
-				C16DA83C22E8D253008624C2 /* RxSwift.framework in Embed Frameworks */,
-				C1FE2E5C22EA0E0F0035DCA0 /* INSSDK.framework in Embed Frameworks */,
-				C1FE2E5D22EA0E150035DCA0 /* PodSDK.framework in Embed Frameworks */,
-				C1FE2E5E22EA0E190035DCA0 /* MKRingProgressView.framework in Embed Frameworks */,
-				C1FE2E5F22EA0E1D0035DCA0 /* SwiftGif.framework in Embed Frameworks */,
-				C16DA83D22E8D253008624C2 /* DashKit.framework in Embed Frameworks */,
-				C1FE2E6022EA0E370035DCA0 /* DashKitUI.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -179,7 +163,7 @@
 		C1941150228DBF2100E886DD /* ExpirationReminderDateTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpirationReminderDateTableViewCell.swift; sourceTree = "<group>"; };
 		C1941152228DBF8300E886DD /* NibLoadable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NibLoadable.swift; sourceTree = "<group>"; };
 		C1941154228DD32A00E886DD /* PodReplacementNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodReplacementNavigationController.swift; sourceTree = "<group>"; };
-		C19BB3E522E776AE00EA5C2E /* DashKit.loopplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DashKit.loopplugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		C19BB3E522E776AE00EA5C2E /* DashKitPlugin.loopplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DashKitPlugin.loopplugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		C19BB3E722E776AE00EA5C2E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C19BB3EE22E7C64900EA5C2E /* DashKitPlugin-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DashKitPlugin-Bridging-Header.h"; sourceTree = "<group>"; };
 		C19BB3EF22E7C64A00EA5C2E /* DashKitPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DashKitPlugin.swift; sourceTree = "<group>"; };
@@ -401,7 +385,7 @@
 				C1E753D9226928F700A0BC48 /* DashKit.framework */,
 				C1E753E2226928F700A0BC48 /* DashKitTests.xctest */,
 				C107D15322694B9C00D63775 /* DashKitUI.framework */,
-				C19BB3E522E776AE00EA5C2E /* DashKit.loopplugin */,
+				C19BB3E522E776AE00EA5C2E /* DashKitPlugin.loopplugin */,
 				C16DA85622E93387008624C2 /* DashKit.loopwatchplugin */,
 			);
 			name = Products;
@@ -501,6 +485,7 @@
 				C19BB3E222E776AE00EA5C2E /* Frameworks */,
 				C19BB3E322E776AE00EA5C2E /* Resources */,
 				C16DA83822E8D208008624C2 /* Embed Frameworks */,
+				C1D1406322FBB1F300DA6242 /* Copy Frameworks with Carthage */,
 			);
 			buildRules = (
 			);
@@ -508,7 +493,7 @@
 			);
 			name = DashKitPlugin;
 			productName = DashKitPlugin;
-			productReference = C19BB3E522E776AE00EA5C2E /* DashKit.loopplugin */;
+			productReference = C19BB3E522E776AE00EA5C2E /* DashKitPlugin.loopplugin */;
 			productType = "com.apple.product-type.bundle";
 		};
 		C1E753D8226928F700A0BC48 /* DashKit */ = {
@@ -638,6 +623,35 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		C1D1406322FBB1F300DA6242 /* Copy Frameworks with Carthage */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/DashKit.framework",
+				"$(BUILT_PRODUCTS_DIR)/DashKitUI.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/ObjectMapper.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/RxSwift.framework",
+				"$(SRCROOT)/dash-sdk-ios/frameworks/INSSDK.framework",
+				"$(SRCROOT)/dash-sdk-ios/frameworks/PodSDK.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/MKRingProgressView.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SwiftGif.framework",
+			);
+			name = "Copy Frameworks with Carthage";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "carthage copy-frameworks\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		C107D14F22694B9C00D63775 /* Sources */ = {
@@ -892,7 +906,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.tidepool.DashKitPlugin;
 				PRODUCT_MODULE_NAME = DashKitPlugin;
-				PRODUCT_NAME = DashKit;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -926,7 +940,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.tidepool.DashKitPlugin;
 				PRODUCT_MODULE_NAME = DashKitPlugin;
-				PRODUCT_NAME = DashKit;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
