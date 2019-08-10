@@ -904,6 +904,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MACH_O_TYPE = mh_dylib;
 				PRODUCT_BUNDLE_IDENTIFIER = org.tidepool.DashKitPlugin;
 				PRODUCT_MODULE_NAME = DashKitPlugin;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -938,6 +939,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MACH_O_TYPE = mh_dylib;
 				PRODUCT_BUNDLE_IDENTIFIER = org.tidepool.DashKitPlugin;
 				PRODUCT_MODULE_NAME = DashKitPlugin;
 				PRODUCT_NAME = "$(TARGET_NAME)";
