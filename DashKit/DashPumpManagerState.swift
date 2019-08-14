@@ -26,8 +26,6 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
 
     public var lastStatusDate: Date?
 
-    public var suspended: Bool
-
     public var unfinalizedBolus: UnfinalizedDose?
     public var unfinalizedTempBasal: UnfinalizedDose?
     public var unfinalizedSuspend: UnfinalizedDose?
@@ -35,27 +33,27 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
 
     var finalizedDoses: [UnfinalizedDose]
 
+    public var suspendState: SuspendState
+
     // Temporal state not persisted
 
-    internal enum SuspendTransition {
-        case suspending
-        case resuming
+    internal enum EngageablePumpState: Equatable {
+        case engaging
+        case disengaging
+        case stable
     }
 
-    internal var suspendTransition: SuspendTransition?
+    internal var suspendEngageState: EngageablePumpState = .stable
 
-    internal enum BolusTransition {
-        case initiating
-        case canceling
-    }
+    internal var bolusEngageState: EngageablePumpState = .stable
 
-    internal var bolusTransition: BolusTransition?
+    internal var tempBasalEngageState: EngageablePumpState = .stable
 
     public init(timeZone: TimeZone, basalProgram: BasalProgram) {
         self.timeZone = timeZone
         self.basalProgram = basalProgram
         self.finalizedDoses = []
-        self.suspended = false
+        self.suspendState = .resumed(Date())
     }
 
 
@@ -63,21 +61,18 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
         guard
             let _ = rawValue["version"] as? Int,
             let rawBasalProgram = rawValue["basalProgram"] as? BasalProgram.RawValue,
-            let basalProgram = BasalProgram(rawValue: rawBasalProgram)
+            let basalProgram = BasalProgram(rawValue: rawBasalProgram),
+            let suspendStateRaw = rawValue["suspendState"] as? SuspendState.RawValue,
+            let suspendState = SuspendState(rawValue: suspendStateRaw)
             else {
             return nil
         }
 
         self.basalProgram = basalProgram
+        self.suspendState = suspendState
 
         self.podActivatedAt = rawValue["podActivatedAt"] as? Date
         self.lastStatusDate = rawValue["lastStatusDate"] as? Date
-
-        if let suspended = rawValue["suspended"] as? Bool {
-            self.suspended = suspended
-        } else {
-            self.suspended = false
-        }
 
         if let rawReservoirLevel = rawValue["reservoirLevel"] as? ReservoirLevel.RawValue {
             self.reservoirLevel = ReservoirLevel(rawValue: rawReservoirLevel)
@@ -137,7 +132,7 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
             "timeZone": timeZone.secondsFromGMT(),
             "finalizedDoses": finalizedDoses.map( { $0.rawValue }),
             "basalProgram": basalProgram.rawValue,
-            "suspended": suspended,
+            "suspendState": suspendState.rawValue,
         ]
 
         if let lastStatusDate = lastStatusDate {
@@ -180,7 +175,67 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
 extension DashPumpManagerState: CustomDebugStringConvertible {
     public var debugDescription: String {
         return [
+            "* podActivatedAt: \(String(describing: podActivatedAt))",
             "* timeZone: \(timeZone)",
+            "* suspendState: \(suspendState)",
+            "* basalProgram: \(basalProgram)",
+            "* finalizedDoses: \(finalizedDoses)",
+            "* unfinalizedBolus: \(String(describing: unfinalizedBolus))",
+            "* unfinalizedTempBasal: \(String(describing: unfinalizedTempBasal))",
+            "* unfinalizedSuspend: \(String(describing: unfinalizedSuspend))",
+            "* unfinalizedResume: \(String(describing: unfinalizedResume))",
+            "* reservoirLevel: \(String(describing: reservoirLevel))",
+            "* lastStatusDate: \(String(describing: lastStatusDate))",
             ].joined(separator: "\n")
+    }
+}
+
+public enum SuspendState: Equatable, RawRepresentable {
+    public typealias RawValue = [String: Any]
+
+    private enum SuspendStateType: Int {
+        case suspend, resume
+    }
+
+    case suspended(Date)
+    case resumed(Date)
+
+    private var identifier: Int {
+        switch self {
+        case .suspended:
+            return 1
+        case .resumed:
+            return 2
+        }
+    }
+
+    public init?(rawValue: RawValue) {
+        guard let suspendStateType = rawValue["case"] as? SuspendStateType.RawValue,
+            let date = rawValue["date"] as? Date else {
+                return nil
+        }
+        switch SuspendStateType(rawValue: suspendStateType) {
+        case .suspend?:
+            self = .suspended(date)
+        case .resume?:
+            self = .resumed(date)
+        default:
+            return nil
+        }
+    }
+
+    public var rawValue: RawValue {
+        switch self {
+        case .suspended(let date):
+            return [
+                "case": SuspendStateType.suspend.rawValue,
+                "date": date
+            ]
+        case .resumed(let date):
+            return [
+                "case": SuspendStateType.resume.rawValue,
+                "date": date
+            ]
+        }
     }
 }
