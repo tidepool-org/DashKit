@@ -157,12 +157,6 @@ class InsertCannulaSetupViewController: SetupTableViewController {
 
     func insertCannula() {
 
-        // Shouldn't normally happen.  Testing
-        guard pumpManager.podCommState != .active else {
-            self.continueState = .ready
-            return
-        }
-
         let basalProgram = pumpManager.state.basalProgram
         let autoOffAlert = try! AutoOffAlert.init(enable: true, interval: 4 * 60 * 60)
         continueState = .startingInsertion

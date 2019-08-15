@@ -176,12 +176,6 @@ class PairPodSetupViewController: SetupTableViewController {
     func pair() {
         self.continueState = .pairing
 
-        // Shouldn't normally happen.  Testing
-        guard pumpManager.podCommState != .active else {
-            self.continueState = .ready
-            return
-        }
-
         var timeoutHandler: DispatchWorkItem?
 
         pumpManager.startPodActivation(lowReservoirAlert: try! LowReservoirAlert(reservoirVolumeBelow: 1000),
