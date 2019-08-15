@@ -344,12 +344,12 @@ public class DashPumpManager: PumpManager {
         var dosesToStore: [UnfinalizedDose] = []
 
         lockedState.mutate { (state) in
-            if let bolus = state.unfinalizedBolus, bolus.finished {
+            if let bolus = state.unfinalizedBolus, bolus.isFinished {
                 state.finalizedDoses.append(bolus)
                 state.unfinalizedBolus = nil
             }
 
-            if let tempBasal = state.unfinalizedTempBasal, tempBasal.finished {
+            if let tempBasal = state.unfinalizedTempBasal, tempBasal.isFinished {
                 state.finalizedDoses.append(tempBasal)
                 state.unfinalizedTempBasal = nil
             }
@@ -435,7 +435,7 @@ public class DashPumpManager: PumpManager {
         case .disengaging:
             return .cancelingTempBasal
         case .stable:
-            if let tempBasal = state.unfinalizedTempBasal, !tempBasal.finished {
+            if let tempBasal = state.unfinalizedTempBasal, !tempBasal.isFinished {
                 return .tempBasal(DoseEntry(tempBasal))
             }
             switch state.suspendState {
@@ -458,7 +458,7 @@ public class DashPumpManager: PumpManager {
         case .disengaging:
             return .canceling
         case .stable:
-            if let bolus = state.unfinalizedBolus, !bolus.finished {
+            if let bolus = state.unfinalizedBolus, !bolus.isFinished {
                 return .inProgress(DoseEntry(bolus))
             }
         }
@@ -556,7 +556,7 @@ public class DashPumpManager: PumpManager {
 
 
             // Cancel any existing temp basal
-            if self.state.unfinalizedTempBasal?.finished == false {
+            if self.state.unfinalizedTempBasal?.isFinished == false {
                 let semaphore = DispatchSemaphore(value: 0)
                 cancelTempBasal { (dose) in
                     semaphore.signal()

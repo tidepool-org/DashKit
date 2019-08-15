@@ -77,7 +77,7 @@ public struct UnfinalizedDose: RawRepresentable, Equatable, CustomStringConverti
         return min(elapsed / duration, 1)
     }
 
-    public var finished: Bool {
+    public var isFinished: Bool {
         return progress >= 1
     }
 
@@ -221,7 +221,7 @@ extension NewPumpEvent {
     init(_ dose: UnfinalizedDose) {
         let title = String(describing: dose)
         let entry = DoseEntry(dose)
-        self.init(date: dose.startTime, dose: entry, isMutable: false, raw: dose.uniqueKey, title: title)
+        self.init(date: dose.startTime, dose: entry, isMutable: !dose.isFinished, raw: dose.uniqueKey, title: title)
     }
 }
 
