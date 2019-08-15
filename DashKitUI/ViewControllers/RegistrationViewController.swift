@@ -23,12 +23,15 @@
 import Foundation
 import UIKit
 import PodSDK
+import os.log
 
 public enum SplashScreenConfiguration {
     case phoneRegistration, phoneValidation
 }
 
 class RegistrationViewController: UIViewController {
+    private let log = OSLog(category: "DashRegistrationViewController")
+
 
     @IBOutlet weak var phoneRegistration: UIButton!
     @IBOutlet weak var userDataLabel: UILabel!
@@ -53,11 +56,14 @@ class RegistrationViewController: UIViewController {
 
     @IBAction func phoneRegistration(_ sender: UIButton) {
         guard !RegistrationManager.shared.isRegistered() else {
+            log.default("phone is registered")
             presentOkDialog(title: "Error", message: "Phone already registered.")
             return
         }
+        self.log.default("phone is not registered. starting registration")
 
         RegistrationManager.shared.startRegistration { (status) in
+            self.log.default("startRegistration status: %{public}@", String(describing: status))
             print("startRegistration status: \(status)")
             switch(status) {
             case .registered, .alreadyRegistered:

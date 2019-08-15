@@ -35,7 +35,7 @@ public class PodExpirationTableViewCell: UITableViewCell {
                     dayText = LocalizedString("Yesterday", comment: "Name for day preceeding this day")
                 } else {
                     if let weekday = Calendar.current.dateComponents([.weekday], from: date).weekday {
-                        dayText = dateFormatter.weekdaySymbols[weekday]
+                        dayText = dateFormatter.weekdaySymbols[weekday-1]
                     }
                 }
                 dateLabel.text = dayText
