@@ -35,6 +35,13 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
 
     public var suspendState: SuspendState
 
+    public var isSuspended: Bool {
+        if case .suspended = suspendState {
+            return true
+        }
+        return false
+    }
+
     // Temporal state not persisted
 
     internal enum EngageablePumpState: Equatable {
@@ -49,8 +56,11 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
 
     internal var tempBasalEngageState: EngageablePumpState = .stable
 
-    public init(timeZone: TimeZone, basalProgram: BasalProgram) {
-        self.timeZone = timeZone
+    public init?(basalRateSchedule: BasalRateSchedule) {
+        self.timeZone = basalRateSchedule.timeZone
+        guard let basalProgram = BasalProgram(items: basalRateSchedule.items) else {
+            return nil
+        }
         self.basalProgram = basalProgram
         self.finalizedDoses = []
         self.suspendState = .resumed(Date())

@@ -64,8 +64,7 @@ public class DashPumpManagerSetupViewController: UINavigationController, PumpMan
 
         switch viewController {
         case let vc as PairPodSetupViewController:
-            if let basalRateSchedule = basalSchedule, let basalProgram = BasalProgram(rateSchedule: basalRateSchedule) {
-                let pumpManagerState = DashPumpManagerState(timeZone: .currentFixed, basalProgram: basalProgram)
+            if let basalRateSchedule = basalSchedule, let pumpManagerState = DashPumpManagerState(basalRateSchedule: basalRateSchedule) {
                 let pumpManager = DashPumpManager(state: pumpManagerState)
                 vc.pumpManager = pumpManager
                 self.pumpManager = pumpManager

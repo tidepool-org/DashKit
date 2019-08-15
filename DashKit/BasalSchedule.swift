@@ -11,11 +11,11 @@ import PodSDK
 import LoopKit
 
 extension BasalProgram {
-    public init?(rateSchedule: BasalRateSchedule) {
+    public init?(items: [RepeatingScheduleValue<Double>]) {
         var basalSegments = [BasalSegment]()
 
-        let rates = rateSchedule.items.map { $0.value }
-        let startTimes = rateSchedule.items.map { $0.startTime }
+        let rates = items.map { $0.value }
+        let startTimes = items.map { $0.startTime }
         var endTimes = startTimes.suffix(from: 1)
         endTimes.append(.hours(24))
 

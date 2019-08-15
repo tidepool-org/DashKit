@@ -8,7 +8,6 @@
 
 import XCTest
 import LoopKit
-import PodSDK
 import UserNotifications
 @testable import DashKit
 
@@ -32,8 +31,9 @@ class DashPumpManagerTests: XCTestCase {
     override func setUp() {
         super.setUp()
 
-        let basalProgram = try! BasalProgram(basalSegments: [BasalSegment(startTime: 0, endTime: 48, basalRate: 5)])
-        var state = DashPumpManagerState(timeZone: TimeZone.currentFixed, basalProgram: basalProgram)
+        let basalScheduleItems = [RepeatingScheduleValue(startTime: 0, value: 5.0)]
+        let schedule = BasalRateSchedule(dailyItems: basalScheduleItems, timeZone: .current)!
+        var state = DashPumpManagerState(basalRateSchedule: schedule)!
         state.podActivatedAt = Date().addingTimeInterval(.days(1))
 
         podCommManager = MockPodCommManager()
@@ -137,7 +137,7 @@ class DashPumpManagerTests: XCTestCase {
             XCTAssertEqual(startDate, dose.startDate)
         }) { (result) in
             bolusCallbacks.fulfill()
-            guard case .failure(PodCommError.podNotAvailable) = result else {
+            guard case .failure(DashPumpManagerError.podCommError(description: "podNotAvailable")) = result else {
                 XCTFail("Expected podNotAvailable error")
                 return
             }
@@ -208,7 +208,7 @@ class DashPumpManagerTests: XCTestCase {
 
         pumpManager.enactTempBasal(unitsPerHour: 1, for: .minutes(30)) { (result) in
             tempBasalCallbackExpectation.fulfill()
-            guard case .failure(PodCommError.podNotAvailable) = result else {
+            guard case .failure(DashPumpManagerError.podCommError(description: "podNotAvailable")) = result else {
                 XCTFail("Expected podNotAvailable error")
                 return
             }
@@ -253,6 +253,7 @@ extension DashPumpManagerTests: PumpManagerDelegate {
     func pumpManager(_ pumpManager: PumpManager, hasNewPumpEvents events: [NewPumpEvent], lastReconciliation: Date?, completion: @escaping (Error?) -> Void) {
         pumpEventStorageExpectation?.fulfill()
         lastPumpEvents = events
+        completion(nil)
     }
 
     func pumpManager(_ pumpManager: PumpManager, didReadReservoirValue units: Double, at date: Date, completion: @escaping (PumpManagerResult<(newValue: ReservoirValue, lastValue: ReservoirValue?, areStoredValuesContinuous: Bool)>) -> Void) {
@@ -262,7 +263,6 @@ extension DashPumpManagerTests: PumpManagerDelegate {
     }
 
     func pumpManagerDidUpdateState(_ pumpManager: PumpManager) {
-        print("****** fulfill *********")
         pumpManagerDelegateStateUpdateExpectation?.fulfill()
     }
 

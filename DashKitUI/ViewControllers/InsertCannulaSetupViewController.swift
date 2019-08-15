@@ -157,11 +157,10 @@ class InsertCannulaSetupViewController: SetupTableViewController {
 
     func insertCannula() {
 
-        let basalProgram = pumpManager.state.basalProgram
         let autoOffAlert = try! AutoOffAlert.init(enable: true, interval: 4 * 60 * 60)
         continueState = .startingInsertion
         var expectingAnotherEvent = false
-        pumpManager.finishPodActivation(basalProgram: basalProgram, autoOffAlert: autoOffAlert) { (activationStatus) in
+        pumpManager.finishPodActivation(autoOffAlert: autoOffAlert) { (activationStatus) in
             switch(activationStatus) {
             case .error(let error):
                 expectingAnotherEvent = false

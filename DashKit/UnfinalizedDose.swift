@@ -121,7 +121,7 @@ public struct UnfinalizedDose: RawRepresentable, Equatable, CustomStringConverti
         self.scheduledCertainty = scheduledCertainty
     }
 
-    public mutating func cancel(at date: Date, withRemaining remaining: Double? = nil) {
+    public mutating func cancel(at date: Date, withRemaining remainingHundredths: Int? = nil) {
         guard scheduledUnits == nil else {
             // Already canceled
             return
@@ -129,8 +129,8 @@ public struct UnfinalizedDose: RawRepresentable, Equatable, CustomStringConverti
         scheduledUnits = units
         let oldRate = rate
         duration = date.timeIntervalSince(startTime)
-        if let remaining = remaining {
-            units = units - remaining
+        if let remainingHundredths = remainingHundredths {
+            units = units - (Double(remainingHundredths) / 100.0)
         } else if let duration = duration {
             units = oldRate * duration.hours
         }

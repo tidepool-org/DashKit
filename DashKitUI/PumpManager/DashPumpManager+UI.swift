@@ -11,10 +11,6 @@ import LoopKit
 import LoopKitUI
 import DashKit
 
-public enum DashPumpManagerError: Error {
-    case missingSettings
-}
-
 extension DashPumpManager: PumpManagerUI {
 
     static public func setupViewController() -> (UIViewController & PumpManagerSetupViewController & CompletionNotifying) {
@@ -82,14 +78,13 @@ extension DashPumpManager {
 extension DashPumpManager {
 
     public func syncScheduleValues(for viewController: BasalScheduleTableViewController, completion: @escaping (SyncBasalScheduleResult<Double>) -> Void) {
-//        let newSchedule = BasalSchedule(repeatingScheduleValues: viewController.scheduleItems)
-//        setBasalSchedule(newSchedule) { (error) in
-//            if let error = error {
-//                completion(.failure(error))
-//            } else {
-//                completion(.success(scheduleItems: viewController.scheduleItems, timeZone: self.state.timeZone))
-//            }
-//        }
+        setBasalSchedule(dailyItems: viewController.scheduleItems) { (error) in
+            if let error = error {
+                completion(.failure(error))
+            } else {
+                completion(.success(scheduleItems: viewController.scheduleItems, timeZone: self.state.timeZone))
+            }
+        }
     }
 
     public func syncButtonTitle(for viewController: BasalScheduleTableViewController) -> String {
