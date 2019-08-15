@@ -7,8 +7,8 @@
 //
 
 import XCTest
-import PodSDK
 import LoopKit
+import PodSDK
 import UserNotifications
 @testable import DashKit
 
@@ -89,7 +89,7 @@ class DashPumpManagerTests: XCTestCase {
                 XCTAssertEqual(startDate, dose.startDate)
                 XCTAssertEqual(DoseType.bolus, dose.type)
                 XCTAssertEqual(DoseUnit.units, dose.unit)
-                XCTAssertEqual(1.0, dose.units)
+                XCTAssertEqual(1.0, dose.programmedUnits)
                 XCTAssertEqual(100, self.podCommManager.lastBolusVolume)
             }
         }
@@ -100,12 +100,12 @@ class DashPumpManagerTests: XCTestCase {
             return
         }
 
-        XCTAssertEqual(1, dose.units)
+        XCTAssertEqual(1, dose.programmedUnits)
         XCTAssertEqual(startDate, dose.startDate)
 
         XCTAssert(!stateUpdates.isEmpty)
         let lastState = stateUpdates.last!
-        XCTAssertNil(lastState.bolusTransition)
+        XCTAssertEqual(.stable, lastState.bolusEngageState)
 
         switch lastState.reservoirLevel {
         case .some(.valid(let value)):
@@ -158,6 +158,7 @@ class DashPumpManagerTests: XCTestCase {
         stateUpdateExpectation = expectation(description: "pod state updates")
 
         pumpManagerDelegateStateUpdateExpectation = expectation(description: "pumpmanager delegate state updates")
+        pumpManagerDelegateStateUpdateExpectation?.expectedFulfillmentCount = 3
 
         // Set a new reservoir value to make sure the result of the set program is used (5U)
         podCommManager.podStatus.reservoirUnitsRemaining = 500
@@ -232,6 +233,7 @@ extension DashPumpManagerTests: PumpManagerStatusObserver {
 }
 
 extension DashPumpManagerTests: PumpManagerDelegate {
+
     func pumpManagerBLEHeartbeatDidFire(_ pumpManager: PumpManager) {
     }
 
@@ -248,7 +250,7 @@ extension DashPumpManagerTests: PumpManagerDelegate {
     func pumpManager(_ pumpManager: PumpManager, didError error: PumpManagerError) {
     }
 
-    func pumpManager(_ pumpManager: PumpManager, didReadPumpEvents events: [NewPumpEvent], completion: @escaping (Error?) -> Void) {
+    func pumpManager(_ pumpManager: PumpManager, hasNewPumpEvents events: [NewPumpEvent], lastReconciliation: Date?, completion: @escaping (Error?) -> Void) {
         pumpEventStorageExpectation?.fulfill()
         lastPumpEvents = events
     }
@@ -260,6 +262,7 @@ extension DashPumpManagerTests: PumpManagerDelegate {
     }
 
     func pumpManagerDidUpdateState(_ pumpManager: PumpManager) {
+        print("****** fulfill *********")
         pumpManagerDelegateStateUpdateExpectation?.fulfill()
     }
 

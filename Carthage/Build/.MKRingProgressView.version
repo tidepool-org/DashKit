@@ -12,7 +12,7 @@
   "iOS" : [
     {
       "name" : "MKRingProgressView",
-      "hash" : "ee23721691d63d8ec2e4f726dd644ef37fb174738f9f3afc1b3026820a9d07ed",
+      "hash" : "9e10133e0ddebdcf728c273d46165446e57b55c1474c7ccec59ef17f12e89a26",
       "swiftToolchainVersion" : "5.0.1 (swiftlang-1001.0.82.4 clang-1001.0.46.5)"
     }
   ]

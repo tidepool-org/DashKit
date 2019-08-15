@@ -227,17 +227,17 @@ public class DashPumpManager: PumpManager {
         return podCommManager.getPodId()
     }
 
-    private func updateStateFromPodStatus(status: PodStatusProtocol) {
+    private func updateStateFromPodStatus(status: PodStatus) {
         lockedState.mutate { (state) in
             state.lastStatusDate = Date()
             state.reservoirLevel = ReservoirLevel(rawValue: status.reservoirUnitsRemaining)
-            state.podActivatedAt = status.activationTime
+            state.podActivatedAt = status.expirationDate - .days(3)
         }
         notifyPodStatusObservers()
     }
 
-    public func getPodStatus(completion: @escaping (PodCommResult<PodStatusProtocol>) -> ()) {
-        podCommManager.getPodStatus { (response) in
+    public func getPodStatus(completion: @escaping (PodCommResult<PodStatus>) -> ()) {
+        podCommManager.getPodStatus(userInitiated: false) { (response) in
             switch response {
             case .failure(let error):
                 print("Error fetching status: \(error)")
@@ -280,7 +280,7 @@ public class DashPumpManager: PumpManager {
         }
     }
 
-    public func deactivatePod(completion: @escaping (PodCommResult<PodStatusProtocol>) -> ()) {
+    public func deactivatePod(completion: @escaping (PodCommResult<PodStatus>) -> ()) {
         podCommManager.deactivatePod { (result) in
             completion(result)
         }

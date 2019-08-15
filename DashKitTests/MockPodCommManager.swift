@@ -10,14 +10,16 @@ import Foundation
 import DashKit
 import PodSDK
 
-struct MockPodStatus: PodStatusProtocol {
-    var podState: PodState!
+struct MockPodStatus: PodStatus {
+    var expirationDate: Date
 
-    var programStatus: ProgramStatus!
+    var podState: PodState
 
-    var activeAlerts: PodAlerts!
+    var programStatus: ProgramStatus
 
-    var isOcclusionAlertActive: Bool!
+    var activeAlerts: PodAlerts
+
+    var isOcclusionAlertActive: Bool
 
     var bolusUnitsRemaining: Int
 
@@ -35,7 +37,6 @@ struct MockPodStatus: PodStatusProtocol {
 }
 
 class MockPodCommManager: PodCommManagerProtocol {
-
     var lastBolusVolume: Int?
     var lastBasalProgram: BasalProgram?
     var lastTempBasal: TempBasal?
@@ -66,11 +67,15 @@ class MockPodCommManager: PodCommManagerProtocol {
         return
     }
 
-    func deactivatePod(completion: @escaping (PodCommResult<PodStatusProtocol>) -> ()) {
+    func deactivatePod(completion: @escaping (PodCommResult<PodStatus>) -> ()) {
         return
     }
 
-    func getPodStatus(completion: @escaping (PodCommResult<PodStatusProtocol>) -> ()) {
+    func getPodStatus(userInitiated: Bool, completion: @escaping (PodCommResult<PodStatus>) -> ()) {
+        return
+    }
+
+    func getPodStatus(completion: @escaping (PodCommResult<PodStatus>) -> ()) {
         return
     }
 
@@ -78,11 +83,11 @@ class MockPodCommManager: PodCommManagerProtocol {
         return
     }
 
-    func playTestBeeps(completion: @escaping (PodCommResult<PodStatusProtocol>) -> ()) {
+    func playTestBeeps(completion: @escaping (PodCommResult<PodStatus>) -> ()) {
         return
     }
 
-    func sendProgram(programType: ProgramType, beepOption: BeepOption?, completion: @escaping (PodCommResult<PodStatusProtocol>) -> ()) {
+    func sendProgram(programType: ProgramType, beepOption: BeepOption?, completion: @escaping (PodCommResult<PodStatus>) -> ()) {
         if let error = sendProgramFailureError {
             completion(.failure(error))
         } else {
@@ -98,19 +103,19 @@ class MockPodCommManager: PodCommManagerProtocol {
         }
     }
 
-    func stopProgram(programType: StopProgramType, completion: @escaping (PodCommResult<PodStatusProtocol>) -> ()) {
+    func stopProgram(programType: StopProgramType, completion: @escaping (PodCommResult<PodStatus>) -> ()) {
         return
     }
 
-    func updateAlertSetting(alertSetting: PodAlertSetting, completion: @escaping (PodCommResult<PodStatusProtocol>) -> ()) {
+    func updateAlertSetting(alertSetting: PodAlertSetting, completion: @escaping (PodCommResult<PodStatus>) -> ()) {
         return
     }
 
-    func silenceAlerts(alert: PodAlerts, completion: @escaping (PodCommResult<PodStatusProtocol>) -> ()) {
+    func silenceAlerts(alert: PodAlerts, completion: @escaping (PodCommResult<PodStatus>) -> ()) {
         return
     }
 
-    func retryUnacknowledgedCommand(completion: @escaping (PodCommResult<PodStatusProtocol>) -> ()) {
+    func retryUnacknowledgedCommand(completion: @escaping (PodCommResult<PodStatus>) -> ()) {
         return
     }
 
@@ -131,14 +136,16 @@ class MockPodCommManager: PodCommManagerProtocol {
     }
 
     var podCommState: PodCommState {
-        return PodCommState.init(rawValue: "todo")!
+        return .activating
     }
 
     init(podStatus: MockPodStatus? = nil) {
         if let podStatus = podStatus {
             self.podStatus = podStatus
         } else {
+            let activation = Date()
             self.podStatus = MockPodStatus(
+                expirationDate: activation + TimeInterval(days: 3),
                 podState: .runningAboveMinVolume,
                 programStatus: .basalRunning,
                 activeAlerts: PodAlerts([]),
@@ -147,32 +154,7 @@ class MockPodCommManager: PodCommManagerProtocol {
                 totalUnitsDelivered: 38,
                 reservoirUnitsRemaining: 1023,
                 timeElapsedSinceActivation: 2,
-                activationTime: Date())
+                activationTime: activation)
         }
-    }
-}
-
-extension PodStatus {
-    init?(podState: PodState = .runningAboveMinVolume,
-          programStatus: ProgramStatus = ProgramStatus.basalRunning,
-          activeAlerts: PodAlerts = PodAlerts(rawValue: 0),
-          isOcclusionAlertActive: Bool = false,
-          bolusUnitsRemaining: Int = 0,
-          totalUnitsDelivered: Int = 38,
-          reservoirUnitsRemaining: Int = 1023,
-          timeElapsedSinceActivation: Int = 2,
-          lastSequenceNumber: Int = 10) {
-
-        self.init(JSON: [
-            "programStatus": programStatus.rawValue,
-            "lastSequenceNumber": lastSequenceNumber,
-            "podState": podState.rawValue,
-            "activeAlerts": activeAlerts.rawValue,
-            "isOcclusionAlertActive": isOcclusionAlertActive,
-            "pulsesDelivered": totalUnitsDelivered,
-            "reservoirPulsesRemaining": reservoirUnitsRemaining,
-            "timeSinceActivation": timeElapsedSinceActivation,
-            "bolusPulsesRemaining": bolusUnitsRemaining
-            ])
     }
 }

@@ -1,4 +1,4 @@
-github "tidepool-org/LoopKit" "loop-plugins"
+github "tidepool-org/LoopKit" "plugins-and-delivery-updates"
 github "ReactiveX/RxSwift" ~> 5.0
 github "tristanhimmelman/ObjectMapper" ~> 3.5
 github "bahlo/SwiftGif" ~> 1.7.0

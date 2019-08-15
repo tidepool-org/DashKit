@@ -256,6 +256,7 @@ SWIFT_CLASS("_TtC7LoopKit27CachedInsulinDeliveryObject")
 @property (nonatomic, copy) NSString * _Nullable syncIdentifier;
 @property (nonatomic) double value;
 @property (nonatomic, strong) NSNumber * _Nullable primitiveScheduledBasalRate;
+@property (nonatomic, strong) NSNumber * _Nullable primitiveScheduledTempBasalRate;
 @property (nonatomic, strong) NSNumber * _Nullable primitiveReason;
 @property (nonatomic, copy) NSDate * _Nullable createdAt;
 @end
@@ -324,6 +325,8 @@ SWIFT_CLASS("_TtC7LoopKit9PumpEvent")
 @property (nonatomic, copy) NSString * _Nullable primitiveUnit;
 @property (nonatomic, strong) NSNumber * _Nullable primitiveUploaded;
 @property (nonatomic, strong) NSNumber * _Nullable primitiveValue;
+@property (nonatomic, strong) NSNumber * _Nullable primitiveDeliveredUnits;
+@property (nonatomic, getter=mutable, setter=setMutable:) BOOL mutable_;
 @property (nonatomic, copy) NSData * _Nullable raw;
 @property (nonatomic, copy) NSString * _Nullable title;
 @end
@@ -607,6 +610,7 @@ SWIFT_CLASS("_TtC7LoopKit27CachedInsulinDeliveryObject")
 @property (nonatomic, copy) NSString * _Nullable syncIdentifier;
 @property (nonatomic) double value;
 @property (nonatomic, strong) NSNumber * _Nullable primitiveScheduledBasalRate;
+@property (nonatomic, strong) NSNumber * _Nullable primitiveScheduledTempBasalRate;
 @property (nonatomic, strong) NSNumber * _Nullable primitiveReason;
 @property (nonatomic, copy) NSDate * _Nullable createdAt;
 @end
@@ -675,6 +679,8 @@ SWIFT_CLASS("_TtC7LoopKit9PumpEvent")
 @property (nonatomic, copy) NSString * _Nullable primitiveUnit;
 @property (nonatomic, strong) NSNumber * _Nullable primitiveUploaded;
 @property (nonatomic, strong) NSNumber * _Nullable primitiveValue;
+@property (nonatomic, strong) NSNumber * _Nullable primitiveDeliveredUnits;
+@property (nonatomic, getter=mutable, setter=setMutable:) BOOL mutable_;
 @property (nonatomic, copy) NSData * _Nullable raw;
 @property (nonatomic, copy) NSString * _Nullable title;
 @end

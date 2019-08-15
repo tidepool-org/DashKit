@@ -5,38 +5,38 @@
   "watchOS" : [
     {
       "name" : "LoopKit",
-      "hash" : "08c79b6cfedea29c9778ac6e392f068f72c60643e9f3c545a6952f5179228a9d",
+      "hash" : "d21be857c3a2561ff566277cb310f60838ccef25d49d67b2729c056f505b5b03",
       "swiftToolchainVersion" : "5.0.1 (swiftlang-1001.0.82.4 clang-1001.0.46.5)"
     }
   ],
   "tvOS" : [
 
   ],
-  "commitish" : "1075538584882c8fd290b6cc933065107a640ab0",
+  "commitish" : "962d9482df2418dee5e878564f62d2fb4bbb6d19",
   "iOS" : [
     {
-      "name" : "MockKitUI",
-      "hash" : "d14cd757508fa65bd736800c85354f0a7f66bf0bf9f0c429db162087c2bc2a5d",
+      "name" : "LoopTestingKit",
+      "hash" : "88d085b9fb33357a1266ef5693ca1090004314bf53e9dac7a260790c80ab1cd6",
       "swiftToolchainVersion" : "5.0.1 (swiftlang-1001.0.82.4 clang-1001.0.46.5)"
     },
     {
-      "name" : "LoopTestingKit",
-      "hash" : "6cf2d068570b41867282381d5445e4fe48f3fe0ab982af4849bbbba9a730f20d",
+      "name" : "MockKitUI",
+      "hash" : "32254304fb5cea0703199b646af4c3f292bfa6297b9a5480842e7cc932ab8df2",
       "swiftToolchainVersion" : "5.0.1 (swiftlang-1001.0.82.4 clang-1001.0.46.5)"
     },
     {
       "name" : "MockKit",
-      "hash" : "b02f0e8c67e6fb25a129466ef014918fe59df06c46c940967d083a17c917e9c3",
-      "swiftToolchainVersion" : "5.0.1 (swiftlang-1001.0.82.4 clang-1001.0.46.5)"
-    },
-    {
-      "name" : "LoopKit",
-      "hash" : "907d91d0cb5c017baf4c67b77f1cd5218dee84d54a1d9de9ad46a04b19114fcb",
+      "hash" : "3556ed169f07452884b1122a544423c8da18871979c0279a4428c8bd75bcc5de",
       "swiftToolchainVersion" : "5.0.1 (swiftlang-1001.0.82.4 clang-1001.0.46.5)"
     },
     {
       "name" : "LoopKitUI",
-      "hash" : "959b934e4948c4511738699901c8cfc10aab324f28da00e49a143f4b744a87ed",
+      "hash" : "989e6ea077c1d7d3f9387a67a035bffe9844a579484c531e3cb7ec945416596e",
+      "swiftToolchainVersion" : "5.0.1 (swiftlang-1001.0.82.4 clang-1001.0.46.5)"
+    },
+    {
+      "name" : "LoopKit",
+      "hash" : "07c90ace4246fae2dd6af1c08613f53a105e8ad179eca6c088f5956ac78b47fd",
       "swiftToolchainVersion" : "5.0.1 (swiftlang-1001.0.82.4 clang-1001.0.46.5)"
     }
   ]

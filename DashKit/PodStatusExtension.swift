@@ -39,9 +39,6 @@ public extension PodStatus {
 public extension InternalErrorCode {
     var description: String {
         switch self {
-        case .inconsistentCommand:
-            return "Not a valid Pod command"
-
         case .invalidCommand:
             return "Invalid command"
 
@@ -82,10 +79,6 @@ public extension ActivationErrorCode {
             return "Try to call activation phase 2 before completing phase 1"
         }
     }
-}
-
-extension PodAlarm: LocalizedError {
-    
 }
 
 extension PodCommError: LocalizedError {
