@@ -355,11 +355,17 @@ public class DashPumpManager: PumpManager {
             }
 
             dosesToStore = state.finalizedDoses
+            if let unfinalizedBolus = state.unfinalizedBolus {
+                dosesToStore.append(unfinalizedBolus)
+            }
             if let unfinalizedTempBasal = state.unfinalizedTempBasal {
                 dosesToStore.append(unfinalizedTempBasal)
             }
             if let unfinalizedSuspend = state.unfinalizedSuspend {
                 dosesToStore.append(unfinalizedSuspend)
+            }
+            if let unfinalizedResume = state.unfinalizedResume {
+                dosesToStore.append(unfinalizedResume)
             }
         }
 
