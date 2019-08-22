@@ -661,6 +661,8 @@ public class DashPumpManager: PumpManager {
         self.lockedState = Locked(state)
         self.podCommManager = podCommManager
 
+        podCommManager.setLogger(logger: self)
+
         podCommManager.enableAutoConnection(launchOptions: [:])
     }
 
@@ -688,3 +690,17 @@ public class DashPumpManager: PumpManager {
     }
 }
 
+// Capture dash logs
+extension DashPumpManager: LoggingProtocol {
+    public func info(_ message: String) {
+        log.default("Dash Info: %{public}@", message)
+    }
+
+    public func debug(_ message: String) {
+        log.default("Dash Debug: %{public}@", message)
+    }
+
+    public func error(_ message: String) {
+        log.default("Dash Error: %{public}@", message)
+    }
+}

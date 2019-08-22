@@ -30,8 +30,8 @@ public enum SplashScreenConfiguration {
 }
 
 class RegistrationViewController: UIViewController {
-    private let log = OSLog(category: "DashRegistrationViewController")
 
+    private let log = OSLog(category: "DashRegistrationViewController")
 
     @IBOutlet weak var phoneRegistration: UIButton!
     @IBOutlet weak var userDataLabel: UILabel!
@@ -55,6 +55,7 @@ class RegistrationViewController: UIViewController {
     }
 
     @IBAction func phoneRegistration(_ sender: UIButton) {
+
         guard !RegistrationManager.shared.isRegistered() else {
             log.default("phone is registered")
             presentOkDialog(title: "Error", message: "Phone already registered.")
