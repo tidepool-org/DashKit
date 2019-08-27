@@ -18,9 +18,8 @@ extension DashPumpManager: PumpManagerUI {
     }
 
     public func settingsViewController() -> (UIViewController & CompletionNotifying) {
+        self.log.debug("Launching settings: podCommState = %@", String(describing: podCommState))
         switch podCommState {
-        case .noPod:
-            return PodReplacementNavigationController.instantiateNewPodFlow(self)
         case .alarm:
             return PodReplacementNavigationController.instantiatePodReplacementFlow(self)
         default:

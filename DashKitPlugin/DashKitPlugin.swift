@@ -10,8 +10,12 @@ import Foundation
 import LoopKitUI
 import DashKit
 import DashKitUI
+import os.log
 
 class DashKitPlugin: NSObject, LoopUIPlugin {
+    
+    private let log = OSLog(category: "DashKitPlugin")
+
     public var pumpManagerType: PumpManagerUI.Type? {
         return DashPumpManager.self
     }
@@ -22,7 +26,6 @@ class DashKitPlugin: NSObject, LoopUIPlugin {
 
     override init() {
         super.init()
-
-        print("Loaded DashKitPlugin class")
+        log.default("DashKitPlugin Instantiated")
     }
 }

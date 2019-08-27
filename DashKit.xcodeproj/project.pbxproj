@@ -35,6 +35,7 @@
 		C1344DE72304D68300973BE3 /* INSSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C1FE2E5622EA0DDB0035DCA0 /* INSSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C1344DE82304D68300973BE3 /* ObjectMapper.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C1D46D5F22C568F600978E59 /* ObjectMapper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C1344DE92304D68300973BE3 /* RxSwift.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C1D46D5E22C568F600978E59 /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C136AA5823117A2F008A320D /* OSLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ACF43E22A1F9A700F7DDB4 /* OSLog.swift */; };
 		C14D46F222CA85C000656FE0 /* NoActivePodViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14D46F122CA85C000656FE0 /* NoActivePodViewController.swift */; };
 		C15424312280C575006754B3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C15424302280C575006754B3 /* Assets.xcassets */; };
 		C15424332280C75E006754B3 /* PodStatusExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C15424322280C75D006754B3 /* PodStatusExtension.swift */; };
@@ -66,6 +67,7 @@
 		C1ACF44222A1FC1F00F7DDB4 /* PodDoseProgressEstimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ACF44122A1FC1F00F7DDB4 /* PodDoseProgressEstimator.swift */; };
 		C1ACF44422A200B100F7DDB4 /* UnfinalizedDose.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ACF44322A200B100F7DDB4 /* UnfinalizedDose.swift */; };
 		C1ACF44522A200D700F7DDB4 /* NumberFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ACF43622A04B4800F7DDB4 /* NumberFormatter.swift */; };
+		C1BC259C2314604800E80E3F /* DashPumpManagerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BC259B2314604800E80E3F /* DashPumpManagerError.swift */; };
 		C1D46D6222C5698800978E59 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1D46D5E22C568F600978E59 /* RxSwift.framework */; };
 		C1D46D6622C56C2400978E59 /* MockPodCommManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D46D6522C56C2300978E59 /* MockPodCommManager.swift */; };
 		C1D68E302284849D00019CAE /* BasalSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D68E2F2284849D00019CAE /* BasalSchedule.swift */; };
@@ -196,6 +198,7 @@
 		C1ACF43E22A1F9A700F7DDB4 /* OSLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSLog.swift; sourceTree = "<group>"; };
 		C1ACF44122A1FC1F00F7DDB4 /* PodDoseProgressEstimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodDoseProgressEstimator.swift; sourceTree = "<group>"; };
 		C1ACF44322A200B100F7DDB4 /* UnfinalizedDose.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnfinalizedDose.swift; sourceTree = "<group>"; };
+		C1BC259B2314604800E80E3F /* DashPumpManagerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashPumpManagerError.swift; sourceTree = "<group>"; };
 		C1D46D5E22C568F600978E59 /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = Carthage/Build/iOS/RxSwift.framework; sourceTree = "<group>"; };
 		C1D46D5F22C568F600978E59 /* ObjectMapper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ObjectMapper.framework; path = Carthage/Build/iOS/ObjectMapper.framework; sourceTree = "<group>"; };
 		C1D46D6522C56C2300978E59 /* MockPodCommManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPodCommManager.swift; sourceTree = "<group>"; };
@@ -418,6 +421,7 @@
 				C1D68E2F2284849D00019CAE /* BasalSchedule.swift */,
 				C1E753DC226928F700A0BC48 /* DashKit.h */,
 				C107D10A22692A1700D63775 /* DashPumpManager.swift */,
+				C1BC259B2314604800E80E3F /* DashPumpManagerError.swift */,
 				C107D11822692E6B00D63775 /* DashPumpManagerState.swift */,
 				C1E753DD226928F700A0BC48 /* Info.plist */,
 				C107D11122692B7200D63775 /* Pod.swift */,
@@ -721,6 +725,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C136AA5823117A2F008A320D /* OSLog.swift in Sources */,
 				C19BB3F022E7C64A00EA5C2E /* DashKitPlugin.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -741,6 +746,7 @@
 				C107D11722692D9D00D63775 /* LocalizedString.swift in Sources */,
 				C1ACF44422A200B100F7DDB4 /* UnfinalizedDose.swift in Sources */,
 				C107D11922692E6B00D63775 /* DashPumpManagerState.swift in Sources */,
+				C1BC259C2314604800E80E3F /* DashPumpManagerError.swift in Sources */,
 				C1ACF44522A200D700F7DDB4 /* NumberFormatter.swift in Sources */,
 				C1ACF43B22A173FF00F7DDB4 /* ReservoirLevel.swift in Sources */,
 				C107D11222692B7200D63775 /* Pod.swift in Sources */,

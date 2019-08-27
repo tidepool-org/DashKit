@@ -41,20 +41,29 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
         }
         return false
     }
-
-    // Temporal state not persisted
-
-    internal enum EngageablePumpState: Equatable {
-        case engaging
-        case disengaging
-        case stable
+    
+    public var isBolusing: Bool {
+        if let transition = activeTransition, transition == .startingBolus {
+            return true
+        }
+        if let bolus = unfinalizedBolus, !bolus.isFinished {
+            return true
+        }
+        return false
     }
 
-    internal var suspendEngageState: EngageablePumpState = .stable
-
-    internal var bolusEngageState: EngageablePumpState = .stable
-
-    internal var tempBasalEngageState: EngageablePumpState = .stable
+    // Temporal state not persisted
+    
+    internal enum ActiveTransition: Equatable {
+        case startingBolus
+        case cancelingBolus
+        case startingTempBasal
+        case cancelingTempBasal
+        case suspendingPump
+        case resumingPump
+    }
+    
+    internal var activeTransition: ActiveTransition?
 
     public init?(basalRateSchedule: BasalRateSchedule) {
         self.timeZone = basalRateSchedule.timeZone
@@ -179,7 +188,12 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
 
         return rawValue
     }
-
+    
+    mutating func updateFromPodStatus(status: PodStatus) {
+        lastStatusDate = Date()
+        reservoirLevel = ReservoirLevel(rawValue: status.reservoirUnitsRemaining)
+        podActivatedAt = status.expirationDate - .days(3)
+    }
 }
 
 extension DashPumpManagerState: CustomDebugStringConvertible {
