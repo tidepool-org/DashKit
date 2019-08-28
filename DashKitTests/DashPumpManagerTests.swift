@@ -26,7 +26,7 @@ class DashPumpManagerTests: XCTestCase {
 
 
     private var pumpManager: DashPumpManager!
-    private var podCommManager: MockPodCommManager!
+    private var mockPodCommManager: MockPodCommManager!
 
     override func setUp() {
         super.setUp()
@@ -36,8 +36,8 @@ class DashPumpManagerTests: XCTestCase {
         var state = DashPumpManagerState(basalRateSchedule: schedule)!
         state.podActivatedAt = Date().addingTimeInterval(.days(1))
 
-        podCommManager = MockPodCommManager()
-        pumpManager = DashPumpManager(state: state, podCommManager: podCommManager)
+        mockPodCommManager = MockPodCommManager()
+        pumpManager = DashPumpManager(state: state, podCommManager: mockPodCommManager)
         pumpManager.addPodStatusObserver(self, queue: DispatchQueue.main)
         pumpManager.pumpManagerDelegate = self
     }
@@ -76,7 +76,7 @@ class DashPumpManagerTests: XCTestCase {
         pumpManagerDelegateStateUpdateExpectation?.expectedFulfillmentCount = 2
 
         // Set a new reservoir value to make sure the result of the set program is used (5U)
-        podCommManager.podStatus.reservoirUnitsRemaining = 500
+        mockPodCommManager.podStatus.reservoirUnitsRemaining = 500
 
         pumpManager.enactBolus(units: 1, at: startDate, willRequest: { (dose) in
             bolusCallbacks.fulfill()
@@ -91,7 +91,7 @@ class DashPumpManagerTests: XCTestCase {
                 XCTAssertEqual(DoseType.bolus, dose.type)
                 XCTAssertEqual(DoseUnit.units, dose.unit)
                 XCTAssertEqual(1.0, dose.programmedUnits)
-                XCTAssertEqual(100, self.podCommManager.lastBolusVolume)
+                XCTAssertEqual(100, self.mockPodCommManager.lastBolusVolume)
             }
         }
         waitForExpectations(timeout: 3)
@@ -131,7 +131,7 @@ class DashPumpManagerTests: XCTestCase {
         pumpManagerDelegateStateUpdateExpectation = expectation(description: "pumpmanager delegate state updates")
         pumpManagerDelegateStateUpdateExpectation?.expectedFulfillmentCount = 2
 
-        podCommManager.sendProgramFailureError = .podNotAvailable
+        mockPodCommManager.sendProgramFailureError = .podNotAvailable
 
         pumpManager.enactBolus(units: 1, at: startDate, willRequest: { (dose) in
             bolusCallbacks.fulfill()
@@ -156,14 +156,20 @@ class DashPumpManagerTests: XCTestCase {
 
         let tempBasalCallbackExpectation = expectation(description: "temp basal callbacks")
 
-        podStatusUpdateExpectation = expectation(description: "pod state updates")
+        // Internal status updates
+        podStatusUpdateExpectation = expectation(description: "pod status updates")
         podStatusUpdateExpectation?.expectedFulfillmentCount = 4
 
+        // External status updates
+        pumpManagerStatusUpdateExpectation = expectation(description: "pumpmanager status updates")
+        pumpManagerStatusUpdateExpectation?.expectedFulfillmentCount = 4
+
+        // Persistence updates
         pumpManagerDelegateStateUpdateExpectation = expectation(description: "pumpmanager delegate state updates")
         pumpManagerDelegateStateUpdateExpectation?.expectedFulfillmentCount = 4
 
         // Set a new reservoir value to make sure the result of the set program is used (5U)
-        podCommManager.podStatus.reservoirUnitsRemaining = 500
+        mockPodCommManager.podStatus.reservoirUnitsRemaining = 500
 
         pumpManager.enactTempBasal(unitsPerHour: 1, for: .minutes(30)) { (result) in
             tempBasalCallbackExpectation.fulfill()
@@ -179,15 +185,15 @@ class DashPumpManagerTests: XCTestCase {
         waitForExpectations(timeout: 3)
 
         XCTAssert(!posStatusUpdates.isEmpty)
-        let lastState = posStatusUpdates.last!
+        let lastStatus = posStatusUpdates.last!
 
-        switch lastState.reservoirLevel {
+        switch lastStatus.reservoirLevel {
         case .some(.valid(let value)):
             XCTAssertEqual(5.0, value, accuracy: 0.01)
         default:
             XCTFail("Expected reservoir value")
         }
-
+        
         pumpEventStorageExpectation = expectation(description: "pumpmanager dose storage")
 
         pumpManager.assertCurrentPumpData()
@@ -198,6 +204,7 @@ class DashPumpManagerTests: XCTestCase {
 
         let tempBasalEvent = latestReportedNewPumpEvents.last!
         XCTAssertEqual(1.0, tempBasalEvent.dose?.unitsPerHour)
+        XCTAssertNil(tempBasalEvent.dose!.deliveredUnits)
         XCTAssertEqual(PumpEventType.tempBasal, tempBasalEvent.type)
     }
 
@@ -206,7 +213,7 @@ class DashPumpManagerTests: XCTestCase {
 
         let tempBasalCallbackExpectation = expectation(description: "temp basal callbacks")
 
-        podCommManager.sendProgramFailureError = .podNotAvailable
+        mockPodCommManager.sendProgramFailureError = .podNotAvailable
 
         pumpManager.enactTempBasal(unitsPerHour: 1, for: .minutes(30)) { (result) in
             tempBasalCallbackExpectation.fulfill()
@@ -215,6 +222,7 @@ class DashPumpManagerTests: XCTestCase {
                 return
             }
         }
+        XCTAssertEqual(0, latestReportedNewPumpEvents.count)
         waitForExpectations(timeout: 3)
     }
 
