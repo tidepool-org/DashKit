@@ -13,15 +13,15 @@ import UserNotifications
 
 class DashPumpManagerTests: XCTestCase {
 
-    private var stateUpdates: [DashPumpManagerState] = []
-    private var stateUpdateExpectation: XCTestExpectation?
+    private var posStatusUpdates: [DashPumpManagerState] = []
+    private var podStatusUpdateExpectation: XCTestExpectation?
 
     private var pumpManagerStatusUpdates: [PumpManagerStatus] = []
     private var pumpManagerStatusUpdateExpectation: XCTestExpectation?
 
     private var pumpManagerDelegateStateUpdateExpectation: XCTestExpectation?
 
-    private var lastPumpEvents: [NewPumpEvent] = []
+    private var latestReportedNewPumpEvents: [NewPumpEvent] = []
     private var pumpEventStorageExpectation: XCTestExpectation?
 
 
@@ -45,15 +45,15 @@ class DashPumpManagerTests: XCTestCase {
     override func tearDown() {
         super.tearDown()
 
-        stateUpdates.removeAll()
-        stateUpdateExpectation = nil
+        posStatusUpdates.removeAll()
+        podStatusUpdateExpectation = nil
 
         pumpManagerStatusUpdates.removeAll()
         pumpManagerStatusUpdateExpectation = nil
 
         pumpManagerDelegateStateUpdateExpectation = nil
 
-        lastPumpEvents.removeAll()
+        latestReportedNewPumpEvents.removeAll()
         pumpEventStorageExpectation = nil
     }
 
@@ -66,13 +66,14 @@ class DashPumpManagerTests: XCTestCase {
 
         let startDate = Date()
 
-        stateUpdateExpectation = expectation(description: "pod state updates")
+        podStatusUpdateExpectation = expectation(description: "pod state updates")
+        podStatusUpdateExpectation?.expectedFulfillmentCount = 2
 
         pumpManagerStatusUpdateExpectation = expectation(description: "pumpmanager status updates")
         pumpManagerStatusUpdateExpectation?.expectedFulfillmentCount = 2
 
         pumpManagerDelegateStateUpdateExpectation = expectation(description: "pumpmanager delegate state updates")
-        pumpManagerDelegateStateUpdateExpectation?.expectedFulfillmentCount = 3
+        pumpManagerDelegateStateUpdateExpectation?.expectedFulfillmentCount = 2
 
         // Set a new reservoir value to make sure the result of the set program is used (5U)
         podCommManager.podStatus.reservoirUnitsRemaining = 500
@@ -103,9 +104,9 @@ class DashPumpManagerTests: XCTestCase {
         XCTAssertEqual(1, dose.programmedUnits)
         XCTAssertEqual(startDate, dose.startDate)
 
-        XCTAssert(!stateUpdates.isEmpty)
-        let lastState = stateUpdates.last!
-        XCTAssertEqual(.stable, lastState.bolusEngageState)
+        XCTAssert(!posStatusUpdates.isEmpty)
+        let lastState = posStatusUpdates.last!
+        XCTAssertEqual(nil, lastState.activeTransition)
 
         switch lastState.reservoirLevel {
         case .some(.valid(let value)):
@@ -155,10 +156,11 @@ class DashPumpManagerTests: XCTestCase {
 
         let tempBasalCallbackExpectation = expectation(description: "temp basal callbacks")
 
-        stateUpdateExpectation = expectation(description: "pod state updates")
+        podStatusUpdateExpectation = expectation(description: "pod state updates")
+        podStatusUpdateExpectation?.expectedFulfillmentCount = 4
 
         pumpManagerDelegateStateUpdateExpectation = expectation(description: "pumpmanager delegate state updates")
-        pumpManagerDelegateStateUpdateExpectation?.expectedFulfillmentCount = 3
+        pumpManagerDelegateStateUpdateExpectation?.expectedFulfillmentCount = 4
 
         // Set a new reservoir value to make sure the result of the set program is used (5U)
         podCommManager.podStatus.reservoirUnitsRemaining = 500
@@ -176,8 +178,8 @@ class DashPumpManagerTests: XCTestCase {
         }
         waitForExpectations(timeout: 3)
 
-        XCTAssert(!stateUpdates.isEmpty)
-        let lastState = stateUpdates.last!
+        XCTAssert(!posStatusUpdates.isEmpty)
+        let lastState = posStatusUpdates.last!
 
         switch lastState.reservoirLevel {
         case .some(.valid(let value)):
@@ -192,9 +194,9 @@ class DashPumpManagerTests: XCTestCase {
 
         waitForExpectations(timeout: 3)
 
-        XCTAssertEqual(1, lastPumpEvents.count)
+        XCTAssertEqual(1, latestReportedNewPumpEvents.count)
 
-        let tempBasalEvent = lastPumpEvents.last!
+        let tempBasalEvent = latestReportedNewPumpEvents.last!
         XCTAssertEqual(1.0, tempBasalEvent.dose?.unitsPerHour)
         XCTAssertEqual(PumpEventType.tempBasal, tempBasalEvent.type)
     }
@@ -220,8 +222,8 @@ class DashPumpManagerTests: XCTestCase {
 
 extension DashPumpManagerTests: PodStatusObserver {
     func didUpdatePodStatus() {
-        stateUpdateExpectation?.fulfill()
-        stateUpdates.append(pumpManager.state)
+        podStatusUpdateExpectation?.fulfill()
+        posStatusUpdates.append(pumpManager.state)
     }
 }
 
@@ -252,7 +254,7 @@ extension DashPumpManagerTests: PumpManagerDelegate {
 
     func pumpManager(_ pumpManager: PumpManager, hasNewPumpEvents events: [NewPumpEvent], lastReconciliation: Date?, completion: @escaping (Error?) -> Void) {
         pumpEventStorageExpectation?.fulfill()
-        lastPumpEvents = events
+        latestReportedNewPumpEvents = events
         completion(nil)
     }
 

@@ -34,6 +34,21 @@ struct MockPodStatus: PodStatus {
     func hasAlerts() -> Bool {
         return !activeAlerts.isEmpty
     }
+    
+    static func normalPodStatus() -> MockPodStatus {
+        let activation = Date().addingTimeInterval(.hours(-2))
+        return MockPodStatus(
+            expirationDate: activation + TimeInterval(days: 3),
+            podState: .runningAboveMinVolume,
+            programStatus: .basalRunning,
+            activeAlerts: PodAlerts([]),
+            isOcclusionAlertActive: false,
+            bolusUnitsRemaining: 0,
+            totalUnitsDelivered: 38,
+            reservoirUnitsRemaining: 1023,
+            timeElapsedSinceActivation: 2,
+            activationTime: activation)
+    }
 }
 
 class MockPodCommManager: PodCommManagerProtocol {
@@ -64,27 +79,23 @@ class MockPodCommManager: PodCommManagerProtocol {
     }
 
     func discardPod(completion: @escaping (PodCommResult<Bool>) -> ()) {
-        return
+        completion(.success(true))
     }
 
     func deactivatePod(completion: @escaping (PodCommResult<PodStatus>) -> ()) {
-        return
+        completion(.success(podStatus))
     }
 
     func getPodStatus(userInitiated: Bool, completion: @escaping (PodCommResult<PodStatus>) -> ()) {
-        return
-    }
-
-    func getPodStatus(completion: @escaping (PodCommResult<PodStatus>) -> ()) {
-        return
+        completion(.success(podStatus))
     }
 
     func getAlertsDetails(completion: @escaping (PodCommResult<PodAlerts>) -> ()) {
-        return
+        completion(.success(PodAlerts(rawValue: 0)))
     }
 
     func playTestBeeps(completion: @escaping (PodCommResult<PodStatus>) -> ()) {
-        return
+        completion(.success(podStatus))
     }
 
     func sendProgram(programType: ProgramType, beepOption: BeepOption?, completion: @escaping (PodCommResult<PodStatus>) -> ()) {
@@ -104,19 +115,19 @@ class MockPodCommManager: PodCommManagerProtocol {
     }
 
     func stopProgram(programType: StopProgramType, completion: @escaping (PodCommResult<PodStatus>) -> ()) {
-        return
+        completion(.success(MockPodStatus.normalPodStatus()))
     }
 
     func updateAlertSetting(alertSetting: PodAlertSetting, completion: @escaping (PodCommResult<PodStatus>) -> ()) {
-        return
+        completion(.success(MockPodStatus.normalPodStatus()))
     }
 
     func silenceAlerts(alert: PodAlerts, completion: @escaping (PodCommResult<PodStatus>) -> ()) {
-        return
+        completion(.success(MockPodStatus.normalPodStatus()))
     }
 
     func retryUnacknowledgedCommand(completion: @escaping (PodCommResult<PodStatus>) -> ()) {
-        return
+        completion(.success(MockPodStatus.normalPodStatus()))
     }
 
     func clearUnacknowledgedCommand() {

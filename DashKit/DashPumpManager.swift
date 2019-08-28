@@ -130,6 +130,10 @@ public class DashPumpManager: PumpManager {
             returnValue = changes(&state)
         }
         
+        podStatusObservers.forEach { (observer) in
+            observer.didUpdatePodStatus()
+        }
+        
         guard oldValue != newValue else {
             return returnValue
         }
@@ -200,12 +204,6 @@ public class DashPumpManager: PumpManager {
 
     public func removePodStatusObserver(_ observer: PodStatusObserver) {
         self.podStatusObservers.removeElement(observer)
-    }
-
-    private func notifyPodStatusObservers() {
-        podStatusObservers.forEach { (observer) in
-            observer.didUpdatePodStatus()
-        }
     }
 
     public var podActivatedAt: Date? {

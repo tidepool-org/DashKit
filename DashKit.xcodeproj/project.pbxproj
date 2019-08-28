@@ -790,7 +790,6 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 					"$(PROJECT_DIR)/dash-sdk-ios",
-					"$(PROJECT_DIR)/dash-sdk-ios/PodSDK.framework/Frameworks",
 					"$(PROJECT_DIR)/dash-sdk-ios/frameworks",
 				);
 				INFOPLIST_FILE = DashKitUI/Info.plist;
@@ -826,7 +825,6 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 					"$(PROJECT_DIR)/dash-sdk-ios",
-					"$(PROJECT_DIR)/dash-sdk-ios/PodSDK.framework/Frameworks",
 					"$(PROJECT_DIR)/dash-sdk-ios/frameworks",
 				);
 				INFOPLIST_FILE = DashKitUI/Info.plist;
@@ -1119,7 +1117,6 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 					"$(PROJECT_DIR)/dash-sdk-ios",
-					"$(PROJECT_DIR)/dash-sdk-ios/PodSDK.framework/Frameworks",
 					"$(PROJECT_DIR)/dash-sdk-ios/frameworks",
 				);
 				INFOPLIST_FILE = DashKit/Info.plist;
@@ -1156,7 +1153,6 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 					"$(PROJECT_DIR)/dash-sdk-ios",
-					"$(PROJECT_DIR)/dash-sdk-ios/PodSDK.framework/Frameworks",
 					"$(PROJECT_DIR)/dash-sdk-ios/frameworks",
 				);
 				INFOPLIST_FILE = DashKit/Info.plist;
