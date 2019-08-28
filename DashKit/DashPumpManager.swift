@@ -249,7 +249,7 @@ public class DashPumpManager: PumpManager {
         podCommManager.getPodStatus(userInitiated: false) { (response) in
             switch response {
             case .failure(let error):
-                self.log.error("Fetching status failed: %{public}", String(describing: error))
+                self.log.error("Fetching status failed: %{public}@", String(describing: error))
             case .success(let status):
                 self.log.debug("getPodStatus result: %@", String(describing: status))
                 self.mutateState({ (state) in
@@ -604,11 +604,15 @@ public class DashPumpManager: PumpManager {
         
         // Round to nearest supported volume
         let enactRate = roundToSupportedBasalRate(unitsPerHour: unitsPerHour)
-        let program: ProgramType
+        let program: ProgramType?
         
         do {
-            let tempBasal = try TempBasal(value: .flatRate(Int(round(enactRate * 100))), duration: duration)
-            program = ProgramType.tempBasal(tempBasal: tempBasal)
+            if duration < .ulpOfOne {
+                program = nil
+            } else {
+                let tempBasal = try TempBasal(value: .flatRate(Int(round(enactRate * 100))), duration: duration)
+                program = ProgramType.tempBasal(tempBasal: tempBasal)
+            }
         } catch let error {
             completion(.failure(error))
             return
@@ -619,7 +623,7 @@ public class DashPumpManager: PumpManager {
                 completion(.failure(error))
             } else {
                 
-                if duration < .ulpOfOne {
+                guard let program = program else {
                     // 0 duration temp basals are used to cancel any existing temp basal
                     let date = Date()
                     completion(.success(DoseEntry(type: .tempBasal, startDate: date, endDate: date, value: 0, unit: .unitsPerHour)))
@@ -650,10 +654,14 @@ public class DashPumpManager: PumpManager {
                         self.mutateState({ (state) in
                             state.unfinalizedTempBasal = UnfinalizedDose(tempBasalRate: enactRate, startTime: startDate, duration: duration, scheduledCertainty: .certain)
                             state.updateFromPodStatus(status: podStatus)
+                            state.activeTransition = nil
                         })
                         self.finalizeAndStoreDoses()
                         completion(.success(dose))
                     case .failure(let error):
+                        self.mutateState({ (state) in
+                            state.activeTransition = nil
+                        })
                         self.finalizeAndStoreDoses()
                         completion(.failure(DashPumpManagerError(error)))
                     }

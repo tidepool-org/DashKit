@@ -64,6 +64,7 @@ class PairPodSetupViewController: SetupTableViewController {
     private enum State {
         case initial
         case pairing
+        case connected
         case priming(finishTime: TimeInterval)
         case fault
         case ready
@@ -86,6 +87,11 @@ class PairPodSetupViewController: SetupTableViewController {
                 footerView.primaryButton.setPairTitle()
                 lastError = nil
                 loadingText = LocalizedString("Pairing with Pod...", comment: "The text of the loading label when pairing")
+            case .connected:
+                activityIndicator.state = .indeterminantProgress
+                footerView.primaryButton.isEnabled = false
+                lastError = nil
+                loadingText = LocalizedString("Connected. Configuring...", comment: "The text of the loading label when connected")
             case .priming(let finishTime):
                 activityIndicator.state = .timedProgress(finishTime: CACurrentMediaTime() + finishTime)
                 footerView.primaryButton.isEnabled = false
@@ -160,15 +166,14 @@ class PairPodSetupViewController: SetupTableViewController {
     }
 
     override func cancelButtonPressed(_ sender: Any) {
-//        switch pumpManager.podCommState {
-//        case .noPod:
-//            super.cancelButtonPressed(sender)
-//        default:
+        if lastError != nil {
             let confirmVC = UIAlertController(pumpDeletionHandler: {
                 self.navigateToReplacePod()
             })
             self.present(confirmVC, animated: true) {}
-//        }
+        } else {
+            super.cancelButtonPressed(sender)
+        }
     }
 
     // MARK: -
@@ -196,7 +201,10 @@ class PairPodSetupViewController: SetupTableViewController {
                         self.lastError = PodCommError.failToConnect
                     }
                     DispatchQueue.main.asyncAfter(deadline: .now() + finishTime + TimeInterval(seconds: 10), execute: timeoutHandler!)
+                case .retrievingPodVersion:
+                    self.continueState = .connected
                 case .step1Completed:
+                    timeoutHandler?.cancel()
                     self.continueState = .ready
                 default:
                     print("Ignoring event: \(event)")
