@@ -628,6 +628,7 @@ public class DashPumpManager: PumpManager {
                 guard let program = program else {
                     // 0 duration temp basals are used to cancel any existing temp basal
                     let date = Date()
+                    self.finalizeAndStoreDoses()
                     completion(.success(DoseEntry(type: .tempBasal, startDate: date, endDate: date, value: 0, unit: .unitsPerHour)))
                     return
                 }
