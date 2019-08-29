@@ -46,6 +46,9 @@ class PodSetupCompleteViewController: SetupTableViewController {
         if let replaceVC = navigationController as? PodReplacementNavigationController {
             replaceVC.completeSetup()
         }
+        if let settingsVC = navigationController as? SettingsNavigationViewController {
+            settingsVC.notifyComplete()
+        }
     }
 
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {

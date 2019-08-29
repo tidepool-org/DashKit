@@ -28,6 +28,7 @@
 		C107D17D226A24CE00D63775 /* TimeZone.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D11A22692FC400D63775 /* TimeZone.swift */; };
 		C10C758122C4041F00CCC20F /* PodSDKProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10C758022C4041F00CCC20F /* PodSDKProtocol.swift */; };
 		C10C758322C404B700CCC20F /* PodSDK.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10C758222C404B700CCC20F /* PodSDK.swift */; };
+		C12AA74B231870160025FD45 /* ConnectionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12AA74A231870160025FD45 /* ConnectionState.swift */; };
 		C12C9C83229EDB7B00FF7632 /* InsulinStatusTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12C9C82229EDB7B00FF7632 /* InsulinStatusTableViewCell.swift */; };
 		C1344DE22304CE2B00973BE3 /* TimeInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D11422692BDE00D63775 /* TimeInterval.swift */; };
 		C1344DE32304D09B00973BE3 /* PodSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E5722EA0DDB0035DCA0 /* PodSDK.framework */; };
@@ -170,6 +171,7 @@
 		C107D17B226A243A00D63775 /* UITableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITableViewCell.swift; sourceTree = "<group>"; };
 		C10C758022C4041F00CCC20F /* PodSDKProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodSDKProtocol.swift; sourceTree = "<group>"; };
 		C10C758222C404B700CCC20F /* PodSDK.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodSDK.swift; sourceTree = "<group>"; };
+		C12AA74A231870160025FD45 /* ConnectionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionState.swift; sourceTree = "<group>"; };
 		C12C9C82229EDB7B00FF7632 /* InsulinStatusTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsulinStatusTableViewCell.swift; sourceTree = "<group>"; };
 		C14D46F122CA85C000656FE0 /* NoActivePodViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoActivePodViewController.swift; sourceTree = "<group>"; };
 		C15424302280C575006754B3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -364,6 +366,14 @@
 			path = PodSDKProtocol;
 			sourceTree = "<group>";
 		};
+		C12AA74923186FF50025FD45 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				C12AA74A231870160025FD45 /* ConnectionState.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		C194114F228DBF0100E886DD /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -417,6 +427,7 @@
 		C1E753DB226928F700A0BC48 /* DashKit */ = {
 			isa = PBXGroup;
 			children = (
+				C12AA74923186FF50025FD45 /* Extensions */,
 				C10C757F22C4040800CCC20F /* PodSDKProtocol */,
 				C1D68E2F2284849D00019CAE /* BasalSchedule.swift */,
 				C1E753DC226928F700A0BC48 /* DashKit.h */,
@@ -739,6 +750,7 @@
 				C107D11B22692FC400D63775 /* TimeZone.swift in Sources */,
 				C10C758322C404B700CCC20F /* PodSDK.swift in Sources */,
 				C107D10B22692A1700D63775 /* DashPumpManager.swift in Sources */,
+				C12AA74B231870160025FD45 /* ConnectionState.swift in Sources */,
 				C1ACF44222A1FC1F00F7DDB4 /* PodDoseProgressEstimator.swift in Sources */,
 				C15424332280C75E006754B3 /* PodStatusExtension.swift in Sources */,
 				C1ACF44022A1F9B400F7DDB4 /* OSLog.swift in Sources */,

@@ -21,7 +21,7 @@ public class DashPumpManager: PumpManager {
 
     public static var managerIdentifier = "OmnipodDash"
 
-    let podCommManager: PodCommManagerProtocol
+    var podCommManager: PodCommManagerProtocol
 
     public let log = OSLog(category: "DashPumpManager")
 
@@ -78,7 +78,7 @@ public class DashPumpManager: PumpManager {
         }
     }
 
-    public var pumpRecordsBasalProfileStartEvents = false
+    public let pumpRecordsBasalProfileStartEvents = false
 
     public var pumpReservoirCapacity: Double {
         return Pod.reservoirCapacity
@@ -669,7 +669,19 @@ public class DashPumpManager: PumpManager {
     }
 
     public func setMustProvideBLEHeartbeat(_ mustProvideBLEHeartbeat: Bool) {
-        // TODO
+        if mustProvideBLEHeartbeat {
+            podCommManager.configPeriodicStatusCheck(interval: .minutes(1)) { (result) in
+                switch result {
+                case .failure(let error):
+                    self.log.error("podCommManager periodic status check error: %{public}@", String(describing: error))
+                case .success(let status):
+                    self.log.debug("podCommManager periodic status: %@", String(describing: status))
+                    self.pumpDelegate.notify({ (delegate) in
+                        delegate?.pumpManagerBLEHeartbeatDidFire(self)
+                    })
+                }
+            }
+        }
     }
 
     public func suspendDelivery(completion: @escaping (Error?) -> Void) {
@@ -764,6 +776,7 @@ public class DashPumpManager: PumpManager {
     public init(state: DashPumpManagerState, podCommManager: PodCommManagerProtocol = PodCommManager.shared) {
         self.lockedState = Locked(state)
         self.podCommManager = podCommManager
+        self.podCommManager.delegate = self
 
         podCommManager.setLogger(logger: self)
 
@@ -806,5 +819,34 @@ extension DashPumpManager: LoggingProtocol {
 
     public func error(_ message: String) {
         log.default("PodSDK Error: %{public}@", message)
+    }
+}
+
+extension DashPumpManager: PodCommManagerDelegate {
+    public func onAlert(alerts: PodAlerts) {
+        log.default("Pod Alert: %{public}@", String(describing: alerts))
+    }
+    
+    public func onAlarm(alarm: PodAlarm) {
+        log.default("Pod Alarm: %{public}@", String(describing: alarm))
+    }
+    
+    public func onStatusUpdate(status: PodStatus) {
+        log.default("Pod Status Update: %{public}@", String(describing: status))
+    }
+    
+    public func onSystemError(error: SystemErrorCode) {
+        log.default("Pod System Error: %{public}@", String(describing: error))
+    }
+    
+    public func onPodCommStateChanged(podCommState: PodCommState) {
+        log.default("Pod Comm State Changed: %{public}@", String(describing: podCommState))
+    }
+    
+    public func onConnectionStateChanged(connectionState: ConnectionState) {
+        self.mutateState { (state) in
+            state.connectionState = connectionState
+        }
+        log.default("Pod Connection State Changed: %{public}@", String(describing: connectionState))
     }
 }

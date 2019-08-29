@@ -14,6 +14,12 @@ class PodReplacementNavigationController: UINavigationController, UINavigationCo
 
     weak var completionDelegate: CompletionDelegate?
 
+    class func instantiateSettingsNoPodFlow(_ pumpManager: DashPumpManager) -> PodReplacementNavigationController {
+        let vc = UIStoryboard(name: "DashPumpManager", bundle: Bundle(for: PodReplacementNavigationController.self)).instantiateViewController(withIdentifier: "DashSettingsNoPod") as! PodReplacementNavigationController
+        vc.pumpManager = pumpManager
+        return vc
+    }
+
     class func instantiatePodReplacementFlow(_ pumpManager: DashPumpManager) -> PodReplacementNavigationController {
         let vc = UIStoryboard(name: "DashPumpManager", bundle: Bundle(for: PodReplacementNavigationController.self)).instantiateViewController(withIdentifier: "PodReplacementFlow") as! PodReplacementNavigationController
         vc.pumpManager = pumpManager

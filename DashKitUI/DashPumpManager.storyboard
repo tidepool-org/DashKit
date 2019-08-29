@@ -853,12 +853,11 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ozu-qi-mOC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1351" y="275"/>
+            <point key="canvasLocation" x="1067" y="275"/>
         </scene>
         <!--Pod Replacement Navigation Controller-->
         <scene sceneID="Kvr-rq-04X">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="OCd-qq-tgE" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController storyboardIdentifier="DashSettingsNoPod" id="BiB-y7-lPV" customClass="PodReplacementNavigationController" customModule="DashKitUI" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="TTK-QF-P6Y">
                         <rect key="frame" x="0.0" y="44" width="414" height="96"/>
@@ -868,13 +867,13 @@
                         <segue destination="Fzv-E3-GOf" kind="relationship" relationship="rootViewController" id="x4m-5t-2Ht"/>
                     </connections>
                 </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="OCd-qq-tgE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1397" y="-749"/>
         </scene>
         <!--No Active Pod-->
         <scene sceneID="j6M-bT-uvv">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="jU4-z7-ij5" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="NoActivePod" id="Fzv-E3-GOf" customClass="NoActivePodViewController" customModule="DashKitUI" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Klg-qS-ubE">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
@@ -908,7 +907,7 @@
                                 </constraints>
                                 <state key="normal" title="Set up new Pod"/>
                                 <connections>
-                                    <action selector="newPodButtonPressed:" destination="Fzv-E3-GOf" eventType="touchUpInside" id="Oq5-ub-K5j"/>
+                                    <segue destination="dIF-Mh-pOr" kind="show" id="R9r-KL-hge"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -930,6 +929,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="No Active Pod" id="mgh-za-OmY"/>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="jU4-z7-ij5" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2211.594202898551" y="-749.33035714285711"/>
         </scene>
@@ -944,8 +944,8 @@
         </namedColor>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="leR-2Z-BRM"/>
-        <segue reference="qU3-zh-wUk"/>
+        <segue reference="zNF-kE-9oQ"/>
+        <segue reference="R9r-KL-hge"/>
         <segue reference="5RZ-8F-2rM"/>
     </inferredMetricsTieBreakers>
 </document>

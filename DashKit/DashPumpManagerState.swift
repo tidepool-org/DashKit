@@ -64,6 +64,8 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
     }
     
     internal var activeTransition: ActiveTransition?
+    
+    public var connectionState: ConnectionState?
 
     public init?(basalRateSchedule: BasalRateSchedule) {
         self.timeZone = basalRateSchedule.timeZone

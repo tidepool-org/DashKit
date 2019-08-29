@@ -15,7 +15,7 @@ class DashSettingsViewController: UITableViewController {
 
     var pumpManager: DashPumpManager! {
         didSet {
-            pumpManager.addStatusObserver(self, queue: .main)
+            pumpManager.addPodStatusObserver(self, queue: .main)
         }
     }
 
@@ -38,6 +38,7 @@ class DashSettingsViewController: UITableViewController {
         tableView.estimatedRowHeight = 44
 
         tableView.register(TextButtonTableViewCell.self, forCellReuseIdentifier: TextButtonTableViewCell.className)
+        tableView.register(SettingsTableViewCell.self, forCellReuseIdentifier: SettingsTableViewCell.className)
 
         let button = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneTapped(_:)))
         self.navigationItem.setRightBarButton(button, animated: false)
@@ -60,13 +61,14 @@ class DashSettingsViewController: UITableViewController {
     // MARK: - Data Source
 
     private enum Section: Int, CaseIterable {
-        case delivery = 0
+        case status = 0
         case reminders
         case replacePod
     }
 
-    private enum DeliveryRow: Int, CaseIterable {
+    private enum StatusRow: Int, CaseIterable {
         case insulin = 0
+        case connectionStatus
         case expiration
     }
 
@@ -78,8 +80,8 @@ class DashSettingsViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch Section(rawValue: section)! {
-        case .delivery:
-            return DeliveryRow.allCases.count
+        case .status:
+            return StatusRow.allCases.count
         case .reminders:
             return 1
         case .replacePod:
@@ -89,13 +91,18 @@ class DashSettingsViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch Section(rawValue: indexPath.section)! {
-        case .delivery:
-            switch DeliveryRow(rawValue: indexPath.row)! {
+        case .status:
+            switch StatusRow(rawValue: indexPath.row)! {
             case .insulin:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "InsulinCell", for: indexPath) as! InsulinStatusTableViewCell
                 if let reservoirLevel = pumpManager.reservoirLevel, let lastStatusDate = pumpManager.lastStatusDate {
                     cell.setReservoir(level: reservoirLevel, validAt: lastStatusDate)
                 }
+                return cell
+            case .connectionStatus:
+                let cell = tableView.dequeueReusableCell(withIdentifier: SettingsTableViewCell.className, for: indexPath)
+                cell.textLabel?.text = NSLocalizedString("Pod Status", comment: "The title text for the pod status cell")
+                cell.detailTextLabel?.text = pumpManager.state.connectionState?.localizedDescription ?? "-"
                 return cell
             case .expiration:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "ExpirationCell", for: indexPath) as! PodExpirationTableViewCell
@@ -135,11 +142,6 @@ class DashSettingsViewController: UITableViewController {
         default:
             break
         }
-    }
-}
-
-extension DashSettingsViewController: PumpManagerStatusObserver {
-    func pumpManager(_ pumpManager: PumpManager, didUpdate status: PumpManagerStatus, oldStatus: PumpManagerStatus) {
     }
 }
 

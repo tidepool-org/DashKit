@@ -21,25 +21,11 @@ class NoActivePodViewController: UIViewController {
         }
     }
 
-    static public func instantiateFromStoryboard(pumpManager: DashPumpManager) -> NoActivePodViewController {
-
-        let storyboard = UIStoryboard(name: "DashPumpManager", bundle: Bundle(for: DashPumpManagerSetupViewController.self))
-        let settings = storyboard.instantiateViewController(withIdentifier: "NoActivePod") as! NoActivePodViewController
-        settings.pumpManager = pumpManager
-        return settings
-    }
-
     open override func viewDidLoad() {
         super.viewDidLoad()
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelButtonPressed(_:)))
 
-    }
-
-    @IBAction func newPodButtonPressed(_: Any) {
-        let vc = PodReplacementNavigationController.instantiateNewPodFlow(pumpManager)
-        vc.completionDelegate = self
-        self.navigationController?.present(vc, animated: true, completion: nil)
     }
 
     @IBAction open func cancelButtonPressed(_: Any) {
@@ -59,8 +45,8 @@ class NoActivePodViewController: UIViewController {
     }
 
     private func done() {
-        if let nav = navigationController as? SettingsNavigationViewController {
-            nav.notifyComplete()
+        if let nav = navigationController as? PodReplacementNavigationController {
+            nav.completeSetup()
         }
     }
 }
