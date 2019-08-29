@@ -101,7 +101,7 @@ class DashSettingsViewController: UITableViewController {
                 return cell
             case .connectionStatus:
                 let cell = tableView.dequeueReusableCell(withIdentifier: SettingsTableViewCell.className, for: indexPath)
-                cell.textLabel?.text = NSLocalizedString("Pod Status", comment: "The title text for the pod status cell")
+                cell.textLabel?.text = NSLocalizedString("Connection Status", comment: "The title text for the pod connection status cell")
                 cell.detailTextLabel?.text = pumpManager.state.connectionState?.localizedDescription ?? "-"
                 return cell
             case .expiration:

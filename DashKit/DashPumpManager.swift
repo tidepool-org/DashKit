@@ -584,7 +584,11 @@ public class DashPumpManager: PumpManager {
             switch result {
             case .success(let status):
                 self.mutateState({ (state) in
-                    state.unfinalizedTempBasal?.cancel(at: Date())
+                    if var canceledTempBasal = state.unfinalizedTempBasal {
+                        canceledTempBasal.cancel(at: Date())
+                        state.unfinalizedTempBasal = nil
+                        state.finalizedDoses.append(canceledTempBasal)
+                    }
                     state.updateFromPodStatus(status: status)
                     state.activeTransition = nil
                 })
@@ -669,19 +673,20 @@ public class DashPumpManager: PumpManager {
     }
 
     public func setMustProvideBLEHeartbeat(_ mustProvideBLEHeartbeat: Bool) {
-        if mustProvideBLEHeartbeat {
-            podCommManager.configPeriodicStatusCheck(interval: .minutes(1)) { (result) in
-                switch result {
-                case .failure(let error):
-                    self.log.error("podCommManager periodic status check error: %{public}@", String(describing: error))
-                case .success(let status):
-                    self.log.debug("podCommManager periodic status: %@", String(describing: status))
-                    self.pumpDelegate.notify({ (delegate) in
-                        delegate?.pumpManagerBLEHeartbeatDidFire(self)
-                    })
-                }
-            }
-        }
+        // Seems to be causing a deadlock in the SDK
+//        if mustProvideBLEHeartbeat {
+//            podCommManager.configPeriodicStatusCheck(interval: .minutes(1)) { (result) in
+//                switch result {
+//                case .failure(let error):
+//                    self.log.error("podCommManager periodic status check error: %{public}@", String(describing: error))
+//                case .success(let status):
+//                    self.log.debug("podCommManager periodic status: %@", String(describing: status))
+//                    self.pumpDelegate.notify({ (delegate) in
+//                        delegate?.pumpManagerBLEHeartbeatDidFire(self)
+//                    })
+//                }
+//            }
+//        }
     }
 
     public func suspendDelivery(completion: @escaping (Error?) -> Void) {

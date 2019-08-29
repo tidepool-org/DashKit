@@ -115,9 +115,9 @@ class ReplacePodViewController: SetupTableViewController {
             case .continueAfterFailure:
                 activityIndicator.state = .hidden
                 footerView.primaryButton.isEnabled = true
-                footerView.primaryButton.resetTitle()
+                footerView.primaryButton.setDiscardTitle()
                 tableView.beginUpdates()
-                loadingLabel.text = LocalizedString("Unable to deactivate pod. Please continue and pair a new one.", comment: "Instructions when pod cannot be deactivated")
+                loadingLabel.text = LocalizedString("Unable to deactivate pod. Discard pod to pair a new one.", comment: "Instructions when pod cannot be deactivated")
                 loadingLabel.isHidden = false
                 tableView.endUpdates()
             case .ready:
@@ -162,27 +162,18 @@ class ReplacePodViewController: SetupTableViewController {
 
     override func continueButtonPressed(_ sender: Any) {
         switch continueState {
-        case .ready, .continueAfterFailure:
+        case .ready:
             super.continueButtonPressed(sender)
+        case .continueAfterFailure:
+            pumpManager.discardPod { (_) in
+                super.continueButtonPressed(sender)
+            }
         case .initial, .deactivationFailed:
             continueState = .deactivating
             deactivate()
         case .deactivating:
             break
         }
-    }
-
-    func forgetPod() {
-        pumpManager.discardPod(completion: { (result) in
-            // TODO: Do we need to dispatch back to main queue here?
-            switch result {
-            case .failure(let error):
-                self.lastError = error
-                self.continueState = .deactivationFailed
-            case .success:
-                self.continueState = .ready
-            }
-        })
     }
 
     func deactivate() {
@@ -200,14 +191,15 @@ class ReplacePodViewController: SetupTableViewController {
             switch result {
             case .failure(let error):
                 if self.tryCount > 1 {
-                    self.forgetPod()
                     self.continueState = .continueAfterFailure
                 } else {
                     self.lastError = error
                     self.continueState = .deactivationFailed
                 }
             case .success:
-                self.forgetPod()
+                self.pumpManager.discardPod { (_) in
+                    self.continueState = .ready
+                }
             }
         }
     }
@@ -235,6 +227,10 @@ private extension SetupButton {
 
     func setRetryTitle() {
         setTitle(LocalizedString("Retry Pod Deactivation", comment: "Button title for retrying pod deactivation"), for: .normal)
+    }
+    
+    func setDiscardTitle() {
+        setTitle(LocalizedString("Discard Pod", comment: "Button title to discard pod"), for: .normal)
     }
 }
 
