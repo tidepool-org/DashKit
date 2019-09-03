@@ -12,7 +12,7 @@
   "iOS" : [
     {
       "name" : "SwiftGif",
-      "hash" : "103dab0bc0a72eb56c5e361b7ac1e5297dca464dece72f155226470a8433d2f9",
+      "hash" : "f5aad3e01b888b3cadcc22446006d0331807553b16ed7b8b662d4b0a5aba2e4e",
       "swiftToolchainVersion" : "5.0.1 (swiftlang-1001.0.82.4 clang-1001.0.46.5)"
     }
   ]

@@ -1,5 +1,6 @@
+github "Hearst-DD/ObjectMapper" "3.5.1"
 github "ReactiveX/RxSwift" "5.0.1"
 github "bahlo/SwiftGif" "v1.7.0"
+github "lyft/Kronos" "4.0.0"
 github "maxkonovalov/MKRingProgressView" "2.2.2"
-github "tidepool-org/LoopKit" "962d9482df2418dee5e878564f62d2fb4bbb6d19"
-github "tristanhimmelman/ObjectMapper" "3.5.1"
+github "tidepool-org/LoopKit" "01b6d5e69a4355dc609e603760aef5945d182da9"

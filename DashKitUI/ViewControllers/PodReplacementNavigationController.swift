@@ -38,7 +38,13 @@ class PodReplacementNavigationController: UINavigationController, UINavigationCo
         return vc
     }
 
-    private(set) var pumpManager: DashPumpManager!
+    private(set) var pumpManager: DashPumpManager! {
+        didSet {
+            if let vc = viewControllers.first as? NoActivePodViewController {
+                vc.pumpManager = pumpManager
+            }
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()

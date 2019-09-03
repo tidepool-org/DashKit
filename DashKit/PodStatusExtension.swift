@@ -72,11 +72,11 @@ public extension ActivationErrorCode {
         case .podActivationFailed:
             return "Other errors during Pod activation"
 
-        case .podIsAlreadyActive:
-            return "Try to activate a Pod when a Pod is already activated"
-
         case .activationPhase1NotCompleted:
             return "Try to call activation phase 2 before completing phase 1"
+            
+        case .podIsActivatedOrDeactivating:
+            return "Pod is activated or deactivating"
         }
     }
 }
@@ -151,6 +151,9 @@ extension PodCommError: LocalizedError {
 
         case .podSDKExpired:
             return "Pod SDK Expired"
+            
+        case .bleCommunicationError:
+            return "BLE Communication Error"
         }
     }
 

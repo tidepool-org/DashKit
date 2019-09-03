@@ -314,7 +314,7 @@ public class DashPumpManager: PumpManager {
                 completion(error)
                 return
             }
-            self.podCommManager.sendProgram(programType: .basalProgram(basal: basalProgram), beepOption: .none) { (result) in
+            self.podCommManager.sendProgram(programType: .basalProgram(basal: basalProgram, date: nil), beepOption: .none) { (result) in
                 switch result {
                 case .failure(let error):
                     completion(DashPumpManagerError(error))
@@ -613,7 +613,7 @@ public class DashPumpManager: PumpManager {
                 program = nil
             } else {
                 let tempBasal = try TempBasal(value: .flatRate(Int(round(enactRate * 100))), duration: duration)
-                program = ProgramType.tempBasal(tempBasal: tempBasal)
+                program = ProgramType.tempBasal(tempBasal: tempBasal, date: nil)
             }
         } catch let error {
             completion(.failure(error))
@@ -758,7 +758,7 @@ public class DashPumpManager: PumpManager {
             return
         }
 
-        podCommManager.sendProgram(programType: .basalProgram(basal: state.basalProgram), beepOption: .none) { (result) in
+        podCommManager.sendProgram(programType: .basalProgram(basal: state.basalProgram, date: nil), beepOption: .none) { (result) in
             switch result {
             case .failure(let error):
                 self.mutateState({ (state) in
@@ -803,12 +803,42 @@ public class DashPumpManager: PumpManager {
     }
 
     public var debugDescription: String {
-        let lines = [
+        var lines = [
             "## DashPumpManager",
+            "* podCommState: \(podCommManager.podCommState)",
+            "* podId: \(String(describing: podCommManager.getPodId()))",
+        ]
+        
+        let semaphore = DispatchSemaphore(value: 0)
+        podCommManager.getPodStatus(userInitiated: false) { (result) in
+            switch result {
+            case .failure(let error):
+                lines.append("* podStatus: Error: \(error)")
+            case .success(let status):
+                lines.append(contentsOf: [
+                    "* activeAlerts: \(status.activeAlerts)",
+                    "* bolusRemaining: \(status.bolusRemaining)",
+                    "* bolusUnitsRemaining: \(status.bolusUnitsRemaining)",
+                    "* delivered: \(status.delivered)",
+                    "* expirationDate: \(status.expirationDate)",
+                    "* isOcclusionAlertActive: \(status.isOcclusionAlertActive)",
+                    "* podState: \(status.podState)",
+                    "* programStatus: \(status.programStatus)",
+                    "* reservoir: \(status.reservoir)",
+                    "* reservoirUnitsRemaining: \(status.reservoirUnitsRemaining)",
+                    "* totalUnitsDelivered: \(status.totalUnitsDelivered)",
+                ])
+            }
+            semaphore.signal()
+        }
+        let result = semaphore.wait(timeout: .now() + .seconds(8))
+        if case .timedOut = result {
+            lines.append("* podStatus: timed out")
+        }
+        lines.append(contentsOf: [
             state.debugDescription,
             "",
-        ]
-
+        ])
         return lines.joined(separator: "\n")
     }
 }

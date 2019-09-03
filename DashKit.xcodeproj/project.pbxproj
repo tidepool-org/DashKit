@@ -36,6 +36,9 @@
 		C1344DE72304D68300973BE3 /* INSSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C1FE2E5622EA0DDB0035DCA0 /* INSSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C1344DE82304D68300973BE3 /* ObjectMapper.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C1D46D5F22C568F600978E59 /* ObjectMapper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C1344DE92304D68300973BE3 /* RxSwift.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C1D46D5E22C568F600978E59 /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C135D91A2319AA4200774F82 /* Kronos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C135D9192319AA4200774F82 /* Kronos.framework */; };
+		C135D91B2319AA5900774F82 /* Kronos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C135D9192319AA4200774F82 /* Kronos.framework */; };
+		C135D91C2319AA5A00774F82 /* Kronos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C135D9192319AA4200774F82 /* Kronos.framework */; };
 		C136AA5823117A2F008A320D /* OSLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ACF43E22A1F9A700F7DDB4 /* OSLog.swift */; };
 		C14D46F222CA85C000656FE0 /* NoActivePodViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14D46F122CA85C000656FE0 /* NoActivePodViewController.swift */; };
 		C15424312280C575006754B3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C15424302280C575006754B3 /* Assets.xcassets */; };
@@ -173,6 +176,7 @@
 		C10C758222C404B700CCC20F /* PodSDK.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodSDK.swift; sourceTree = "<group>"; };
 		C12AA74A231870160025FD45 /* ConnectionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionState.swift; sourceTree = "<group>"; };
 		C12C9C82229EDB7B00FF7632 /* InsulinStatusTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsulinStatusTableViewCell.swift; sourceTree = "<group>"; };
+		C135D9192319AA4200774F82 /* Kronos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Kronos.framework; path = Carthage/Build/iOS/Kronos.framework; sourceTree = "<group>"; };
 		C14D46F122CA85C000656FE0 /* NoActivePodViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoActivePodViewController.swift; sourceTree = "<group>"; };
 		C15424302280C575006754B3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C15424322280C75D006754B3 /* PodStatusExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodStatusExtension.swift; sourceTree = "<group>"; };
@@ -228,6 +232,7 @@
 				C1FE2E6122EA0E5A0035DCA0 /* PodSDK.framework in Frameworks */,
 				C1FE2E3E22EA0B5A0035DCA0 /* LoopKit.framework in Frameworks */,
 				C1FE2E3F22EA0B5D0035DCA0 /* LoopKitUI.framework in Frameworks */,
+				C135D91B2319AA5900774F82 /* Kronos.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -247,6 +252,7 @@
 				C1FE2E5A22EA0DEA0035DCA0 /* INSSDK.framework in Frameworks */,
 				C1FE2E3C22EA0B360035DCA0 /* LoopKitUI.framework in Frameworks */,
 				C1FE2E5B22EA0DF00035DCA0 /* PodSDK.framework in Frameworks */,
+				C135D91C2319AA5A00774F82 /* Kronos.framework in Frameworks */,
 				C16DA83622E7C6F2008624C2 /* DashKit.framework in Frameworks */,
 				C16DA85822E93973008624C2 /* DashKitUI.framework in Frameworks */,
 			);
@@ -256,6 +262,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C135D91A2319AA4200774F82 /* Kronos.framework in Frameworks */,
 				C1FE2E5822EA0DDC0035DCA0 /* INSSDK.framework in Frameworks */,
 				C1FE2E5322EA0DB90035DCA0 /* MKRingProgressView.framework in Frameworks */,
 				C1FE2E3D22EA0B570035DCA0 /* LoopKit.framework in Frameworks */,
@@ -280,6 +287,7 @@
 		C107D10C22692AE700D63775 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C135D9192319AA4200774F82 /* Kronos.framework */,
 				C1FE2E5622EA0DDB0035DCA0 /* INSSDK.framework */,
 				C1FE2E5722EA0DDB0035DCA0 /* PodSDK.framework */,
 				C1FE2E5422EA0DCB0035DCA0 /* SwiftGif.framework */,
@@ -677,6 +685,7 @@
 				"$(SRCROOT)/dash-sdk-ios/frameworks/PodSDK.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/MKRingProgressView.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SwiftGif.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Kronos.framework",
 			);
 			name = "Copy Frameworks with Carthage";
 			outputFileListPaths = (
@@ -1043,7 +1052,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1101,7 +1110,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -1133,7 +1142,6 @@
 				);
 				INFOPLIST_FILE = DashKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1169,7 +1177,6 @@
 				);
 				INFOPLIST_FILE = DashKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
