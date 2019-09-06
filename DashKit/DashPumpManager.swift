@@ -218,6 +218,13 @@ public class DashPumpManager: PumpManager {
     public var reservoirLevel: ReservoirLevel? {
         return state.reservoirLevel
     }
+    
+    public var podTotalDelivery: HKQuantity? {
+        guard let delivery = state.podTotalDelivery else {
+            return nil
+        }
+        return HKQuantity(unit: .internationalUnit(), doubleValue: delivery)
+    }
 
     public var reservoirWarningLevel: Double {
         return 10 // TODO: Make configurable
@@ -273,24 +280,40 @@ public class DashPumpManager: PumpManager {
         }
     }
 
-    public func finishPodActivation(autoOffAlert: AutoOffAlert?, eventListener: @escaping (ActivationStatus<ActivationStep2Event>) -> ()) {
+    public func finishPodActivation(autoOffAlert: AutoOffAlert? = nil, eventListener: @escaping (ActivationStatus<ActivationStep2Event>) -> ()) {
         // TODO: SDK needs to be updated to allow us to pass in TimeZone
         podCommManager.finishPodActivation(basalProgram: state.basalProgram, autoOffAlert: autoOffAlert) { (activationStatus) in
-            if case .event(let event) = activationStatus, case .podStatus(let status) = event {
-                self.mutateState({ (state) in
-                    state.updateFromPodStatus(status: status)
-                })
+            switch activationStatus {
+            case .event(let event):
+                self.log.debug("finishPodActivation event: %@", String(describing: event))
+                switch event {
+                case .podStatus(let podStatus):
+                    self.mutateState({ (state) in
+                        state.updateFromPodStatus(status: podStatus)
+                    })
+                case .step2Completed:
+                    self.mutateState({ (state) in
+                        let now = Date()
+                        state.unfinalizedResume = UnfinalizedDose(resumeStartTime: now, scheduledCertainty: .certain)
+                        state.suspendState = .resumed(now)
+                    })
+                default:
+                    break
+                }
+            case .error(let error):
+                self.log.error("Error from finishPodActivation: %{public}@", String(describing: error))
             }
             eventListener(activationStatus)
         }
     }
-
+    
     public func discardPod(completion: @escaping (PodCommResult<Bool>) -> ()) {
         podCommManager.discardPod { (result) in
             self.mutateState({ (state) in
                 state.podActivatedAt = nil
                 state.lastStatusDate = nil
                 state.reservoirLevel = nil
+                state.podTotalDelivery = nil
             })
             completion(result)
         }

@@ -157,29 +157,27 @@ class InsertCannulaSetupViewController: SetupTableViewController {
 
     func insertCannula() {
 
-        let autoOffAlert = try! AutoOffAlert.init(enable: true, interval: 4 * 60 * 60)
         continueState = .startingInsertion
         var expectingAnotherEvent = false
-        pumpManager.finishPodActivation(autoOffAlert: autoOffAlert) { (activationStatus) in
+        pumpManager.finishPodActivation() { [weak self] (activationStatus) in
             switch(activationStatus) {
             case .error(let error):
                 expectingAnotherEvent = false
-                self.lastError = error
+                self?.lastError = error
             case .event(let event):
-                print("event: \(event)")
                 switch(event) {
                 case .insertingCannula:
                     expectingAnotherEvent = true
                     let finishTime = TimeInterval(seconds: 10)
-                    self.continueState = .inserting(finishTime: finishTime)
+                    self?.continueState = .inserting(finishTime: finishTime)
                     DispatchQueue.main.asyncAfter(deadline: .now() + finishTime + TimeInterval(seconds: 5)) {
                         if expectingAnotherEvent {
-                            self.lastError = PodCommError.failToConnect
+                            self?.lastError = PodCommError.failToConnect
                         }
                     }
                 case .step2Completed:
                     expectingAnotherEvent = false
-                    self.continueState = .ready
+                    self?.continueState = .ready
                 default:
                     break
                 }

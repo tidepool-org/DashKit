@@ -18,6 +18,13 @@ class DashSettingsViewController: UITableViewController {
             pumpManager.addPodStatusObserver(self, queue: .main)
         }
     }
+    
+    let insulinFormatter: QuantityFormatter = {
+        let insulinFormatter = QuantityFormatter()
+        insulinFormatter.numberFormatter.minimumFractionDigits = 2
+        insulinFormatter.numberFormatter.maximumFractionDigits = 2
+        return insulinFormatter
+    }()
 
     static public func instantiateFromStoryboard(pumpManager: DashPumpManager) -> DashSettingsViewController {
 
@@ -42,6 +49,9 @@ class DashSettingsViewController: UITableViewController {
 
         let button = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneTapped(_:)))
         self.navigationItem.setRightBarButton(button, animated: false)
+        
+        // Trigger refresh
+        pumpManager.getPodStatus { (_) in }
     }
 
     @objc func doneTapped(_ sender: Any) {
@@ -68,8 +78,9 @@ class DashSettingsViewController: UITableViewController {
 
     private enum StatusRow: Int, CaseIterable {
         case insulin = 0
-        case connectionStatus
         case expiration
+        case connectionStatus
+        case totalDelivery
     }
 
     // MARK: UITableViewDataSource
@@ -99,15 +110,24 @@ class DashSettingsViewController: UITableViewController {
                     cell.setReservoir(level: reservoirLevel, validAt: lastStatusDate)
                 }
                 return cell
+            case .expiration:
+                let cell = tableView.dequeueReusableCell(withIdentifier: "ExpirationCell", for: indexPath) as! PodExpirationTableViewCell
+                if let podExpiresAt = pumpManager.podExpiresAt {
+                    cell.expirationDate = podExpiresAt
+                }
+                return cell
             case .connectionStatus:
                 let cell = tableView.dequeueReusableCell(withIdentifier: SettingsTableViewCell.className, for: indexPath)
                 cell.textLabel?.text = NSLocalizedString("Connection Status", comment: "The title text for the pod connection status cell")
                 cell.detailTextLabel?.text = pumpManager.state.connectionState?.localizedDescription ?? "-"
                 return cell
-            case .expiration:
-                let cell = tableView.dequeueReusableCell(withIdentifier: "ExpirationCell", for: indexPath) as! PodExpirationTableViewCell
-                if let podExpiresAt = pumpManager.podExpiresAt {
-                    cell.expirationDate = podExpiresAt
+            case .totalDelivery:
+                let cell = tableView.dequeueReusableCell(withIdentifier: SettingsTableViewCell.className, for: indexPath)
+                cell.textLabel?.text = NSLocalizedString("Total Pod Delivery", comment: "The title text for the total pod delivery status cell")
+                if let delivery = pumpManager.podTotalDelivery {
+                    cell.detailTextLabel?.text = insulinFormatter.string(from: delivery, for: .internationalUnit())
+                } else {
+                    cell.detailTextLabel?.text = "-"
                 }
                 return cell
             }
