@@ -52,6 +52,22 @@ struct MockPodStatus: PodStatus {
 }
 
 class MockPodCommManager: PodCommManagerProtocol {
+    func updateBeepOptions(bolusReminder: BeepOption, tempBasalReminder: BeepOption, completion: @escaping (PodCommResult<PodStatus>) -> ()) {
+        completion(.success(podStatus))
+    }
+    
+    func verifyUnacknowledgedCommand(withRetry: Bool, completion: @escaping (PodCommResult<PodStatus>) -> ()) {
+        completion(.success(podStatus))
+    }
+    
+    func configPeriodicStatusCheck(interval: TimeInterval, completion: @escaping (PodCommResult<Bool>) -> ()) {
+        completion(.success(true))
+    }
+    
+    func disablePeriodicStatusCheck(completion: @escaping (PodCommResult<Bool>) -> ()) {
+        completion(.success(true))
+    }
+    
     var lastBolusVolume: Int?
     var lastBasalProgram: BasalProgram?
     var lastTempBasal: TempBasal?
@@ -103,11 +119,11 @@ class MockPodCommManager: PodCommManagerProtocol {
             completion(.failure(error))
         } else {
             switch programType {
-            case .basalProgram(let program):
+            case .basalProgram(let program, _):
                 lastBasalProgram = program
             case .bolus(let bolus):
                 lastBolusVolume = bolus.immediateVolume
-            case .tempBasal(let tempBasal):
+            case .tempBasal(let tempBasal, _):
                 lastTempBasal = tempBasal
             }
             completion(.success(podStatus))
