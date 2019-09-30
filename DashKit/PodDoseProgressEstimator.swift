@@ -45,4 +45,3 @@ class PodDoseProgressEstimator: DoseProgressTimerEstimator {
         return (delay: delayUntilNextPulse, repeating: timeBetweenPulses)
     }
 }
-import Foundation

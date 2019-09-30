@@ -30,14 +30,14 @@ public enum ReservoirLevel: RawRepresentable, Equatable {
         case aboveThresholdMagicNumber:
             self = .aboveThreshold
         default:
-            self = .valid(Double(rawValue) / 100)
+            self = .valid(Double(rawValue) / Pod.podSDKInsulinMultiplier)
         }
     }
 
     public var rawValue: RawValue {
         switch self {
         case .valid(let value):
-            return Int(round(value * 100))
+            return Int(round(value * Pod.podSDKInsulinMultiplier))
         case .aboveThreshold:
             return aboveThresholdMagicNumber
         }

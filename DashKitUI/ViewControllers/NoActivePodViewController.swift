@@ -65,9 +65,7 @@ extension NoActivePodViewController: CompletionDelegate {
 }
 
 extension NoActivePodViewController: PodStatusObserver {
-    func didUpdatePodStatus() {
-        //tableView.reloadData()
-    }
+    func didUpdatePodStatus() { }
 }
 
 private extension UIAlertController {

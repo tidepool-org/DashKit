@@ -13,7 +13,7 @@ public struct Pod {
     public static let pulseSize: Double = 0.05
 
     // Number of pulses required to delivery one unit of insulin
-    public static let pulsesPerUnit: Double = 20
+    public static let pulsesPerUnit: Double = 1/pulseSize
 
     // Units per second
     public static let bolusDeliveryRate: Double = 0.025
@@ -35,4 +35,7 @@ public struct Pod {
 
     // Time from pod activation until expiration
     public static let lifetime = TimeInterval(hours: 72)
+    
+    // PodSDK insulin values are U * 100
+    public static let podSDKInsulinMultiplier: Double = 100
 }

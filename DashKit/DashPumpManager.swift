@@ -91,23 +91,10 @@ public class DashPumpManager: PumpManager {
     private func status(for state: DashPumpManagerState) -> PumpManagerStatus {
         return PumpManagerStatus(
             timeZone: state.timeZone,
-            device: device(for: state),
+            device: device,
             pumpBatteryChargeRemaining: nil,
             basalDeliveryState: basalDeliveryState(for: state),
             bolusState: bolusState(for: state)
-        )
-    }
-
-    private func device(for state: DashPumpManagerState) -> HKDevice {
-        return HKDevice(
-            name: type(of: self).managerIdentifier,
-            manufacturer: "Insulet",
-            model: "DASH",
-            hardwareVersion: nil,
-            firmwareVersion: nil,
-            softwareVersion: String(DashKitVersionNumber),
-            localIdentifier: podCommManager.getPodId(),
-            udiDeviceIdentifier: nil
         )
     }
 
@@ -175,7 +162,7 @@ public class DashPumpManager: PumpManager {
             manufacturer: "Insulet",
             model: "DASH",
             hardwareVersion: nil,
-            firmwareVersion: "1.0",
+            firmwareVersion: nil,
             softwareVersion: String(DashKitVersionNumber),
             localIdentifier: podCommManager.getPodId(),
             udiDeviceIdentifier: nil
@@ -522,7 +509,7 @@ public class DashPumpManager: PumpManager {
             
             // Round to nearest supported volume
             let enactUnits = roundToSupportedBolusVolume(units: units)
-            let program = ProgramType.bolus(bolus: try Bolus(immediateVolume: Int(round(enactUnits * 100))))
+            let program = ProgramType.bolus(bolus: try Bolus(immediateVolume: Int(round(enactUnits * Pod.podSDKInsulinMultiplier))))
 
             let endDate = startDate.addingTimeInterval(enactUnits / Pod.bolusDeliveryRate)
             let dose = DoseEntry(type: .bolus, startDate: startDate, endDate: endDate, value: enactUnits, unit: .units)
@@ -635,7 +622,7 @@ public class DashPumpManager: PumpManager {
             if duration < .ulpOfOne {
                 program = nil
             } else {
-                let tempBasal = try TempBasal(value: .flatRate(Int(round(enactRate * 100))), duration: duration)
+                let tempBasal = try TempBasal(value: .flatRate(Int(round(enactRate * Pod.podSDKInsulinMultiplier))), duration: duration)
                 program = ProgramType.tempBasal(tempBasal: tempBasal, date: nil)
             }
         } catch let error {

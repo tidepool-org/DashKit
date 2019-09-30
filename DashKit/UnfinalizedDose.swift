@@ -138,7 +138,7 @@ public struct UnfinalizedDose: RawRepresentable, Equatable, CustomStringConverti
         let oldRate = rate
         duration = date.timeIntervalSince(startTime)
         if let remainingHundredths = remainingHundredths {
-            units = units - (Double(remainingHundredths) / 100.0)
+            units = units - (Double(remainingHundredths) / Pod.podSDKInsulinMultiplier)
         } else if let duration = duration {
             units = oldRate * duration.hours
         }

@@ -24,149 +24,166 @@ import PodSDK
 
 public extension PodStatus {
     var bolusRemaining: Double {
-        return Double(bolusUnitsRemaining) / 100.0
+        return Double(bolusUnitsRemaining) / Pod.podSDKInsulinMultiplier
     }
 
     var delivered: Double {
-        return Double(totalUnitsDelivered) / 100.0
+        return Double(totalUnitsDelivered) / Pod.podSDKInsulinMultiplier
     }
 
     var reservoir: Double {
-        return Double(reservoirUnitsRemaining) / 100.0
+        return Double(reservoirUnitsRemaining) / Pod.podSDKInsulinMultiplier
     }
 }
 
 public extension InternalErrorCode {
-    var description: String {
+    var localizedDescription: String {
         switch self {
         case .invalidCommand:
-            return "Invalid command"
+            return LocalizedString("Invalid command", comment: "Description for InternalErrorCode.invalidCommand")
 
         case .invalidResponse:
-            return "Invalid response"
+            return LocalizedString("Invalid response", comment: "Description for InternalErrorCode.invalidResponse")
 
         case .incompatibleProductId:
-            return "Incompatible product Id"
+            return LocalizedString("Incompatible product ID", comment: "Description for InternalErrorCode.incompatibleProductId")
 
         case .unexpectedMessageSequence:
-            return "Unexpected message sequence"
+            return LocalizedString("Unexpected message sequence", comment: "Description for InternalErrorCode.unexpectedMessageSequence")
 
         case .invalidPodId:
-            return "Invalid POD ID"
+            return LocalizedString("Invalid POD ID", comment: "Description for InternalErrorCode.invalidPodId")
         }
     }
 }
 
 public extension ActivationErrorCode {
-    var description: String {
+    var localizedDescription: String {
         switch self {
         case .moreThanOnePodAvailable:
-            return "More than one Pod found during Pod activation"
+            return LocalizedString("More than one Pod found during Pod activation", comment: "Description for ActivationErrorCode.moreThanOnePodAvailable")
 
         case .podIsLumpOfCoal1Hour:
-            return "Pod is not activated during 1 hour after UID is set"
+            return LocalizedString("Pod is not activated during 1 hour after UID is set", comment: "Description for ActivationErrorCode.podIsLumpOfCoal1Hour")
 
         case .podIsLumpOfCoal2Hours:
-            return "Pod is not activated during 2 hour after insulin is filled"
+            return LocalizedString("Pod is not activated during the 2 hours after insulin is filled", comment: "Description for ActivationErrorCode.podIsLumpOfCoal2Hours")
 
         case .podActivationFailed:
-            return "Other errors during Pod activation"
+            return LocalizedString("Pod Activation Failed", comment: "Description for ActivationErrorCode.podActivationFailed")
 
         case .activationPhase1NotCompleted:
-            return "Try to call activation phase 2 before completing phase 1"
+            return LocalizedString("Try to call activation phase 2 before completing phase 1", comment: "Description for ActivationErrorCode.activationPhase1NotCompleted")
             
         case .podIsActivatedOrDeactivating:
-            return "Pod is activated or deactivating"
+            return LocalizedString("Pod is activated or deactivating", comment: "Description for ActivationErrorCode.podIsActivatedOrDeactivating")
         }
     }
 }
+
+public extension NackErrorCode {
+    var localizedDescription: String {
+        switch self {
+        case .errorPodState:
+            return LocalizedString("Pod State", comment: "Description for NackErrorCode.errorPodState")
+            
+        case .errorPumpState:
+            return LocalizedString("Pump State", comment: "Description for NackErrorCode.errorPumpState")
+
+        case .podInAlarm:
+            return LocalizedString("Pod In Alarm", comment: "Description for NackErrorCode.podInAlarm")
+
+        case .invalidCrc:
+            return LocalizedString("Invalid CRC", comment: "Description for NackErrorCode.invalidCrc")
+
+        case .generalError:
+            return LocalizedString("General Error", comment: "Description for NackErrorCode.generalError")
+        }
+    }
+}
+
 
 extension PodCommError: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .unknownError:
-            return "Error not mapped"
+            return LocalizedString("Unknown Error", comment: "Error description for PodCommError.unknownError")
 
         case .phoneNotRegistered:
-            return "Phone is not registered"
+            return LocalizedString("Phone is not registered", comment: "Error description for PodCommError.phoneNotRegistered")
 
         case .podServiceIsBusy:
-            return "Pod service is busy"
+            return LocalizedString("Pod service is busy", comment: "Error description for PodCommError.podServiceIsBusy")
 
         case .podIsNotActive:
-            return "Pod is not active"
+            return LocalizedString("Pod is not active", comment: "Error description for PodCommError.podIsNotActive")
 
         case .failToConnect:
-            return "Failed to connect"
+            return LocalizedString("Failed to connect", comment: "Error description for PodCommError.failToConnect")
 
         case .operationTimeout:
-            return "Operation timed out"
+            return LocalizedString("Operation timed out", comment: "Error description for PodCommError.operationTimeout")
 
         case .notConnected:
-            return "Pod is not connected"
+            return LocalizedString("Pod is not connected", comment: "Error description for PodCommError.notConnected")
 
         case .messageSigningFailed:
-            return "Message signinng failed"
+            return LocalizedString("Message signing failed", comment: "Error description for PodCommError.messageSigningFailed")
 
         case .podNotAvailable:
-            return NSLocalizedString("Loop cannot locate Pod", comment: "Error text when pod not available.")
+            return LocalizedString("Pod not available", comment: "Error description for PodCommError.podNotAvailable")
 
         case .bluetoothOff:
-            return "Bluetooth is off"
+            return LocalizedString("Bluetooth is off", comment: "Error description for PodCommError.bluetoothOff")
 
-        case .internalError:
-            return "Internal error"
+        case .internalError(let internalErrorCode):
+            return String(format: LocalizedString("Internal error: %1$@", comment: "Format string for error description for PodCommError.internalError (1: internal error code description)"), internalErrorCode.localizedDescription)
 
-        case .activationError(let activationError):
-            switch activationError {
-            case .moreThanOnePodAvailable:
-                return NSLocalizedString("More than one Pod discovered", comment: "Error text when multiple pods detected.")
-            default:
-                return "Activation error"
-            }
-
+        case .activationError(let activationErrorCode):
+            return String(format: LocalizedString("Activation error: %1$@", comment: "Format string for error description for PodCommError.activationError (1: activation error code description)"), activationErrorCode.localizedDescription)
+            
         case .nackReceived(let nackCode):
-            return "NACK received: \(nackCode)"
+            return String(format: LocalizedString("Nack received: %1$@", comment: "Format string for error description for PodCommError.nackReceived (1: nack error code description)"), nackCode.localizedDescription)
 
         case .podIsInAlarm:
-            return "Pod is in alarm"
+            return LocalizedString("Pod is in alarm", comment: "Error description for PodCommError.podIsInAlarm")
 
         case .systemAlarm:
-            return "System alarm"
+            return LocalizedString("System alarm", comment: "Error description for PodCommError.systemAlarm")
 
         case .invalidProgram:
-            return "Invalid program"
+            return LocalizedString("Invalid program", comment: "Error description for PodCommError.invalidProgram")
 
         case .invalidAlertSetting:
-            return "Invalid alert settings"
+            return LocalizedString("Invalid alert settings", comment: "Error description for PodCommError.invalidAlertSetting")
 
         case .invalidProgramStatus:
-            return "Invalid Program status"
+            return LocalizedString("Invalid Program status", comment: "Error description for PodCommError.invalidProgramStatus")
 
         case .unacknowledgedCommandPendingRetry:
-            return "Unacknowledged Command Pending Retry"
+            return LocalizedString("Unacknowledged Command Pending Retry", comment: "Error description for PodCommError.unacknowledgedCommandPendingRetry")
 
         case .noUnacknowledgedCommandToRetry:
-            return "No Unacknowledged Command To Retry"
+            return LocalizedString("No Unacknowledged Command To Retry", comment: "Error description for PodCommError.noUnacknowledgedCommandToRetry")
 
         case .podSDKExpired:
-            return "Pod SDK Expired"
+            return LocalizedString("Pod SDK Expired", comment: "Error description for PodCommError.podSDKExpired")
             
         case .bleCommunicationError:
-            return "BLE Communication Error"
+            return LocalizedString("Bluetooth Communication Error", comment: "Error description for PodCommError.bleCommunicationError")
         }
     }
 
     public var recoverySuggestion: String? {
         switch self {
         case .podNotAvailable:
-            return NSLocalizedString("Move to a new area, place your phone and Pod close to each other and tap Retry.", comment: "Recovery suggestion when pod not available.")
+            return LocalizedString("Move to a new area, place your phone and Pod close to each other and tap Retry.", comment: "Recovery suggestion when pod not available.")
         case .activationError(let error):
             switch error {
             case .moreThanOnePodAvailable:
-                return NSLocalizedString("Please move to a new location and try again.", comment: "Recovery suggestion when multiple pods detected.")
+                return LocalizedString("Please move to a new location and try again.", comment: "Recovery suggestion when multiple pods detected.")
             case .podIsLumpOfCoal1Hour, .podIsLumpOfCoal2Hours:
-                return NSLocalizedString("Pod activation took too long. The pod was not activated within two hours after filling the reservoir and cannot be used.", comment: "Recovery suggestion when pod is lump of coal")
+                return LocalizedString("Pod activation took too long. The pod was not activated within two hours after filling the reservoir and cannot be used.", comment: "Recovery suggestion when pod is lump of coal")
             default:
                 return nil
             }
@@ -181,7 +198,7 @@ extension ActivationStep1Event : Equatable {
     public var description : String {
         switch self {
         case .connecting:
-            return " Pod is connecting"
+            return "Pod is connecting"
 
         case .retrievingPodVersion:
             return "Retrieving Pod version"
@@ -214,34 +231,34 @@ extension ActivationStep1Event : Equatable {
 
     public static func ==(lhs: ActivationStep1Event, rhs: ActivationStep1Event) -> Bool {
         switch (lhs, rhs) {
-        case ( .connecting, .connecting):
+        case (.connecting, .connecting):
             return true
 
-        case ( .retrievingPodVersion, .retrievingPodVersion):
+        case (.retrievingPodVersion, .retrievingPodVersion):
             return true
 
-        case ( .settingPodUid, .settingPodUid):
+        case (.settingPodUid, .settingPodUid):
             return true
 
-        case ( .programmingLowReservoirAlert, .programmingLowReservoirAlert):
+        case (.programmingLowReservoirAlert, .programmingLowReservoirAlert):
             return true
 
-        case ( .programmingLumpOfCoal, .programmingLumpOfCoal):
+        case (.programmingLumpOfCoal, .programmingLumpOfCoal):
             return true
 
-        case ( .primingPod, .primingPod):
+        case (.primingPod, .primingPod):
             return true
 
-        case ( .checkingPodStatus, .checkingPodStatus):
+        case (.checkingPodStatus, .checkingPodStatus):
             return true
 
-        case ( .programmingPodExpireAlert, .programmingPodExpireAlert):
+        case (.programmingPodExpireAlert, .programmingPodExpireAlert):
             return true
 
-        case ( .podStatus, .podStatus):
+        case (.podStatus, .podStatus):
             return true
 
-        case ( .step1Completed, .step1Completed):
+        case (.step1Completed, .step1Completed):
             return true
 
         default:

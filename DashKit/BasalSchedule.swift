@@ -21,7 +21,7 @@ extension BasalProgram {
 
         let segmentUnit = Pod.minimumBasalScheduleEntryDuration
         for (rate,(start,end)) in zip(rates,zip(startTimes,endTimes)) {
-            let podRate = Int(round(rate * 100))
+            let podRate = Int(round(rate * Pod.podSDKInsulinMultiplier))
 
             do {
                 let segment = try BasalSegment(startTime: Int(round(start/segmentUnit)), endTime: Int(round(end/segmentUnit)), basalRate: podRate)

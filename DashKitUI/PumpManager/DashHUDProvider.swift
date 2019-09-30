@@ -29,10 +29,6 @@ internal class DashHUDProvider: NSObject, HUDProvider {
     
     private var podLifeView: PodLifeHUDView?
 
-//    private var reservoirView: OmnipodReservoirView?
-//
-//    private var podLifeView: PodLifeHUDView?
-
     var visible: Bool = false {
         didSet {
             if oldValue != visible && visible {
