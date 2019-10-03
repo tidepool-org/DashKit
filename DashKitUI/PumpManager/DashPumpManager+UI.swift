@@ -26,9 +26,8 @@ extension DashPumpManager: PumpManagerUI {
             if hasActivePod {
                 let settings = DashSettingsViewController.instantiateFromStoryboard(pumpManager: self)
                 return SettingsNavigationViewController(rootViewController: settings)
-            } else {
-                return PodReplacementNavigationController.instantiateSettingsNoPodFlow(self)
             }
+            return PodReplacementNavigationController.instantiateSettingsNoPodFlow(self)
         }
     }
 
@@ -49,18 +48,19 @@ extension DashPumpManager: PumpManagerUI {
 // MARK: - DeliveryLimitSettingsTableViewControllerSyncSource
 extension DashPumpManager {
     public func syncDeliveryLimitSettings(for viewController: DeliveryLimitSettingsTableViewController, completion: @escaping (DeliveryLimitSettingsResult) -> Void) {
-        guard let maxBasalRate = viewController.maximumBasalRatePerHour,
-            let maxBolus = viewController.maximumBolus else
+        guard let maximumBasalRatePerHour = viewController.maximumBasalRatePerHour,
+            let maximumBolus = viewController.maximumBolus else
         {
             completion(.failure(DashPumpManagerError.missingSettings))
             return
         }
 
-        completion(.success(maximumBasalRatePerHour: maxBasalRate, maximumBolus: maxBolus))
+        completion(.success(maximumBasalRatePerHour: maximumBasalRatePerHour, maximumBolus: maximumBolus))
     }
 
     public func syncButtonTitle(for viewController: DeliveryLimitSettingsTableViewController) -> String {
-        return LocalizedString("Save", comment: "Title of button to save delivery limit settings")    }
+        return LocalizedString("Save", comment: "Title of button to save delivery limit settings")
+    }
 
     public func syncButtonDetailText(for viewController: DeliveryLimitSettingsTableViewController) -> String? {
         return nil

@@ -10,8 +10,11 @@ import UIKit
 import LoopKitUI
 import DashKit
 import PodSDK
+import os.log
 
 class ReplacePodViewController: SetupTableViewController {
+
+    private let log = OSLog(category: "ReplacePodViewController")
 
     enum PodReplacementReason {
         case normal
@@ -71,10 +74,6 @@ class ReplacePodViewController: SetupTableViewController {
         continueState = .initial
     }
 
-    override func setEditing(_ editing: Bool, animated: Bool) {
-        super.setEditing(editing, animated: animated)
-    }
-
     // MARK: - UITableViewDelegate
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -117,7 +116,7 @@ class ReplacePodViewController: SetupTableViewController {
                 footerView.primaryButton.isEnabled = true
                 footerView.primaryButton.setDiscardTitle()
                 tableView.beginUpdates()
-                loadingLabel.text = LocalizedString("Unable to deactivate pod. Discard pod to pair a new one.", comment: "Instructions when pod cannot be deactivated")
+                loadingLabel.text = LocalizedString("Unable to deactivate pod. Discard pod and pair a new one.", comment: "Instructions when pod cannot be deactivated")
                 loadingLabel.isHidden = false
                 tableView.endUpdates()
             case .ready:
@@ -149,9 +148,7 @@ class ReplacePodViewController: SetupTableViewController {
 
             tableView.beginUpdates()
             loadingLabel.text = errorText
-
-            let isHidden = (errorText == nil)
-            loadingLabel.isHidden = isHidden
+            loadingLabel.isHidden = (errorText == nil)
             tableView.endUpdates()
         }
     }
@@ -179,27 +176,27 @@ class ReplacePodViewController: SetupTableViewController {
     func deactivate() {
         tryCount += 1
 
-        // Shouldn't happen normally. Remove when pairing is stabilized.
-        if pumpManager.podCommState == .noPod {
-            pumpManager.discardPod { (response) in
-                self.continueState = .ready
-            }
-        }
-
         pumpManager.deactivatePod { (result) in
-            // TODO: Do we need to dispatch back to main queue here?
             switch result {
             case .failure(let error):
                 if self.tryCount > 1 {
                     self.continueState = .continueAfterFailure
                 } else {
+                    self.log.error("deactivatePod returned error: %{public}@", String(describing: error))
                     self.lastError = error
                     self.continueState = .deactivationFailed
                 }
             case .success:
-                self.pumpManager.discardPod { (_) in
+                self.pumpManager.discardPod(completion: { (result) in
+                    switch result {
+                    case .failure(let error):
+                        self.log.error("discardPod returned error: %{public}@", String(describing: error))
+                    case .success:
+                        break
+                    }
+                    // Continue in either case, as we need a continue path for the user.
                     self.continueState = .ready
-                }
+                })
             }
         }
     }

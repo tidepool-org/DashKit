@@ -67,6 +67,7 @@ internal class DashHUDProvider: NSObject, HUDProvider {
         updateFaultDisplay()
         pumpManager.getPodStatus { (_) in }
     }
+    
     public var hudViewsRawState: HUDProvider.HUDViewsRawState {
         var rawValue: HUDProvider.HUDViewsRawState = [:]
 
@@ -82,7 +83,6 @@ internal class DashHUDProvider: NSObject, HUDProvider {
 
     public static func createHUDViews(rawValue: HUDProvider.HUDViewsRawState) -> [BaseHUDView] {
         guard let podActivatedAt = rawValue["podActivatedAt"] as? Date,
-            let lifetime = rawValue["lifetime"] as? Double,
             let rawReservoirLevel = rawValue["reservoirLevel"] as? ReservoirLevel.RawValue else
         {
             return []
@@ -92,16 +92,16 @@ internal class DashHUDProvider: NSObject, HUDProvider {
 
         let reservoirLevel = ReservoirLevel(rawValue: rawReservoirLevel)
 
-        if let validTime = rawValue["validTime"] as? Date
+        if let lastStatusDate = rawValue["lastStatusDate"] as? Date
         {
             reservoirView = OmnipodReservoirView.instantiate()
-            reservoirView!.update(level: reservoirLevel, at: validTime, reservoirAlertState: .ok)
+            reservoirView!.update(level: reservoirLevel, at: lastStatusDate, reservoirAlertState: .ok)
         } else {
             reservoirView = nil
         }
 
         let podLifeHUDView = PodLifeHUDView.instantiate()
-        podLifeHUDView.setPodLifeCycle(startTime: podActivatedAt, lifetime: lifetime)
+        podLifeHUDView.setPodLifeCycle(startTime: podActivatedAt, lifetime: Pod.lifetime)
 
         return [reservoirView, podLifeHUDView].compactMap({ $0 })
     }
@@ -113,15 +113,9 @@ internal class DashHUDProvider: NSObject, HUDProvider {
             return
         }
 
-        let reservoirLevel = pumpManager.reservoirLevel
+        let reservoirAlertState: ReservoirAlertState = pumpManager.isReservoirLow ? .lowReservoir : .ok
 
-        var reservoirAlertState: ReservoirAlertState = .ok
-
-        if pumpManager.isReservoirLow {
-            reservoirAlertState = .lowReservoir
-        }
-
-        reservoirView.update(level: reservoirLevel, at: lastStatusDate, reservoirAlertState: reservoirAlertState)
+        reservoirView.update(level: pumpManager.reservoirLevel, at: lastStatusDate, reservoirAlertState: reservoirAlertState)
     }
 
     private func updateFaultDisplay() {
@@ -129,11 +123,7 @@ internal class DashHUDProvider: NSObject, HUDProvider {
             return
         }
 
-        if pumpManager.isPodAlarming {
-            podLifeView.alertState = .fault
-        } else {
-            podLifeView.alertState = .none
-        }
+        podLifeView.alertState = pumpManager.isPodAlarming ? .fault : .none
     }
 
     private func updatePodLifeView() {
@@ -141,9 +131,7 @@ internal class DashHUDProvider: NSObject, HUDProvider {
             return
         }
 
-        let lifetime = Pod.lifetime
-
-        podLifeView.setPodLifeCycle(startTime: pumpManager.podActivatedAt, lifetime: lifetime)
+        podLifeView.setPodLifeCycle(startTime: pumpManager.podActivatedAt, lifetime: Pod.lifetime)
     }
 }
 

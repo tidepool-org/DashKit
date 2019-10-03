@@ -15,10 +15,13 @@ import LoopKitUI
 import DashKit
 import SwiftGif
 import PodSDK
+import os.log
+
 
 class PairPodSetupViewController: SetupTableViewController {
 
     var pumpManager: DashPumpManager!
+    
 
     // MARK: -
 
@@ -27,14 +30,14 @@ class PairPodSetupViewController: SetupTableViewController {
     @IBOutlet weak var loadingLabel: UILabel!
 
     @IBOutlet weak var imageView: UIImageView!
+    
+    public let log = OSLog(category: "PairPodSetupViewController")
 
     private var loadingText: String? {
         didSet {
             tableView.beginUpdates()
             loadingLabel.text = loadingText
-
-            let isHidden = (loadingText == nil)
-            loadingLabel.isHidden = isHidden
+            loadingLabel.isHidden = (loadingText == nil)
             tableView.endUpdates()
         }
     }
@@ -101,7 +104,7 @@ class PairPodSetupViewController: SetupTableViewController {
             case .fault:
                 activityIndicator.state = .hidden
                 footerView.primaryButton.isEnabled = true
-                footerView.primaryButton.setDeactivateTitle()
+                footerView.primaryButton.setTitle(LocalizedString("Deactivate", comment: "Button title to deactivate pod because of fault during setup"), for: .normal)
             case .ready:
                 activityIndicator.state = .completed
                 footerView.primaryButton.isEnabled = true
@@ -135,13 +138,9 @@ class PairPodSetupViewController: SetupTableViewController {
                     // On first error: retry. On second, fault (discard pod)
                     continueState = oldValue == nil ? State.initial : State.fault
                 }
-
-            } else if lastError != nil {
-                continueState = .initial
             }
 
             loadingText = errorText
-
         }
     }
 
@@ -186,14 +185,15 @@ class PairPodSetupViewController: SetupTableViewController {
         pumpManager.startPodActivation(lowReservoirAlert: try! LowReservoirAlert(reservoirVolumeBelow: 1000),
                                                  podExpirationAlert: try! PodExpirationAlert(intervalBeforeExpiration: 4 * 60 * 60))
         { (activationStatus) in
-            switch(activationStatus) {
+            switch activationStatus {
             case .error(let error):
                 timeoutHandler?.cancel()
                 self.lastError = error
             case .event(let event):
-                switch(event) {
-                case .podStatus(let status):
-                    print("Pod status: \(status)")
+                self.log.debug("startPodActivation event: %{public}@", String(describing: event))
+                switch event {
+                case .podStatus:
+                    break;
                 case .primingPod:
                     let finishTime = TimeInterval(seconds: 35)
                     self.continueState = .priming(finishTime: finishTime)
@@ -207,7 +207,7 @@ class PairPodSetupViewController: SetupTableViewController {
                     timeoutHandler?.cancel()
                     self.continueState = .ready
                 default:
-                    print("Ignoring event: \(event)")
+                    break;
                 }
             }
         }
@@ -217,10 +217,6 @@ class PairPodSetupViewController: SetupTableViewController {
 private extension SetupButton {
     func setPairTitle() {
         setTitle(LocalizedString("Pair", comment: "Button title to pair with pod during setup"), for: .normal)
-    }
-
-    func setDeactivateTitle() {
-        setTitle(LocalizedString("Deactivate", comment: "Button title to deactivate pod because of fault during setup"), for: .normal)
     }
 }
 

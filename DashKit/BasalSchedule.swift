@@ -20,7 +20,7 @@ extension BasalProgram {
         endTimes.append(.hours(24))
 
         let segmentUnit = Pod.minimumBasalScheduleEntryDuration
-        for (rate,(start,end)) in zip(rates,zip(startTimes,endTimes)) {
+        for (rate, (start, end)) in zip(rates, zip(startTimes, endTimes)) {
             let podRate = Int(round(rate * Pod.podSDKInsulinMultiplier))
 
             do {
@@ -78,12 +78,12 @@ extension BasalProgram: RawRepresentable {
     public typealias RawValue = [String: Any]
 
     public init?(rawValue: RawValue) {
-        guard let entriesRaw = rawValue["basalSegments"] as? [BasalSegment.RawValue] else {
+        guard let basalSegmentsRaw = rawValue["basalSegments"] as? [BasalSegment.RawValue] else {
             return nil
         }
 
         do {
-            try self.init(basalSegments: entriesRaw.compactMap { BasalSegment(rawValue: $0) })
+            try self.init(basalSegments: basalSegmentsRaw.compactMap { BasalSegment(rawValue: $0) })
         } catch {
             return nil
         }

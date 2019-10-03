@@ -41,10 +41,10 @@ public struct UnfinalizedDose: RawRepresentable, Equatable, CustomStringConverti
     }()
 
     private let shortDateFormatter: DateFormatter = {
-        let timeFormatter = DateFormatter()
-        timeFormatter.dateStyle = .short
-        timeFormatter.timeStyle = .medium
-        return timeFormatter
+        let formatter = DateFormatter()
+        formatter.dateStyle = .short
+        formatter.timeStyle = .medium
+        return formatter
     }()
 
     private let dateFormatter = ISO8601DateFormatter()
@@ -61,7 +61,7 @@ public struct UnfinalizedDose: RawRepresentable, Equatable, CustomStringConverti
     var duration: TimeInterval?
     var scheduledCertainty: ScheduledCertainty
 
-    var finishTime: Date? {
+    var endTime: Date? {
         get {
             return duration != nil ? startTime.addingTimeInterval(duration!) : nil
         }
@@ -70,16 +70,16 @@ public struct UnfinalizedDose: RawRepresentable, Equatable, CustomStringConverti
         }
     }
 
-    public var progress: Double {
+    public func progress(at date: Date) -> Double {
         guard let duration = duration else {
             return 0
         }
-        let elapsed = -startTime.timeIntervalSinceNow
+        let elapsed = -startTime.timeIntervalSince(date)
         return min(elapsed / duration, 1)
     }
 
-    public var isFinished: Bool {
-        return progress >= 1
+    public func isFinished(at date: Date) -> Bool {
+        return progress(at: date) >= 1
     }
 
     // Units per hour
@@ -89,9 +89,9 @@ public struct UnfinalizedDose: RawRepresentable, Equatable, CustomStringConverti
         }
         return units / duration.hours
     }
-
-    public var finalizedUnits: Double? {
-        guard isFinished else {
+    
+    public func finalizedUnits(at date: Date) -> Double? {
+        guard isFinished(at: date) else {
             return nil
         }
         return units
@@ -140,7 +140,7 @@ public struct UnfinalizedDose: RawRepresentable, Equatable, CustomStringConverti
         if let remainingHundredths = remainingHundredths {
             units = units - (Double(remainingHundredths) / Pod.podSDKInsulinMultiplier)
         } else if let duration = duration {
-            units = oldRate * duration.hours
+            units = floor(oldRate * duration.hours * Pod.pulsesPerUnit) / Pod.pulsesPerUnit
         }
     }
 
@@ -234,20 +234,20 @@ private extension TimeInterval {
 }
 
 extension NewPumpEvent {
-    init(_ dose: UnfinalizedDose) {
+    init(_ dose: UnfinalizedDose, at date: Date) {
         let title = String(describing: dose)
-        let entry = DoseEntry(dose)
-        self.init(date: dose.startTime, dose: entry, isMutable: !dose.isFinished, raw: dose.uniqueKey, title: title)
+        let entry = DoseEntry(dose, at: date)
+        self.init(date: dose.startTime, dose: entry, isMutable: !dose.isFinished(at: date), raw: dose.uniqueKey, title: title)
     }
 }
 
 extension DoseEntry {
-    init (_ dose: UnfinalizedDose) {
+    init (_ dose: UnfinalizedDose, at date: Date) {
         switch dose.doseType {
         case .bolus:
-            self = DoseEntry(type: .bolus, startDate: dose.startTime, endDate: dose.finishTime, value: dose.scheduledUnits ?? dose.units, unit: .units, deliveredUnits: dose.finalizedUnits)
+            self = DoseEntry(type: .bolus, startDate: dose.startTime, endDate: dose.endTime, value: dose.scheduledUnits ?? dose.units, unit: .units, deliveredUnits: dose.finalizedUnits(at: date))
         case .tempBasal:
-            self = DoseEntry(type: .tempBasal, startDate: dose.startTime, endDate: dose.finishTime, value: dose.scheduledTempRate ?? dose.rate, unit: .unitsPerHour, deliveredUnits: dose.finalizedUnits)
+            self = DoseEntry(type: .tempBasal, startDate: dose.startTime, endDate: dose.endTime, value: dose.scheduledTempRate ?? dose.rate, unit: .unitsPerHour, deliveredUnits: dose.finalizedUnits(at: date))
         case .suspend:
             self = DoseEntry(suspendDate: dose.startTime)
         case .resume:
@@ -257,7 +257,7 @@ extension DoseEntry {
 }
 
 extension UnfinalizedDose {
-    func doseEntry() -> DoseEntry {
-        return DoseEntry(self)
+    func doseEntry(at date: Date) -> DoseEntry {
+        return DoseEntry(self, at: date)
     }
 }

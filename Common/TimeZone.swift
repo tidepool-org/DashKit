@@ -1,7 +1,8 @@
 //
 //  TimeZone.swift
-//  RileyLink
+//  DashKit
 //
+//  Originally from RileyLink
 //  Created by Nate Racklyeft on 10/2/16.
 //  Copyright © 2019 Tidepool. All rights reserved.
 //

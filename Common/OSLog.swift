@@ -1,6 +1,6 @@
 //
 //  OSLog.swift
-//  Loop
+//  DashKit
 //
 //  Copyright © 2017 LoopKit Authors. All rights reserved.
 //
@@ -10,7 +10,7 @@ import os.log
 
 extension OSLog {
     convenience init(category: String) {
-        self.init(subsystem: "com.loopkit.Loop", category: category)
+        self.init(subsystem: "org.tidepool.DashKit", category: category)
     }
 
     func debug(_ message: StaticString, _ args: CVarArg...) {

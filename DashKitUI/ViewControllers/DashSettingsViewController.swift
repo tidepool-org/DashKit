@@ -59,11 +59,13 @@ class DashSettingsViewController: UITableViewController {
     }
 
     private func done() {
-        if let nav = navigationController as? SettingsNavigationViewController {
+        switch navigationController {
+        case let nav as SettingsNavigationViewController:
             nav.notifyComplete()
-        }
-        if let nav = navigationController as? DashPumpManagerSetupViewController {
+        case let nav as DashPumpManagerSetupViewController:
             nav.finishedSettingsDisplay()
+        default:
+            break
         }
     }
 

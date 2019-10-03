@@ -50,10 +50,6 @@ class RegistrationViewController: UIViewController {
         phoneRegistration.layer.cornerRadius = 10
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
-
     @IBAction func phoneRegistration(_ sender: UIButton) {
 
         guard !RegistrationManager.shared.isRegistered() else {
@@ -65,10 +61,8 @@ class RegistrationViewController: UIViewController {
 
         RegistrationManager.shared.startRegistration { (status) in
             self.log.default("startRegistration status: %{public}@", String(describing: status))
-            print("startRegistration status: \(status)")
-            switch(status) {
+            switch status {
             case .registered, .alreadyRegistered:
-                print("RegistrationManager.shared.isRegistered() = \(RegistrationManager.shared.isRegistered())")
                 self.performSegue(withIdentifier: "Continue", sender: nil)
             default:
                 self.presentOkDialog(title: "Error", message: "Phone registration error \(status)")

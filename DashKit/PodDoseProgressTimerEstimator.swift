@@ -1,5 +1,5 @@
 //
-//  PodDoseProgressEstimator.swift
+//  PodDoseProgressTimerEstimator.swift
 //  DashKit
 //
 //  Created by Pete Schwamb on 5/31/19.
@@ -9,7 +9,7 @@
 import Foundation
 import LoopKit
 
-class PodDoseProgressEstimator: DoseProgressTimerEstimator {
+class PodDoseProgressTimerEstimator: DoseProgressTimerEstimator {
 
     let dose: DoseEntry
 
@@ -19,7 +19,7 @@ class PodDoseProgressEstimator: DoseProgressTimerEstimator {
         let elapsed = -dose.startDate.timeIntervalSinceNow
         let duration = dose.endDate.timeIntervalSince(dose.startDate)
         let percentComplete = min(elapsed / duration, 1)
-        let delivered = pumpManager?.roundToSupportedBolusVolume(units: percentComplete * dose.programmedUnits) ?? dose.programmedUnits
+        let delivered = pumpManager?.roundToSupportedBolusVolume(units: percentComplete * dose.programmedUnits) ?? percentComplete * dose.programmedUnits
         return DoseProgress(deliveredUnits: delivered, percentComplete: percentComplete)
     }
 
@@ -36,7 +36,7 @@ class PodDoseProgressEstimator: DoseProgressTimerEstimator {
         case .bolus:
             timeBetweenPulses = Pod.pulseSize / Pod.bolusDeliveryRate
         case .basal, .tempBasal:
-            timeBetweenPulses = Pod.pulseSize / dose.unitsPerHour
+            timeBetweenPulses = Pod.pulseSize / (dose.unitsPerHour / TimeInterval(hours: 1))
         default:
             fatalError("Can only estimate progress on basal rates or boluses.")
         }

@@ -10,6 +10,17 @@ import Foundation
 import LoopKit
 import PodSDK
 
+// Primarily used for testing
+private struct DateGeneratorWrapper {
+    let dateGenerator: () -> Date
+}
+extension DateGeneratorWrapper: Equatable {
+    static func == (lhs: DateGeneratorWrapper, rhs: DateGeneratorWrapper) -> Bool {
+        return true
+    }
+}
+
+
 public struct DashPumpManagerState: RawRepresentable, Equatable {
 
     public typealias RawValue = PumpManager.RawStateValue
@@ -33,7 +44,7 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
     public var unfinalizedSuspend: UnfinalizedDose?
     public var unfinalizedResume: UnfinalizedDose?
 
-    var finalizedDoses: [UnfinalizedDose]
+    var finishedDoses: [UnfinalizedDose]
 
     public var suspendState: SuspendState
 
@@ -48,7 +59,7 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
         if let transition = activeTransition, transition == .startingBolus {
             return true
         }
-        if let bolus = unfinalizedBolus, !bolus.isFinished {
+        if let bolus = unfinalizedBolus, !bolus.isFinished(at: dateGenerator()) {
             return true
         }
         return false
@@ -68,28 +79,36 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
     internal var activeTransition: ActiveTransition?
     
     public var connectionState: ConnectionState?
+    
+    private let dateGeneratorWrapper: DateGeneratorWrapper
+    private func dateGenerator() -> Date {
+        return dateGeneratorWrapper.dateGenerator()
+    }
 
-    public init?(basalRateSchedule: BasalRateSchedule) {
+    public init?(basalRateSchedule: BasalRateSchedule, dateGenerator: @escaping () -> Date = Date.init) {
         self.timeZone = basalRateSchedule.timeZone
         guard let basalProgram = BasalProgram(items: basalRateSchedule.items) else {
             return nil
         }
         self.basalProgram = basalProgram
-        self.finalizedDoses = []
-        self.suspendState = .resumed(Date())
+        self.dateGeneratorWrapper = DateGeneratorWrapper(dateGenerator: dateGenerator)
+        self.finishedDoses = []
+        self.suspendState = .resumed(dateGenerator())
     }
 
 
-    public init?(rawValue: [String : Any]) {
+    public init?(rawValue: RawValue) {
         guard
             let _ = rawValue["version"] as? Int,
             let rawBasalProgram = rawValue["basalProgram"] as? BasalProgram.RawValue,
             let basalProgram = BasalProgram(rawValue: rawBasalProgram),
-            let suspendStateRaw = rawValue["suspendState"] as? SuspendState.RawValue,
-            let suspendState = SuspendState(rawValue: suspendStateRaw)
+            let rawSuspendState = rawValue["suspendState"] as? SuspendState.RawValue,
+            let suspendState = SuspendState(rawValue: rawSuspendState)
             else {
             return nil
         }
+        
+        self.dateGeneratorWrapper = DateGeneratorWrapper(dateGenerator: Date.init)
 
         self.basalProgram = basalProgram
         self.suspendState = suspendState
@@ -102,14 +121,12 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
             self.reservoirLevel = ReservoirLevel(rawValue: rawReservoirLevel)
         }
 
-        let timeZone: TimeZone
         if let timeZoneSeconds = rawValue["timeZone"] as? Int,
-            let tz = TimeZone(secondsFromGMT: timeZoneSeconds) {
-            timeZone = tz
+            let timeZone = TimeZone(secondsFromGMT: timeZoneSeconds) {
+            self.timeZone = timeZone
         } else {
-            timeZone = TimeZone.currentFixed
+            self.timeZone = TimeZone.currentFixed
         }
-        self.timeZone = timeZone
 
         if let rawUnfinalizedBolus = rawValue["unfinalizedBolus"] as? UnfinalizedDose.RawValue,
             let unfinalizedBolus = UnfinalizedDose(rawValue: rawUnfinalizedBolus)
@@ -143,10 +160,10 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
             self.unfinalizedResume = nil
         }
 
-        if let rawFinalizedDoses = rawValue["finalizedDoses"] as? [UnfinalizedDose.RawValue] {
-            self.finalizedDoses = rawFinalizedDoses.compactMap( { UnfinalizedDose(rawValue: $0) } )
+        if let rawFinishedDoses = rawValue["finishedDoses"] as? [UnfinalizedDose.RawValue] {
+            self.finishedDoses = rawFinishedDoses.compactMap( { UnfinalizedDose(rawValue: $0) } )
         } else {
-            self.finalizedDoses = []
+            self.finishedDoses = []
         }
     }
 
@@ -154,7 +171,7 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
         var rawValue: RawValue = [
             "version": DashPumpManagerState.version,
             "timeZone": timeZone.secondsFromGMT(),
-            "finalizedDoses": finalizedDoses.map( { $0.rawValue }),
+            "finishedDoses": finishedDoses.map( { $0.rawValue }),
             "basalProgram": basalProgram.rawValue,
             "suspendState": suspendState.rawValue,
         ]
@@ -179,19 +196,19 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
             rawValue["podActivatedAt"] = podActivatedAt
         }
 
-        if let unfinalizedBolus = self.unfinalizedBolus {
+        if let unfinalizedBolus = unfinalizedBolus {
             rawValue["unfinalizedBolus"] = unfinalizedBolus.rawValue
         }
 
-        if let unfinalizedTempBasal = self.unfinalizedTempBasal {
+        if let unfinalizedTempBasal = unfinalizedTempBasal {
             rawValue["unfinalizedTempBasal"] = unfinalizedTempBasal.rawValue
         }
 
-        if let unfinalizedSuspend = self.unfinalizedSuspend {
+        if let unfinalizedSuspend = unfinalizedSuspend {
             rawValue["unfinalizedSuspend"] = unfinalizedSuspend.rawValue
         }
 
-        if let unfinalizedResume = self.unfinalizedResume {
+        if let unfinalizedResume = unfinalizedResume {
             rawValue["unfinalizedResume"] = unfinalizedResume.rawValue
         }
 
@@ -199,7 +216,7 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
     }
     
     mutating func updateFromPodStatus(status: PodStatus) {
-        lastStatusDate = Date()
+        lastStatusDate = dateGenerator()
         reservoirLevel = ReservoirLevel(rawValue: status.reservoirUnitsRemaining)
         podActivatedAt = status.expirationDate - .days(3)
         podTotalDelivery = status.delivered
@@ -213,7 +230,7 @@ extension DashPumpManagerState: CustomDebugStringConvertible {
             "* timeZone: \(timeZone)",
             "* suspendState: \(suspendState)",
             "* basalProgram: \(basalProgram)",
-            "* finalizedDoses: \(finalizedDoses)",
+            "* finishedDoses: \(finishedDoses)",
             "* unfinalizedBolus: \(String(describing: unfinalizedBolus))",
             "* unfinalizedTempBasal: \(String(describing: unfinalizedTempBasal))",
             "* unfinalizedSuspend: \(String(describing: unfinalizedSuspend))",
@@ -244,11 +261,11 @@ public enum SuspendState: Equatable, RawRepresentable {
     }
 
     public init?(rawValue: RawValue) {
-        guard let suspendStateType = rawValue["case"] as? SuspendStateType.RawValue,
+        guard let rawSuspendStateType = rawValue["type"] as? SuspendStateType.RawValue,
             let date = rawValue["date"] as? Date else {
                 return nil
         }
-        switch SuspendStateType(rawValue: suspendStateType) {
+        switch SuspendStateType(rawValue: rawSuspendStateType) {
         case .suspend?:
             self = .suspended(date)
         case .resume?:
@@ -262,12 +279,12 @@ public enum SuspendState: Equatable, RawRepresentable {
         switch self {
         case .suspended(let date):
             return [
-                "case": SuspendStateType.suspend.rawValue,
+                "type": SuspendStateType.suspend.rawValue,
                 "date": date
             ]
         case .resumed(let date):
             return [
-                "case": SuspendStateType.resume.rawValue,
+                "type": SuspendStateType.resume.rawValue,
                 "date": date
             ]
         }

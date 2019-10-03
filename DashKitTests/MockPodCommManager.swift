@@ -78,13 +78,9 @@ class MockPodCommManager: PodCommManagerProtocol {
 
     var delegate: PodCommManagerDelegate?
 
-    func setLogger(logger: LoggingProtocol) {
-        return
-    }
+    func setLogger(logger: LoggingProtocol) { }
 
-    func enableAutoConnection(launchOptions: [AnyHashable : Any]?) {
-        return
-    }
+    func enableAutoConnection(launchOptions: [AnyHashable : Any]?) { }
 
     func startPodActivation(lowReservoirAlert: LowReservoirAlert?, podExpirationAlert: PodExpirationAlert?, eventListener: @escaping (ActivationStatus<ActivationStep1Event>) -> ()) {
         return

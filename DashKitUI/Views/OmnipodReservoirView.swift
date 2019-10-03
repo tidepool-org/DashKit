@@ -84,7 +84,7 @@ public final class OmnipodReservoirView: LevelHUDView, NibLoadable {
             let time = timeFormatter.string(from: date)
             caption?.text = time
 
-            switch(reservoirLevel) {
+            switch reservoirLevel {
             case .aboveThreshold:
                 volumeLabel.isHidden = false
                 level = nil
@@ -128,13 +128,9 @@ public final class OmnipodReservoirView: LevelHUDView, NibLoadable {
 
         updateColor()
 
-        if self.superview == nil {
+        UIView.animate(withDuration: 0.25, animations: {
             self.alertLabel.alpha = alertLabelAlpha
-        } else {
-            UIView.animate(withDuration: 0.25, animations: {
-                self.alertLabel.alpha = alertLabelAlpha
-            })
-        }
+        })
     }
 
     public func update(level: ReservoirLevel?, at date: Date, reservoirAlertState: ReservoirAlertState) {

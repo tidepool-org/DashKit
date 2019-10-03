@@ -28,8 +28,7 @@ public class DashPumpManager: PumpManager {
     public static let localizedTitle = LocalizedString("Omnipod DASH", comment: "Generic title of the omnipod DASH pump manager")
 
     public var lastReconciliation: Date? {
-        // TODO
-        return Date()
+        return dateGenerator()
     }
 
     public func roundToSupportedBasalRate(unitsPerHour: Double) -> Double {
@@ -87,7 +86,14 @@ public class DashPumpManager: PumpManager {
     public var hasActivePod: Bool {
         return state.podActivatedAt != nil
     }
+    
+    // Primarily used for testing
+    private let dateGenerator: () -> Date
 
+    public var state: DashPumpManagerState {
+        return lockedState.value
+    }
+    
     private func status(for state: DashPumpManagerState) -> PumpManagerStatus {
         return PumpManagerStatus(
             timeZone: state.timeZone,
@@ -96,10 +102,6 @@ public class DashPumpManager: PumpManager {
             basalDeliveryState: basalDeliveryState(for: state),
             bolusState: bolusState(for: state)
         )
-    }
-
-    public var state: DashPumpManagerState {
-        return lockedState.value
     }
     
     @discardableResult private func mutateState(_ changes: (_ state: inout DashPumpManagerState) -> Void) -> DashPumpManagerState {
@@ -176,21 +178,21 @@ public class DashPumpManager: PumpManager {
     private var statusObservers = WeakSynchronizedSet<PumpManagerStatusObserver>()
 
     public func addStatusObserver(_ observer: PumpManagerStatusObserver, queue: DispatchQueue) {
-        self.statusObservers.insert(observer, queue: queue)
+        statusObservers.insert(observer, queue: queue)
     }
 
     public func removeStatusObserver(_ observer: PumpManagerStatusObserver) {
-        self.statusObservers.removeElement(observer)
+        statusObservers.removeElement(observer)
     }
 
     private var podStatusObservers = WeakSynchronizedSet<PodStatusObserver>()
 
     public func addPodStatusObserver(_ observer: PodStatusObserver, queue: DispatchQueue) {
-        self.podStatusObservers.insert(observer, queue: queue)
+        podStatusObservers.insert(observer, queue: queue)
     }
 
     public func removePodStatusObserver(_ observer: PodStatusObserver) {
-        self.podStatusObservers.removeElement(observer)
+        podStatusObservers.removeElement(observer)
     }
 
     public var podActivatedAt: Date? {
@@ -254,10 +256,7 @@ public class DashPumpManager: PumpManager {
 
     public func startPodActivation(lowReservoirAlert: LowReservoirAlert?, podExpirationAlert: PodExpirationAlert?, eventListener: @escaping (ActivationStatus<ActivationStep1Event>) -> ())
     {
-
-        print("Going to startPodActivation. Registration status = \(RegistrationManager.shared.isRegistered())")
         return podCommManager.startPodActivation(lowReservoirAlert: lowReservoirAlert, podExpirationAlert: podExpirationAlert) { (activationStatus) in
-            print("ActivationStatus: \(activationStatus)")
             if case .event(let event) = activationStatus, case .podStatus(let status) = event {
                 self.mutateState({ (state) in
                     state.updateFromPodStatus(status: status)
@@ -280,7 +279,7 @@ public class DashPumpManager: PumpManager {
                     })
                 case .step2Completed:
                     self.mutateState({ (state) in
-                        let now = Date()
+                        let now = self.dateGenerator()
                         state.unfinalizedResume = UnfinalizedDose(resumeStartTime: now, scheduledCertainty: .certain)
                         state.suspendState = .resumed(now)
                     })
@@ -295,14 +294,21 @@ public class DashPumpManager: PumpManager {
     }
     
     public func discardPod(completion: @escaping (PodCommResult<Bool>) -> ()) {
+        
         podCommManager.discardPod { (result) in
             self.mutateState({ (state) in
+                let now = self.dateGenerator()
+                state.unfinalizedBolus?.cancel(at: now)
+                state.unfinalizedTempBasal?.cancel(at: now)
+                state.suspendState = .suspended(now)
                 state.podActivatedAt = nil
                 state.lastStatusDate = nil
                 state.reservoirLevel = nil
                 state.podTotalDelivery = nil
             })
-            completion(result)
+            self.finalizeAndStoreDoses(completion: { (_) in
+                completion(result)
+            })
         }
     }
 
@@ -329,7 +335,7 @@ public class DashPumpManager: PumpManager {
                 case .failure(let error):
                     completion(DashPumpManagerError(error))
                 case .success(let podStatus):
-                    let now = Date()
+                    let now = self.dateGenerator()
                     self.mutateState({ (state) in
                         state.updateFromPodStatus(status: podStatus)
                         state.unfinalizedResume = UnfinalizedDose(resumeStartTime: now, scheduledCertainty: .certain)
@@ -347,21 +353,21 @@ public class DashPumpManager: PumpManager {
         return pumpDataAge > pumpStatusAgeTolerance
     }
 
-    private func finalizeAndStoreDoses() {
+    private func finalizeAndStoreDoses(completion: ((Error?) -> Void)? = nil) {
         var dosesToStore: [UnfinalizedDose] = []
 
         lockedState.mutate { (state) in
-            if let bolus = state.unfinalizedBolus, bolus.isFinished {
-                state.finalizedDoses.append(bolus)
+            if let bolus = state.unfinalizedBolus, bolus.isFinished(at: dateGenerator()) {
+                state.finishedDoses.append(bolus)
                 state.unfinalizedBolus = nil
             }
 
-            if let tempBasal = state.unfinalizedTempBasal, tempBasal.isFinished {
-                state.finalizedDoses.append(tempBasal)
+            if let tempBasal = state.unfinalizedTempBasal, tempBasal.isFinished(at: dateGenerator()) {
+                state.finishedDoses.append(tempBasal)
                 state.unfinalizedTempBasal = nil
             }
 
-            dosesToStore = state.finalizedDoses
+            dosesToStore = state.finishedDoses
             if let unfinalizedBolus = state.unfinalizedBolus {
                 dosesToStore.append(unfinalizedBolus)
             }
@@ -379,14 +385,16 @@ public class DashPumpManager: PumpManager {
         let lastPumpReconciliation = lastReconciliation
 
         pumpDelegate.notify { (delegate) in
-            delegate?.pumpManager(self, hasNewPumpEvents: dosesToStore.map { NewPumpEvent($0) }, lastReconciliation: lastPumpReconciliation, completion: { (error) in
+            delegate?.pumpManager(self, hasNewPumpEvents: dosesToStore.map { NewPumpEvent($0, at: self.dateGenerator()) }, lastReconciliation: lastPumpReconciliation, completion: { (error) in
                 if let error = error {
                     self.log.error("Error storing pod events: %@", String(describing: error))
+                    completion?(error)
                 } else {
                     self.lockedState.mutate { (state) in
-                        state.finalizedDoses.removeAll { dosesToStore.contains($0) }
+                        state.finishedDoses.removeAll { dosesToStore.contains($0) }
                     }
                     self.log.error("Stored pod events: %@", String(describing: dosesToStore))
+                    completion?(nil)
                 }
             })
         }
@@ -395,8 +403,6 @@ public class DashPumpManager: PumpManager {
     
 
     public func assertCurrentPumpData() {
-
-        finalizeAndStoreDoses()
 
         guard hasActivePod else {
             return
@@ -448,8 +454,8 @@ public class DashPumpManager: PumpManager {
             }
         }
         
-        if let tempBasal = state.unfinalizedTempBasal, !tempBasal.isFinished {
-            return .tempBasal(DoseEntry(tempBasal))
+        if let tempBasal = state.unfinalizedTempBasal, !tempBasal.isFinished(at: dateGenerator()) {
+            return .tempBasal(DoseEntry(tempBasal, at: dateGenerator()))
         }
         
         switch state.suspendState {
@@ -475,15 +481,15 @@ public class DashPumpManager: PumpManager {
                 break
             }
         }
-        if let bolus = state.unfinalizedBolus, !bolus.isFinished {
-            return .inProgress(DoseEntry(bolus))
+        if let bolus = state.unfinalizedBolus, !bolus.isFinished(at: dateGenerator()) {
+            return .inProgress(DoseEntry(bolus, at: dateGenerator()))
         }
         return .none
     }
 
     public func createBolusProgressReporter(reportingOn dispatchQueue: DispatchQueue) -> DoseProgressReporter? {
         if case .inProgress(let dose) = bolusState(for: self.state) {
-            return PodDoseProgressEstimator(dose: dose, pumpManager: self, reportingQueue: dispatchQueue)
+            return PodDoseProgressTimerEstimator(dose: dose, pumpManager: self, reportingQueue: dispatchQueue)
         }
         return nil
     }
@@ -494,7 +500,7 @@ public class DashPumpManager: PumpManager {
                 if state.activeTransition != nil {
                     return SetBolusError.certain(DashPumpManagerError.busy)
                 }
-                if let bolus = state.unfinalizedBolus, !bolus.isFinished {
+                if let bolus = state.unfinalizedBolus, !bolus.isFinished(at: dateGenerator()) {
                     return SetBolusError.certain(DashPumpManagerError.busy)
                 }
                 
@@ -517,7 +523,7 @@ public class DashPumpManager: PumpManager {
             willRequest(dose)
 
             podCommManager.sendProgram(programType: program, beepOption: nil) { (result) in
-                switch(result) {
+                switch result {
                 case .success(let podStatus):
                     self.mutateState({ (state) in
                         state.unfinalizedBolus = UnfinalizedDose(bolusAmount: enactUnits, startTime: startDate, scheduledCertainty: .certain)
@@ -559,12 +565,12 @@ public class DashPumpManager: PumpManager {
             switch result {
             case .success(let status):
                 self.mutateState({ (state) in
-                    state.unfinalizedBolus?.cancel(at: Date())
+                    state.unfinalizedBolus?.cancel(at: self.dateGenerator())
                     state.updateFromPodStatus(status: status)
                     state.activeTransition = nil
                 })
                 self.finalizeAndStoreDoses()
-                completion(.success(self.state.unfinalizedBolus?.doseEntry()))
+                completion(.success(self.state.unfinalizedBolus?.doseEntry(at: self.dateGenerator())))
             case .failure(let error):
                 self.mutateState({ (state) in
                     state.activeTransition = nil
@@ -595,9 +601,9 @@ public class DashPumpManager: PumpManager {
             case .success(let status):
                 self.mutateState({ (state) in
                     if var canceledTempBasal = state.unfinalizedTempBasal {
-                        canceledTempBasal.cancel(at: Date())
+                        canceledTempBasal.cancel(at: self.dateGenerator())
                         state.unfinalizedTempBasal = nil
-                        state.finalizedDoses.append(canceledTempBasal)
+                        state.finishedDoses.append(canceledTempBasal)
                     }
                     state.updateFromPodStatus(status: status)
                     state.activeTransition = nil
@@ -637,7 +643,7 @@ public class DashPumpManager: PumpManager {
                 
                 guard let program = program else {
                     // 0 duration temp basals are used to cancel any existing temp basal
-                    let date = Date()
+                    let date = self.dateGenerator()
                     self.finalizeAndStoreDoses()
                     completion(.success(DoseEntry(type: .tempBasal, startDate: date, endDate: date, value: 0, unit: .unitsPerHour)))
                     return
@@ -657,12 +663,12 @@ public class DashPumpManager: PumpManager {
                     return
                 }
                 
-                let startDate = Date()
+                let startDate = self.dateGenerator()
                 
                 let dose = DoseEntry(type: .tempBasal, startDate: startDate, endDate: startDate.addingTimeInterval(duration), value: enactRate, unit: .unitsPerHour)
                 
                 self.podCommManager.sendProgram(programType: program, beepOption: .init(beepAtEnd: false)) { (result) in
-                    switch(result) {
+                    switch result {
                     case .success(let podStatus):
                         self.mutateState({ (state) in
                             state.unfinalizedTempBasal = UnfinalizedDose(tempBasalRate: enactRate, startTime: startDate, duration: duration, scheduledCertainty: .certain)
@@ -726,16 +732,16 @@ public class DashPumpManager: PumpManager {
             case .success(let podStatus):
 
                 self.mutateState({ (state) in
-                    let now = Date()
+                    let now = self.dateGenerator()
                     if let unfinalizedTempBasal = state.unfinalizedTempBasal,
-                        let finishTime = unfinalizedTempBasal.finishTime,
+                        let finishTime = unfinalizedTempBasal.endTime,
                         finishTime > now
                     {
                         state.unfinalizedTempBasal?.cancel(at: now)
                     }
                     
                     if let unfinalizedBolus = state.unfinalizedBolus,
-                        let finishTime = unfinalizedBolus.finishTime,
+                        let finishTime = unfinalizedBolus.endTime,
                         finishTime > now
                     {
                         state.unfinalizedBolus?.cancel(at: now, withRemaining: podStatus.bolusUnitsRemaining)
@@ -777,7 +783,7 @@ public class DashPumpManager: PumpManager {
                 completion(error)
             case .success(let podStatus):
                 self.mutateState({ (state) in
-                    let now = Date()
+                    let now = self.dateGenerator()
                     state.unfinalizedResume = UnfinalizedDose(resumeStartTime: now, scheduledCertainty: .certain)
                     state.suspendState = .resumed(now)
                     state.updateFromPodStatus(status: podStatus)
@@ -789,9 +795,10 @@ public class DashPumpManager: PumpManager {
         }
     }
 
-    public init(state: DashPumpManagerState, podCommManager: PodCommManagerProtocol = PodCommManager.shared) {
+    public init(state: DashPumpManagerState, podCommManager: PodCommManagerProtocol = PodCommManager.shared, dateGenerator: @escaping () -> Date = Date.init) {
         self.lockedState = Locked(state)
         self.podCommManager = podCommManager
+        self.dateGenerator = dateGenerator
         self.podCommManager.delegate = self
 
         podCommManager.setLogger(logger: self)

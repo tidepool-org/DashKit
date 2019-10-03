@@ -30,14 +30,10 @@ class InsertCannulaSetupViewController: SetupTableViewController {
         didSet {
             tableView.beginUpdates()
             loadingLabel.text = loadingText
-
-            let isHidden = (loadingText == nil)
-            loadingLabel.isHidden = isHidden
+            loadingLabel.isHidden = (loadingText == nil)
             tableView.endUpdates()
         }
     }
-
-    private var cancelErrorCount = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -160,12 +156,12 @@ class InsertCannulaSetupViewController: SetupTableViewController {
         continueState = .startingInsertion
         var expectingAnotherEvent = false
         pumpManager.finishPodActivation() { [weak self] (activationStatus) in
-            switch(activationStatus) {
+            switch activationStatus {
             case .error(let error):
                 expectingAnotherEvent = false
                 self?.lastError = error
             case .event(let event):
-                switch(event) {
+                switch event {
                 case .insertingCannula:
                     expectingAnotherEvent = true
                     let finishTime = TimeInterval(seconds: 10)

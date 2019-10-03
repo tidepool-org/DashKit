@@ -1,23 +1,7 @@
 //
 //  PodStatusExtension.swift
-//  SampleApp
+//  DashKit
 //
-// Copyright (C) 2019, Insulet Corporation
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software
-// and associated documentation files (the "Software"), to deal in the Software without restriction,
-// including without limitation the rights to use, copy, modify, merge, publish, distribute,
-// sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all copies or substantial
-// portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
-// NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-// IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-// WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-// SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import Foundation
 import PodSDK
@@ -52,7 +36,7 @@ public extension InternalErrorCode {
             return LocalizedString("Unexpected message sequence", comment: "Description for InternalErrorCode.unexpectedMessageSequence")
 
         case .invalidPodId:
-            return LocalizedString("Invalid POD ID", comment: "Description for InternalErrorCode.invalidPodId")
+            return LocalizedString("Invalid Pod Identifier", comment: "Description for InternalErrorCode.invalidPodId")
         }
     }
 }
@@ -158,19 +142,19 @@ extension PodCommError: LocalizedError {
             return LocalizedString("Invalid alert settings", comment: "Error description for PodCommError.invalidAlertSetting")
 
         case .invalidProgramStatus:
-            return LocalizedString("Invalid Program status", comment: "Error description for PodCommError.invalidProgramStatus")
+            return LocalizedString("Invalid program status", comment: "Error description for PodCommError.invalidProgramStatus")
 
         case .unacknowledgedCommandPendingRetry:
-            return LocalizedString("Unacknowledged Command Pending Retry", comment: "Error description for PodCommError.unacknowledgedCommandPendingRetry")
+            return LocalizedString("Unacknowledged command pending retry", comment: "Error description for PodCommError.unacknowledgedCommandPendingRetry")
 
         case .noUnacknowledgedCommandToRetry:
-            return LocalizedString("No Unacknowledged Command To Retry", comment: "Error description for PodCommError.noUnacknowledgedCommandToRetry")
+            return LocalizedString("No unacknowledged command to retry", comment: "Error description for PodCommError.noUnacknowledgedCommandToRetry")
 
         case .podSDKExpired:
-            return LocalizedString("Pod SDK Expired", comment: "Error description for PodCommError.podSDKExpired")
+            return LocalizedString("Pod SDK expired", comment: "Error description for PodCommError.podSDKExpired")
             
         case .bleCommunicationError:
-            return LocalizedString("Bluetooth Communication Error", comment: "Error description for PodCommError.bleCommunicationError")
+            return LocalizedString("Bluetooth communication error", comment: "Error description for PodCommError.bleCommunicationError")
         }
     }
 
@@ -178,6 +162,7 @@ extension PodCommError: LocalizedError {
         switch self {
         case .podNotAvailable:
             return LocalizedString("Move to a new area, place your phone and Pod close to each other and tap Retry.", comment: "Recovery suggestion when pod not available.")
+            
         case .activationError(let error):
             switch error {
             case .moreThanOnePodAvailable:
@@ -187,24 +172,24 @@ extension PodCommError: LocalizedError {
             default:
                 return nil
             }
+            
         default:
             return nil
         }
     }
 }
 
-extension ActivationStep1Event : Equatable {
-
+extension ActivationStep1Event {
     public var description : String {
         switch self {
         case .connecting:
             return "Pod is connecting"
 
         case .retrievingPodVersion:
-            return "Retrieving Pod version"
+            return "Retrieving pod version"
 
         case .settingPodUid:
-            return "Setting Pod Uid"
+            return "Setting pod UID"
 
         case .programmingLowReservoirAlert:
             return "Programming low reservoir alert"
@@ -213,62 +198,24 @@ extension ActivationStep1Event : Equatable {
             return "Programming lump of coal"
 
         case .primingPod:
-            return "Priming Pod"
+            return "Priming pod"
 
         case .checkingPodStatus:
-            return "Checking Pod status"
+            return "Checking pod status"
 
         case .programmingPodExpireAlert:
-            return "Programming Pod expiration alert"
+            return "Programming pod expiration alert"
 
         case .podStatus:
             return "Pod status"
 
         case .step1Completed:
-            return "Activation Step 1 completed"
-        }
-    }
-
-    public static func ==(lhs: ActivationStep1Event, rhs: ActivationStep1Event) -> Bool {
-        switch (lhs, rhs) {
-        case (.connecting, .connecting):
-            return true
-
-        case (.retrievingPodVersion, .retrievingPodVersion):
-            return true
-
-        case (.settingPodUid, .settingPodUid):
-            return true
-
-        case (.programmingLowReservoirAlert, .programmingLowReservoirAlert):
-            return true
-
-        case (.programmingLumpOfCoal, .programmingLumpOfCoal):
-            return true
-
-        case (.primingPod, .primingPod):
-            return true
-
-        case (.checkingPodStatus, .checkingPodStatus):
-            return true
-
-        case (.programmingPodExpireAlert, .programmingPodExpireAlert):
-            return true
-
-        case (.podStatus, .podStatus):
-            return true
-
-        case (.step1Completed, .step1Completed):
-            return true
-
-        default:
-            return false
+            return "Activation step 1 completed"
         }
     }
 }
 
-extension ActivationStep2Event : Equatable {
-
+extension ActivationStep2Event {
     public var description : String {
         switch self {
         case .connecting:
@@ -278,10 +225,10 @@ extension ActivationStep2Event : Equatable {
             return "Programming active basal"
 
         case .insertingCannula:
-            return "Inserting Cannula."
+            return "Inserting cannula."
 
         case .checkingPodStatus:
-            return "Checking Pod status"
+            return "Checking pod status"
 
         case .podStatus:
             return "Pod status"
@@ -291,30 +238,6 @@ extension ActivationStep2Event : Equatable {
 
         case .cancelLumpOfCoalProgrammingAutoOff:
             return "Cancelling lump of coal"
-        }
-    }
-    public static func ==(lhs: ActivationStep2Event, rhs: ActivationStep2Event) -> Bool {
-        switch (lhs, rhs) {
-        case ( .connecting, .connecting):
-            return true
-
-        case ( .programmingActiveBasal, .programmingActiveBasal):
-            return true
-
-        case ( .insertingCannula, .insertingCannula):
-            return true
-
-        case ( .checkingPodStatus, .checkingPodStatus):
-            return true
-
-        case ( .podStatus, .podStatus):
-            return true
-
-        case ( .step2Completed, .step2Completed):
-            return true
-
-        default:
-            return false
         }
     }
 }
@@ -341,7 +264,7 @@ extension PodState : CustomStringConvertible {
             return "Clutch drive is engaged"
 
         case .basalProgramRunning:
-            return "Basal Program is Running"
+            return "Basal program is Running"
 
         case .priming:
             return "Pod is priming. \nPlease wait for 10 seconds. Activation is in process......"
@@ -371,10 +294,10 @@ public extension PodCommState {
     var description: String {
         switch self {
         case .active:
-            return "Pod is Active"
+            return "Pod is active"
 
         case .noPod:
-            return "No Pod is Present"
+            return "No pod is Present"
 
         case .activating:
             return "Pod is activating"

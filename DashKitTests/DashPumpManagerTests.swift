@@ -21,23 +21,42 @@ class DashPumpManagerTests: XCTestCase {
 
     private var pumpManagerDelegateStateUpdateExpectation: XCTestExpectation?
 
-    private var latestReportedNewPumpEvents: [NewPumpEvent] = []
+    private var reportedPumpEvents: [NewPumpEvent] = []
     private var pumpEventStorageExpectation: XCTestExpectation?
 
 
     private var pumpManager: DashPumpManager!
     private var mockPodCommManager: MockPodCommManager!
+    
+    // Date simulation
+    private var dateFormatter = ISO8601DateFormatter()
+    private var simulatedDate: Date = ISO8601DateFormatter().date(from: "2019-10-02T00:00:00Z")!
+    private var dateSimulationOffset: TimeInterval = 0
+    
+    private func setSimulatedDate(from dateString: String) {
+        simulatedDate = dateFormatter.date(from: dateString)!
+        dateSimulationOffset = 0
+    }
+    
+    private func timeTravel(_ time: TimeInterval) {
+        dateSimulationOffset += time
+    }
+    
+    private func dateGenerator() -> Date {
+        return self.simulatedDate + dateSimulationOffset
+    }
 
     override func setUp() {
         super.setUp()
 
         let basalScheduleItems = [RepeatingScheduleValue(startTime: 0, value: 5.0)]
         let schedule = BasalRateSchedule(dailyItems: basalScheduleItems, timeZone: .current)!
-        var state = DashPumpManagerState(basalRateSchedule: schedule)!
+        var state = DashPumpManagerState(basalRateSchedule: schedule, dateGenerator: dateGenerator)!
         state.podActivatedAt = Date().addingTimeInterval(.days(1))
 
         mockPodCommManager = MockPodCommManager()
-        pumpManager = DashPumpManager(state: state, podCommManager: mockPodCommManager)
+        
+        pumpManager = DashPumpManager(state: state, podCommManager: mockPodCommManager, dateGenerator: dateGenerator)
         pumpManager.addPodStatusObserver(self, queue: DispatchQueue.main)
         pumpManager.pumpManagerDelegate = self
     }
@@ -53,9 +72,19 @@ class DashPumpManagerTests: XCTestCase {
 
         pumpManagerDelegateStateUpdateExpectation = nil
 
-        latestReportedNewPumpEvents.removeAll()
+        reportedPumpEvents.removeAll()
         pumpEventStorageExpectation = nil
     }
+    
+    
+    private func enactTempBasal(unitsPerHour: Double, duration: TimeInterval = .minutes(30)) {
+        let tempBasalCallbackExpectation = expectation(description: "temp basal callback")
+        pumpManager.enactTempBasal(unitsPerHour: unitsPerHour, for:duration) { (result) in
+            tempBasalCallbackExpectation.fulfill()
+        }
+        waitForExpectations(timeout: 3)
+    }
+
 
     func testSuccessfulBolus() {
 
@@ -156,10 +185,6 @@ class DashPumpManagerTests: XCTestCase {
 
         let tempBasalCallbackExpectation = expectation(description: "temp basal callbacks")
 
-        // Internal status updates
-        podStatusUpdateExpectation = expectation(description: "pod status updates")
-        podStatusUpdateExpectation?.expectedFulfillmentCount = 4
-
         // External status updates
         pumpManagerStatusUpdateExpectation = expectation(description: "pumpmanager status updates")
         pumpManagerStatusUpdateExpectation?.expectedFulfillmentCount = 4
@@ -195,14 +220,15 @@ class DashPumpManagerTests: XCTestCase {
         }
         
         pumpEventStorageExpectation = expectation(description: "pumpmanager dose storage")
+        //pumpEventStorageExpectation?.expectedFulfillmentCount = 2
 
         pumpManager.assertCurrentPumpData()
 
         waitForExpectations(timeout: 3)
 
-        XCTAssertEqual(1, latestReportedNewPumpEvents.count)
+        XCTAssertEqual(2, reportedPumpEvents.count)
 
-        let tempBasalEvent = latestReportedNewPumpEvents.last!
+        let tempBasalEvent = reportedPumpEvents.last!
         XCTAssertEqual(1.0, tempBasalEvent.dose?.unitsPerHour)
         XCTAssertNil(tempBasalEvent.dose!.deliveredUnits)
         XCTAssertEqual(PumpEventType.tempBasal, tempBasalEvent.type)
@@ -213,17 +239,33 @@ class DashPumpManagerTests: XCTestCase {
 
         let tempBasalCallbackExpectation = expectation(description: "temp basal callbacks")
 
-        mockPodCommManager.sendProgramFailureError = .podNotAvailable
-
         pumpManager.enactTempBasal(unitsPerHour: 1, for: .minutes(30)) { (result) in
             tempBasalCallbackExpectation.fulfill()
-            guard case .failure(DashPumpManagerError.podCommError(description: "podNotAvailable")) = result else {
-                XCTFail("Expected podNotAvailable error")
-                return
-            }
         }
-        XCTAssertEqual(0, latestReportedNewPumpEvents.count)
+        XCTAssertEqual(0, reportedPumpEvents.count)
         waitForExpectations(timeout: 3)
+    }
+    
+    func testDiscardPodShouldFinishPendingDoses() {
+        
+        enactTempBasal(unitsPerHour: 1)
+        timeTravel(.minutes(5))
+        let discardPodCallbackExpectation = expectation(description: "temp basal callbacks")
+        pumpManager.discardPod { (result) in
+            discardPodCallbackExpectation.fulfill()
+        }
+        waitForExpectations(timeout: 3)
+
+        XCTAssertEqual(2, reportedPumpEvents.count)
+        let finalReportedTemp = reportedPumpEvents.last!
+        XCTAssertEqual(false, finalReportedTemp.isMutable)
+        XCTAssertEqual(0.05, finalReportedTemp.dose?.deliveredUnits)
+        let lastPumpManagerStatus = pumpManagerStatusUpdates.last!
+        if case .suspended(let date) = lastPumpManagerStatus.basalDeliveryState {
+            XCTAssertEqual(dateGenerator(), date)
+        } else {
+            XCTFail("PumpManager should indicate suspended delivery after pod discarded")
+        }
     }
 
 }
@@ -262,7 +304,7 @@ extension DashPumpManagerTests: PumpManagerDelegate {
 
     func pumpManager(_ pumpManager: PumpManager, hasNewPumpEvents events: [NewPumpEvent], lastReconciliation: Date?, completion: @escaping (Error?) -> Void) {
         pumpEventStorageExpectation?.fulfill()
-        latestReportedNewPumpEvents = events
+        reportedPumpEvents.append(contentsOf: events)
         completion(nil)
     }
 

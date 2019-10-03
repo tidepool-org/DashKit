@@ -1,9 +1,9 @@
 //
 //  PodLifeHUDView.swift
-//  OmniKitUI
+//  DashKitUI
 //
 //  Created by Pete Schwamb on 10/22/18.
-//  Copyright © 2018 Pete Schwamb. All rights reserved.
+//  Copyright © 2019 Tidepool. All rights reserved.
 //
 
 import UIKit
@@ -81,12 +81,9 @@ public class PodLifeHUDView: BaseHUDView, NibLoadable {
     private func updateAlertStateLabel() {
         var alertLabelAlpha: CGFloat = 1
         
-        if alertState == .fault {
-            timer = nil
-        }
-        
         switch alertState {
         case .fault:
+            timer = nil
             alertLabel.text = "!"
             alertLabel.backgroundColor = stateColors?.error
         case .warning:
@@ -125,7 +122,7 @@ public class PodLifeHUDView: BaseHUDView, NibLoadable {
             // Update time label and caption
             if alertState == .fault {
                 timeLabel.isHidden = true
-                caption.text = "Fault"
+                caption.text = LocalizedString("Fault", comment: "Pod life hud view label when alertState is .fault")
             } else if remaining > .hours(24) {
                 timeLabel.isHidden = true
                 caption.text = LocalizedString("Pod Age", comment: "Pod life hud view label describing pod age view")

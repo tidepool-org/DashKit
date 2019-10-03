@@ -1,5 +1,5 @@
 //
-//  PodSDK.swift
+//  PodCommManager.swift
 //  DashKit
 //
 //  Created by Pete Schwamb on 6/26/19.
@@ -9,6 +9,4 @@
 import Foundation
 import PodSDK
 
-extension PodCommManager: PodCommManagerProtocol {
-}
-
+extension PodCommManager: PodCommManagerProtocol { }
