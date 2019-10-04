@@ -193,7 +193,7 @@ class PairPodSetupViewController: SetupTableViewController {
                 self.log.debug("startPodActivation event: %{public}@", String(describing: event))
                 switch event {
                 case .podStatus:
-                    break;
+                    break
                 case .primingPod:
                     let finishTime = TimeInterval(seconds: 35)
                     self.continueState = .priming(finishTime: finishTime)
@@ -207,7 +207,7 @@ class PairPodSetupViewController: SetupTableViewController {
                     timeoutHandler?.cancel()
                     self.continueState = .ready
                 default:
-                    break;
+                    break
                 }
             }
         }

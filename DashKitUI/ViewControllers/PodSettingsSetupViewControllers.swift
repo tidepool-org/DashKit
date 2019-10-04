@@ -40,8 +40,7 @@ class PodSettingsSetupViewController: SetupTableViewController {
         let enabled: Bool
         if pumpManagerSetupViewController?.maxBolusUnits == nil || pumpManagerSetupViewController?.maxBasalRateUnitsPerHour == nil {
             enabled = false
-        }
-        else if let basalSchedule = pumpManagerSetupViewController?.basalSchedule {
+        } else if let basalSchedule = pumpManagerSetupViewController?.basalSchedule {
             enabled = !basalSchedule.items.isEmpty && !scheduleHasError
         } else {
             enabled = false
@@ -149,9 +148,9 @@ class PodSettingsSetupViewController: SetupTableViewController {
             case .basalRates:
                 let vc = BasalScheduleTableViewController(allowedBasalRates: Pod.supportedBasalRates, maximumScheduleItemCount: Pod.maximumBasalScheduleEntryCount, minimumTimeInterval: Pod.minimumBasalScheduleEntryDuration)
 
-                if let profile = pumpManagerSetupViewController?.basalSchedule {
-                    vc.scheduleItems = profile.items
-                    vc.timeZone = profile.timeZone
+                if let basalSchedule = pumpManagerSetupViewController?.basalSchedule {
+                    vc.scheduleItems = basalSchedule.items
+                    vc.timeZone = basalSchedule.timeZone
                 } else {
                     vc.scheduleItems = []
                     vc.timeZone = .currentFixed

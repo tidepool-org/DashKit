@@ -14,12 +14,12 @@ import PodSDK
 private struct DateGeneratorWrapper {
     let dateGenerator: () -> Date
 }
+
 extension DateGeneratorWrapper: Equatable {
     static func == (lhs: DateGeneratorWrapper, rhs: DateGeneratorWrapper) -> Bool {
         return true
     }
 }
-
 
 public struct DashPumpManagerState: RawRepresentable, Equatable {
 
