@@ -1,4 +1,4 @@
-# Dash PumpManager
+# DashKit
 
 This is a Loop PumpManager implemention to provide support for the Omnipod DASH™ Pod.
 
