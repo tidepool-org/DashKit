@@ -10,6 +10,7 @@ import XCTest
 import LoopKit
 import UserNotifications
 @testable import DashKit
+import PodSDK
 
 class DashPumpManagerTests: XCTestCase {
 
@@ -246,6 +247,49 @@ class DashPumpManagerTests: XCTestCase {
         waitForExpectations(timeout: 3)
     }
     
+    func testSuccessfulSetBasalSchedule() {
+        let callbackExpectation = expectation(description: "set basal scheduled callback")
+        let items = [RepeatingScheduleValue(startTime: 0, value: 10.0), RepeatingScheduleValue(startTime: .hours(12), value: 15.0)]
+        pumpManager.setBasalSchedule(dailyItems: items) { (error) in
+            callbackExpectation.fulfill()
+            guard error == nil else {
+                XCTFail("Unexpected error: \(String(describing: error))")
+                return
+            }
+        }
+        waitForExpectations(timeout: 3)
+        
+        let program = BasalProgram(items: items)
+        
+        XCTAssertEqual(mockPodCommManager.lastBasalProgram, program)
+        XCTAssertEqual(pumpManager.state.basalProgram, program)
+    }
+
+    func testFailedSetBasalSchedule() {
+        let callbackExpectation = expectation(description: "set basal scheduled callback")
+        let items = [RepeatingScheduleValue(startTime: 0, value: 10.0), RepeatingScheduleValue(startTime: .hours(12), value: 15.0)]
+        
+        mockPodCommManager.sendProgramFailureError = .podNotAvailable
+
+        pumpManager.setBasalSchedule(dailyItems: items) { (error) in
+            callbackExpectation.fulfill()
+            guard let pumpManagerError = error as? DashPumpManagerError else {
+                XCTFail("Unexpected error: \(String(describing: error))")
+                return
+            }
+            guard case DashPumpManagerError.podCommError(description: "podNotAvailable") = pumpManagerError else {
+                XCTFail("Expected podNotAvailable error")
+                return
+            }
+        }
+        waitForExpectations(timeout: 3)
+        
+        let program = BasalProgram(items: items)
+        
+        XCTAssertNotEqual(mockPodCommManager.lastBasalProgram, program)
+        XCTAssertNotEqual(pumpManager.state.basalProgram, program)
+    }
+
     func testDiscardPodShouldFinishPendingDoses() {
         
         enactTempBasal(unitsPerHour: 1)

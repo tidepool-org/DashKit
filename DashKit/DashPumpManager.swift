@@ -337,6 +337,7 @@ public class DashPumpManager: PumpManager {
                 case .success(let podStatus):
                     let now = self.dateGenerator()
                     self.mutateState({ (state) in
+                        state.basalProgram = basalProgram
                         state.updateFromPodStatus(status: podStatus)
                         state.unfinalizedResume = UnfinalizedDose(resumeStartTime: now, scheduledCertainty: .certain)
                         state.suspendState = .resumed(now)
@@ -763,7 +764,7 @@ public class DashPumpManager: PumpManager {
     public func resumeDelivery(completion: @escaping (Error?) -> Void) {
         let preflightError = self.setStateWithResult({ (state) -> Error? in
             if state.activeTransition != nil {
-                return SetBolusError.certain(DashPumpManagerError.busy)
+                return DashPumpManagerError.busy
             }
             state.activeTransition = .resumingPump
             return nil
