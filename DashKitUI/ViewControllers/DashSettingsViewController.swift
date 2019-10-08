@@ -167,7 +167,7 @@ class DashSettingsViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
         switch Section(rawValue: indexPath.section)! {
-        case .actions:
+        case .actions, .replacePod:
             return true
         default:
             return false
