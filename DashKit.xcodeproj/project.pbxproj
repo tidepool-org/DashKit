@@ -34,7 +34,6 @@
 		C1344DE32304D09B00973BE3 /* PodSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E5722EA0DDB0035DCA0 /* PodSDK.framework */; };
 		C1344DE62304D65100973BE3 /* PodSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C1FE2E5722EA0DDB0035DCA0 /* PodSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C1344DE72304D68300973BE3 /* INSSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C1FE2E5622EA0DDB0035DCA0 /* INSSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C1344DE82304D68300973BE3 /* ObjectMapper.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C1D46D5F22C568F600978E59 /* ObjectMapper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C1344DE92304D68300973BE3 /* RxSwift.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C1D46D5E22C568F600978E59 /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C135D91A2319AA4200774F82 /* Kronos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C135D9192319AA4200774F82 /* Kronos.framework */; };
 		C135D91B2319AA5900774F82 /* Kronos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C135D9192319AA4200774F82 /* Kronos.framework */; };
@@ -121,7 +120,6 @@
 			dstSubfolderSpec = 10;
 			files = (
 				C1344DE72304D68300973BE3 /* INSSDK.framework in CopyFiles */,
-				C1344DE82304D68300973BE3 /* ObjectMapper.framework in CopyFiles */,
 				C1344DE92304D68300973BE3 /* RxSwift.framework in CopyFiles */,
 				C1344DE62304D65100973BE3 /* PodSDK.framework in CopyFiles */,
 			);
@@ -675,7 +673,6 @@
 			inputPaths = (
 				"$(BUILT_PRODUCTS_DIR)/DashKit.framework",
 				"$(BUILT_PRODUCTS_DIR)/DashKitUI.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/ObjectMapper.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/RxSwift.framework",
 				"$(SRCROOT)/dash-sdk-ios/frameworks/INSSDK.framework",
 				"$(SRCROOT)/dash-sdk-ios/frameworks/PodSDK.framework",

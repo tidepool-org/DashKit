@@ -267,8 +267,8 @@ public class DashPumpManager: PumpManager {
     }
 
     public func finishPodActivation(autoOffAlert: AutoOffAlert? = nil, eventListener: @escaping (ActivationStatus<ActivationStep2Event>) -> ()) {
-        // TODO: SDK needs to be updated to allow us to pass in TimeZone
-        podCommManager.finishPodActivation(basalProgram: state.basalProgram, autoOffAlert: autoOffAlert) { (activationStatus) in
+        let programType = ProgramType.basalProgram(basal: state.basalProgram, date: dateGenerator())
+        podCommManager.finishPodActivation(basalProgram: programType, autoOffAlert: autoOffAlert) { (activationStatus) in
             switch activationStatus {
             case .event(let event):
                 self.log.debug("finishPodActivation event: %@", String(describing: event))

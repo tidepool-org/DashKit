@@ -1,6 +1,5 @@
 github "tidepool-org/LoopKit" "dev"
-github "ReactiveX/RxSwift" ~> 5.0
-github "Hearst-DD/ObjectMapper" ~> 3.5
 github "bahlo/SwiftGif" ~> 1.7.0
 github "maxkonovalov/MKRingProgressView" ~> 2.2
+github "ReactiveX/RxSwift" ~> 5.0
 github "lyft/Kronos"
