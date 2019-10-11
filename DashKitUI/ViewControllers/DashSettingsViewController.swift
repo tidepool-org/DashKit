@@ -16,6 +16,7 @@ class DashSettingsViewController: UITableViewController {
     var pumpManager: DashPumpManager! {
         didSet {
             pumpManager.addPodStatusObserver(self, queue: .main)
+            pumpManager.addStatusObserver(self, queue: .main)
         }
     }
     
@@ -24,6 +25,12 @@ class DashSettingsViewController: UITableViewController {
         insulinFormatter.numberFormatter.minimumFractionDigits = 2
         insulinFormatter.numberFormatter.maximumFractionDigits = 2
         return insulinFormatter
+    }()
+    
+    lazy var suspendResumeTableViewCell: SuspendResumeTableViewCell = {
+        let cell = SuspendResumeTableViewCell(style: .default, reuseIdentifier: nil)
+        cell.basalDeliveryState = pumpManager.status.basalDeliveryState
+        return cell
     }()
 
     static public func instantiateFromStoryboard(pumpManager: DashPumpManager) -> DashSettingsViewController {
@@ -75,6 +82,7 @@ class DashSettingsViewController: UITableViewController {
     private enum Section: Int, CaseIterable {
         case status = 0
         case reminders
+        case actions
         case replacePod
     }
 
@@ -83,6 +91,10 @@ class DashSettingsViewController: UITableViewController {
         case expiration
         case connectionStatus
         case totalDelivery
+    }
+    
+    private enum ActionRow: Int, CaseIterable {
+        case suspendResume = 0
     }
 
     // MARK: UITableViewDataSource
@@ -97,6 +109,8 @@ class DashSettingsViewController: UITableViewController {
             return StatusRow.allCases.count
         case .reminders:
             return 1
+        case .actions:
+            return ActionRow.allCases.count
         case .replacePod:
             return 1
         }
@@ -136,6 +150,11 @@ class DashSettingsViewController: UITableViewController {
         case .reminders:
             let cell = tableView.dequeueReusableCell(withIdentifier: "RemindersCell", for: indexPath)
             return cell
+        case .actions:
+            switch ActionRow(rawValue: indexPath.row)! {
+            case .suspendResume:
+                return suspendResumeTableViewCell
+            }
         case .replacePod:
             let cell = tableView.dequeueReusableCell(withIdentifier: TextButtonTableViewCell.className, for: indexPath) as! TextButtonTableViewCell
             cell.textLabel?.text = LocalizedString("Change Pod", comment: "The title of the command to replace pod")
@@ -148,7 +167,7 @@ class DashSettingsViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
         switch Section(rawValue: indexPath.section)! {
-        case .replacePod:
+        case .actions, .replacePod:
             return true
         default:
             return false
@@ -157,6 +176,12 @@ class DashSettingsViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch Section(rawValue: indexPath.section)! {
+        case .actions:
+            switch ActionRow(rawValue: indexPath.row)! {
+            case .suspendResume:
+                suspendResumeTapped()
+                tableView.deselectRow(at: indexPath, animated: true)
+            }            
         case .replacePod:
             let vc = PodReplacementNavigationController.instantiatePodReplacementFlow(pumpManager)
             vc.completionDelegate = self
@@ -164,8 +189,39 @@ class DashSettingsViewController: UITableViewController {
         default:
             break
         }
+        
+    }
+        
+    private func suspendResumeTapped() {
+        switch suspendResumeTableViewCell.shownAction {
+        case .resume:
+            pumpManager.resumeDelivery { (error) in
+                if let error = error {
+                    DispatchQueue.main.async {
+                        let title = LocalizedString("Error Resuming", comment: "The alert title for a resume error")
+                        self.present(UIAlertController(with: error, title: title), animated: true)
+                    }
+                }
+            }
+        case .suspend:
+            pumpManager.suspendDelivery { (error) in
+                if let error = error {
+                    DispatchQueue.main.async {
+                        let title = LocalizedString("Error Suspending", comment: "The alert title for a suspend error")
+                        self.present(UIAlertController(with: error, title: title), animated: true)
+                    }
+                }
+            }
+        }
     }
 }
+
+extension DashSettingsViewController: PumpManagerStatusObserver {
+    func pumpManager(_ pumpManager: PumpManager, didUpdate status: PumpManagerStatus, oldStatus: PumpManagerStatus) {
+        self.suspendResumeTableViewCell.basalDeliveryState = status.basalDeliveryState
+    }
+}
+
 
 extension DashSettingsViewController: CompletionDelegate {
     func completionNotifyingDidComplete(_ object: CompletionNotifying) {
