@@ -86,7 +86,7 @@ class MockPodCommManager: PodCommManagerProtocol {
         return
     }
 
-    func finishPodActivation(basalProgram: BasalProgram, autoOffAlert: AutoOffAlert?, eventListener: @escaping (ActivationStatus<ActivationStep2Event>) -> ()) {
+    func finishPodActivation(basalProgram: ProgramType, autoOffAlert: AutoOffAlert?, eventListener: @escaping (ActivationStatus<ActivationStep2Event>) -> ()) {
         return
     }
 
