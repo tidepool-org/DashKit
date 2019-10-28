@@ -78,8 +78,8 @@ public protocol PodCommManagerProtocol {
       - Note: No more events after either PodCommError or ActivationStep2Event.step2Completed.
      
      */
-    func finishPodActivation(basalProgram: PodSDK.ProgramType, autoOffAlert: PodSDK.AutoOffAlert, eventListener: @escaping (PodSDK.ActivationStatus<PodSDK.ActivationStep2Event>) -> ())
-
+    func finishPodActivation(basalProgram: PodSDK.ProgramType, autoOffAlert: PodSDK.AutoOffAlert?, eventListener: @escaping (PodSDK.ActivationStatus<PodSDK.ActivationStep2Event>) -> ())
+    
     /**
      Cancels an ongoing activation and clears all states maintained by the `PodCommManager`.
      
