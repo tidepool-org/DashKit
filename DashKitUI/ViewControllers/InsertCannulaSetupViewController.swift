@@ -155,7 +155,10 @@ class InsertCannulaSetupViewController: SetupTableViewController {
 
         continueState = .startingInsertion
         var expectingAnotherEvent = false
-        pumpManager.finishPodActivation() { [weak self] (activationStatus) in
+        
+        let autoOffAlert = try? AutoOffAlert(enable: false)
+        
+        pumpManager.finishPodActivation(autoOffAlert: autoOffAlert!) { [weak self] (activationStatus) in
             switch activationStatus {
             case .error(let error):
                 expectingAnotherEvent = false

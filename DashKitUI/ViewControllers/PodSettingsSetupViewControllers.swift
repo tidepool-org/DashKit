@@ -22,9 +22,9 @@ class PodSettingsSetupViewController: SetupTableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         updateContinueButton()
-
+        
         tableView.register(SettingsTableViewCell.self, forCellReuseIdentifier: SettingsTableViewCell.className)
     }
 

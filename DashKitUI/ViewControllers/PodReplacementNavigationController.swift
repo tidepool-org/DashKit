@@ -49,6 +49,12 @@ class PodReplacementNavigationController: UINavigationController, UINavigationCo
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        if #available(iOSApplicationExtension 13.0, *) {
+            view.backgroundColor = .systemBackground
+        } else {
+            view.backgroundColor = .white
+        }
+
         delegate = self
     }
 

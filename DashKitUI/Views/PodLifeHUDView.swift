@@ -12,8 +12,8 @@ import MKRingProgressView
 
 public enum PodAlertState {
     case none
-    case warning
-    case fault
+    case alert
+    case alarm
 }
 
 public class PodLifeHUDView: BaseHUDView, NibLoadable {
@@ -22,7 +22,15 @@ public class PodLifeHUDView: BaseHUDView, NibLoadable {
         return 12
     }
 
-    @IBOutlet private weak var timeLabel: UILabel!
+    @IBOutlet private weak var timeLabel: UILabel! {
+        didSet {
+            // Setting this color in code because the nib isn't being applied correctly
+            if #available(iOSApplicationExtension 13.0, *) {
+                timeLabel.textColor = .label
+            }
+        }
+    }
+    
     @IBOutlet private weak var progressRing: RingProgressView!
     
     @IBOutlet private weak var alertLabel: UILabel! {
@@ -31,6 +39,16 @@ public class PodLifeHUDView: BaseHUDView, NibLoadable {
             alertLabel.textColor = UIColor.white
             alertLabel.layer.cornerRadius = 9
             alertLabel.clipsToBounds = true
+        }
+    }
+    
+    @IBOutlet private weak var backgroundRing: UIImageView! {
+        didSet {
+            if #available(iOSApplicationExtension 13.0, iOS 13.0, *) {
+                backgroundRing.tintColor = .systemGray5
+            } else {
+                backgroundRing.tintColor = UIColor(red: 198 / 255, green: 199 / 255, blue: 201 / 255, alpha: 1)
+            }
         }
     }
 
@@ -82,11 +100,11 @@ public class PodLifeHUDView: BaseHUDView, NibLoadable {
         var alertLabelAlpha: CGFloat = 1
         
         switch alertState {
-        case .fault:
+        case .alarm:
             timer = nil
             alertLabel.text = "!"
             alertLabel.backgroundColor = stateColors?.error
-        case .warning:
+        case .alert:
             alertLabel.text = "!"
             alertLabel.backgroundColor = stateColors?.warning
         case .none:
@@ -111,16 +129,16 @@ public class PodLifeHUDView: BaseHUDView, NibLoadable {
                 progressRing.shadowOpacity = 0
             } else if progress < 1.0 {
                 self.endColor = stateColors?.warning
-                progressRing.shadowOpacity = 1
+                progressRing.shadowOpacity = 0.5
             } else {
                 self.endColor = stateColors?.error
-                progressRing.shadowOpacity = 1
+                progressRing.shadowOpacity = 0.5
             }
             
             let remaining = (lifetime - age)
 
             // Update time label and caption
-            if alertState == .fault {
+            if alertState == .alarm {
                 timeLabel.isHidden = true
                 caption.text = LocalizedString("Fault", comment: "Pod life hud view label when alertState is .fault")
             } else if remaining > .hours(24) {

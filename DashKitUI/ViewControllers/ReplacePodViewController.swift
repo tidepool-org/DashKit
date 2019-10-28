@@ -163,7 +163,10 @@ class ReplacePodViewController: SetupTableViewController {
             super.continueButtonPressed(sender)
         case .continueAfterFailure:
             pumpManager.discardPod { (_) in
-                super.continueButtonPressed(sender)
+                DispatchQueue.main.async {
+                    self.lastError = nil
+                    self.continueState = .ready
+                }
             }
         case .initial, .deactivationFailed:
             continueState = .deactivating
@@ -179,12 +182,14 @@ class ReplacePodViewController: SetupTableViewController {
         pumpManager.deactivatePod { (result) in
             switch result {
             case .failure(let error):
-                if self.tryCount > 1 {
-                    self.continueState = .continueAfterFailure
-                } else {
-                    self.log.error("deactivatePod returned error: %{public}@", String(describing: error))
-                    self.lastError = error
-                    self.continueState = .deactivationFailed
+                DispatchQueue.main.async {
+                    if self.tryCount > 1 {
+                        self.continueState = .continueAfterFailure
+                    } else {
+                        self.log.error("deactivatePod returned error: %{public}@", String(describing: error))
+                        self.lastError = error
+                        self.continueState = .deactivationFailed
+                    }
                 }
             case .success:
                 self.pumpManager.discardPod(completion: { (result) in
@@ -195,7 +200,10 @@ class ReplacePodViewController: SetupTableViewController {
                         break
                     }
                     // Continue in either case, as we need a continue path for the user.
-                    self.continueState = .ready
+                    DispatchQueue.main.async {
+                        self.lastError = nil
+                        self.continueState = .ready
+                    }
                 })
             }
         }
