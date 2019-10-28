@@ -587,42 +587,39 @@ public class DashPumpManager: PumpManager {
     }
 
     public func cancelTempBasal(completion: @escaping (DashPumpManagerError?) -> Void) {
-
-        DispatchQueue.main.async {
-            let preflightError = self.setStateWithResult({ (state) -> DashPumpManagerError? in
-                if state.activeTransition != nil {
-                    return DashPumpManagerError.busy
-                }
-                
-                state.activeTransition = .cancelingTempBasal
-                return nil
-            })
-            
-            guard preflightError == nil else {
-                completion(preflightError!)
-                return
+        let preflightError = self.setStateWithResult({ (state) -> DashPumpManagerError? in
+            if state.activeTransition != nil {
+                return DashPumpManagerError.busy
             }
+            
+            state.activeTransition = .cancelingTempBasal
+            return nil
+        })
+        
+        guard preflightError == nil else {
+            completion(preflightError!)
+            return
+        }
 
-            self.podCommManager.stopProgram(programType: .tempBasal) { (result) in
-                self.log.debug("stopProgram result: %{public}@", String(describing: result))
-                switch result {
-                case .success(let status):
-                    self.mutateState({ (state) in
-                        if var canceledTempBasal = state.unfinalizedTempBasal {
-                            canceledTempBasal.cancel(at: self.dateGenerator())
-                            state.unfinalizedTempBasal = nil
-                            state.finishedDoses.append(canceledTempBasal)
-                        }
-                        state.updateFromPodStatus(status: status)
-                        state.activeTransition = nil
-                    })
-                    completion(nil)
-                case .failure(let error):
-                    self.mutateState({ (state) in
-                        state.activeTransition = nil
-                    })
-                    completion(DashPumpManagerError(error))
-                }
+        self.podCommManager.stopProgram(programType: .tempBasal) { (result) in
+            self.log.debug("stopProgram result: %{public}@", String(describing: result))
+            switch result {
+            case .success(let status):
+                self.mutateState({ (state) in
+                    if var canceledTempBasal = state.unfinalizedTempBasal {
+                        canceledTempBasal.cancel(at: self.dateGenerator())
+                        state.unfinalizedTempBasal = nil
+                        state.finishedDoses.append(canceledTempBasal)
+                    }
+                    state.updateFromPodStatus(status: status)
+                    state.activeTransition = nil
+                })
+                completion(nil)
+            case .failure(let error):
+                self.mutateState({ (state) in
+                    state.activeTransition = nil
+                })
+                completion(DashPumpManagerError(error))
             }
         }
     }
