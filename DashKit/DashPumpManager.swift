@@ -706,6 +706,12 @@ public class DashPumpManager: PumpManager {
                 DispatchQueue.global(qos: .userInteractive).async {
                     self.podCommManager.sendProgram(programType: program, beepOption: .init(beepAtEnd: false)) { (result) in
                         switch result {
+                        case .failure(let error):
+                            self.mutateState({ (state) in
+                                state.activeTransition = nil
+                            })
+                            self.finalizeAndStoreDoses()
+                            completion(.failure(DashPumpManagerError(error)))
                         case .success(let podStatus):
                             self.mutateState({ (state) in
                                 state.unfinalizedTempBasal = UnfinalizedDose(tempBasalRate: enactRate, startTime: startDate, duration: duration, scheduledCertainty: .certain)
@@ -714,12 +720,6 @@ public class DashPumpManager: PumpManager {
                             })
                             self.finalizeAndStoreDoses()
                             completion(.success(dose))
-                        case .failure(let error):
-                            self.mutateState({ (state) in
-                                state.activeTransition = nil
-                            })
-                            self.finalizeAndStoreDoses()
-                            completion(.failure(DashPumpManagerError(error)))
                         }
                     }
                 }
