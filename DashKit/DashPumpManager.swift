@@ -20,6 +20,8 @@ public protocol PodStatusObserver: class {
 public class DashPumpManager: PumpManager {
 
     public static var managerIdentifier = "OmnipodDash"
+    
+    static let podAlarmNotificationIdentifier = "DASH:\(LoopNotificationCategory.pumpFault.rawValue)"
 
     var podCommManager: PodCommManagerProtocol
 
@@ -224,7 +226,7 @@ public class DashPumpManager: PumpManager {
     }
 
     public var isPodAlarming: Bool {
-        return false // TODO
+        return state.isPodAlarming
     }
     
     public var lastStatusDate: Date? {
@@ -308,6 +310,7 @@ public class DashPumpManager: PumpManager {
                 state.lastStatusDate = nil
                 state.reservoirLevel = nil
                 state.podTotalDelivery = nil
+                state.isPodAlarming = false
             })
             self.finalizeAndStoreDoses(completion: { (_) in
                 completion(result)
@@ -920,7 +923,23 @@ extension DashPumpManager: PodCommManagerDelegate {
     }
     
     public func podCommManager(_ podCommManager: PodCommManager, didAlarm alarm: PodAlarm) {
+        self.mutateState { (state) in
+            state.isPodAlarming = true
+        }
         log.default("Pod Alarm: %{public}@", String(describing: alarm))
+        log.default("Alarm code: %{public}@", String(describing: alarm.alarmCode))
+
+        let content = UNMutableNotificationContent()
+
+        content.title = NSLocalizedString("Call Customer Care", comment: "The title for pod alarm notification")
+
+        content.body = NSLocalizedString("Remove Pod Now. Call Customer Care at 1 800-591-3455", comment: "The body of the pod alarm notification")
+        content.categoryIdentifier = LoopNotificationCategory.pumpFault.rawValue
+        content.threadIdentifier = LoopNotificationCategory.pumpFault.rawValue
+
+        pumpDelegate.notify { (delegate) in
+            delegate?.scheduleNotification(for: self, identifier: DashPumpManager.podAlarmNotificationIdentifier, content: content, trigger: nil)
+        }
     }
     
     public func podCommManager(_ podCommManager: PodCommManager, didCheckPeriodicStatus status: PodStatus) {

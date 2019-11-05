@@ -699,8 +699,8 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"$(BUILT_PRODUCTS_DIR)/DashKit.framework",
-				"$(BUILT_PRODUCTS_DIR)/DashKitUI.framework",
+				"$(TARGET_BUILD_DIR)/DashKit.framework",
+				"$(TARGET_BUILD_DIR)/DashKitUI.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/RxSwift.framework",
 				"$(SRCROOT)/dash-sdk-ios/frameworks/INSSDK.framework",
 				"$(SRCROOT)/dash-sdk-ios/frameworks/PodSDK.framework",
