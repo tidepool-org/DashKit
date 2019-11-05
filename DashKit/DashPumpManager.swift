@@ -226,7 +226,7 @@ public class DashPumpManager: PumpManager {
     public var isPodAlarming: Bool {
         return false // TODO
     }
-
+    
     public var lastStatusDate: Date? {
         return state.lastStatusDate
     }
@@ -238,6 +238,8 @@ public class DashPumpManager: PumpManager {
     public var podId: String? {
         return podCommManager.getPodId()
     }
+
+    public var isPeriodicStatusCheckConfigured: Bool = false
 
     public func getPodStatus(completion: @escaping (PodCommResult<PodStatus>) -> ()) {
         podCommManager.getPodStatus(userInitiated: false) { (response) in
@@ -254,7 +256,7 @@ public class DashPumpManager: PumpManager {
         }
     }
 
-    public func startPodActivation(lowReservoirAlert: LowReservoirAlert?, podExpirationAlert: PodExpirationAlert?, eventListener: @escaping (ActivationStatus<ActivationStep1Event>) -> ())
+    public func startPodActivation(lowReservoirAlert: LowReservoirAlert, podExpirationAlert: PodExpirationAlert, eventListener: @escaping (ActivationStatus<ActivationStep1Event>) -> ())
     {
         return podCommManager.startPodActivation(lowReservoirAlert: lowReservoirAlert, podExpirationAlert: podExpirationAlert) { (activationStatus) in
             if case .event(let event) = activationStatus, case .podStatus(let status) = event {
@@ -266,8 +268,9 @@ public class DashPumpManager: PumpManager {
         }
     }
 
-    public func finishPodActivation(autoOffAlert: AutoOffAlert? = nil, eventListener: @escaping (ActivationStatus<ActivationStep2Event>) -> ()) {
-        let programType = ProgramType.basalProgram(basal: state.basalProgram, date: dateGenerator())
+    public func finishPodActivation(autoOffAlert: AutoOffAlert, eventListener: @escaping (ActivationStatus<ActivationStep2Event>) -> ()) {
+        let offset = state.timeZone.scheduleOffset(forDate: dateGenerator())
+        let programType = ProgramType.basalProgram(basal: state.basalProgram, secondsSinceMidnight: Int(offset.rounded()))
         podCommManager.finishPodActivation(basalProgram: programType, autoOffAlert: autoOffAlert) { (activationStatus) in
             switch activationStatus {
             case .event(let event):
@@ -330,7 +333,9 @@ public class DashPumpManager: PumpManager {
                 completion(error)
                 return
             }
-            self.podCommManager.sendProgram(programType: .basalProgram(basal: basalProgram, date: nil), beepOption: .none) { (result) in
+            let offset = self.state.timeZone.scheduleOffset(forDate: self.dateGenerator())
+
+            self.podCommManager.sendProgram(programType: .basalProgram(basal: basalProgram, secondsSinceMidnight: Int(offset.rounded())), beepOption: .none) { (result) in
                 switch result {
                 case .failure(let error):
                     completion(DashPumpManagerError(error))
@@ -582,7 +587,6 @@ public class DashPumpManager: PumpManager {
     }
 
     public func cancelTempBasal(completion: @escaping (DashPumpManagerError?) -> Void) {
-
         let preflightError = self.setStateWithResult({ (state) -> DashPumpManagerError? in
             if state.activeTransition != nil {
                 return DashPumpManagerError.busy
@@ -597,7 +601,8 @@ public class DashPumpManager: PumpManager {
             return
         }
 
-        podCommManager.stopProgram(programType: .tempBasal) { (result) in
+        self.podCommManager.stopProgram(programType: .tempBasal) { (result) in
+            self.log.debug("stopProgram result: %{public}@", String(describing: result))
             switch result {
             case .success(let status):
                 self.mutateState({ (state) in
@@ -630,18 +635,47 @@ public class DashPumpManager: PumpManager {
                 program = nil
             } else {
                 let tempBasal = try TempBasal(value: .flatRate(Int(round(enactRate * Pod.podSDKInsulinMultiplier))), duration: duration)
-                program = ProgramType.tempBasal(tempBasal: tempBasal, date: nil)
+                // secondsSinceMidnight not used for absolute rate temp basals; SDK api will change in future so this is only specified for percent value types
+                program = ProgramType.tempBasal(tempBasal: tempBasal, secondsSinceMidnight: nil)
             }
         } catch let error {
             completion(.failure(error))
             return
         }
         
-        cancelTempBasal { (error) in
+        let preflight: (_ completion: @escaping (Error?) -> Void) -> Void
+        
+        if case .tempBasal = status.basalDeliveryState {
+            preflight = { (_ completion: @escaping (Error?) -> Void) in
+                self.cancelTempBasal { (error) in
+                    if let error = error {
+                        self.log.error("cancelTempBasal error: %{public}@", String(describing: error))
+                        completion(error)
+                    } else {
+                        self.log.default("cancelTempBasal succeeded")
+                        completion(nil)
+                    }
+                }
+            }
+        } else {
+            preflight = { (_ completion: @escaping (Error?) -> Void) in
+                self.podCommManager.getPodStatus(userInitiated: false) { (result) in
+                    switch result {
+                    case .failure(let error):
+                        self.log.error("getPodStatus error: %{public}@", String(describing: error))
+                        completion(error)
+                    case .success:
+                        completion(nil)
+                    }
+                }
+            }
+        }
+        
+        preflight { (error) in
             if let error = error {
                 completion(.failure(error))
             } else {
-                
+                self.log.default("preflight succeeded")
                 guard let program = program else {
                     // 0 duration temp basals are used to cancel any existing temp basal
                     let date = self.dateGenerator()
@@ -668,22 +702,25 @@ public class DashPumpManager: PumpManager {
                 
                 let dose = DoseEntry(type: .tempBasal, startDate: startDate, endDate: startDate.addingTimeInterval(duration), value: enactRate, unit: .unitsPerHour)
                 
-                self.podCommManager.sendProgram(programType: program, beepOption: .init(beepAtEnd: false)) { (result) in
-                    switch result {
-                    case .success(let podStatus):
-                        self.mutateState({ (state) in
-                            state.unfinalizedTempBasal = UnfinalizedDose(tempBasalRate: enactRate, startTime: startDate, duration: duration, scheduledCertainty: .certain)
-                            state.updateFromPodStatus(status: podStatus)
-                            state.activeTransition = nil
-                        })
-                        self.finalizeAndStoreDoses()
-                        completion(.success(dose))
-                    case .failure(let error):
-                        self.mutateState({ (state) in
-                            state.activeTransition = nil
-                        })
-                        self.finalizeAndStoreDoses()
-                        completion(.failure(DashPumpManagerError(error)))
+                // SDK not allowing us to make calls from a callback thread, so dispatch.
+                DispatchQueue.global(qos: .userInteractive).async {
+                    self.podCommManager.sendProgram(programType: program, beepOption: .init(beepAtEnd: false)) { (result) in
+                        switch result {
+                        case .failure(let error):
+                            self.mutateState({ (state) in
+                                state.activeTransition = nil
+                            })
+                            self.finalizeAndStoreDoses()
+                            completion(.failure(DashPumpManagerError(error)))
+                        case .success(let podStatus):
+                            self.mutateState({ (state) in
+                                state.unfinalizedTempBasal = UnfinalizedDose(tempBasalRate: enactRate, startTime: startDate, duration: duration, scheduledCertainty: .certain)
+                                state.updateFromPodStatus(status: podStatus)
+                                state.activeTransition = nil
+                            })
+                            self.finalizeAndStoreDoses()
+                            completion(.success(dose))
+                        }
                     }
                 }
             }
@@ -691,20 +728,18 @@ public class DashPumpManager: PumpManager {
     }
 
     public func setMustProvideBLEHeartbeat(_ mustProvideBLEHeartbeat: Bool) {
-        // Seems to be causing a deadlock in the SDK
-//        if mustProvideBLEHeartbeat {
-//            podCommManager.configPeriodicStatusCheck(interval: .minutes(1)) { (result) in
-//                switch result {
-//                case .failure(let error):
-//                    self.log.error("podCommManager periodic status check error: %{public}@", String(describing: error))
-//                case .success(let status):
-//                    self.log.debug("podCommManager periodic status: %@", String(describing: status))
-//                    self.pumpDelegate.notify({ (delegate) in
-//                        delegate?.pumpManagerBLEHeartbeatDidFire(self)
-//                    })
-//                }
-//            }
-//        }
+        if mustProvideBLEHeartbeat && !isPeriodicStatusCheckConfigured {
+            self.log.debug("podCommManager periodic status: configuring")
+            podCommManager.configPeriodicStatusCheck(interval: .minutes(1)) { (result) in
+                switch result {
+                case .failure(let error):
+                    self.log.error("podCommManager periodic status check error: %{public}@", String(describing: error))
+                case .success(let status):
+                    self.isPeriodicStatusCheckConfigured = true
+                    self.log.debug("podCommManager periodic status check configured", String(describing: status))
+                }
+            }
+        }
     }
 
     public func suspendDelivery(completion: @escaping (Error?) -> Void) {
@@ -774,8 +809,11 @@ public class DashPumpManager: PumpManager {
             completion(preflightError!)
             return
         }
+        
+        let offset = state.timeZone.scheduleOffset(forDate: dateGenerator())
+        let programType = ProgramType.basalProgram(basal: state.basalProgram, secondsSinceMidnight: Int(offset.rounded()))
 
-        podCommManager.sendProgram(programType: .basalProgram(basal: state.basalProgram, date: nil), beepOption: .none) { (result) in
+        podCommManager.sendProgram(programType: programType, beepOption: .none) { (result) in
             switch result {
             case .failure(let error):
                 self.mutateState({ (state) in
@@ -877,27 +915,29 @@ extension DashPumpManager: LoggingProtocol {
 }
 
 extension DashPumpManager: PodCommManagerDelegate {
-    public func onAlert(alerts: PodAlerts) {
+    public func podCommManager(_ podCommManager: PodCommManager, hasAlerts alerts: PodAlerts) {
         log.default("Pod Alert: %{public}@", String(describing: alerts))
     }
     
-    public func onAlarm(alarm: PodAlarm) {
+    public func podCommManager(_ podCommManager: PodCommManager, didAlarm alarm: PodAlarm) {
         log.default("Pod Alarm: %{public}@", String(describing: alarm))
     }
     
-    public func onStatusUpdate(status: PodStatus) {
-        log.default("Pod Status Update: %{public}@", String(describing: status))
+    public func podCommManager(_ podCommManager: PodCommManager, didCheckPeriodicStatus status: PodStatus) {
+        self.pumpDelegate.notify({ (delegate) in
+            delegate?.pumpManagerBLEHeartbeatDidFire(self)
+        })
     }
     
-    public func onSystemError(error: SystemErrorCode) {
+    public func podCommManager(_ podCommManager: PodCommManager, hasSystemError error: SystemErrorCode) {
         log.default("Pod System Error: %{public}@", String(describing: error))
     }
     
-    public func onPodCommStateChanged(podCommState: PodCommState) {
+    public func podCommManager(_ podCommManager: PodCommManager, podCommStateDidChange podCommState: PodCommState) {
         log.default("Pod Comm State Changed: %{public}@", String(describing: podCommState))
     }
     
-    public func onConnectionStateChanged(connectionState: ConnectionState) {
+    public func podCommManager(_ podCommManager: PodCommManager, connectionStateDidChange connectionState: ConnectionState) {
         self.mutateState { (state) in
             state.connectionState = connectionState
         }

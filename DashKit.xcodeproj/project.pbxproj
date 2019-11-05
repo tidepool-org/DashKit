@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -42,13 +42,13 @@
 		C14D46F222CA85C000656FE0 /* NoActivePodViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14D46F122CA85C000656FE0 /* NoActivePodViewController.swift */; };
 		C15424312280C575006754B3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C15424302280C575006754B3 /* Assets.xcassets */; };
 		C15424332280C75E006754B3 /* PodStatusExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C15424322280C75D006754B3 /* PodStatusExtension.swift */; };
-		C16DA83622E7C6F2008624C2 /* DashKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; };
+		C16DA83622E7C6F2008624C2 /* DashKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; platformFilter = ios; };
 		C16DA84822E93387008624C2 /* DashKitPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19BB3EF22E7C64A00EA5C2E /* DashKitPlugin.swift */; };
 		C16DA84B22E93387008624C2 /* DashKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; };
 		C16DA85022E93387008624C2 /* ObjectMapper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1D46D5F22C568F600978E59 /* ObjectMapper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C16DA85122E93387008624C2 /* RxSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1D46D5E22C568F600978E59 /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C16DA85222E93387008624C2 /* DashKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C16DA85822E93973008624C2 /* DashKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C107D15322694B9C00D63775 /* DashKitUI.framework */; };
+		C16DA85822E93973008624C2 /* DashKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C107D15322694B9C00D63775 /* DashKitUI.framework */; platformFilter = ios; };
 		C194113D2285D30A00E886DD /* PairPodSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C194113C2285D30A00E886DD /* PairPodSetupViewController.swift */; };
 		C19411442286164E00E886DD /* ReplacePodViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19411432286164E00E886DD /* ReplacePodViewController.swift */; };
 		C194114622861E9100E886DD /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C194114522861E9100E886DD /* UIColor.swift */; };
@@ -79,6 +79,7 @@
 		C1E753E3226928F700A0BC48 /* DashKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; };
 		C1E753E8226928F700A0BC48 /* DashPumpManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E753E7226928F700A0BC48 /* DashPumpManagerTests.swift */; };
 		C1E753EA226928F700A0BC48 /* DashKit.h in Headers */ = {isa = PBXBuildFile; fileRef = C1E753DC226928F700A0BC48 /* DashKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C1FDF4AC235EC930008B0251 /* HUDAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C1FDF4AB235EC930008B0251 /* HUDAssets.xcassets */; };
 		C1FE2E3A22EA0B360035DCA0 /* LoopKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E3922EA0B360035DCA0 /* LoopKit.framework */; };
 		C1FE2E3C22EA0B360035DCA0 /* LoopKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E3B22EA0B360035DCA0 /* LoopKitUI.framework */; };
 		C1FE2E3D22EA0B570035DCA0 /* LoopKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E3922EA0B360035DCA0 /* LoopKit.framework */; };
@@ -95,6 +96,27 @@
 
 /* Begin PBXContainerItemProxy section */
 		C1E753E4226928F700A0BC48 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C1E753D0226928F700A0BC48 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C1E753D8226928F700A0BC48;
+			remoteInfo = DashKit;
+		};
+		C1E888B7234FC53F00F69964 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C1E753D0226928F700A0BC48 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C1E753D8226928F700A0BC48;
+			remoteInfo = DashKit;
+		};
+		C1E888B9234FC54300F69964 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C1E753D0226928F700A0BC48 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C107D15222694B9C00D63775;
+			remoteInfo = DashKitUI;
+		};
+		C1E888BB234FC58B00F69964 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C1E753D0226928F700A0BC48 /* Project object */;
 			proxyType = 1;
@@ -211,6 +233,7 @@
 		C1E753E2226928F700A0BC48 /* DashKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DashKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1E753E7226928F700A0BC48 /* DashPumpManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashPumpManagerTests.swift; sourceTree = "<group>"; };
 		C1E753E9226928F700A0BC48 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C1FDF4AB235EC930008B0251 /* HUDAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = HUDAssets.xcassets; sourceTree = "<group>"; };
 		C1FE2E3922EA0B360035DCA0 /* LoopKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = LoopKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1FE2E3B22EA0B360035DCA0 /* LoopKitUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = LoopKitUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1FE2E5222EA0DB90035DCA0 /* MKRingProgressView.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MKRingProgressView.framework; path = Carthage/Build/iOS/MKRingProgressView.framework; sourceTree = "<group>"; };
@@ -381,6 +404,7 @@
 		C194114F228DBF0100E886DD /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				C1FDF4AB235EC930008B0251 /* HUDAssets.xcassets */,
 				C1ACF42E22A03F0400F7DDB4 /* OmnipodReservoirView.swift */,
 				C1ACF42F22A03F0500F7DDB4 /* OmnipodReservoirView.xib */,
 				C1ACF43022A03F0500F7DDB4 /* PodLifeHUDView.swift */,
@@ -490,6 +514,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				C1E888BC234FC58B00F69964 /* PBXTargetDependency */,
 			);
 			name = DashKitUI;
 			productName = DashKitUI;
@@ -527,6 +552,8 @@
 			buildRules = (
 			);
 			dependencies = (
+				C1E888BA234FC54300F69964 /* PBXTargetDependency */,
+				C1E888B8234FC53F00F69964 /* PBXTargetDependency */,
 			);
 			name = DashKitPlugin;
 			productName = DashKitPlugin;
@@ -627,6 +654,7 @@
 			files = (
 				C15424312280C575006754B3 /* Assets.xcassets in Resources */,
 				C1ACF43322A03F0500F7DDB4 /* OmnipodReservoirView.xib in Resources */,
+				C1FDF4AC235EC930008B0251 /* HUDAssets.xcassets in Resources */,
 				C1ACF43522A03F0500F7DDB4 /* PodLifeHUDView.xib in Resources */,
 				C107D166226A0EED00D63775 /* DashPumpManager.storyboard in Resources */,
 			);
@@ -785,12 +813,30 @@
 			target = C1E753D8226928F700A0BC48 /* DashKit */;
 			targetProxy = C1E753E4226928F700A0BC48 /* PBXContainerItemProxy */;
 		};
+		C1E888B8234FC53F00F69964 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			platformFilter = ios;
+			target = C1E753D8226928F700A0BC48 /* DashKit */;
+			targetProxy = C1E888B7234FC53F00F69964 /* PBXContainerItemProxy */;
+		};
+		C1E888BA234FC54300F69964 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			platformFilter = ios;
+			target = C107D15222694B9C00D63775 /* DashKitUI */;
+			targetProxy = C1E888B9234FC54300F69964 /* PBXContainerItemProxy */;
+		};
+		C1E888BC234FC58B00F69964 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C1E753D8226928F700A0BC48 /* DashKit */;
+			targetProxy = C1E888BB234FC58B00F69964 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		C107D15D22694B9C00D63775 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Manual;
@@ -826,6 +872,7 @@
 		C107D15E22694B9C00D63775 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Manual;

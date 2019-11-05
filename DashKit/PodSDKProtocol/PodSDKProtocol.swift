@@ -32,27 +32,28 @@ public protocol PodCommManagerProtocol {
      2. Setting a unique Pod ID
      3. Priming the Pod (to release any air from the cannula)
      4. Programming a default (initial) basal
-     
+    
      - parameters:
-     - lowReservoirAlert: `LowReservoirAlert`. If not provided, default of 10 U is programmed.
-     - podExpirationAlert: `PodExpirationAlert`. If not provided, default of 4 hours before Pod expiration is programmed.
-     - eventListener: a closure to be called when `ActivationStep1Event`s are issued by the comm. layer on the main thread.
-     - event: one of the following `ActivationStep1Event`s issued during the 1st phase of activation, listed below (in order) except ActivationStep1Event.podStatus(PodStatus)
-     - `ActivationStep1Event.connecting`
-     - `ActivationStep1Event.retrievingPodVersion`
-     - `ActivationStep1Event.settingPodUid`
-     - `ActivationStep1Event.programmingLowReservoirAlert`
-     - `ActivationStep1Event.programmingLumpOfCoal`
-     - `ActivationStep1Event.primingPod`
-     - `ActivationStep1Event.checkingPodStatus`
-     - `ActivationStep1Event.programmingPodExpireAlert`
-     - `ActivationStep1Event.podStatus(PodStatus)`
-     - `ActivationStep1Event.step1Completed`
-     - error: In case of an error - `PodCommError`
+        - lowReservoirAlert: `LowReservoirAlert`. If not provided, default of 10 U is programmed.
+        - podExpirationAlert: `PodExpirationAlert`. If not provided, default of 4 hours before Pod expiration is programmed.
+        - eventListener: a closure to be called when `ActivationStep1Event`s are issued by the comm. layer on the main thread.
+            - event: one of the following `ActivationStep1Event`s issued during the 1st phase of activation, listed below (in order) except ActivationStep1Event.podStatus(PodStatus)
+                - `ActivationStep1Event.connecting`
+                - `ActivationStep1Event.retrievingPodVersion`
+                - `ActivationStep1Event.settingPodUid`
+                - `ActivationStep1Event.programmingLowReservoirAlert`
+                - `ActivationStep1Event.programmingLumpOfCoal`
+                - `ActivationStep1Event.primingPod`
+                - `ActivationStep1Event.checkingPodStatus`
+                - `ActivationStep1Event.programmingPodExpireAlert`
+                - `ActivationStep1Event.podStatus(...)`
+                - `ActivationStep1Event.step1Completed`
+            - error: In case of an error - `PodCommError`
      
      - Note: No more events after either PodCommError or ActivationStep1Event.step1Completed.
      */
-    func startPodActivation(lowReservoirAlert: PodSDK.LowReservoirAlert?, podExpirationAlert: PodSDK.PodExpirationAlert?, eventListener: @escaping (PodSDK.ActivationStatus<PodSDK.ActivationStep1Event>) -> ())
+    func startPodActivation(lowReservoirAlert: PodSDK.LowReservoirAlert, podExpirationAlert: PodSDK.PodExpirationAlert, eventListener: @escaping (PodSDK.ActivationStatus<PodSDK.ActivationStep1Event>) -> ())
+
     
     /**
      Finishes a Pod activation previously started with `startPodActivation(...)`.
@@ -60,24 +61,24 @@ public protocol PodCommManagerProtocol {
      Activation is a 2-phase process. Use this call to initiate the 2nd phase. This phase
      performs cannula insertion and completes a Pod activation.
      
-     - parameters:
-     - basalProgram: a basal program to program during the activation
-     - autoOffAlert: optional "Auto-Off" setting to program on the Pod. Default is 'disabled'.
-     - eventListener: a closure to be called when `ActivationStatus<ActivationStep2Event>`s are issued by the comm. layer on the main thread
-     - event: one of the following `ActivationStep2Event`s issued during the 2nd phase of activation, listed below in order except ActivationStep2Event.podStatus(PodStatus)
-     - `ActivationStep2Event.connecting`
-     - `ActivationStep2Event.programmingActiveBasal`
-     - `ActivationStep2Event.cancelLumpOfCoal`
-     - `ActivationStep2Event.insertingCannula`
-     - `ActivationStep2Event.checkingPodStatus`
-     - `ActivationStep2Event.podStatus(PodStatus)`
-     - `ActivationStep2Event.step2Completed`
-     - error: In case of an error - 'optional' `PodCommError`
+      - parameters:
+        - basalProgram: a basal program to program during the activation
+        - autoOffAlert: optional "Auto-Off" setting to program on the Pod. Default is 'disabled'.
+        - eventListener: a closure to be called when `ActivationStatus<ActivationStep2Event>`s are issued by the comm. layer on the main thread
+            - event: one of the following `ActivationStep2Event`s issued during the 2nd phase of activation, listed below in order except ActivationStep2Event.podStatus(PodStatus)
+                - `ActivationStep2Event.connecting`
+                - `ActivationStep2Event.programmingActiveBasal`
+                - `ActivationStep2Event.cancelLumpOfCoalProgrammingAutoOff`
+                - `ActivationStep2Event.insertingCannula`
+                - `ActivationStep2Event.checkingPodStatus`
+                - `ActivationStep2Event.podStatus(...)`
+                - `ActivationStep2Event.step2Completed`
+            - error: In case of an error - 'optional' `PodCommError`
      
-     - Note: No more events after either PodCommError or ActivationStep2Event.step2Completed.
+      - Note: No more events after either PodCommError or ActivationStep2Event.step2Completed.
      
      */
-    func finishPodActivation(basalProgram: PodSDK.ProgramType, autoOffAlert: PodSDK.AutoOffAlert?, eventListener: @escaping (PodSDK.ActivationStatus<PodSDK.ActivationStep2Event>) -> ())
+        func finishPodActivation(basalProgram: PodSDK.ProgramType, autoOffAlert: PodSDK.AutoOffAlert, eventListener: @escaping (PodSDK.ActivationStatus<PodSDK.ActivationStep2Event>) -> ())
     
     /**
      Cancels an ongoing activation and clears all states maintained by the `PodCommManager`.

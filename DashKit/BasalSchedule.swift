@@ -66,14 +66,6 @@ extension BasalSegment: RawRepresentable {
     }
 }
 
-extension BasalSegment: Equatable {
-    public static func == (lhs: BasalSegment, rhs: BasalSegment) -> Bool {
-        return lhs.startTime == rhs.startTime &&
-            lhs.endTime == rhs.endTime &&
-            lhs.basalRate == rhs.basalRate
-    }
-}
-
 extension BasalProgram: RawRepresentable {
     public typealias RawValue = [String: Any]
 
@@ -94,11 +86,5 @@ extension BasalProgram: RawRepresentable {
             "basalSegments": basalSegments.map { $0.rawValue }
         ]
     }
-}
-
-extension BasalProgram: Equatable {
-    public static func == (lhs: BasalProgram, rhs: BasalProgram) -> Bool {
-        return zip(lhs.basalSegments, rhs.basalSegments).allSatisfy { $0.0 == $0.1 }
-   }
 }
 

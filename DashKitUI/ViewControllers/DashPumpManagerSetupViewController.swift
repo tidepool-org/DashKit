@@ -41,6 +41,12 @@ public class DashPumpManagerSetupViewController: UINavigationController, PumpMan
 
     open override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if #available(iOSApplicationExtension 13.0, *) {
+            view.backgroundColor = .systemBackground
+        } else {
+            view.backgroundColor = .white
+        }
 
         delegate = self
     }

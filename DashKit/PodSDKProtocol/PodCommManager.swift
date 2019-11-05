@@ -9,4 +9,4 @@
 import Foundation
 import PodSDK
 
-extension PodCommManager: PodCommManagerProtocol { }
+extension PodCommManager: PodCommManagerProtocol {}

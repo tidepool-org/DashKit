@@ -123,7 +123,7 @@ internal class DashHUDProvider: NSObject, HUDProvider {
             return
         }
 
-        podLifeView.alertState = pumpManager.isPodAlarming ? .fault : .none
+        podLifeView.alertState = pumpManager.isPodAlarming ? .alarm : .none
     }
 
     private func updatePodLifeView() {

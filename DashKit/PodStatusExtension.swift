@@ -155,6 +155,9 @@ extension PodCommError: LocalizedError {
             
         case .bleCommunicationError:
             return LocalizedString("Bluetooth communication error", comment: "Error description for PodCommError.bleCommunicationError")
+            
+        case .bluetoothUnauthorized:
+            return LocalizedString("Bluetooth unauthorized", comment: "Error description for PodCommError.bluetoothUnauthorized")
         }
     }
 
