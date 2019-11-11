@@ -188,11 +188,11 @@ class DashPumpManagerTests: XCTestCase {
 
         // External status updates
         pumpManagerStatusUpdateExpectation = expectation(description: "pumpmanager status updates")
-        pumpManagerStatusUpdateExpectation?.expectedFulfillmentCount = 4
+        pumpManagerStatusUpdateExpectation?.expectedFulfillmentCount = 2
 
         // Persistence updates
         pumpManagerDelegateStateUpdateExpectation = expectation(description: "pumpmanager delegate state updates")
-        pumpManagerDelegateStateUpdateExpectation?.expectedFulfillmentCount = 4
+        pumpManagerDelegateStateUpdateExpectation?.expectedFulfillmentCount = 2
 
         // Set a new reservoir value to make sure the result of the set program is used (5U)
         mockPodCommManager.podStatus.reservoirUnitsRemaining = 500
