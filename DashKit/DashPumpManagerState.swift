@@ -39,7 +39,11 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
 
     public var lastStatusDate: Date?
     
-    public var isPodAlarming: Bool = false
+    public var alarmCode: AlarmCode?
+    
+    public var isPodAlarming: Bool {
+        return alarmCode != nil
+    }
 
     public var unfinalizedBolus: UnfinalizedDose?
     public var unfinalizedTempBasal: UnfinalizedDose?
@@ -118,7 +122,10 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
         self.podActivatedAt = rawValue["podActivatedAt"] as? Date
         self.lastStatusDate = rawValue["lastStatusDate"] as? Date
         self.podTotalDelivery = rawValue["podTotalDelivery"] as? Double
-        self.isPodAlarming = rawValue["isPodAlarming"] as? Bool ?? false
+        
+        if let rawAlarmCode = rawValue["alarmCode"] as? String {
+            self.alarmCode = AlarmCode(rawValue: rawAlarmCode)
+        }
 
         if let rawReservoirLevel = rawValue["reservoirLevel"] as? ReservoirLevel.RawValue {
             self.reservoirLevel = ReservoirLevel(rawValue: rawReservoirLevel)
@@ -177,7 +184,6 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
             "finishedDoses": finishedDoses.map( { $0.rawValue }),
             "basalProgram": basalProgram.rawValue,
             "suspendState": suspendState.rawValue,
-            "isPodAlarming": isPodAlarming,
         ]
 
         if let lastStatusDate = lastStatusDate {
@@ -214,6 +220,10 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
 
         if let unfinalizedResume = unfinalizedResume {
             rawValue["unfinalizedResume"] = unfinalizedResume.rawValue
+        }
+        
+        if let alarmCode = alarmCode {
+            rawValue["alarmCode"] = alarmCode.rawValue
         }
 
         return rawValue

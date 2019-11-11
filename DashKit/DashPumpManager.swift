@@ -310,7 +310,7 @@ public class DashPumpManager: PumpManager {
                 state.lastStatusDate = nil
                 state.reservoirLevel = nil
                 state.podTotalDelivery = nil
-                state.isPodAlarming = false
+                state.alarmCode = nil
             })
             self.finalizeAndStoreDoses(completion: { (_) in
                 completion(result)
@@ -924,16 +924,15 @@ extension DashPumpManager: PodCommManagerDelegate {
     
     public func podCommManager(_ podCommManager: PodCommManager, didAlarm alarm: PodAlarm) {
         self.mutateState { (state) in
-            state.isPodAlarming = true
+            state.alarmCode = alarm.alarmCode
         }
         log.default("Pod Alarm: %{public}@", String(describing: alarm))
         log.default("Alarm code: %{public}@", String(describing: alarm.alarmCode))
-
+        
         let content = UNMutableNotificationContent()
 
-        content.title = NSLocalizedString("Call Customer Care", comment: "The title for pod alarm notification")
-
-        content.body = NSLocalizedString("Remove Pod Now. Call Customer Care at 1 800-591-3455", comment: "The body of the pod alarm notification")
+        content.title = alarm.alarmCode.notificationTitle
+        content.body = alarm.alarmCode.notificationBody
         content.categoryIdentifier = LoopNotificationCategory.pumpFault.rawValue
         content.threadIdentifier = LoopNotificationCategory.pumpFault.rawValue
 

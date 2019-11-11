@@ -18,7 +18,7 @@ class ReplacePodViewController: SetupTableViewController {
 
     enum PodReplacementReason {
         case normal
-        case fault
+        case alarm(AlarmCode)
         case canceledPairingBeforeApplication
         case canceledPairing
     }
@@ -29,8 +29,9 @@ class ReplacePodViewController: SetupTableViewController {
             switch replacementReason {
             case .normal:
             break // Text set in interface builder
-            case .fault:
-                instructionsLabel.text = LocalizedString("Pod has encountered an internal error. Insulin delivery has stopped. Please deactivate and remove pod.", comment: "String providing instructions for replacing pod due to a fault.")
+            case .alarm(let alarmCode):
+                
+                instructionsLabel.text = LocalizedString("%1$@. Insulin delivery has stopped. Please deactivate and remove pod.", comment: "Format string providing instructions for replacing pod due to a fault.")
             case .canceledPairingBeforeApplication:
                 instructionsLabel.text = LocalizedString("Incompletely set up pod must be deactivated before pairing with a new one. Please deactivate and discard pod.", comment: "Instructions when deactivating pod that has been paired, but not attached.")
             case .canceledPairing:
@@ -46,7 +47,8 @@ class ReplacePodViewController: SetupTableViewController {
             let podState = pumpManager.podCommState
             switch podState {
             case .alarm:
-                self.replacementReason = .fault
+                let alarmCode: AlarmCode = pumpManager.state.alarmCode ?? .other
+                self.replacementReason = .alarm(alarmCode)
             case .activating:
                 self.replacementReason = .canceledPairingBeforeApplication
             case .deactivating:

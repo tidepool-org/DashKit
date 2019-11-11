@@ -42,6 +42,7 @@
 		C14D46F222CA85C000656FE0 /* NoActivePodViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14D46F122CA85C000656FE0 /* NoActivePodViewController.swift */; };
 		C15424312280C575006754B3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C15424302280C575006754B3 /* Assets.xcassets */; };
 		C15424332280C75E006754B3 /* PodStatusExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C15424322280C75D006754B3 /* PodStatusExtension.swift */; };
+		C160FEBA2371EA050080031E /* AlarmCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = C160FEB92371EA050080031E /* AlarmCode.swift */; };
 		C16DA83622E7C6F2008624C2 /* DashKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; platformFilter = ios; };
 		C16DA84822E93387008624C2 /* DashKitPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19BB3EF22E7C64A00EA5C2E /* DashKitPlugin.swift */; };
 		C16DA84B22E93387008624C2 /* DashKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; };
@@ -200,6 +201,7 @@
 		C14D46F122CA85C000656FE0 /* NoActivePodViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoActivePodViewController.swift; sourceTree = "<group>"; };
 		C15424302280C575006754B3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C15424322280C75D006754B3 /* PodStatusExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodStatusExtension.swift; sourceTree = "<group>"; };
+		C160FEB92371EA050080031E /* AlarmCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmCode.swift; sourceTree = "<group>"; };
 		C16DA85622E93387008624C2 /* DashKit.loopwatchplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DashKit.loopwatchplugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		C194113C2285D30A00E886DD /* PairPodSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairPodSetupViewController.swift; sourceTree = "<group>"; };
 		C19411432286164E00E886DD /* ReplacePodViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplacePodViewController.swift; sourceTree = "<group>"; };
@@ -397,6 +399,7 @@
 			isa = PBXGroup;
 			children = (
 				C12AA74A231870160025FD45 /* ConnectionState.swift */,
+				C160FEB92371EA050080031E /* AlarmCode.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -789,6 +792,7 @@
 				C1ACF44422A200B100F7DDB4 /* UnfinalizedDose.swift in Sources */,
 				C107D11922692E6B00D63775 /* DashPumpManagerState.swift in Sources */,
 				C1BC259C2314604800E80E3F /* DashPumpManagerError.swift in Sources */,
+				C160FEBA2371EA050080031E /* AlarmCode.swift in Sources */,
 				C1ACF44522A200D700F7DDB4 /* NumberFormatter.swift in Sources */,
 				C1ACF43B22A173FF00F7DDB4 /* ReservoirLevel.swift in Sources */,
 				C107D11222692B7200D63775 /* Pod.swift in Sources */,
