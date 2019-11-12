@@ -140,7 +140,7 @@ public struct UnfinalizedDose: RawRepresentable, Equatable, CustomStringConverti
         if let remainingHundredths = remainingHundredths {
             units = units - (Double(remainingHundredths) / Pod.podSDKInsulinMultiplier)
         } else if let duration = duration {
-            units = floor(oldRate * duration.hours * Pod.pulsesPerUnit) / Pod.pulsesPerUnit
+            units = min(units, floor(oldRate * duration.hours * Pod.pulsesPerUnit) / Pod.pulsesPerUnit)
         }
     }
 

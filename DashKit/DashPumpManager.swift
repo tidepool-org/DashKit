@@ -571,7 +571,7 @@ public class DashPumpManager: PumpManager {
             switch result {
             case .success(let status):
                 self.mutateState({ (state) in
-                    state.unfinalizedBolus?.cancel(at: self.dateGenerator())
+                    state.unfinalizedBolus?.cancel(at: self.dateGenerator(), withRemaining: status.bolusUnitsRemaining)
                     state.updateFromPodStatus(status: status)
                     state.activeTransition = nil
                 })

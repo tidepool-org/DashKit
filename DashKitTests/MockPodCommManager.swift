@@ -82,11 +82,11 @@ class MockPodCommManager: PodCommManagerProtocol {
 
     func enableAutoConnection(launchOptions: [AnyHashable : Any]?) { }
 
-    func startPodActivation(lowReservoirAlert: LowReservoirAlert?, podExpirationAlert: PodExpirationAlert?, eventListener: @escaping (ActivationStatus<ActivationStep1Event>) -> ()) {
+    func startPodActivation(lowReservoirAlert: LowReservoirAlert, podExpirationAlert: PodExpirationAlert, eventListener: @escaping (ActivationStatus<ActivationStep1Event>) -> ()) {
         return
     }
 
-    func finishPodActivation(basalProgram: ProgramType, autoOffAlert: AutoOffAlert?, eventListener: @escaping (ActivationStatus<ActivationStep2Event>) -> ()) {
+    func finishPodActivation(basalProgram: ProgramType, autoOffAlert: AutoOffAlert, eventListener: @escaping (ActivationStatus<ActivationStep2Event>) -> ()) {
         return
     }
 
