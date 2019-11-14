@@ -10,7 +10,7 @@ import Foundation
 import PodSDK
 
 extension AlarmCode {
-    var notificationTitle: String {
+    public var notificationTitle: String {
         switch self {
         case .autoOff:
             return NSLocalizedString("Auto Off Alarm", comment: "The title for Auto-Off alarm notification")
@@ -25,12 +25,12 @@ extension AlarmCode {
         }
     }
     
-    var notificationBody: String {
+    public var notificationBody: String {
         switch self {
         case .other:
             return NSLocalizedString("Remove Pod Now. Call Customer Care at 1 800-591-3455", comment: "The body of AlarmCode.other notification")
         default:
-            return NSLocalizedString("Insulin delivery stopped. Deactivate Pod now,", comment: "The notification body for known AlarmCodes")
+            return NSLocalizedString("Insulin delivery stopped. Deactivate Pod now.", comment: "The notification body for known AlarmCodes")
         }
     }
 }
