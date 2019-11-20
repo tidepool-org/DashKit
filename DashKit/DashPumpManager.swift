@@ -535,6 +535,9 @@ public class DashPumpManager: PumpManager {
                 switch result {
                 case .success(let podStatus):
                     self.mutateState({ (state) in
+                        if let finishedBolus = state.unfinalizedBolus {
+                            state.finishedDoses.append(finishedBolus)
+                        }
                         state.unfinalizedBolus = UnfinalizedDose(bolusAmount: enactUnits, startTime: startDate, scheduledCertainty: .certain)
                         state.updateFromPodStatus(status: podStatus)
                         state.activeTransition = nil
@@ -604,7 +607,7 @@ public class DashPumpManager: PumpManager {
             return
         }
 
-        self.podCommManager.stopProgram(programType: .tempBasal) { (result) in
+        self.podCommManager.stopProgram(programType: .tempBasal(reminderBeep: false)) { (result) in
             self.log.debug("stopProgram result: %{public}@", String(describing: result))
             switch result {
             case .success(let status):
@@ -639,7 +642,7 @@ public class DashPumpManager: PumpManager {
             } else {
                 let tempBasal = try TempBasal(value: .flatRate(Int(round(enactRate * Pod.podSDKInsulinMultiplier))), duration: duration)
                 // secondsSinceMidnight not used for absolute rate temp basals; SDK api will change in future so this is only specified for percent value types
-                program = ProgramType.tempBasal(tempBasal: tempBasal, secondsSinceMidnight: nil)
+                program = ProgramType.tempBasal(tempBasal: tempBasal)
             }
         } catch let error {
             completion(.failure(error))
