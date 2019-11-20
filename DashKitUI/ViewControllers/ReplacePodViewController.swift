@@ -31,7 +31,7 @@ class ReplacePodViewController: SetupTableViewController {
             break // Text set in interface builder
             case .alarm(let alarmCode):
                 
-                instructionsLabel.text = String(format: LocalizedString("%1$@. %2$@", comment: "Format string providing instructions for replacing pod due to a fault. (1: The alarm code notification title)"), alarmCode.notificationTitle, alarmCode.notificationBody)
+                instructionsLabel.text = String(format: LocalizedString("%1$@. %2$@", comment: "Format string providing instructions for replacing pod due to a fault. (1: The alarm code notification title) (2: The alarm code notification body)"), alarmCode.notificationTitle, alarmCode.notificationBody)
             case .canceledPairingBeforeApplication:
                 instructionsLabel.text = LocalizedString("Incompletely set up pod must be deactivated before pairing with a new one. Please deactivate and discard pod.", comment: "Instructions when deactivating pod that has been paired, but not attached.")
             case .canceledPairing:
