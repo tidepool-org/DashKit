@@ -38,6 +38,12 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
     public var podTotalDelivery: Double?
 
     public var lastStatusDate: Date?
+    
+    public var alarmCode: AlarmCode?
+    
+    public var isPodAlarming: Bool {
+        return alarmCode != nil
+    }
 
     public var unfinalizedBolus: UnfinalizedDose?
     public var unfinalizedTempBasal: UnfinalizedDose?
@@ -116,6 +122,10 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
         self.podActivatedAt = rawValue["podActivatedAt"] as? Date
         self.lastStatusDate = rawValue["lastStatusDate"] as? Date
         self.podTotalDelivery = rawValue["podTotalDelivery"] as? Double
+        
+        if let rawAlarmCode = rawValue["alarmCode"] as? AlarmCode.RawValue {
+            self.alarmCode = AlarmCode(rawValue: rawAlarmCode)
+        }
 
         if let rawReservoirLevel = rawValue["reservoirLevel"] as? ReservoirLevel.RawValue {
             self.reservoirLevel = ReservoirLevel(rawValue: rawReservoirLevel)
@@ -176,41 +186,16 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
             "suspendState": suspendState.rawValue,
         ]
 
-        if let lastStatusDate = lastStatusDate {
-            rawValue["lastStatusDate"] = lastStatusDate
-        }
-
-        if let reservoirLevel = reservoirLevel {
-            rawValue["reservoirLevel"] = reservoirLevel.rawValue
-        }
-        
-        if let podTotalDelivery = podTotalDelivery {
-            rawValue["podTotalDelivery"] = podTotalDelivery
-        }
-
-        if let lastStatusDate = lastStatusDate {
-            rawValue["lastStatusDate"] = lastStatusDate
-        }
-
-        if let podActivatedAt = podActivatedAt {
-            rawValue["podActivatedAt"] = podActivatedAt
-        }
-
-        if let unfinalizedBolus = unfinalizedBolus {
-            rawValue["unfinalizedBolus"] = unfinalizedBolus.rawValue
-        }
-
-        if let unfinalizedTempBasal = unfinalizedTempBasal {
-            rawValue["unfinalizedTempBasal"] = unfinalizedTempBasal.rawValue
-        }
-
-        if let unfinalizedSuspend = unfinalizedSuspend {
-            rawValue["unfinalizedSuspend"] = unfinalizedSuspend.rawValue
-        }
-
-        if let unfinalizedResume = unfinalizedResume {
-            rawValue["unfinalizedResume"] = unfinalizedResume.rawValue
-        }
+        rawValue["lastStatusDate"] = lastStatusDate
+        rawValue["reservoirLevel"] = reservoirLevel?.rawValue
+        rawValue["podTotalDelivery"] = podTotalDelivery
+        rawValue["lastStatusDate"] = lastStatusDate
+        rawValue["podActivatedAt"] = podActivatedAt
+        rawValue["unfinalizedBolus"] = unfinalizedBolus?.rawValue
+        rawValue["unfinalizedTempBasal"] = unfinalizedTempBasal?.rawValue
+        rawValue["unfinalizedSuspend"] = unfinalizedSuspend?.rawValue
+        rawValue["unfinalizedResume"] = unfinalizedResume?.rawValue
+        rawValue["alarmCode"] = alarmCode?.rawValue
 
         return rawValue
     }

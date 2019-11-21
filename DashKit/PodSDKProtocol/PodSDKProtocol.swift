@@ -52,9 +52,8 @@ public protocol PodCommManagerProtocol {
      
      - Note: No more events after either PodCommError or ActivationStep1Event.step1Completed.
      */
-    func startPodActivation(lowReservoirAlert: PodSDK.LowReservoirAlert, podExpirationAlert: PodSDK.PodExpirationAlert, eventListener: @escaping (PodSDK.ActivationStatus<PodSDK.ActivationStep1Event>) -> ())
+    func startPodActivation(lowReservoirAlert: PodSDK.LowReservoirAlert?, podExpirationAlert: PodSDK.PodExpirationAlert?, eventListener: @escaping (PodSDK.ActivationStatus<PodSDK.ActivationStep1Event>) -> ())
 
-    
     /**
      Finishes a Pod activation previously started with `startPodActivation(...)`.
      
@@ -78,8 +77,8 @@ public protocol PodCommManagerProtocol {
       - Note: No more events after either PodCommError or ActivationStep2Event.step2Completed.
      
      */
-        func finishPodActivation(basalProgram: PodSDK.ProgramType, autoOffAlert: PodSDK.AutoOffAlert, eventListener: @escaping (PodSDK.ActivationStatus<PodSDK.ActivationStep2Event>) -> ())
-    
+    func finishPodActivation(basalProgram: PodSDK.ProgramType, autoOffAlert: PodSDK.AutoOffAlert?, eventListener: @escaping (PodSDK.ActivationStatus<PodSDK.ActivationStep2Event>) -> ())
+
     /**
      Cancels an ongoing activation and clears all states maintained by the `PodCommManager`.
      

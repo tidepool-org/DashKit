@@ -1,5 +1,5 @@
 github "tidepool-org/LoopKit" "dev"
 github "bahlo/SwiftGif" ~> 1.7.0
-github "maxkonovalov/MKRingProgressView" ~> 2.2
+github "maxkonovalov/MKRingProgressView" "f548a5c6"
 github "ReactiveX/RxSwift" ~> 5.0
 github "lyft/Kronos"

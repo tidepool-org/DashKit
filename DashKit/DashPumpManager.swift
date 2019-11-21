@@ -20,6 +20,8 @@ public protocol PodStatusObserver: class {
 public class DashPumpManager: PumpManager {
 
     public static var managerIdentifier = "OmnipodDash"
+    
+    static let podAlarmNotificationIdentifier = "DASH:\(LoopNotificationCategory.pumpFault.rawValue)"
 
     var podCommManager: PodCommManagerProtocol
 
@@ -224,7 +226,7 @@ public class DashPumpManager: PumpManager {
     }
 
     public var isPodAlarming: Bool {
-        return false // TODO
+        return state.isPodAlarming
     }
     
     public var lastStatusDate: Date? {
@@ -308,6 +310,7 @@ public class DashPumpManager: PumpManager {
                 state.lastStatusDate = nil
                 state.reservoirLevel = nil
                 state.podTotalDelivery = nil
+                state.alarmCode = nil
             })
             self.finalizeAndStoreDoses(completion: { (_) in
                 completion(result)
@@ -532,6 +535,9 @@ public class DashPumpManager: PumpManager {
                 switch result {
                 case .success(let podStatus):
                     self.mutateState({ (state) in
+                        if let finishedBolus = state.unfinalizedBolus {
+                            state.finishedDoses.append(finishedBolus)
+                        }
                         state.unfinalizedBolus = UnfinalizedDose(bolusAmount: enactUnits, startTime: startDate, scheduledCertainty: .certain)
                         state.updateFromPodStatus(status: podStatus)
                         state.activeTransition = nil
@@ -601,7 +607,7 @@ public class DashPumpManager: PumpManager {
             return
         }
 
-        self.podCommManager.stopProgram(programType: .tempBasal) { (result) in
+        self.podCommManager.stopProgram(programType: .tempBasal(reminderBeep: false)) { (result) in
             self.log.debug("stopProgram result: %{public}@", String(describing: result))
             switch result {
             case .success(let status):
@@ -636,7 +642,7 @@ public class DashPumpManager: PumpManager {
             } else {
                 let tempBasal = try TempBasal(value: .flatRate(Int(round(enactRate * Pod.podSDKInsulinMultiplier))), duration: duration)
                 // secondsSinceMidnight not used for absolute rate temp basals; SDK api will change in future so this is only specified for percent value types
-                program = ProgramType.tempBasal(tempBasal: tempBasal, secondsSinceMidnight: nil)
+                program = ProgramType.tempBasal(tempBasal: tempBasal)
             }
         } catch let error {
             completion(.failure(error))
@@ -920,7 +926,22 @@ extension DashPumpManager: PodCommManagerDelegate {
     }
     
     public func podCommManager(_ podCommManager: PodCommManager, didAlarm alarm: PodAlarm) {
+        self.mutateState { (state) in
+            state.alarmCode = alarm.alarmCode
+        }
         log.default("Pod Alarm: %{public}@", String(describing: alarm))
+        log.default("Alarm code: %{public}@", String(describing: alarm.alarmCode))
+        
+        let content = UNMutableNotificationContent()
+
+        content.title = alarm.alarmCode.notificationTitle
+        content.body = alarm.alarmCode.notificationBody
+        content.categoryIdentifier = LoopNotificationCategory.pumpFault.rawValue
+        content.threadIdentifier = LoopNotificationCategory.pumpFault.rawValue
+
+        pumpDelegate.notify { (delegate) in
+            delegate?.scheduleNotification(for: self, identifier: DashPumpManager.podAlarmNotificationIdentifier, content: content, trigger: nil)
+        }
     }
     
     public func podCommManager(_ podCommManager: PodCommManager, didCheckPeriodicStatus status: PodStatus) {
