@@ -6,6 +6,20 @@
 	objectVersion = 52;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		C11615F0239588DB0039A072 /* Cartfile */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = C11615F3239588DB0039A072 /* Build configuration list for PBXAggregateTarget "Cartfile" */;
+			buildPhases = (
+				C11615F4239588F40039A072 /* Carthage Bootstrap */,
+			);
+			dependencies = (
+			);
+			name = Cartfile;
+			productName = Cartfile;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		C107D10B22692A1700D63775 /* DashPumpManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D10A22692A1700D63775 /* DashPumpManager.swift */; };
 		C107D11222692B7200D63775 /* Pod.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D11122692B7200D63775 /* Pod.swift */; };
@@ -93,6 +107,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		C11615F5239589250039A072 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C1E753D0226928F700A0BC48 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C11615F0239588DB0039A072;
+			remoteInfo = Cartfile;
+		};
 		C1E753E4226928F700A0BC48 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C1E753D0226928F700A0BC48 /* Project object */;
@@ -571,6 +592,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				C11615F6239589250039A072 /* PBXTargetDependency */,
 			);
 			name = DashKit;
 			productName = DashKit;
@@ -610,6 +632,9 @@
 						CreatedOnToolsVersion = 10.2;
 						LastSwiftMigration = 1020;
 					};
+					C11615F0239588DB0039A072 = {
+						CreatedOnToolsVersion = 11.1;
+					};
 					C19BB3E422E776AE00EA5C2E = {
 						CreatedOnToolsVersion = 10.3;
 						LastSwiftMigration = 1030;
@@ -641,6 +666,7 @@
 				C107D15222694B9C00D63775 /* DashKitUI */,
 				C19BB3E422E776AE00EA5C2E /* DashKitPlugin */,
 				C16DA84622E93387008624C2 /* DashKitWatchPlugin */,
+				C11615F0239588DB0039A072 /* Cartfile */,
 			);
 		};
 /* End PBXProject section */
@@ -689,6 +715,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		C11615F4239588F40039A072 /* Carthage Bootstrap */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Carthage Bootstrap";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "echo \"Bootstrapping carthage dependencies\"\nunset LLVM_TARGET_TRIPLE_SUFFIX\n/usr/local/bin/carthage bootstrap --project-directory \"$SRCROOT\" --cache-builds\n";
+		};
 		C1D1406322FBB1F300DA6242 /* Copy Frameworks with Carthage */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -808,6 +852,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		C11615F6239589250039A072 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C11615F0239588DB0039A072 /* Cartfile */;
+			targetProxy = C11615F5239589250039A072 /* PBXContainerItemProxy */;
+		};
 		C1E753E5226928F700A0BC48 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = C1E753D8226928F700A0BC48 /* DashKit */;
@@ -901,6 +950,24 @@
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		C11615F1239588DB0039A072 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = UY678SP37Q;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		C11615F2239588DB0039A072 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = UY678SP37Q;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
@@ -1291,6 +1358,15 @@
 			buildConfigurations = (
 				C107D15D22694B9C00D63775 /* Debug */,
 				C107D15E22694B9C00D63775 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C11615F3239588DB0039A072 /* Build configuration list for PBXAggregateTarget "Cartfile" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C11615F1239588DB0039A072 /* Debug */,
+				C11615F2239588DB0039A072 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
