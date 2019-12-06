@@ -6,6 +6,20 @@
 	objectVersion = 52;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		C11615F0239588DB0039A072 /* Cartfile */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = C11615F3239588DB0039A072 /* Build configuration list for PBXAggregateTarget "Cartfile" */;
+			buildPhases = (
+				C11615F4239588F40039A072 /* Carthage Bootstrap */,
+			);
+			dependencies = (
+			);
+			name = Cartfile;
+			productName = Cartfile;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		C107D10B22692A1700D63775 /* DashPumpManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D10A22692A1700D63775 /* DashPumpManager.swift */; };
 		C107D11222692B7200D63775 /* Pod.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D11122692B7200D63775 /* Pod.swift */; };
@@ -28,12 +42,11 @@
 		C107D17D226A24CE00D63775 /* TimeZone.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D11A22692FC400D63775 /* TimeZone.swift */; };
 		C10C758122C4041F00CCC20F /* PodSDKProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10C758022C4041F00CCC20F /* PodSDKProtocol.swift */; };
 		C10C758322C404B700CCC20F /* PodCommManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10C758222C404B700CCC20F /* PodCommManager.swift */; };
+		C11097CE238F14A4004F1A04 /* PodSDK.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C11097CD238F14A4004F1A04 /* PodSDK.xcframework */; };
 		C127160C237A07B60093DAB7 /* UnfinalizedDoseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C127160B237A07B60093DAB7 /* UnfinalizedDoseTests.swift */; };
 		C12AA74B231870160025FD45 /* ConnectionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12AA74A231870160025FD45 /* ConnectionState.swift */; };
 		C12C9C83229EDB7B00FF7632 /* InsulinStatusTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12C9C82229EDB7B00FF7632 /* InsulinStatusTableViewCell.swift */; };
 		C1344DE22304CE2B00973BE3 /* TimeInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D11422692BDE00D63775 /* TimeInterval.swift */; };
-		C1344DE32304D09B00973BE3 /* PodSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E5722EA0DDB0035DCA0 /* PodSDK.framework */; };
-		C1344DE62304D65100973BE3 /* PodSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C1FE2E5722EA0DDB0035DCA0 /* PodSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C1344DE72304D68300973BE3 /* INSSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C1FE2E5622EA0DDB0035DCA0 /* INSSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C1344DE92304D68300973BE3 /* RxSwift.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C1D46D5E22C568F600978E59 /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C135D91A2319AA4200774F82 /* Kronos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C135D9192319AA4200774F82 /* Kronos.framework */; };
@@ -90,13 +103,17 @@
 		C1FE2E5322EA0DB90035DCA0 /* MKRingProgressView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E5222EA0DB90035DCA0 /* MKRingProgressView.framework */; };
 		C1FE2E5522EA0DCB0035DCA0 /* SwiftGif.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E5422EA0DCB0035DCA0 /* SwiftGif.framework */; };
 		C1FE2E5822EA0DDC0035DCA0 /* INSSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E5622EA0DDB0035DCA0 /* INSSDK.framework */; };
-		C1FE2E5922EA0DDC0035DCA0 /* PodSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E5722EA0DDB0035DCA0 /* PodSDK.framework */; };
 		C1FE2E5A22EA0DEA0035DCA0 /* INSSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E5622EA0DDB0035DCA0 /* INSSDK.framework */; };
-		C1FE2E5B22EA0DF00035DCA0 /* PodSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E5722EA0DDB0035DCA0 /* PodSDK.framework */; };
-		C1FE2E6122EA0E5A0035DCA0 /* PodSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E5722EA0DDB0035DCA0 /* PodSDK.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		C11615F5239589250039A072 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C1E753D0226928F700A0BC48 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C11615F0239588DB0039A072;
+			remoteInfo = Cartfile;
+		};
 		C1E753E4226928F700A0BC48 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C1E753D0226928F700A0BC48 /* Project object */;
@@ -145,7 +162,6 @@
 			files = (
 				C1344DE72304D68300973BE3 /* INSSDK.framework in CopyFiles */,
 				C1344DE92304D68300973BE3 /* RxSwift.framework in CopyFiles */,
-				C1344DE62304D65100973BE3 /* PodSDK.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -196,6 +212,7 @@
 		C107D17B226A243A00D63775 /* UITableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITableViewCell.swift; sourceTree = "<group>"; };
 		C10C758022C4041F00CCC20F /* PodSDKProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodSDKProtocol.swift; sourceTree = "<group>"; };
 		C10C758222C404B700CCC20F /* PodCommManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodCommManager.swift; sourceTree = "<group>"; };
+		C11097CD238F14A4004F1A04 /* PodSDK.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = PodSDK.xcframework; path = "dash-sdk-ios/frameworks/PodSDK.xcframework"; sourceTree = "<group>"; };
 		C127160B237A07B60093DAB7 /* UnfinalizedDoseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnfinalizedDoseTests.swift; sourceTree = "<group>"; };
 		C12AA74A231870160025FD45 /* ConnectionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionState.swift; sourceTree = "<group>"; };
 		C12C9C82229EDB7B00FF7632 /* InsulinStatusTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsulinStatusTableViewCell.swift; sourceTree = "<group>"; };
@@ -243,7 +260,6 @@
 		C1FE2E5222EA0DB90035DCA0 /* MKRingProgressView.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MKRingProgressView.framework; path = Carthage/Build/iOS/MKRingProgressView.framework; sourceTree = "<group>"; };
 		C1FE2E5422EA0DCB0035DCA0 /* SwiftGif.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftGif.framework; path = Carthage/Build/iOS/SwiftGif.framework; sourceTree = "<group>"; };
 		C1FE2E5622EA0DDB0035DCA0 /* INSSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = INSSDK.framework; path = "dash-sdk-ios/frameworks/INSSDK.framework"; sourceTree = "<group>"; };
-		C1FE2E5722EA0DDB0035DCA0 /* PodSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PodSDK.framework; path = "dash-sdk-ios/frameworks/PodSDK.framework"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -252,7 +268,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C1D68E392284E0E000019CAE /* DashKit.framework in Frameworks */,
-				C1FE2E6122EA0E5A0035DCA0 /* PodSDK.framework in Frameworks */,
 				C1FE2E3E22EA0B5A0035DCA0 /* LoopKit.framework in Frameworks */,
 				C1FE2E3F22EA0B5D0035DCA0 /* LoopKitUI.framework in Frameworks */,
 				C135D91B2319AA5900774F82 /* Kronos.framework in Frameworks */,
@@ -274,7 +289,6 @@
 				C1FE2E3A22EA0B360035DCA0 /* LoopKit.framework in Frameworks */,
 				C1FE2E5A22EA0DEA0035DCA0 /* INSSDK.framework in Frameworks */,
 				C1FE2E3C22EA0B360035DCA0 /* LoopKitUI.framework in Frameworks */,
-				C1FE2E5B22EA0DF00035DCA0 /* PodSDK.framework in Frameworks */,
 				C135D91C2319AA5A00774F82 /* Kronos.framework in Frameworks */,
 				C16DA83622E7C6F2008624C2 /* DashKit.framework in Frameworks */,
 				C16DA85822E93973008624C2 /* DashKitUI.framework in Frameworks */,
@@ -289,8 +303,8 @@
 				C1FE2E5822EA0DDC0035DCA0 /* INSSDK.framework in Frameworks */,
 				C1FE2E5322EA0DB90035DCA0 /* MKRingProgressView.framework in Frameworks */,
 				C1FE2E3D22EA0B570035DCA0 /* LoopKit.framework in Frameworks */,
+				C11097CE238F14A4004F1A04 /* PodSDK.xcframework in Frameworks */,
 				C1FE2E5522EA0DCB0035DCA0 /* SwiftGif.framework in Frameworks */,
-				C1FE2E5922EA0DDC0035DCA0 /* PodSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -298,7 +312,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C1344DE32304D09B00973BE3 /* PodSDK.framework in Frameworks */,
 				C1D46D6222C5698800978E59 /* RxSwift.framework in Frameworks */,
 				C1E753E3226928F700A0BC48 /* DashKit.framework in Frameworks */,
 			);
@@ -310,9 +323,9 @@
 		C107D10C22692AE700D63775 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C11097CD238F14A4004F1A04 /* PodSDK.xcframework */,
 				C135D9192319AA4200774F82 /* Kronos.framework */,
 				C1FE2E5622EA0DDB0035DCA0 /* INSSDK.framework */,
-				C1FE2E5722EA0DDB0035DCA0 /* PodSDK.framework */,
 				C1FE2E5422EA0DCB0035DCA0 /* SwiftGif.framework */,
 				C1FE2E5222EA0DB90035DCA0 /* MKRingProgressView.framework */,
 				C1FE2E3922EA0B360035DCA0 /* LoopKit.framework */,
@@ -579,6 +592,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				C11615F6239589250039A072 /* PBXTargetDependency */,
 			);
 			name = DashKit;
 			productName = DashKit;
@@ -618,6 +632,9 @@
 						CreatedOnToolsVersion = 10.2;
 						LastSwiftMigration = 1020;
 					};
+					C11615F0239588DB0039A072 = {
+						CreatedOnToolsVersion = 11.1;
+					};
 					C19BB3E422E776AE00EA5C2E = {
 						CreatedOnToolsVersion = 10.3;
 						LastSwiftMigration = 1030;
@@ -649,6 +666,7 @@
 				C107D15222694B9C00D63775 /* DashKitUI */,
 				C19BB3E422E776AE00EA5C2E /* DashKitPlugin */,
 				C16DA84622E93387008624C2 /* DashKitWatchPlugin */,
+				C11615F0239588DB0039A072 /* Cartfile */,
 			);
 		};
 /* End PBXProject section */
@@ -697,6 +715,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		C11615F4239588F40039A072 /* Carthage Bootstrap */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Carthage Bootstrap";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "echo \"Bootstrapping carthage dependencies\"\nunset LLVM_TARGET_TRIPLE_SUFFIX\n/usr/local/bin/carthage bootstrap --project-directory \"$SRCROOT\" --cache-builds\n";
+		};
 		C1D1406322FBB1F300DA6242 /* Copy Frameworks with Carthage */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -709,7 +745,7 @@
 				"$(TARGET_BUILD_DIR)/DashKitUI.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/RxSwift.framework",
 				"$(SRCROOT)/dash-sdk-ios/frameworks/INSSDK.framework",
-				"$(SRCROOT)/dash-sdk-ios/frameworks/PodSDK.framework",
+				"$(SRCROOT)/dash-sdk-ios/frameworks/PodSDK.xcframework/ios-arm64/PodSDK.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/MKRingProgressView.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SwiftGif.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Kronos.framework",
@@ -816,6 +852,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		C11615F6239589250039A072 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C11615F0239588DB0039A072 /* Cartfile */;
+			targetProxy = C11615F5239589250039A072 /* PBXContainerItemProxy */;
+		};
 		C1E753E5226928F700A0BC48 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = C1E753D8226928F700A0BC48 /* DashKit */;
@@ -909,6 +950,24 @@
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		C11615F1239588DB0039A072 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = UY678SP37Q;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		C11615F2239588DB0039A072 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = UY678SP37Q;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
@@ -1299,6 +1358,15 @@
 			buildConfigurations = (
 				C107D15D22694B9C00D63775 /* Debug */,
 				C107D15E22694B9C00D63775 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C11615F3239588DB0039A072 /* Build configuration list for PBXAggregateTarget "Cartfile" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C11615F1239588DB0039A072 /* Debug */,
+				C11615F2239588DB0039A072 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
