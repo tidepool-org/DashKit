@@ -867,6 +867,8 @@ public class DashPumpManager: PumpManager {
     public var debugDescription: String {
         var lines = [
             "## DashPumpManager",
+            "* PodSDK Version: \(Bundle(for: PodCommManager.self).infoDictionary?["CFBundleShortVersionString"] ?? "?")",
+            "* PodSDK Build: \(PodSDKVersionNumber)",
             "* podCommState: \(podCommManager.podCommState)",
             "* podId: \(String(describing: podCommManager.getPodId()))",
         ]
