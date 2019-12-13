@@ -132,9 +132,6 @@ extension PodCommError: LocalizedError {
         case .podIsInAlarm:
             return LocalizedString("Pod is in alarm", comment: "Error description for PodCommError.podIsInAlarm")
 
-        case .systemAlarm:
-            return LocalizedString("System alarm", comment: "Error description for PodCommError.systemAlarm")
-
         case .invalidProgram:
             return LocalizedString("Invalid program", comment: "Error description for PodCommError.invalidProgram")
 
@@ -158,6 +155,8 @@ extension PodCommError: LocalizedError {
             
         case .bluetoothUnauthorized:
             return LocalizedString("Bluetooth unauthorized", comment: "Error description for PodCommError.bluetoothUnauthorized")
+        case .systemError(let systemError):
+            return String(format: LocalizedString("System error: %1$@", comment: "Format string for error description for PodCommError.systemError (1: system error code description)"), String(describing: systemError))
         }
     }
 
@@ -311,6 +310,8 @@ public extension PodCommState {
         case .deactivating:
             return "Pod is deactivating"
 
+        case .systemError(let error):
+            return "System Error: \(error)"
         }
     }
 }

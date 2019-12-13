@@ -58,11 +58,6 @@
 		C15424332280C75E006754B3 /* PodStatusExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C15424322280C75D006754B3 /* PodStatusExtension.swift */; };
 		C160FEBA2371EA050080031E /* AlarmCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = C160FEB92371EA050080031E /* AlarmCode.swift */; };
 		C16DA83622E7C6F2008624C2 /* DashKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; platformFilter = ios; };
-		C16DA84822E93387008624C2 /* DashKitPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19BB3EF22E7C64A00EA5C2E /* DashKitPlugin.swift */; };
-		C16DA84B22E93387008624C2 /* DashKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; };
-		C16DA85022E93387008624C2 /* ObjectMapper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1D46D5F22C568F600978E59 /* ObjectMapper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C16DA85122E93387008624C2 /* RxSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1D46D5E22C568F600978E59 /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C16DA85222E93387008624C2 /* DashKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C16DA85822E93973008624C2 /* DashKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C107D15322694B9C00D63775 /* DashKitUI.framework */; platformFilter = ios; };
 		C194113D2285D30A00E886DD /* PairPodSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C194113C2285D30A00E886DD /* PairPodSetupViewController.swift */; };
 		C19411442286164E00E886DD /* ReplacePodViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19411432286164E00E886DD /* ReplacePodViewController.swift */; };
@@ -175,19 +170,6 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C16DA84D22E93387008624C2 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				C16DA85022E93387008624C2 /* ObjectMapper.framework in Embed Frameworks */,
-				C16DA85122E93387008624C2 /* RxSwift.framework in Embed Frameworks */,
-				C16DA85222E93387008624C2 /* DashKit.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -221,7 +203,6 @@
 		C15424302280C575006754B3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C15424322280C75D006754B3 /* PodStatusExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodStatusExtension.swift; sourceTree = "<group>"; };
 		C160FEB92371EA050080031E /* AlarmCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmCode.swift; sourceTree = "<group>"; };
-		C16DA85622E93387008624C2 /* DashKit.loopwatchplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DashKit.loopwatchplugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		C194113C2285D30A00E886DD /* PairPodSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairPodSetupViewController.swift; sourceTree = "<group>"; };
 		C19411432286164E00E886DD /* ReplacePodViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplacePodViewController.swift; sourceTree = "<group>"; };
 		C194114522861E9100E886DD /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
@@ -271,14 +252,6 @@
 				C1FE2E3E22EA0B5A0035DCA0 /* LoopKit.framework in Frameworks */,
 				C1FE2E3F22EA0B5D0035DCA0 /* LoopKitUI.framework in Frameworks */,
 				C135D91B2319AA5900774F82 /* Kronos.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C16DA84922E93387008624C2 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				C16DA84B22E93387008624C2 /* DashKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -463,7 +436,6 @@
 				C1E753E2226928F700A0BC48 /* DashKitTests.xctest */,
 				C107D15322694B9C00D63775 /* DashKitUI.framework */,
 				C19BB3E522E776AE00EA5C2E /* DashKitPlugin.loopplugin */,
-				C16DA85622E93387008624C2 /* DashKit.loopwatchplugin */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -539,24 +511,6 @@
 			productName = DashKitUI;
 			productReference = C107D15322694B9C00D63775 /* DashKitUI.framework */;
 			productType = "com.apple.product-type.framework";
-		};
-		C16DA84622E93387008624C2 /* DashKitWatchPlugin */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = C16DA85322E93387008624C2 /* Build configuration list for PBXNativeTarget "DashKitWatchPlugin" */;
-			buildPhases = (
-				C16DA84722E93387008624C2 /* Sources */,
-				C16DA84922E93387008624C2 /* Frameworks */,
-				C16DA84C22E93387008624C2 /* Resources */,
-				C16DA84D22E93387008624C2 /* Embed Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = DashKitWatchPlugin;
-			productName = DashKitPlugin;
-			productReference = C16DA85622E93387008624C2 /* DashKit.loopwatchplugin */;
-			productType = "com.apple.product-type.bundle";
 		};
 		C19BB3E422E776AE00EA5C2E /* DashKitPlugin */ = {
 			isa = PBXNativeTarget;
@@ -665,7 +619,6 @@
 				C1E753E1226928F700A0BC48 /* DashKitTests */,
 				C107D15222694B9C00D63775 /* DashKitUI */,
 				C19BB3E422E776AE00EA5C2E /* DashKitPlugin */,
-				C16DA84622E93387008624C2 /* DashKitWatchPlugin */,
 				C11615F0239588DB0039A072 /* Cartfile */,
 			);
 		};
@@ -681,13 +634,6 @@
 				C1FDF4AC235EC930008B0251 /* HUDAssets.xcassets in Resources */,
 				C1ACF43522A03F0500F7DDB4 /* PodLifeHUDView.xib in Resources */,
 				C107D166226A0EED00D63775 /* DashPumpManager.storyboard in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C16DA84C22E93387008624C2 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -793,14 +739,6 @@
 				C107D173226A1B6100D63775 /* DashSettingsViewController.swift in Sources */,
 				C107D17A226A241200D63775 /* IdentifiableClass.swift in Sources */,
 				C1ACF43F22A1F9A700F7DDB4 /* OSLog.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C16DA84722E93387008624C2 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				C16DA84822E93387008624C2 /* DashKitPlugin.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -968,73 +906,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = UY678SP37Q;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
-		C16DA85422E93387008624C2 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "Mac Developer";
-				CODE_SIGN_STYLE = Manual;
-				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = "";
-				ENABLE_BITCODE = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
-				INFOPLIST_FILE = "DashKitPlugin copy-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.tidepool.DashKitPlugin;
-				PRODUCT_MODULE_NAME = DashKitPlugin;
-				PRODUCT_NAME = DashKit;
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "watchsimulator watchos";
-				SWIFT_OBJC_BRIDGING_HEADER = "DashKitPlugin/DashKitPlugin-Bridging-Header.h";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				WRAPPER_EXTENSION = loopwatchplugin;
-			};
-			name = Debug;
-		};
-		C16DA85522E93387008624C2 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "Mac Developer";
-				CODE_SIGN_STYLE = Manual;
-				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = "";
-				ENABLE_BITCODE = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
-				INFOPLIST_FILE = "DashKitPlugin copy-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.tidepool.DashKitPlugin;
-				PRODUCT_MODULE_NAME = DashKitPlugin;
-				PRODUCT_NAME = DashKit;
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "watchsimulator watchos";
-				SWIFT_OBJC_BRIDGING_HEADER = "DashKitPlugin/DashKitPlugin-Bridging-Header.h";
-				SWIFT_VERSION = 5.0;
-				WRAPPER_EXTENSION = loopwatchplugin;
 			};
 			name = Release;
 		};
@@ -1367,15 +1238,6 @@
 			buildConfigurations = (
 				C11615F1239588DB0039A072 /* Debug */,
 				C11615F2239588DB0039A072 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		C16DA85322E93387008624C2 /* Build configuration list for PBXNativeTarget "DashKitWatchPlugin" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				C16DA85422E93387008624C2 /* Debug */,
-				C16DA85522E93387008624C2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
