@@ -76,6 +76,8 @@ public class DashPumpManagerSetupViewController: UINavigationController, PumpMan
                 self.pumpManager = pumpManager
                 setupDelegate?.pumpManagerSetupViewController(self, didSetUpPumpManager: pumpManager)
             }
+        case let vc as ReplacePodViewController:
+            vc.pumpManager = pumpManager
         case let vc as InsertCannulaSetupViewController:
             vc.pumpManager = pumpManager
         case let vc as PodSetupCompleteViewController:

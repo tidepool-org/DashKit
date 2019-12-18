@@ -155,6 +155,7 @@ extension PodCommError: LocalizedError {
             
         case .bluetoothUnauthorized:
             return LocalizedString("Bluetooth unauthorized", comment: "Error description for PodCommError.bluetoothUnauthorized")
+            
         case .systemError(let systemError):
             return String(format: LocalizedString("System error: %1$@", comment: "Format string for error description for PodCommError.systemError (1: system error code description)"), String(describing: systemError))
         }
