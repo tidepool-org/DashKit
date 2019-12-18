@@ -923,6 +923,10 @@ extension DashPumpManager: LoggingProtocol {
 }
 
 extension DashPumpManager: PodCommManagerDelegate {
+    public func podCommManager(_ podCommManager: PodCommManager, hasSystemError error: SystemError) {
+        log.error("PodCommManager has system error: %{public}@", String(describing: error))
+    }
+    
     public func podCommManager(_ podCommManager: PodCommManager, hasAlerts alerts: PodAlerts) {
         log.default("Pod Alert: %{public}@", String(describing: alerts))
     }
