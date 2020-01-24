@@ -89,6 +89,7 @@
 		C1E753E3226928F700A0BC48 /* DashKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; };
 		C1E753E8226928F700A0BC48 /* DashPumpManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E753E7226928F700A0BC48 /* DashPumpManagerTests.swift */; };
 		C1E753EA226928F700A0BC48 /* DashKit.h in Headers */ = {isa = PBXBuildFile; fileRef = C1E753DC226928F700A0BC48 /* DashKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C1F8403623D7A0B200673141 /* PodSDKLoggingShim.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F8403523D7A0B200673141 /* PodSDKLoggingShim.swift */; };
 		C1FDF4AC235EC930008B0251 /* HUDAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C1FDF4AB235EC930008B0251 /* HUDAssets.xcassets */; };
 		C1FE2E3A22EA0B360035DCA0 /* LoopKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E3922EA0B360035DCA0 /* LoopKit.framework */; };
 		C1FE2E3C22EA0B360035DCA0 /* LoopKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E3B22EA0B360035DCA0 /* LoopKitUI.framework */; };
@@ -235,6 +236,7 @@
 		C1E753E2226928F700A0BC48 /* DashKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DashKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1E753E7226928F700A0BC48 /* DashPumpManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashPumpManagerTests.swift; sourceTree = "<group>"; };
 		C1E753E9226928F700A0BC48 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C1F8403523D7A0B200673141 /* PodSDKLoggingShim.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodSDKLoggingShim.swift; sourceTree = "<group>"; };
 		C1FDF4AB235EC930008B0251 /* HUDAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = HUDAssets.xcassets; sourceTree = "<group>"; };
 		C1FE2E3922EA0B360035DCA0 /* LoopKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = LoopKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1FE2E3B22EA0B360035DCA0 /* LoopKitUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = LoopKitUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -379,6 +381,7 @@
 			children = (
 				C10C758022C4041F00CCC20F /* PodSDKProtocol.swift */,
 				C10C758222C404B700CCC20F /* PodCommManager.swift */,
+				C1F8403523D7A0B200673141 /* PodSDKLoggingShim.swift */,
 			);
 			path = PodSDKProtocol;
 			sourceTree = "<group>";
@@ -761,6 +764,7 @@
 				C10C758322C404B700CCC20F /* PodCommManager.swift in Sources */,
 				C107D10B22692A1700D63775 /* DashPumpManager.swift in Sources */,
 				C12AA74B231870160025FD45 /* ConnectionState.swift in Sources */,
+				C1F8403623D7A0B200673141 /* PodSDKLoggingShim.swift in Sources */,
 				C1ACF44222A1FC1F00F7DDB4 /* PodDoseProgressTimerEstimator.swift in Sources */,
 				C15424332280C75E006754B3 /* PodStatusExtension.swift in Sources */,
 				C1ACF44022A1F9B400F7DDB4 /* OSLog.swift in Sources */,

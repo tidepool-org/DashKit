@@ -26,9 +26,9 @@ public class DashPumpManager: PumpManager {
     var podCommManager: PodCommManagerProtocol
 
     public let log = OSLog(category: "DashPumpManager")
-
+    
     public static let localizedTitle = LocalizedString("Omnipod DASH", comment: "Generic title of the omnipod DASH pump manager")
-
+    
     public var lastReconciliation: Date? {
         return dateGenerator()
     }
@@ -841,11 +841,17 @@ public class DashPumpManager: PumpManager {
     }
 
     public init(state: DashPumpManagerState, podCommManager: PodCommManagerProtocol = PodCommManager.shared, dateGenerator: @escaping () -> Date = Date.init) {
-        self.lockedState = Locked(state)
-        self.podCommManager = podCommManager
-        self.dateGenerator = dateGenerator
-        self.podCommManager.delegate = self
+        var loggingShim = PodSDKLoggingShim(target: podCommManager)
+        loggingShim.deviceIdentifier = podCommManager.getPodId()
 
+        self.lockedState = Locked(state)
+        self.podCommManager = loggingShim
+        self.dateGenerator = dateGenerator
+        
+        loggingShim.loggingShimDelegate = self
+
+        self.podCommManager.delegate = self
+        
         podCommManager.setLogger(logger: self)
 
         podCommManager.enableAutoConnection(launchOptions: [:])
@@ -969,5 +975,13 @@ extension DashPumpManager: PodCommManagerDelegate {
             state.connectionState = connectionState
         }
         log.default("Pod Connection State Changed: %{public}@", String(describing: connectionState))
+    }
+}
+
+extension DashPumpManager: PodSDKLoggingShimDelegate {
+    func podSDKLoggingShim(_ shim: PodSDKLoggingShim, didLogEventForDevice deviceIdentifier: String?, type: DeviceLogEntryType, message: String, completion: ((Error?) -> Void)?) {
+        self.pumpDelegate.notify { (delegate) in
+            delegate?.deviceManager(self, logEventForDeviceIdentifier: deviceIdentifier, type: type, message: message, completion: nil)
+        }
     }
 }
