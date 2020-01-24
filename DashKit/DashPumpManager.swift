@@ -841,7 +841,7 @@ public class DashPumpManager: PumpManager {
     }
 
     public init(state: DashPumpManagerState, podCommManager: PodCommManagerProtocol = PodCommManager.shared, dateGenerator: @escaping () -> Date = Date.init) {
-        var loggingShim = PodSDKLoggingShim(target: podCommManager)
+        let loggingShim = PodSDKLoggingShim(target: podCommManager)
         loggingShim.deviceIdentifier = podCommManager.getPodId()
 
         self.lockedState = Locked(state)
@@ -929,20 +929,26 @@ extension DashPumpManager: LoggingProtocol {
 }
 
 extension DashPumpManager: PodCommManagerDelegate {
+    private func logPodCommManagerDelegateMessage(_ message: String) {
+        self.pumpDelegate.notify { (delegate) in
+            delegate?.deviceManager(self, logEventForDeviceIdentifier: self.podId, type: .delegate, message: message, completion: nil)
+        }
+    }
+    
     public func podCommManager(_ podCommManager: PodCommManager, hasSystemError error: SystemError) {
-        log.error("PodCommManager has system error: %{public}@", String(describing: error))
+        logPodCommManagerDelegateMessage("hasSystemError: \(String(describing: error))")
     }
     
     public func podCommManager(_ podCommManager: PodCommManager, hasAlerts alerts: PodAlerts) {
-        log.default("Pod Alert: %{public}@", String(describing: alerts))
+        logPodCommManagerDelegateMessage("hasAlerts: \(String(describing: alerts))")
     }
     
     public func podCommManager(_ podCommManager: PodCommManager, didAlarm alarm: PodAlarm) {
+        logPodCommManagerDelegateMessage("didAlarm: \(String(describing: alarm))")
+        
         self.mutateState { (state) in
             state.alarmCode = alarm.alarmCode
         }
-        log.default("Pod Alarm: %{public}@", String(describing: alarm))
-        log.default("Alarm code: %{public}@", String(describing: alarm.alarmCode))
         
         let content = UNMutableNotificationContent()
 
@@ -957,24 +963,27 @@ extension DashPumpManager: PodCommManagerDelegate {
     }
     
     public func podCommManager(_ podCommManager: PodCommManager, didCheckPeriodicStatus status: PodStatus) {
+        logPodCommManagerDelegateEvent("didCheckPeriodicStatus: \(String(describing: status))")
+
         self.pumpDelegate.notify({ (delegate) in
             delegate?.pumpManagerBLEHeartbeatDidFire(self)
         })
     }
     
     public func podCommManager(_ podCommManager: PodCommManager, hasSystemError error: SystemErrorCode) {
-        log.default("Pod System Error: %{public}@", String(describing: error))
+        logPodCommManagerDelegateEvent("hasSystemError: \(String(describing: error))")
     }
     
     public func podCommManager(_ podCommManager: PodCommManager, podCommStateDidChange podCommState: PodCommState) {
-        log.default("Pod Comm State Changed: %{public}@", String(describing: podCommState))
+        logPodCommManagerDelegateEvent("podCommStateDidChange: \(String(describing: podCommState))")
     }
     
     public func podCommManager(_ podCommManager: PodCommManager, connectionStateDidChange connectionState: ConnectionState) {
+        logPodCommManagerDelegateEvent("connectionStateDidChange: \(String(describing: connectionState))")
+        
         self.mutateState { (state) in
             state.connectionState = connectionState
         }
-        log.default("Pod Connection State Changed: %{public}@", String(describing: connectionState))
     }
 }
 
