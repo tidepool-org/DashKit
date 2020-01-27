@@ -122,7 +122,7 @@
         <!--Pair Pod-->
         <scene sceneID="pjO-kc-2fc">
             <objects>
-                <tableViewController title="Pump Setup" id="dIF-Mh-pOr" userLabel="Pair Pod" customClass="PairPodSetupViewController" customModule="DashKitUI" sceneMemberID="viewController">
+                <tableViewController title="Pump Setup" id="dIF-Mh-pOr" userLabel="Pair Pod" customClass="PairPodSetupViewController" customModule="DashKitUI" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="static" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" id="47k-93-zA1">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

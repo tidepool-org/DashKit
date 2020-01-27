@@ -963,7 +963,7 @@ extension DashPumpManager: PodCommManagerDelegate {
     }
     
     public func podCommManager(_ podCommManager: PodCommManager, didCheckPeriodicStatus status: PodStatus) {
-        logPodCommManagerDelegateEvent("didCheckPeriodicStatus: \(String(describing: status))")
+        logPodCommManagerDelegateMessage("didCheckPeriodicStatus: \(String(describing: status))")
 
         self.pumpDelegate.notify({ (delegate) in
             delegate?.pumpManagerBLEHeartbeatDidFire(self)
@@ -971,15 +971,15 @@ extension DashPumpManager: PodCommManagerDelegate {
     }
     
     public func podCommManager(_ podCommManager: PodCommManager, hasSystemError error: SystemErrorCode) {
-        logPodCommManagerDelegateEvent("hasSystemError: \(String(describing: error))")
+        logPodCommManagerDelegateMessage("hasSystemError: \(String(describing: error))")
     }
     
     public func podCommManager(_ podCommManager: PodCommManager, podCommStateDidChange podCommState: PodCommState) {
-        logPodCommManagerDelegateEvent("podCommStateDidChange: \(String(describing: podCommState))")
+        logPodCommManagerDelegateMessage("podCommStateDidChange: \(String(describing: podCommState))")
     }
     
     public func podCommManager(_ podCommManager: PodCommManager, connectionStateDidChange connectionState: ConnectionState) {
-        logPodCommManagerDelegateEvent("connectionStateDidChange: \(String(describing: connectionState))")
+        logPodCommManagerDelegateMessage("connectionStateDidChange: \(String(describing: connectionState))")
         
         self.mutateState { (state) in
             state.connectionState = connectionState
