@@ -8,8 +8,6 @@
 
 import Foundation
 import PodSDK
-import os.log
-public let log = OSLog(category: "DashPumpManager")
 import LoopKit
 
 protocol PodSDKLoggingShimDelegate: class {
