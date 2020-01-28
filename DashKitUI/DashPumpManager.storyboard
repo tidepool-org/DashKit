@@ -80,7 +80,7 @@
             <objects>
                 <tableViewController title="Pod Settings" id="ztc-qC-nUQ" userLabel="Pod Settings Setup" customClass="PodSettingsSetupViewController" customModule="DashKitUI" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" id="BHj-PM-cVB">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="756"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="808"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <prototypes>
@@ -122,9 +122,9 @@
         <!--Pair Pod-->
         <scene sceneID="pjO-kc-2fc">
             <objects>
-                <tableViewController title="Pump Setup" id="dIF-Mh-pOr" userLabel="Pair Pod" customClass="PairPodSetupViewController" customModule="DashKitUI" sceneMemberID="viewController">
+                <tableViewController title="Pump Setup" id="dIF-Mh-pOr" userLabel="Pair Pod" customClass="PairPodSetupViewController" customModule="DashKitUI" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="static" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" id="47k-93-zA1">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="756"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <sections>
@@ -260,7 +260,7 @@
             <objects>
                 <tableViewController title="Pump Setup" id="Cv7-Zz-kui" userLabel="Replace Pod" customClass="ReplacePodViewController" customModule="DashKitUI" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="static" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" id="yaf-qw-bZz">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="808"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <sections>
@@ -517,7 +517,7 @@
             <objects>
                 <tableViewController title="Pump Setup" id="KAy-cH-H6i" userLabel="Insert Cannula" customClass="InsertCannulaSetupViewController" customModule="DashKitUI" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="static" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" id="ZRx-Vo-Azm">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="756"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <sections>
@@ -655,7 +655,7 @@
             <objects>
                 <tableViewController title="Pump Setup" id="pOb-ys-rOX" userLabel="Setup Complete" customClass="PodSetupCompleteViewController" customModule="DashKitUI" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="static" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" id="R66-Ll-85A">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="756"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <sections>
@@ -922,8 +922,8 @@
         </namedColor>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="leR-2Z-BRM"/>
+        <segue reference="zNF-kE-9oQ"/>
         <segue reference="aHy-fJ-ReA"/>
-        <segue reference="Pft-aY-Q2F"/>
+        <segue reference="gHm-6T-X6H"/>
     </inferredMetricsTieBreakers>
 </document>
