@@ -87,7 +87,7 @@ extension PodSDKLoggingShim: PodCommManagerProtocol {
     }
     
     func getPodStatus(userInitiated: Bool, completion: @escaping (PodCommResult<PodStatus>) -> ()) {
-        logSend("getPodStatus()")
+        logSend("getPodStatus(\(userInitiated))")
         target.getPodStatus(userInitiated: userInitiated) { (result) in
             self.logReceive("getPodStatus result: \(result)")
             completion(result)
@@ -95,7 +95,7 @@ extension PodSDKLoggingShim: PodCommManagerProtocol {
     }
     
     func getAlertsDetails(completion: @escaping (PodCommResult<PodAlerts>) -> ()) {
-        logSend("getPodStatus()")
+        logSend("getAlertsDetails()")
         target.getAlertsDetails { (alerts) in
             self.logReceive("getAlertsDetails alerts: \(alerts)")
             completion(alerts)
@@ -196,8 +196,6 @@ extension PodSDKLoggingShim: PodCommManagerProtocol {
     
     var podCommState: PodCommState {
         // Pass-through. No need to log.
-        get {
-            return target.podCommState
-        }
+        return target.podCommState
     }
 }
