@@ -1,0 +1,4 @@
+framework module Kronos {
+  header "Kronos-Swift.h"
+  requires objc
+}

@@ -1,0 +1,13 @@
+{
+  "commitish" : "f548a5c64832be2d37d7c91b5800e284887a2a0a",
+  "iOS" : [
+    {
+      "name" : "MKRingProgressView",
+      "hash" : "8f8cb23c745056dc17c4b9ad9ae4882d1ae0f9b6f03e9873ce040f238bf73eee",
+      "swiftToolchainVersion" : "5.1 (swiftlang-1100.0.270.13 clang-1100.0.33.7)"
+    }
+  ],
+  "watchOS" : [
+
+  ]
+}
