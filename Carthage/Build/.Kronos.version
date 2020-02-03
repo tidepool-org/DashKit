@@ -1,0 +1,13 @@
+{
+  "commitish" : "4.0.0",
+  "iOS" : [
+    {
+      "name" : "Kronos",
+      "hash" : "b442c171ee99fc8a6106c8b1ad8c4ce111cbf2f9a7282b05aee0f135a8dd0fa0",
+      "swiftToolchainVersion" : "5.1 (swiftlang-1100.0.270.13 clang-1100.0.33.7)"
+    }
+  ],
+  "watchOS" : [
+
+  ]
+}

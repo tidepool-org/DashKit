@@ -1,0 +1,52 @@
+{
+  "commitish" : "5.0.1",
+  "iOS" : [
+    {
+      "name" : "RxRelay",
+      "hash" : "03ee7bae80dbe42587a2d298d9a0c59b21fe0c148bc5f6b776c27e00df5aaed2",
+      "swiftToolchainVersion" : "5.1 (swiftlang-1100.0.270.13 clang-1100.0.33.7)"
+    },
+    {
+      "name" : "RxTest",
+      "hash" : "4aae057571c59e09e467385b537154fac17527681dd662f9f9cd14ff7e1c219a",
+      "swiftToolchainVersion" : "5.1 (swiftlang-1100.0.270.13 clang-1100.0.33.7)"
+    },
+    {
+      "name" : "RxBlocking",
+      "hash" : "a62325d051720269a97f495e62c829479cecc48fa8356b1fcb4926a805a8bca7",
+      "swiftToolchainVersion" : "5.1 (swiftlang-1100.0.270.13 clang-1100.0.33.7)"
+    },
+    {
+      "name" : "RxCocoa",
+      "hash" : "ce649ba25b6026183e564a9dacbb09e50f35ab62502ac91a57646c8a31e3fe24",
+      "swiftToolchainVersion" : "5.1 (swiftlang-1100.0.270.13 clang-1100.0.33.7)"
+    },
+    {
+      "name" : "RxSwift",
+      "hash" : "39adb844efe13a48b086761631daa136bde54902783d5cf94fc79ebc5dfa458e",
+      "swiftToolchainVersion" : "5.1 (swiftlang-1100.0.270.13 clang-1100.0.33.7)"
+    }
+  ],
+  "watchOS" : [
+    {
+      "name" : "RxBlocking",
+      "hash" : "799ce1196bb1d41939c012d3bb51c088414d515d98433baa89ac94ddfe3db70d",
+      "swiftToolchainVersion" : "5.1 (swiftlang-1100.0.270.13 clang-1100.0.33.7)"
+    },
+    {
+      "name" : "RxRelay",
+      "hash" : "c99124bb51281c40a42931562146499a0abeff1d9b97c29433c0c16719cc77d3",
+      "swiftToolchainVersion" : "5.1 (swiftlang-1100.0.270.13 clang-1100.0.33.7)"
+    },
+    {
+      "name" : "RxCocoa",
+      "hash" : "dba7633ec976ba623cecb491d7f2dddaddca27f901e896d9bf860a3752ca79fc",
+      "swiftToolchainVersion" : "5.1 (swiftlang-1100.0.270.13 clang-1100.0.33.7)"
+    },
+    {
+      "name" : "RxSwift",
+      "hash" : "7e5783d89cdda587961452585c9f26f3d1eb559f6bd7570975bdda1629279f31",
+      "swiftToolchainVersion" : "5.1 (swiftlang-1100.0.270.13 clang-1100.0.33.7)"
+    }
+  ]
+}
