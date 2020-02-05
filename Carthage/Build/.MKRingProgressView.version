@@ -3,8 +3,8 @@
   "iOS" : [
     {
       "name" : "MKRingProgressView",
-      "hash" : "8f8cb23c745056dc17c4b9ad9ae4882d1ae0f9b6f03e9873ce040f238bf73eee",
-      "swiftToolchainVersion" : "5.1 (swiftlang-1100.0.270.13 clang-1100.0.33.7)"
+      "hash" : "b1c8b9bbd62cbff3fcc97d437e8170abd3b1172000f2a676e274e69010646f6b",
+      "swiftToolchainVersion" : "5.1.3 (swiftlang-1100.0.282.1 clang-1100.0.33.15)"
     }
   ],
   "watchOS" : [

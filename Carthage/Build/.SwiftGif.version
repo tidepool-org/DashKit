@@ -3,8 +3,8 @@
   "iOS" : [
     {
       "name" : "SwiftGif",
-      "hash" : "84bdd4e12191325fa4881c286f0b61363f6571574755299283676c93fdbd9aad",
-      "swiftToolchainVersion" : "5.1 (swiftlang-1100.0.270.13 clang-1100.0.33.7)"
+      "hash" : "493699c72a6ba691f80e43850c7fb06401507fc652e3561081a56b1e62d35236",
+      "swiftToolchainVersion" : "5.1.3 (swiftlang-1100.0.282.1 clang-1100.0.33.15)"
     }
   ],
   "watchOS" : [
