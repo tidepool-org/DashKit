@@ -211,7 +211,9 @@ class DashPumpManagerTests: XCTestCase {
         waitForExpectations(timeout: 3)
 
         XCTAssert(!posStatusUpdates.isEmpty)
-        let lastStatus = posStatusUpdates.last!
+        guard let lastStatus = posStatusUpdates.last else {
+            return
+        }
 
         switch lastStatus.reservoirLevel {
         case .some(.valid(let value)):
@@ -228,10 +230,15 @@ class DashPumpManagerTests: XCTestCase {
         waitForExpectations(timeout: 3)
 
         XCTAssertEqual(2, reportedPumpEvents.count)
-
-        let tempBasalEvent = reportedPumpEvents.last!
+        guard let tempBasalEvent = reportedPumpEvents.last else {
+            return
+        }
         XCTAssertEqual(1.0, tempBasalEvent.dose?.unitsPerHour)
-        XCTAssertNil(tempBasalEvent.dose!.deliveredUnits)
+        XCTAssertNotNil(tempBasalEvent.dose)
+        guard let dose = tempBasalEvent.dose else {
+            return
+        }
+        XCTAssertNil(dose.deliveredUnits)
         XCTAssertEqual(PumpEventType.tempBasal, tempBasalEvent.type)
     }
 
