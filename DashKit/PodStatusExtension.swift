@@ -147,9 +147,6 @@ extension PodCommError: LocalizedError {
         case .noUnacknowledgedCommandToRetry:
             return LocalizedString("No unacknowledged command to retry", comment: "Error description for PodCommError.noUnacknowledgedCommandToRetry")
 
-        case .podSDKExpired:
-            return LocalizedString("Pod SDK expired", comment: "Error description for PodCommError.podSDKExpired")
-            
         case .bleCommunicationError:
             return LocalizedString("Bluetooth communication error", comment: "Error description for PodCommError.bleCommunicationError")
             
@@ -158,6 +155,9 @@ extension PodCommError: LocalizedError {
             
         case .systemError(let systemError):
             return String(format: LocalizedString("System error: %1$@", comment: "Format string for error description for PodCommError.systemError (1: system error code description)"), String(describing: systemError))
+
+        case .sdkNotInitialized:
+            return LocalizedString("SDK Not Initialized.", comment: "Error description for PodCommError.sdkNotInitialized")
         }
     }
 
