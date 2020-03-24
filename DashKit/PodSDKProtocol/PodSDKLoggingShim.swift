@@ -44,16 +44,14 @@ class PodSDKLoggingShim {
 }
 
 extension PodSDKLoggingShim: PodCommManagerProtocol {
+    func setup(withLaunchingOptions launchOptions: [AnyHashable : Any]?) {
+        target.setup(withLaunchingOptions: launchOptions)
+    }
     
     func setLogger(logger: LoggingProtocol) {
         target.setLogger(logger: logger)
     }
         
-    func enableAutoConnection(launchOptions: [AnyHashable : Any]?) {
-        logSend("enableAutoConnection(\(String(describing: launchOptions)))")
-        target.enableAutoConnection(launchOptions: launchOptions)
-    }
-    
     func startPodActivation(lowReservoirAlert: LowReservoirAlert?, podExpirationAlert: PodExpirationAlert?, eventListener: @escaping (ActivationStatus<ActivationStep1Event>) -> ()) {
         logSend("startPodActivation(\(String(describing: lowReservoirAlert)), \(String(describing: podExpirationAlert)))")
         target.startPodActivation(lowReservoirAlert: lowReservoirAlert, podExpirationAlert: podExpirationAlert) { (event) in
@@ -150,17 +148,20 @@ extension PodSDKLoggingShim: PodCommManagerProtocol {
         }
     }
     
-    func verifyUnacknowledgedCommand(withRetry: Bool, completion: @escaping (PodCommResult<PodStatus>) -> ()) {
-        logSend("verifyUnacknowledgedCommand(\(withRetry))")
-        target.verifyUnacknowledgedCommand(withRetry: withRetry) { (result) in
-            self.logReceive("verifyUnacknowledgedCommand result: \(result)")
-            completion(result)
+    func retryUnacknowledgedCommand(completion: @escaping (PodCommResult<PodStatus>) -> ()) {
+        logSend("retryUnacknowledgedCommand()")
+        target.retryUnacknowledgedCommand { (status) in
+            self.logReceive("retryUnacknowledgedCommand result: \(status)")
+            completion(status)
         }
     }
     
-    func clearUnacknowledgedCommand() {
-        logSend("clearUnacknowledgedCommand()")
-        target.clearUnacknowledgedCommand()
+    func queryAndClearUnacknowledgedCommand(completion: @escaping (PodCommResult<PendingRetryResult>) -> ()) {
+        logSend("queryAndClearUnacknowledgedCommand()")
+        target.queryAndClearUnacknowledgedCommand { (result) in
+            self.logReceive("queryAndClearUnacknowledgedCommand result: \(result)")
+            completion(result)
+        }
     }
     
     func configPeriodicStatusCheck(interval: TimeInterval, completion: @escaping (PodCommResult<Bool>) -> ()) {

@@ -854,7 +854,7 @@ public class DashPumpManager: PumpManager {
         
         podCommManager.setLogger(logger: self)
 
-        podCommManager.enableAutoConnection(launchOptions: [:])
+        podCommManager.setup(withLaunchingOptions: [:])
     }
 
     public convenience required init?(rawState: PumpManager.RawStateValue) {
