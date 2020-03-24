@@ -15,7 +15,10 @@ public protocol PodCommManagerProtocol {
      The delegate used to asynchrounously notify the application of various pod communication events.
      */
     var delegate: PodCommManagerDelegate? { get set }
-    
+
+    /**
+     The first API that the application layer must call to enable the auto connection.
+    */
     func setup(withLaunchingOptions launchOptions: [AnyHashable : Any]?)
     
     /**
@@ -190,9 +193,28 @@ public protocol PodCommManagerProtocol {
      - Note: Pod won't issue another alert once it's cleared. App layer must reprogram the alert again.
      */
     func silenceAlerts(alert: PodSDK.PodAlerts, completion: @escaping (PodSDK.PodCommResult<PodStatus>) -> ())
-
-    /* TODO: add docs */
+    
+    /**
+    If the previous call to the Pod returns `PodCommError.unacknowledgedCommandPendingRetry` then use this API to retry the previous unacknowledged command.
+    If the command has been programmed already, Pod won't program it again, if the command has not been programmed, Pod will program it.
+     
+     - parameters:
+        - completion: a closure to be called when `PodCommResult` is issued by the comm. layer on the main thread
+            - result: a `PodCommResult.success(...)` if success or `PodCommResult.failure(...)` in case of an error
+     
+     - Note: App will retry the same command once, if fails on the second try, API will return `PodCommError.unacknowledgedCommandPendingRetry`
+     */
     func retryUnacknowledgedCommand(completion: @escaping (_ result: PodSDK.PodCommResult<PodStatus>)->())
+        
+    /**
+     If the previous call to the Pod returns `PodCommError.unacknowledgedCommandPendingRetry` then either retry with `PodCommManager.retryUnacknowledgedCommand(...)` or query and discard the unacknowledged command with this API.
+     
+     - parameters:
+            - completion: a closure to be called when `PodCommResult` is issued by the comm. layer on the main thread
+                - result: a `PodCommResult.success(...)` if success or `PodCommResult.failure(...)` in case of an error
+     
+     - Note: If the Pod is not connected, the API will not clear the Unacknowledged command. App should notify the user the previous command has been programmed or not by checking `PendingRetryResult`
+     */
     func queryAndClearUnacknowledgedCommand(completion: @escaping (_ result: PodSDK.PodCommResult<PendingRetryResult>)->())
     
     /**
