@@ -30,10 +30,8 @@
 		C107D15722694B9C00D63775 /* DashKitUI.h in Headers */ = {isa = PBXBuildFile; fileRef = C107D15522694B9C00D63775 /* DashKitUI.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C107D161226A0DCF00D63775 /* DashPumpManager+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D160226A0DCF00D63775 /* DashPumpManager+UI.swift */; };
 		C107D166226A0EED00D63775 /* DashPumpManager.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C107D165226A0EED00D63775 /* DashPumpManager.storyboard */; };
-		C107D16A226A12B900D63775 /* RegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D169226A12B900D63775 /* RegistrationViewController.swift */; };
 		C107D16D226A143A00D63775 /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D16C226A143A00D63775 /* UIViewController.swift */; };
 		C107D171226A1AD100D63775 /* PodSettingsSetupViewControllers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D170226A1AD100D63775 /* PodSettingsSetupViewControllers.swift */; };
-		C107D173226A1B6100D63775 /* DashSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D172226A1B6100D63775 /* DashSettingsViewController.swift */; };
 		C107D175226A1C7800D63775 /* DashHUDProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D174226A1C7800D63775 /* DashHUDProvider.swift */; };
 		C107D176226A22BF00D63775 /* LocalizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D11622692D9D00D63775 /* LocalizedString.swift */; };
 		C107D17A226A241200D63775 /* IdentifiableClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D179226A241200D63775 /* IdentifiableClass.swift */; };
@@ -67,7 +65,6 @@
 		C146965A240EDB620063DFB2 /* ProgressIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1469658240EDB620063DFB2 /* ProgressIndicatorView.swift */; };
 		C14C6F252419F95E00CF3408 /* LeadingImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14C6F242419F95E00CF3408 /* LeadingImage.swift */; };
 		C14C6F27241A754B00CF3408 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14C6F26241A754B00CF3408 /* ErrorView.swift */; };
-		C14D46F222CA85C000656FE0 /* NoActivePodViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14D46F122CA85C000656FE0 /* NoActivePodViewController.swift */; };
 		C15424312280C575006754B3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C15424302280C575006754B3 /* Assets.xcassets */; };
 		C15424332280C75E006754B3 /* PodStatusExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C15424322280C75D006754B3 /* PodStatusExtension.swift */; };
 		C1562F7F241581C7006952D6 /* DashSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1562F7E241581C7006952D6 /* DashSettingsViewModel.swift */; };
@@ -81,14 +78,10 @@
 		C160FEBA2371EA050080031E /* AlarmCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = C160FEB92371EA050080031E /* AlarmCode.swift */; };
 		C16DA83622E7C6F2008624C2 /* DashKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; platformFilter = ios; };
 		C16DA85822E93973008624C2 /* DashKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C107D15322694B9C00D63775 /* DashKitUI.framework */; platformFilter = ios; };
-		C194113D2285D30A00E886DD /* PairPodSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C194113C2285D30A00E886DD /* PairPodSetupViewController.swift */; };
-		C19411442286164E00E886DD /* ReplacePodViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19411432286164E00E886DD /* ReplacePodViewController.swift */; };
 		C194114622861E9100E886DD /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C194114522861E9100E886DD /* UIColor.swift */; };
-		C1941148228DA42C00E886DD /* InsertCannulaSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1941147228DA42C00E886DD /* InsertCannulaSetupViewController.swift */; };
 		C194114E228DBEC000E886DD /* PodSetupCompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C194114D228DBEC000E886DD /* PodSetupCompleteViewController.swift */; };
 		C1941151228DBF2100E886DD /* ExpirationReminderDateTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1941150228DBF2100E886DD /* ExpirationReminderDateTableViewCell.swift */; };
 		C1941153228DBF8300E886DD /* NibLoadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1941152228DBF8300E886DD /* NibLoadable.swift */; };
-		C1941155228DD32A00E886DD /* PodReplacementNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1941154228DD32A00E886DD /* PodReplacementNavigationController.swift */; };
 		C19BB3F022E7C64A00EA5C2E /* DashKitPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19BB3EF22E7C64A00EA5C2E /* DashKitPlugin.swift */; };
 		C1A701B923EB7EC2002D1E45 /* PairPodView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A701B823EB7EC2002D1E45 /* PairPodView.swift */; };
 		C1ACF43222A03F0500F7DDB4 /* OmnipodReservoirView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ACF42E22A03F0400F7DDB4 /* OmnipodReservoirView.swift */; };
@@ -215,10 +208,8 @@
 		C107D15622694B9C00D63775 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C107D160226A0DCF00D63775 /* DashPumpManager+UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DashPumpManager+UI.swift"; sourceTree = "<group>"; };
 		C107D165226A0EED00D63775 /* DashPumpManager.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = DashPumpManager.storyboard; sourceTree = "<group>"; };
-		C107D169226A12B900D63775 /* RegistrationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationViewController.swift; sourceTree = "<group>"; };
 		C107D16C226A143A00D63775 /* UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
 		C107D170226A1AD100D63775 /* PodSettingsSetupViewControllers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodSettingsSetupViewControllers.swift; sourceTree = "<group>"; };
-		C107D172226A1B6100D63775 /* DashSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashSettingsViewController.swift; sourceTree = "<group>"; };
 		C107D174226A1C7800D63775 /* DashHUDProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashHUDProvider.swift; sourceTree = "<group>"; };
 		C107D179226A241200D63775 /* IdentifiableClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifiableClass.swift; sourceTree = "<group>"; };
 		C107D17B226A243A00D63775 /* UITableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITableViewCell.swift; sourceTree = "<group>"; };
@@ -244,7 +235,6 @@
 		C1469658240EDB620063DFB2 /* ProgressIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressIndicatorView.swift; sourceTree = "<group>"; };
 		C14C6F242419F95E00CF3408 /* LeadingImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeadingImage.swift; sourceTree = "<group>"; };
 		C14C6F26241A754B00CF3408 /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
-		C14D46F122CA85C000656FE0 /* NoActivePodViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoActivePodViewController.swift; sourceTree = "<group>"; };
 		C15424302280C575006754B3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C15424322280C75D006754B3 /* PodStatusExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodStatusExtension.swift; sourceTree = "<group>"; };
 		C1562F7E241581C7006952D6 /* DashSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashSettingsViewModel.swift; sourceTree = "<group>"; };
@@ -256,14 +246,10 @@
 		C1562F8A2416A7C8006952D6 /* MockPodDeactivating.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPodDeactivating.swift; sourceTree = "<group>"; };
 		C1562F8C2416A945006952D6 /* MockPodStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPodStatus.swift; sourceTree = "<group>"; };
 		C160FEB92371EA050080031E /* AlarmCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmCode.swift; sourceTree = "<group>"; };
-		C194113C2285D30A00E886DD /* PairPodSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairPodSetupViewController.swift; sourceTree = "<group>"; };
-		C19411432286164E00E886DD /* ReplacePodViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplacePodViewController.swift; sourceTree = "<group>"; };
 		C194114522861E9100E886DD /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
-		C1941147228DA42C00E886DD /* InsertCannulaSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsertCannulaSetupViewController.swift; sourceTree = "<group>"; };
 		C194114D228DBEC000E886DD /* PodSetupCompleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodSetupCompleteViewController.swift; sourceTree = "<group>"; };
 		C1941150228DBF2100E886DD /* ExpirationReminderDateTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpirationReminderDateTableViewCell.swift; sourceTree = "<group>"; };
 		C1941152228DBF8300E886DD /* NibLoadable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NibLoadable.swift; sourceTree = "<group>"; };
-		C1941154228DD32A00E886DD /* PodReplacementNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodReplacementNavigationController.swift; sourceTree = "<group>"; };
 		C19BB3E522E776AE00EA5C2E /* DashKitPlugin.loopplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DashKitPlugin.loopplugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		C19BB3E722E776AE00EA5C2E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C19BB3EF22E7C64A00EA5C2E /* DashKitPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DashKitPlugin.swift; sourceTree = "<group>"; };
@@ -476,15 +462,8 @@
 		C1201E3D23EE1ABE002DA84A /* Old ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				C107D169226A12B900D63775 /* RegistrationViewController.swift */,
 				C107D170226A1AD100D63775 /* PodSettingsSetupViewControllers.swift */,
-				C107D172226A1B6100D63775 /* DashSettingsViewController.swift */,
-				C194113C2285D30A00E886DD /* PairPodSetupViewController.swift */,
-				C19411432286164E00E886DD /* ReplacePodViewController.swift */,
-				C1941147228DA42C00E886DD /* InsertCannulaSetupViewController.swift */,
 				C194114D228DBEC000E886DD /* PodSetupCompleteViewController.swift */,
-				C1941154228DD32A00E886DD /* PodReplacementNavigationController.swift */,
-				C14D46F122CA85C000656FE0 /* NoActivePodViewController.swift */,
 			);
 			path = "Old ViewControllers";
 			sourceTree = "<group>";
@@ -868,22 +847,18 @@
 				C146965A240EDB620063DFB2 /* ProgressIndicatorView.swift in Sources */,
 				C1ED19D223F98C5C00D55049 /* DashUICoordinator.swift in Sources */,
 				C12A06A323F2235A0052195C /* ActivityIndicator.swift in Sources */,
-				C107D16A226A12B900D63775 /* RegistrationViewController.swift in Sources */,
 				C1562F8B2416A7C8006952D6 /* MockPodDeactivating.swift in Sources */,
 				C12A06A123F217A40052195C /* RegistrationViewModel.swift in Sources */,
 				C1D68E322284B50300019CAE /* TimeInterval.swift in Sources */,
 				C14C6F252419F95E00CF3408 /* LeadingImage.swift in Sources */,
 				C1469659240EDB620063DFB2 /* ProgressView.swift in Sources */,
 				C1ACF43D22A1D00500F7DDB4 /* PodExpirationTableViewCell.swift in Sources */,
-				C194113D2285D30A00E886DD /* PairPodSetupViewController.swift in Sources */,
 				C1201E3123EDF498002DA84A /* Image.swift in Sources */,
 				C107D171226A1AD100D63775 /* PodSettingsSetupViewControllers.swift in Sources */,
 				C1941151228DBF2100E886DD /* ExpirationReminderDateTableViewCell.swift in Sources */,
 				C1ACF43422A03F0500F7DDB4 /* PodLifeHUDView.swift in Sources */,
 				C194114622861E9100E886DD /* UIColor.swift in Sources */,
 				C1562F8924169C65006952D6 /* DeactivatePodViewModel.swift in Sources */,
-				C14D46F222CA85C000656FE0 /* NoActivePodViewController.swift in Sources */,
-				C1941155228DD32A00E886DD /* PodReplacementNavigationController.swift in Sources */,
 				C1C72D8B241568E700DB224B /* DashSettingsView.swift in Sources */,
 				C12C9C83229EDB7B00FF7632 /* InsulinStatusTableViewCell.swift in Sources */,
 				C107D175226A1C7800D63775 /* DashHUDProvider.swift in Sources */,
@@ -898,9 +873,7 @@
 				C1562F8724169C41006952D6 /* DeactivatePodView.swift in Sources */,
 				C1941153228DBF8300E886DD /* NibLoadable.swift in Sources */,
 				C107D161226A0DCF00D63775 /* DashPumpManager+UI.swift in Sources */,
-				C1941148228DA42C00E886DD /* InsertCannulaSetupViewController.swift in Sources */,
 				C14C6F27241A754B00CF3408 /* ErrorView.swift in Sources */,
-				C19411442286164E00E886DD /* ReplacePodViewController.swift in Sources */,
 				C1201E3F23EE1B03002DA84A /* RegisterView.swift in Sources */,
 				C1ED19D623F9C63E00D55049 /* InsertCannulaView.swift in Sources */,
 				C1ACF43722A04B4800F7DDB4 /* NumberFormatter.swift in Sources */,
@@ -908,7 +881,6 @@
 				C1562F8D2416A945006952D6 /* MockPodStatus.swift in Sources */,
 				C107D176226A22BF00D63775 /* LocalizedString.swift in Sources */,
 				C1A701B923EB7EC2002D1E45 /* PairPodView.swift in Sources */,
-				C107D173226A1B6100D63775 /* DashSettingsViewController.swift in Sources */,
 				C10EF92E24044C000091392C /* SettingsProviding.swift in Sources */,
 				C107D17A226A241200D63775 /* IdentifiableClass.swift in Sources */,
 				C1DFF91F2417C88600EAC44E /* InsertCannulaViewModel.swift in Sources */,

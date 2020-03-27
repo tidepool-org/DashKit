@@ -23,7 +23,7 @@ extension DashPumpManager: PumpManagerUI {
     }
 
     public var smallImage: UIImage? {
-        return UIImage(named: "Pod", in: Bundle(for: DashSettingsViewController.self), compatibleWith: nil)!
+        return UIImage(named: "Pod", in: Bundle(for: DashSettingsViewModel.self), compatibleWith: nil)!
     }
 
     public func hudProvider() -> HUDProvider? {
