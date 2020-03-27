@@ -319,9 +319,6 @@ class DashPumpManagerTests: XCTestCase {
 
 extension DashPumpManagerTests: PodStatusObserver {
     func didUpdatePodStatus() {
-        if !Thread.isMainThread {
-            print("here")
-        }
         podStatusUpdateExpectation?.fulfill()
         posStatusUpdates.append(pumpManager.state)
     }
