@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import LoopKitUI
 
 struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol  {
     

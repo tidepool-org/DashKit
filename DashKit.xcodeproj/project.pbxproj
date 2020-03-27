@@ -49,7 +49,6 @@
 		C1201E3F23EE1B03002DA84A /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1201E3E23EE1B03002DA84A /* RegisterView.swift */; };
 		C127160C237A07B60093DAB7 /* UnfinalizedDoseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C127160B237A07B60093DAB7 /* UnfinalizedDoseTests.swift */; };
 		C12A06A123F217A40052195C /* RegistrationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12A06A023F217A40052195C /* RegistrationViewModel.swift */; };
-		C12A06A323F2235A0052195C /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12A06A223F2235A0052195C /* ActivityIndicator.swift */; };
 		C12A06AA23F2EFED0052195C /* MockRegistrationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12A06A923F2EFED0052195C /* MockRegistrationManager.swift */; };
 		C12A06AC23F2F0070052195C /* RegistrationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12A06AB23F2F0070052195C /* RegistrationManager.swift */; };
 		C12AA74B231870160025FD45 /* ConnectionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12AA74A231870160025FD45 /* ConnectionState.swift */; };
@@ -61,8 +60,6 @@
 		C135D91B2319AA5900774F82 /* Kronos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C135D9192319AA4200774F82 /* Kronos.framework */; };
 		C135D91C2319AA5A00774F82 /* Kronos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C135D9192319AA4200774F82 /* Kronos.framework */; };
 		C136AA5823117A2F008A320D /* OSLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ACF43E22A1F9A700F7DDB4 /* OSLog.swift */; };
-		C1469659240EDB620063DFB2 /* ProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1469657240EDB620063DFB2 /* ProgressView.swift */; };
-		C146965A240EDB620063DFB2 /* ProgressIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1469658240EDB620063DFB2 /* ProgressIndicatorView.swift */; };
 		C14C6F252419F95E00CF3408 /* LeadingImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14C6F242419F95E00CF3408 /* LeadingImage.swift */; };
 		C14C6F27241A754B00CF3408 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14C6F26241A754B00CF3408 /* ErrorView.swift */; };
 		C15424312280C575006754B3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C15424302280C575006754B3 /* Assets.xcassets */; };
@@ -225,14 +222,11 @@
 		C1201E3E23EE1B03002DA84A /* RegisterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
 		C127160B237A07B60093DAB7 /* UnfinalizedDoseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnfinalizedDoseTests.swift; sourceTree = "<group>"; };
 		C12A06A023F217A40052195C /* RegistrationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationViewModel.swift; sourceTree = "<group>"; };
-		C12A06A223F2235A0052195C /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
 		C12A06A923F2EFED0052195C /* MockRegistrationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockRegistrationManager.swift; sourceTree = "<group>"; };
 		C12A06AB23F2F0070052195C /* RegistrationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationManager.swift; sourceTree = "<group>"; };
 		C12AA74A231870160025FD45 /* ConnectionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionState.swift; sourceTree = "<group>"; };
 		C12C9C82229EDB7B00FF7632 /* InsulinStatusTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsulinStatusTableViewCell.swift; sourceTree = "<group>"; };
 		C135D9192319AA4200774F82 /* Kronos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Kronos.framework; path = Carthage/Build/iOS/Kronos.framework; sourceTree = "<group>"; };
-		C1469657240EDB620063DFB2 /* ProgressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressView.swift; sourceTree = "<group>"; };
-		C1469658240EDB620063DFB2 /* ProgressIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressIndicatorView.swift; sourceTree = "<group>"; };
 		C14C6F242419F95E00CF3408 /* LeadingImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeadingImage.swift; sourceTree = "<group>"; };
 		C14C6F26241A754B00CF3408 /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
 		C15424302280C575006754B3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -451,8 +445,6 @@
 		C1201E3623EE1533002DA84A /* DesignElements */ = {
 			isa = PBXGroup;
 			children = (
-				C1469657240EDB620063DFB2 /* ProgressView.swift */,
-				C1469658240EDB620063DFB2 /* ProgressIndicatorView.swift */,
 				C14C6F242419F95E00CF3408 /* LeadingImage.swift */,
 				C14C6F26241A754B00CF3408 /* ErrorView.swift */,
 			);
@@ -531,7 +523,6 @@
 		C1E680BD23F30987004DC719 /* Wrappers */ = {
 			isa = PBXGroup;
 			children = (
-				C12A06A223F2235A0052195C /* ActivityIndicator.swift */,
 			);
 			path = Wrappers;
 			sourceTree = "<group>";
@@ -844,14 +835,11 @@
 				C1562F812415834D006952D6 /* MockDashSettingsViewModel.swift in Sources */,
 				C1562F7F241581C7006952D6 /* DashSettingsViewModel.swift in Sources */,
 				C1DFF9252417CA5B00EAC44E /* MockCannulaInsertion.swift in Sources */,
-				C146965A240EDB620063DFB2 /* ProgressIndicatorView.swift in Sources */,
 				C1ED19D223F98C5C00D55049 /* DashUICoordinator.swift in Sources */,
-				C12A06A323F2235A0052195C /* ActivityIndicator.swift in Sources */,
 				C1562F8B2416A7C8006952D6 /* MockPodDeactivating.swift in Sources */,
 				C12A06A123F217A40052195C /* RegistrationViewModel.swift in Sources */,
 				C1D68E322284B50300019CAE /* TimeInterval.swift in Sources */,
 				C14C6F252419F95E00CF3408 /* LeadingImage.swift in Sources */,
-				C1469659240EDB620063DFB2 /* ProgressView.swift in Sources */,
 				C1ACF43D22A1D00500F7DDB4 /* PodExpirationTableViewCell.swift in Sources */,
 				C1201E3123EDF498002DA84A /* Image.swift in Sources */,
 				C107D171226A1AD100D63775 /* PodSettingsSetupViewControllers.swift in Sources */,
