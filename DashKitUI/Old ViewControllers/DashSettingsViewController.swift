@@ -37,7 +37,7 @@ class DashSettingsViewController: UITableViewController {
 
     static public func instantiateFromStoryboard(pumpManager: DashPumpManager) -> DashSettingsViewController {
 
-        let storyboard = UIStoryboard(name: "DashPumpManager", bundle: Bundle(for: DashPumpManagerSetupViewController.self))
+        let storyboard = UIStoryboard(name: "DashPumpManager", bundle: Bundle(for: DashSettingsViewController.self))
         let settings = storyboard.instantiateViewController(withIdentifier: "SettingsWithPod") as! DashSettingsViewController
         settings.pumpManager = pumpManager
         return settings
@@ -66,18 +66,6 @@ class DashSettingsViewController: UITableViewController {
     @objc func doneTapped(_ sender: Any) {
         didFinish?()
     }
-
-    private func done() {
-        switch navigationController {
-        case let nav as SettingsNavigationViewController:
-            nav.notifyComplete()
-        case let nav as DashPumpManagerSetupViewController:
-            nav.finishedSettingsDisplay()
-        default:
-            break
-        }
-    }
-
 
     // MARK: - Data Source
 

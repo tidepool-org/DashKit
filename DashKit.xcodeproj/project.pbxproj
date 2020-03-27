@@ -29,7 +29,6 @@
 		C107D11B22692FC400D63775 /* TimeZone.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D11A22692FC400D63775 /* TimeZone.swift */; };
 		C107D15722694B9C00D63775 /* DashKitUI.h in Headers */ = {isa = PBXBuildFile; fileRef = C107D15522694B9C00D63775 /* DashKitUI.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C107D161226A0DCF00D63775 /* DashPumpManager+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D160226A0DCF00D63775 /* DashPumpManager+UI.swift */; };
-		C107D163226A0E1B00D63775 /* DashPumpManagerSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D162226A0E1B00D63775 /* DashPumpManagerSetupViewController.swift */; };
 		C107D166226A0EED00D63775 /* DashPumpManager.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C107D165226A0EED00D63775 /* DashPumpManager.storyboard */; };
 		C107D16A226A12B900D63775 /* RegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D169226A12B900D63775 /* RegistrationViewController.swift */; };
 		C107D16D226A143A00D63775 /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D16C226A143A00D63775 /* UIViewController.swift */; };
@@ -215,7 +214,6 @@
 		C107D15522694B9C00D63775 /* DashKitUI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DashKitUI.h; sourceTree = "<group>"; };
 		C107D15622694B9C00D63775 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C107D160226A0DCF00D63775 /* DashPumpManager+UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DashPumpManager+UI.swift"; sourceTree = "<group>"; };
-		C107D162226A0E1B00D63775 /* DashPumpManagerSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashPumpManagerSetupViewController.swift; sourceTree = "<group>"; };
 		C107D165226A0EED00D63775 /* DashPumpManager.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = DashPumpManager.storyboard; sourceTree = "<group>"; };
 		C107D169226A12B900D63775 /* RegistrationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationViewController.swift; sourceTree = "<group>"; };
 		C107D16C226A143A00D63775 /* UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
@@ -478,7 +476,6 @@
 		C1201E3D23EE1ABE002DA84A /* Old ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				C107D162226A0E1B00D63775 /* DashPumpManagerSetupViewController.swift */,
 				C107D169226A12B900D63775 /* RegistrationViewController.swift */,
 				C107D170226A1AD100D63775 /* PodSettingsSetupViewControllers.swift */,
 				C107D172226A1B6100D63775 /* DashSettingsViewController.swift */,
@@ -893,7 +890,6 @@
 				C11B2C2D2425846D00308035 /* MockNavigator.swift in Sources */,
 				C1562F832415848D006952D6 /* DashSettingsViewModelProtocol.swift in Sources */,
 				C1ACF43222A03F0500F7DDB4 /* OmnipodReservoirView.swift in Sources */,
-				C107D163226A0E1B00D63775 /* DashPumpManagerSetupViewController.swift in Sources */,
 				C107D17D226A24CE00D63775 /* TimeZone.swift in Sources */,
 				C194114E228DBEC000E886DD /* PodSetupCompleteViewController.swift in Sources */,
 				C10D1D77241169F50007ABF7 /* MockPodPairing.swift in Sources */,

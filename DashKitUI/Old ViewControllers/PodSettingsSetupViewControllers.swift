@@ -17,7 +17,7 @@ import DashKit
 class PodSettingsSetupViewController: SetupTableViewController {
     
     static public func instantiateFromStoryboard() -> PodSettingsSetupViewController {
-        let storyboard = UIStoryboard(name: "DashPumpManager", bundle: Bundle(for: DashPumpManagerSetupViewController.self))
+        let storyboard = UIStoryboard(name: "DashPumpManager", bundle: Bundle(for: PodSettingsSetupViewController.self))
         return storyboard.instantiateViewController(withIdentifier: "PodSettingsSetupViewController") as! PodSettingsSetupViewController
     }
 

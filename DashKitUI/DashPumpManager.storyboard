@@ -8,28 +8,12 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Dash Pump Manager Setup View Controller-->
-        <scene sceneID="rAY-07-ofb">
-            <objects>
-                <navigationController storyboardIdentifier="SetupWithRegistration" id="Zjn-qM-vVY" customClass="DashPumpManagerSetupViewController" customModule="DashKitUI" customModuleProvider="target" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translucent="NO" largeTitles="YES" id="5Xe-i2-KAi">
-                        <rect key="frame" x="0.0" y="44" width="414" height="96"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <connections>
-                        <segue destination="McK-rf-l7x" kind="relationship" relationship="rootViewController" id="eJG-R6-UwG"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Ge3-NO-mrR" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-646" y="57"/>
-        </scene>
         <!--Register-->
         <scene sceneID="XyI-00-36C">
             <objects>
                 <viewController storyboardIdentifier="HomeTabBar" id="McK-rf-l7x" customClass="RegistrationViewController" customModule="DashKitUI" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Zcw-ww-ZWD">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="756"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="This phone must be registered before using with Omnipod Dash" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="19" translatesAutoresizingMaskIntoConstraints="NO" id="N1Q-D2-BXT">
@@ -42,7 +26,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YlA-nh-p5N">
-                                <rect key="frame" x="20" y="662" width="374" height="44"/>
+                                <rect key="frame" x="20" y="802" width="374" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="0ma-aa-s6F"/>
                                 </constraints>
@@ -79,7 +63,7 @@
             <objects>
                 <tableViewController storyboardIdentifier="PodSettingsSetupViewController" title="Pod Settings" id="ztc-qC-nUQ" userLabel="Pod Settings Setup" customClass="PodSettingsSetupViewController" customModule="DashKitUI" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" id="BHj-PM-cVB">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="808"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <prototypes>
@@ -894,22 +878,6 @@
             </objects>
             <point key="canvasLocation" x="2211.594202898551" y="-749.33035714285711"/>
         </scene>
-        <!--Dash Pump Manager Setup View Controller-->
-        <scene sceneID="IJd-jA-iuq">
-            <objects>
-                <navigationController storyboardIdentifier="SetupWithoutRegistration" id="DvC-yy-TgX" customClass="DashPumpManagerSetupViewController" customModule="DashKitUI" customModuleProvider="target" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translucent="NO" largeTitles="YES" id="4o4-0d-wn6">
-                        <rect key="frame" x="0.0" y="44" width="414" height="96"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <connections>
-                        <segue destination="ztc-qC-nUQ" kind="relationship" relationship="rootViewController" id="gHm-6T-X6H"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Enq-N4-e2J" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-743" y="777"/>
-        </scene>
     </scenes>
     <resources>
         <image name="No Pod" width="227" height="129"/>
@@ -923,6 +891,5 @@
     <inferredMetricsTieBreakers>
         <segue reference="HsL-77-TKw"/>
         <segue reference="aHy-fJ-ReA"/>
-        <segue reference="gHm-6T-X6H"/>
     </inferredMetricsTieBreakers>
 </document>
