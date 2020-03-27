@@ -48,9 +48,7 @@
 		C10EF92E24044C000091392C /* SettingsProviding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10EF92C24044B560091392C /* SettingsProviding.swift */; };
 		C11097CE238F14A4004F1A04 /* PodSDK.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C11097CD238F14A4004F1A04 /* PodSDK.xcframework */; };
 		C11B2C2D2425846D00308035 /* MockNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11B2C2C2425846D00308035 /* MockNavigator.swift */; };
-		C11C3CB624102951003C14C8 /* ExpandableDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11C3CB524102951003C14C8 /* ExpandableDetail.swift */; };
 		C1201E3123EDF498002DA84A /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1201E3023EDF498002DA84A /* Image.swift */; };
-		C1201E3823EE157C002DA84A /* InstructionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1201E3723EE157C002DA84A /* InstructionListView.swift */; };
 		C1201E3F23EE1B03002DA84A /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1201E3E23EE1B03002DA84A /* RegisterView.swift */; };
 		C127160C237A07B60093DAB7 /* UnfinalizedDoseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C127160B237A07B60093DAB7 /* UnfinalizedDoseTests.swift */; };
 		C12A06A123F217A40052195C /* RegistrationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12A06A023F217A40052195C /* RegistrationViewModel.swift */; };
@@ -234,9 +232,7 @@
 		C10EF92C24044B560091392C /* SettingsProviding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsProviding.swift; sourceTree = "<group>"; };
 		C11097CD238F14A4004F1A04 /* PodSDK.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = PodSDK.xcframework; path = "dash-sdk-ios/frameworks/PodSDK.xcframework"; sourceTree = "<group>"; };
 		C11B2C2C2425846D00308035 /* MockNavigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNavigator.swift; sourceTree = "<group>"; };
-		C11C3CB524102951003C14C8 /* ExpandableDetail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpandableDetail.swift; sourceTree = "<group>"; };
 		C1201E3023EDF498002DA84A /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
-		C1201E3723EE157C002DA84A /* InstructionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionListView.swift; sourceTree = "<group>"; };
 		C1201E3E23EE1B03002DA84A /* RegisterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
 		C127160B237A07B60093DAB7 /* UnfinalizedDoseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnfinalizedDoseTests.swift; sourceTree = "<group>"; };
 		C12A06A023F217A40052195C /* RegistrationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationViewModel.swift; sourceTree = "<group>"; };
@@ -473,9 +469,7 @@
 			children = (
 				C1469657240EDB620063DFB2 /* ProgressView.swift */,
 				C1469658240EDB620063DFB2 /* ProgressIndicatorView.swift */,
-				C1201E3723EE157C002DA84A /* InstructionListView.swift */,
 				C14C6F242419F95E00CF3408 /* LeadingImage.swift */,
-				C11C3CB524102951003C14C8 /* ExpandableDetail.swift */,
 				C14C6F26241A754B00CF3408 /* ErrorView.swift */,
 			);
 			path = DesignElements;
@@ -870,7 +864,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C11C3CB624102951003C14C8 /* ExpandableDetail.swift in Sources */,
 				C1562F85241698C0006952D6 /* PodLifeState.swift in Sources */,
 				C1562F812415834D006952D6 /* MockDashSettingsViewModel.swift in Sources */,
 				C1562F7F241581C7006952D6 /* DashSettingsViewModel.swift in Sources */,
@@ -920,7 +913,6 @@
 				C107D176226A22BF00D63775 /* LocalizedString.swift in Sources */,
 				C1A701B923EB7EC2002D1E45 /* PairPodView.swift in Sources */,
 				C107D173226A1B6100D63775 /* DashSettingsViewController.swift in Sources */,
-				C1201E3823EE157C002DA84A /* InstructionListView.swift in Sources */,
 				C10EF92E24044C000091392C /* SettingsProviding.swift in Sources */,
 				C107D17A226A241200D63775 /* IdentifiableClass.swift in Sources */,
 				C1DFF91F2417C88600EAC44E /* InsertCannulaViewModel.swift in Sources */,

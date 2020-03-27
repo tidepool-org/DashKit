@@ -20,7 +20,7 @@ class PodSetupCompleteViewController: SetupTableViewController {
         return vc
     }
     
-    var navigator: DashUINavigator!
+    weak var navigator: DashUINavigator?
 
     @IBOutlet weak var expirationReminderDateCell: ExpirationReminderDateTableViewCell!
 

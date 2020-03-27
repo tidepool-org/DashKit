@@ -21,7 +21,7 @@ struct InsertCannulaView: View {
                 LeadingImage("Pod")
 
                 HStack {
-                    InstructionListView(instructions: [
+                    InstructionList(instructions: [
                         "Prepare site.",
                         "Remove blue Pod needle cap and check cannula. Then remove paper backing.",
                         "Check Pod and then apply to site."

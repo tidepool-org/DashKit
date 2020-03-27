@@ -54,7 +54,7 @@ enum DashUIScreen {
     }
 }
 
-protocol DashUINavigator {
+protocol DashUINavigator: class {
     func navigateTo(_ screen: DashUIScreen)
 }
 

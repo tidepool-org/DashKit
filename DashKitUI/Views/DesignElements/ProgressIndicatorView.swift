@@ -42,7 +42,7 @@ extension ProgressIndicatorState {
 
 struct ProgressIndicatorView: View {
 
-    var state: ProgressIndicatorState
+    private let state: ProgressIndicatorState
     
     private let fullSize: CGFloat = 35
 

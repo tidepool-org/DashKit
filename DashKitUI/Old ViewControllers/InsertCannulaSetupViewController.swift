@@ -23,7 +23,7 @@ class InsertCannulaSetupViewController: SetupTableViewController {
         return vc
     }
     
-    var navigator: DashUINavigator!
+    weak var navigator: DashUINavigator?
 
     var pumpManager: DashPumpManager!
 
@@ -141,9 +141,9 @@ class InsertCannulaSetupViewController: SetupTableViewController {
             continueState = .startingInsertion
             insertCannula()
         case .ready:
-            navigator.navigateTo(.setupComplete)
+            navigator?.navigateTo(.setupComplete)
         case .fault:
-            navigator.navigateTo(.deactivate)
+            navigator?.navigateTo(.deactivate)
         default:
             break
         }
@@ -151,7 +151,7 @@ class InsertCannulaSetupViewController: SetupTableViewController {
 
     override func cancelButtonPressed(_ sender: Any) {
         let confirmVC = UIAlertController(pumpDeletionHandler: {
-            self.navigator.navigateTo(.deactivate)
+            self.navigator?.navigateTo(.deactivate)
         })
         present(confirmVC, animated: true) {}
     }

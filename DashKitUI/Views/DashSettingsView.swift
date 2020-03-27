@@ -12,7 +12,7 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
     
     @ObservedObject var viewModel: Model
 
-    var navigator: DashUINavigator
+    weak var navigator: DashUINavigator?
     
     var body: some View {
         List {
@@ -60,7 +60,7 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
             
             Section(header: Text("Pod").font(.headline).foregroundColor(Color.primary)) {
                 Button(action: {
-                    self.navigator.navigateTo(self.viewModel.lifeState.nextPodLifecycleAction)
+                    self.navigator?.navigateTo(self.viewModel.lifeState.nextPodLifecycleAction)
                 }) {
                     Text(self.viewModel.lifeState.nextPodLifecycleActionDescription)
                 }
@@ -91,8 +91,7 @@ struct DashSettingsView_Previews: PreviewProvider {
 }
 
 
-struct DashSettingsSheetView: View, DashUINavigator {
-    func navigateTo(_ screen: DashUIScreen) { }
+struct DashSettingsSheetView: View {
     
     @State var showingDetail = true
     
@@ -105,7 +104,7 @@ struct DashSettingsSheetView: View, DashUINavigator {
             }.sheet(isPresented: $showingDetail) {
                 NavigationView {
                     ZStack {
-                        DashSettingsView(viewModel: MockDashSettingsViewModel(), navigator: self)
+                        DashSettingsView(viewModel: MockDashSettingsViewModel(), navigator: MockNavigator())
                     }
                 }
             }

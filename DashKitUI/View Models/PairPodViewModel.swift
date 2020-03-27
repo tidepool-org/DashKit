@@ -149,7 +149,7 @@ class PairPodViewModel: ObservableObject, Identifiable {
     
     var didCancel: (() -> Void)?
     
-    var navigator: DashUINavigator
+    weak var navigator: DashUINavigator?
     
     var pairing: PodPairing
 
@@ -189,7 +189,7 @@ class PairPodViewModel: ObservableObject, Identifiable {
         switch state {
         case .error(let error, _):
             if !error.recoverable {
-                self.navigator.navigateTo(.deactivate)
+                self.navigator?.navigateTo(.deactivate)
             } else {
                 // Retry
                 pair()

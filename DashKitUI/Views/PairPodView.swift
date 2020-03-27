@@ -19,7 +19,7 @@ struct PairPodView: View {
                 LeadingImage("Pod")
 
                 HStack {
-                    InstructionListView(instructions: [
+                    InstructionList(instructions: [
                         "Fill a new pod with U-100 Insulin (leave blue Pod needle cap on)",
                         "Listen for 2 beeps."
                     ]).foregroundColor(Color(self.viewModel.state.instructionsColor))
@@ -77,10 +77,7 @@ struct PairPodView: View {
     }
 }
 
-struct PairPodView_Previews: PreviewProvider, DashUINavigator {
-    func navigateTo(_ screen: DashUIScreen) {
-        print("PairPodView wants to navigate to \(screen)")
-    }
+struct PairPodView_Previews: PreviewProvider {
     
     static var previews: some View {
         NavigationView {

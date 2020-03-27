@@ -21,7 +21,7 @@ class ReplacePodViewController: SetupTableViewController {
         return vc
     }
 
-    var navigator: DashUINavigator!
+    weak var navigator: DashUINavigator?
 
     private let log = OSLog(category: "ReplacePodViewController")
 
@@ -165,7 +165,7 @@ class ReplacePodViewController: SetupTableViewController {
     override func continueButtonPressed(_ sender: Any) {
         switch continueState {
         case .ready:
-            navigator.navigateTo(.pairPod)
+            navigator?.navigateTo(.pairPod)
         case .continueAfterFailure:
             pumpManager.discardPod { (_) in
                 DispatchQueue.main.async {

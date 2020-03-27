@@ -124,7 +124,7 @@ class InsertCannulaViewModel: ObservableObject, Identifiable {
     
     var cannulaInsertion: CannulaInsertion
     
-    var navigator: DashUINavigator
+    weak var navigator: DashUINavigator?
 
     init(cannulaInsertion: CannulaInsertion, navigator: DashUINavigator) {
         self.cannulaInsertion = cannulaInsertion
@@ -164,7 +164,7 @@ class InsertCannulaViewModel: ObservableObject, Identifiable {
             if error.recoverable {
                 insertCannula()
             } else {
-                navigator.navigateTo(.deactivate)
+                navigator?.navigateTo(.deactivate)
             }
         default:
             insertCannula()
