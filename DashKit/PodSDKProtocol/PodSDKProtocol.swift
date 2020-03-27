@@ -254,3 +254,21 @@ public protocol PodCommManagerProtocol {
      */
     var podCommState: PodSDK.PodCommState { get }
 }
+
+public protocol RegistrationManagerProtocol {
+    
+    /**
+     Starts a registration process without SMS validation.
+     
+     - parameters:
+        - completion: A closure to be called when a `PodCommEvent` is issued by the comm. layer.
+            - status: Registration status.
+     
+     - Note: Only use this API if your app does not require SMS validation (as per the Insulet Cloud configuration set for your team).
+     */
+    func startRegistration(completion: @escaping (PodSDK.RegistrationStatus) -> ())
+
+    /// Registration is complete.
+    func isRegistered() -> Bool
+
+}

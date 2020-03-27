@@ -10,25 +10,16 @@ import UIKit
 import LoopKit
 import LoopKitUI
 import DashKit
+import SwiftUI
 
 extension DashPumpManager: PumpManagerUI {
 
     static public func setupViewController() -> (UIViewController & PumpManagerSetupViewController & CompletionNotifying) {
-        return DashPumpManagerSetupViewController.instantiateFromStoryboard()
+        return DashUICoordinator()
     }
 
     public func settingsViewController() -> (UIViewController & CompletionNotifying) {
-        self.log.debug("Launching settings: podCommState = %@", String(describing: podCommState))
-        switch podCommState {
-        case .alarm:
-            return PodReplacementNavigationController.instantiatePodReplacementFlow(self)
-        default:
-            if hasActivePod {
-                let settings = DashSettingsViewController.instantiateFromStoryboard(pumpManager: self)
-                return SettingsNavigationViewController(rootViewController: settings)
-            }
-            return PodReplacementNavigationController.instantiateSettingsNoPodFlow(self)
-        }
+        return DashUICoordinator(pumpManager: self)
     }
 
     public var smallImage: UIImage? {

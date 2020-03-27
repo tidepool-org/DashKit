@@ -12,6 +12,8 @@ import LoopKit
 import LoopKitUI
 
 class DashSettingsViewController: UITableViewController {
+    
+    var didFinish: (() -> Void)?
 
     var pumpManager: DashPumpManager! {
         didSet {
@@ -62,7 +64,7 @@ class DashSettingsViewController: UITableViewController {
     }
 
     @objc func doneTapped(_ sender: Any) {
-        done()
+        didFinish?()
     }
 
     private func done() {

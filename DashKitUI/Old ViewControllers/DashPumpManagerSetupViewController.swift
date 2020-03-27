@@ -29,9 +29,6 @@ public class DashPumpManagerSetupViewController: UINavigationController, PumpMan
     class func instantiateFromStoryboard() -> DashPumpManagerSetupViewController {
         let storyboard = UIStoryboard(name: "DashPumpManager", bundle: Bundle(for: DashPumpManagerSetupViewController.self))
 
-        // TODO: This needs to be removed once it's not a prerequisite for checking registration
-        PodCommManager.shared.enableAutoConnection(launchOptions: [:])
-
         if RegistrationManager.shared.isRegistered() {
             return storyboard.instantiateViewController(withIdentifier: "SetupWithoutRegistration") as! DashPumpManagerSetupViewController
         } else {

@@ -15,6 +15,15 @@ import SwiftGif
 
 
 class InsertCannulaSetupViewController: SetupTableViewController {
+    
+    class func instantiateFromStoryboard(_ pumpManager: DashPumpManager, navigator: DashUINavigator) -> InsertCannulaSetupViewController {
+        let vc = UIStoryboard(name: "DashPumpManager", bundle: Bundle(for: InsertCannulaSetupViewController.self)).instantiateViewController(withIdentifier: "InsertCannulaSetupViewController") as! InsertCannulaSetupViewController
+        vc.pumpManager = pumpManager
+        vc.navigator = navigator
+        return vc
+    }
+    
+    var navigator: DashUINavigator!
 
     var pumpManager: DashPumpManager!
 
@@ -126,19 +135,15 @@ class InsertCannulaSetupViewController: SetupTableViewController {
         }
     }
 
-    private func navigateToReplacePod() {
-        performSegue(withIdentifier: "ReplacePod", sender: nil)
-    }
-
     override func continueButtonPressed(_ sender: Any) {
         switch continueState {
         case .initial:
             continueState = .startingInsertion
             insertCannula()
         case .ready:
-            super.continueButtonPressed(sender)
+            navigator.navigateTo(.setupComplete)
         case .fault:
-            navigateToReplacePod()
+            navigator.navigateTo(.deactivate)
         default:
             break
         }
@@ -146,7 +151,7 @@ class InsertCannulaSetupViewController: SetupTableViewController {
 
     override func cancelButtonPressed(_ sender: Any) {
         let confirmVC = UIAlertController(pumpDeletionHandler: {
-            self.navigateToReplacePod()
+            self.navigator.navigateTo(.deactivate)
         })
         present(confirmVC, animated: true) {}
     }
@@ -163,6 +168,17 @@ class InsertCannulaSetupViewController: SetupTableViewController {
             case .error(let error):
                 expectingAnotherEvent = false
                 self?.lastError = error
+                switch error {
+                case .activationError(let activationErrorCode):
+                    switch activationErrorCode {
+                    case .podIsLumpOfCoal1Hour, .podIsLumpOfCoal2Hours:
+                        self?.continueState = .fault
+                    default:
+                        break
+                    }
+                default:
+                    break
+                }
             case .event(let event):
                 switch event {
                 case .insertingCannula:

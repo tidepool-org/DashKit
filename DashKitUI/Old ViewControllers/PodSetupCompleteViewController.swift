@@ -12,18 +12,21 @@ import DashKit
 import PodSDK
 
 class PodSetupCompleteViewController: SetupTableViewController {
+    
+    class func instantiateFromStoryboard(_ pumpManager: DashPumpManager, navigator: DashUINavigator) -> PodSetupCompleteViewController {
+        let vc = UIStoryboard(name: "DashPumpManager", bundle: Bundle(for: PodSetupCompleteViewController.self)).instantiateViewController(withIdentifier: "PodSetupCompleteViewController") as! PodSetupCompleteViewController
+        vc.pumpManager = pumpManager
+        vc.navigator = navigator
+        return vc
+    }
+    
+    var navigator: DashUINavigator!
 
     @IBOutlet weak var expirationReminderDateCell: ExpirationReminderDateTableViewCell!
 
-    var pumpManager: DashPumpManager! {
-        didSet {
-            if let expirationDate = pumpManager.podExpiresAt {
-                expirationReminderDateCell.date = expirationDate.addingTimeInterval(TimeInterval(hours: -2))
-                expirationReminderDateCell.datePicker.maximumDate = expirationDate.addingTimeInterval(TimeInterval(hours: -2))
-                expirationReminderDateCell.datePicker.minimumDate = expirationDate.addingTimeInterval(TimeInterval(hours: -8))
-            }
-        }
-    }
+    var pumpManager: DashPumpManager!
+    
+    var completion: (() -> Void)?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,18 +40,16 @@ class PodSetupCompleteViewController: SetupTableViewController {
         expirationReminderDateCell.titleLabel.text = LocalizedString("Expiration Reminder", comment: "The title of the cell showing the pod expiration reminder date")
         expirationReminderDateCell.datePicker.minuteInterval = 1
         expirationReminderDateCell.delegate = self
+        
+       if let expirationDate = pumpManager.podExpiresAt {
+           expirationReminderDateCell.date = expirationDate.addingTimeInterval(TimeInterval(hours: -2))
+           expirationReminderDateCell.datePicker.maximumDate = expirationDate.addingTimeInterval(TimeInterval(hours: -2))
+           expirationReminderDateCell.datePicker.minimumDate = expirationDate.addingTimeInterval(TimeInterval(hours: -8))
+       }
     }
 
     override func continueButtonPressed(_ sender: Any) {
-        if let setupVC = navigationController as? DashPumpManagerSetupViewController {
-            setupVC.finishedSetup()
-        }
-        if let replaceVC = navigationController as? PodReplacementNavigationController {
-            replaceVC.completeSetup()
-        }
-        if let settingsVC = navigationController as? SettingsNavigationViewController {
-            settingsVC.notifyComplete()
-        }
+        completion?()
     }
 
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {

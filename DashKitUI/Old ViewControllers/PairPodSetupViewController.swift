@@ -195,7 +195,7 @@ class PairPodSetupViewController: SetupTableViewController {
                 case .podStatus:
                     break
                 case .primingPod:
-                    let finishTime = TimeInterval(seconds: 35)
+                    let finishTime = TimeInterval(seconds: Pod.estimatedPrimingDuration)
                     self.continueState = .priming(finishTime: finishTime)
                     timeoutHandler = DispatchWorkItem {
                         self.lastError = PodCommError.failToConnect

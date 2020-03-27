@@ -35,7 +35,18 @@ public struct Pod {
 
     // Time from pod activation until expiration
     public static let lifetime = TimeInterval(hours: 72)
-    
+
+    // Time from expiration until pod fault
+    public static let expirationWindow = TimeInterval(hours: 8)
+
     // PodSDK insulin values are U * 100
     public static let podSDKInsulinMultiplier: Double = 100
+    
+    // Estimated time for priming to complete; SDK will send back an event when priming completes,
+    // But this lets us provide an estimate to the user.
+    public static let estimatedPrimingDuration = TimeInterval(35)
+    
+    // Estimated time for cannula insertion; SDK will send back an event that actually marks the end,
+    // but this lets us provide an estimate to the user
+    public static let estimatedCannulaInsertionDuration = TimeInterval(10)
 }

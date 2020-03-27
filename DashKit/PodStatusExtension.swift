@@ -91,67 +91,77 @@ extension PodCommError: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .unknownError:
-            return LocalizedString("Unknown Error", comment: "Error description for PodCommError.unknownError")
+            return LocalizedString("Unknown Error.", comment: "Error description for PodCommError.unknownError")
 
         case .phoneNotRegistered:
-            return LocalizedString("Phone is not registered", comment: "Error description for PodCommError.phoneNotRegistered")
+            return LocalizedString("Phone is not registered.", comment: "Error description for PodCommError.phoneNotRegistered")
 
         case .podServiceIsBusy:
-            return LocalizedString("Pod service is busy", comment: "Error description for PodCommError.podServiceIsBusy")
+            return LocalizedString("Pod service is busy.", comment: "Error description for PodCommError.podServiceIsBusy")
 
         case .podIsNotActive:
-            return LocalizedString("Pod is not active", comment: "Error description for PodCommError.podIsNotActive")
+            return LocalizedString("Pod is not active.", comment: "Error description for PodCommError.podIsNotActive")
 
         case .failToConnect:
-            return LocalizedString("Failed to connect", comment: "Error description for PodCommError.failToConnect")
+            return LocalizedString("Failed to connect.", comment: "Error description for PodCommError.failToConnect")
 
         case .operationTimeout:
-            return LocalizedString("Operation timed out", comment: "Error description for PodCommError.operationTimeout")
+            return LocalizedString("Operation timed out.", comment: "Error description for PodCommError.operationTimeout")
 
         case .notConnected:
-            return LocalizedString("Pod is not connected", comment: "Error description for PodCommError.notConnected")
+            return LocalizedString("There was a problem communicating with the Pod.", comment: "Error description for PodCommError.notConnected")
 
         case .messageSigningFailed:
-            return LocalizedString("Message signing failed", comment: "Error description for PodCommError.messageSigningFailed")
+            return LocalizedString("Message signing failed.", comment: "Error description for PodCommError.messageSigningFailed")
 
         case .podNotAvailable:
-            return LocalizedString("Pod not available", comment: "Error description for PodCommError.podNotAvailable")
+            return LocalizedString("Pod not available.", comment: "Error description for PodCommError.podNotAvailable")
 
         case .bluetoothOff:
-            return LocalizedString("Bluetooth is off", comment: "Error description for PodCommError.bluetoothOff")
+            return LocalizedString("Bluetooth is off.", comment: "Error description for PodCommError.bluetoothOff")
 
         case .internalError(let internalErrorCode):
-            return String(format: LocalizedString("Internal error: %1$@", comment: "Format string for error description for PodCommError.internalError (1: internal error code description)"), internalErrorCode.localizedDescription)
+            return String(format: LocalizedString("Internal error: %1$@.", comment: "Format string for error description for PodCommError.internalError (1: internal error code description)"), internalErrorCode.localizedDescription)
 
         case .activationError(let activationErrorCode):
-            return String(format: LocalizedString("Activation error: %1$@", comment: "Format string for error description for PodCommError.activationError (1: activation error code description)"), activationErrorCode.localizedDescription)
-            
+            switch activationErrorCode {
+            case .moreThanOnePodAvailable:
+                return LocalizedString("More than one Pod discovered.", comment: "Error description when multiple pods detected.")
+            case .podIsLumpOfCoal1Hour, .podIsLumpOfCoal2Hours:
+                return LocalizedString("Pod activation took too long.", comment: "Error description when pod is lump of coal")
+            case .podActivationFailed:
+                return LocalizedString("Pod activation failed.", comment: "Error description when pod activation failed")
+            case .podIsActivatedOrDeactivating:
+                return LocalizedString("Pod already active.", comment: "Error description when pod is activated or deactivating")
+            case .activationPhase1NotCompleted:
+                return LocalizedString("Priming not complete.", comment: "Error description when pod priming has not completed")
+            }
         case .nackReceived(let nackCode):
-            return String(format: LocalizedString("Nack received: %1$@", comment: "Format string for error description for PodCommError.nackReceived (1: nack error code description)"), nackCode.localizedDescription)
+            return String(format: LocalizedString("Nack received: %1$@.", comment: "Format string for error description for PodCommError.nackReceived (1: nack error code description)"), nackCode.localizedDescription)
 
         case .podIsInAlarm:
-            return LocalizedString("Pod is in alarm", comment: "Error description for PodCommError.podIsInAlarm")
+            return LocalizedString("Pod is in alarm.", comment: "Error description for PodCommError.podIsInAlarm")
 
         case .invalidProgram:
-            return LocalizedString("Invalid program", comment: "Error description for PodCommError.invalidProgram")
+            return LocalizedString("Invalid program.", comment: "Error description for PodCommError.invalidProgram")
 
         case .invalidAlertSetting:
-            return LocalizedString("Invalid alert settings", comment: "Error description for PodCommError.invalidAlertSetting")
+            return LocalizedString("Invalid alert settings.", comment: "Error description for PodCommError.invalidAlertSetting")
 
         case .invalidProgramStatus:
-            return LocalizedString("Invalid program status", comment: "Error description for PodCommError.invalidProgramStatus")
+            return LocalizedString("Invalid program status.", comment: "Error description for PodCommError.invalidProgramStatus")
 
         case .unacknowledgedCommandPendingRetry:
-            return LocalizedString("Unacknowledged command pending retry", comment: "Error description for PodCommError.unacknowledgedCommandPendingRetry")
+            return LocalizedString("Unacknowledged command pending retry.", comment: "Error description for PodCommError.unacknowledgedCommandPendingRetry")
 
         case .noUnacknowledgedCommandToRetry:
-            return LocalizedString("No unacknowledged command to retry", comment: "Error description for PodCommError.noUnacknowledgedCommandToRetry")
+            return LocalizedString("No unacknowledged command to retry.", comment: "Error description for PodCommError.noUnacknowledgedCommandToRetry")
 
         case .bleCommunicationError:
-            return LocalizedString("Bluetooth communication error", comment: "Error description for PodCommError.bleCommunicationError")
+            return LocalizedString("There was a problem communicating with the Pod.", comment: "Error description for PodCommError.bleCommunicationError")
             
         case .bluetoothUnauthorized:
-            return LocalizedString("Bluetooth unauthorized", comment: "Error description for PodCommError.bluetoothUnauthorized")
+            return LocalizedString("Bluetooth not authorized.", comment: "Error description for PodCommError.bluetoothUnauthorized")
             
         case .systemError(let systemError):
             return String(format: LocalizedString("System error: %1$@", comment: "Format string for error description for PodCommError.systemError (1: system error code description)"), String(describing: systemError))
@@ -163,19 +173,21 @@ extension PodCommError: LocalizedError {
 
     public var recoverySuggestion: String? {
         switch self {
-        case .podNotAvailable:
-            return LocalizedString("Move to a new area, place your phone and Pod close to each other and tap Retry.", comment: "Recovery suggestion when pod not available.")
-            
         case .activationError(let error):
             switch error {
             case .moreThanOnePodAvailable:
                 return LocalizedString("Please move to a new location and try again.", comment: "Recovery suggestion when multiple pods detected.")
-            case .podIsLumpOfCoal1Hour, .podIsLumpOfCoal2Hours:
-                return LocalizedString("Pod activation took too long. The pod was not activated within two hours after filling the reservoir and cannot be used.", comment: "Recovery suggestion when pod is lump of coal")
+            case .podIsLumpOfCoal1Hour:
+                return LocalizedString("The pod was not activated within one hour after filling the reservoir and cannot be used.", comment: "Recovery suggestion when pod is lump of coal 1 hour")
+            case .podIsLumpOfCoal2Hours:
+                return LocalizedString("Pod activation was not finished within two hours after filling the reservoir and cannot be used.", comment: "Recovery suggestion when pod is lump of coal 2 hours")
             default:
                 return nil
             }
-            
+        case .bluetoothUnauthorized:
+            return LocalizedString("Please authorize Loop for bluetooth in settings app.", comment: "Recovery suggestion for PodCommError.bluetoothUnauthorized")
+        case .bluetoothOff:
+            return LocalizedString("Please re-enable bluetooth and try again.", comment: "Recovery suggestion bluetooth not authorized.")
         default:
             return nil
         }

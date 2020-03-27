@@ -13,6 +13,15 @@ import PodSDK
 import os.log
 
 class ReplacePodViewController: SetupTableViewController {
+    
+    class func instantiateFromStoryboard(_ pumpManager: DashPumpManager, navigator: DashUINavigator) -> ReplacePodViewController {
+        let vc = UIStoryboard(name: "DashPumpManager", bundle: Bundle(for: ReplacePodViewController.self)).instantiateViewController(withIdentifier: "ReplacePodViewController") as! ReplacePodViewController
+        vc.pumpManager = pumpManager
+        vc.navigator = navigator
+        return vc
+    }
+
+    var navigator: DashUINavigator!
 
     private let log = OSLog(category: "ReplacePodViewController")
 
@@ -42,22 +51,7 @@ class ReplacePodViewController: SetupTableViewController {
         }
     }
 
-    var pumpManager: DashPumpManager! {
-        didSet {
-            let podState = pumpManager.podCommState
-            switch podState {
-            case .alarm:
-                let alarmCode: AlarmCode = pumpManager.state.alarmCode ?? .other
-                self.replacementReason = .alarm(alarmCode)
-            case .activating:
-                self.replacementReason = .canceledPairingBeforeApplication
-            case .deactivating:
-                self.replacementReason = .canceledPairing
-            default:
-                self.replacementReason = .normal
-            }
-        }
-    }
+    var pumpManager: DashPumpManager!
 
     // MARK: -
 
@@ -74,6 +68,19 @@ class ReplacePodViewController: SetupTableViewController {
         super.viewDidLoad()
 
         continueState = .initial
+        
+        let podState = pumpManager.podCommState
+        switch podState {
+        case .alarm:
+           let alarmCode: AlarmCode = pumpManager.state.alarmCode ?? .other
+           self.replacementReason = .alarm(alarmCode)
+        case .activating:
+           self.replacementReason = .canceledPairingBeforeApplication
+        case .deactivating:
+           self.replacementReason = .canceledPairing
+        default:
+           self.replacementReason = .normal
+        }
     }
 
     // MARK: - UITableViewDelegate
@@ -155,14 +162,10 @@ class ReplacePodViewController: SetupTableViewController {
         }
     }
 
-    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
-        return continueState == .ready || continueState == .continueAfterFailure
-    }
-
     override func continueButtonPressed(_ sender: Any) {
         switch continueState {
         case .ready:
-            super.continueButtonPressed(sender)
+            navigator.navigateTo(.pairPod)
         case .continueAfterFailure:
             pumpManager.discardPod { (_) in
                 DispatchQueue.main.async {
