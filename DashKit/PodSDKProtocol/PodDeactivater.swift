@@ -1,5 +1,5 @@
 //
-//  PodDeactivating.swift
+//  PodDeactivater.swift
 //  DashKit
 //
 //  Created by Pete Schwamb on 3/10/20.
@@ -9,9 +9,9 @@
 import Foundation
 import PodSDK
 
-public protocol PodDeactivating {
+public protocol PodDeactivater {
     func deactivatePod(completion: @escaping (PodCommResult<PodStatus>) -> ())
     func discardPod(completion: @escaping (PodCommResult<Bool>) -> ())
 }
 
-extension DashPumpManager: PodDeactivating { }
+extension DashPumpManager: PodDeactivater { }

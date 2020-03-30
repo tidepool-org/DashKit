@@ -1,5 +1,5 @@
 //
-//  MockPodPairing.swift
+//  MockPodPairer.swift
 //  DashKitUI
 //
 //  Created by Pete Schwamb on 3/5/20.
@@ -10,7 +10,7 @@ import PodSDK
 import DashKit
 
 
-class MockPodPairing: PodPairing {
+class MockPodPairer: PodPairer {
     private var attemptCount = 0
     
     var podCommState: PodCommState = .noPod

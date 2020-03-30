@@ -10,7 +10,7 @@ import Foundation
 import DashKit
 import PodSDK
 
-class MockRegistrationManager: RegistrationManagerProtocol {
+class MockRegistrationManager: PDMRegistrator {
     
     public var initialResponse: RegistrationStatus = .connectionTimeout
     

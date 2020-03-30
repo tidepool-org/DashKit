@@ -12,6 +12,9 @@ struct LeadingImage: View {
     
     var name: String
     
+    static let compactScreenImageHeight: CGFloat = 70
+    static let regularScreenImageHeight: CGFloat = 150
+
     @Environment(\.verticalSizeClass) var verticalSizeClass
     
     init(_ name: String) {
@@ -22,7 +25,7 @@ struct LeadingImage: View {
         Image(frameworkImage: self.name, decorative: true)
             .resizable()
             .aspectRatio(contentMode: ContentMode.fit)
-            .frame(height: self.verticalSizeClass == .compact ? 70 : 150)
+            .frame(height: self.verticalSizeClass == .compact ? LeadingImage.compactScreenImageHeight : LeadingImage.regularScreenImageHeight)
             .padding(.vertical, self.verticalSizeClass == .compact ? 0 : nil)
     }
 }

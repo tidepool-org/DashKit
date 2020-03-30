@@ -151,10 +151,10 @@ class PairPodViewModel: ObservableObject, Identifiable {
     
     weak var navigator: DashUINavigator?
     
-    var pairing: PodPairing
+    var podPairer: PodPairer
 
-    init(pairing: PodPairing, navigator: DashUINavigator) {
-        self.pairing = pairing
+    init(podPairer: PodPairer, navigator: DashUINavigator) {
+        self.podPairer = podPairer
         self.navigator = navigator
     }
     
@@ -174,11 +174,11 @@ class PairPodViewModel: ObservableObject, Identifiable {
     private func pair() {
         state = .pairing
         
-        pairing.pair { (status) in
+        podPairer.pair { (status) in
             switch status {
             case .error(let error):
                 let pairingError = DashPairingError.podCommError(error)
-                self.state = .error(pairingError, self.pairing.podCommState)
+                self.state = .error(pairingError, self.podPairer.podCommState)
             case .event(let event):
                 self.handleEvent(event)
             }

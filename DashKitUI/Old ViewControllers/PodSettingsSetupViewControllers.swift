@@ -21,7 +21,7 @@ class PodSettingsSetupViewController: SetupTableViewController {
         return storyboard.instantiateViewController(withIdentifier: "PodSettingsSetupViewController") as! PodSettingsSetupViewController
     }
 
-    weak var settingsProvider: SettingsProviding?
+    weak var settingsProvider: SettingsProvider?
     
     var completion: (() -> Void)?
 

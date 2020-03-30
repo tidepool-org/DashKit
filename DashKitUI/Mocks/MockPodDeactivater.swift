@@ -1,5 +1,5 @@
 //
-//  MockPodDeactivating.swift
+//  MockPodDeactivater.swift
 //  DashKitUI
 //
 //  Created by Pete Schwamb on 3/9/20.
@@ -9,7 +9,7 @@
 import DashKit
 import PodSDK
 
-class MockPodDeactivating: PodDeactivating {
+class MockPodDeactivater: PodDeactivater {
     private var attemptCount = 0
     
     func deactivatePod(completion: @escaping (PodCommResult<PodStatus>) -> ()) {

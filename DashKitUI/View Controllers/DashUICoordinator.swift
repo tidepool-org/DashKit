@@ -58,7 +58,7 @@ protocol DashUINavigator: class {
     func navigateTo(_ screen: DashUIScreen)
 }
 
-class DashUICoordinator: UINavigationController, PumpManagerSetupViewController, CompletionNotifying, SettingsProviding, UINavigationControllerDelegate {
+class DashUICoordinator: UINavigationController, PumpManagerSetupViewController, CompletionNotifying, SettingsProvider, UINavigationControllerDelegate {
     
     var setupDelegate: PumpManagerSetupViewControllerDelegate?
     var completionDelegate: CompletionDelegate?
@@ -73,7 +73,7 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
 
     private var disposables = Set<AnyCancellable>()
     
-    private var registrationManager: RegistrationManagerProtocol
+    private var registrationManager: PDMRegistrator
     
     var currentScreen: DashUIScreen {
         return screenStack.last!
@@ -85,31 +85,29 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
         switch screen {
         case .alarm:
             // TODO
-            let view = PairPodView(viewModel: PairPodViewModel(pairing: MockPodPairing(), navigator: self))
+            let view = PairPodView(viewModel: PairPodViewModel(podPairer: MockPodPairer(), navigator: self))
             return UIHostingController(rootView: view)
         case .deactivate:
-            if let pumpManager = pumpManager {
-                let viewModel = DeactivatePodViewModel(deactivating: pumpManager)
-
-                viewModel.didFinish = { [weak self] in
-                    self?.stepFinished()
-                }
-                viewModel.didCancel = { [weak self] in
-                    self?.setupCanceled()
-                }
-                let view = DeactivatePodView(viewModel: viewModel)
-                return UIHostingController(rootView: view)
-            } else {
+            guard let pumpManager = pumpManager else {
                 fatalError("Need pump manager for pod deactivate screen")
             }
+            let viewModel = DeactivatePodViewModel(podDeactivator: pumpManager)
+
+            viewModel.didFinish = { [weak self] in
+                self?.stepFinished()
+            }
+            viewModel.didCancel = { [weak self] in
+                self?.setupCanceled()
+            }
+            let view = DeactivatePodView(viewModel: viewModel)
+            return UIHostingController(rootView: view)
         case .settings:
-            if let pumpManager = pumpManager {
-                let viewModel = DashSettingsViewModel(pumpManager: pumpManager)
-                let view = DashSettingsView(viewModel: viewModel, navigator: self)
-                return UIHostingController(rootView: view)
-            } else {
+            guard let pumpManager = pumpManager else {
                 fatalError("Cannot create settings without PumpManager")
             }
+            let viewModel = DashSettingsViewModel(pumpManager: pumpManager)
+            let view = DashSettingsView(viewModel: viewModel, navigator: self)
+            return UIHostingController(rootView: view)
         case .registration:
             let viewModel = RegistrationViewModel(registrationManager: registrationManager)
             viewModel.completion = { [weak self] in
@@ -126,7 +124,7 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
             return settingsVC
         case .pairPod:
             #if targetEnvironment(simulator)
-            let viewModel = PairPodViewModel(pairing: MockPodPairing(), navigator: self)
+            let viewModel = PairPodViewModel(podPairer: MockPodPairer(), navigator: self)
             #else
             if pumpManager == nil,
                 let basalRateSchedule = basalSchedule,
@@ -153,7 +151,7 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
             return UIHostingController(rootView: view)
         case .insertCannula:
             #if targetEnvironment(simulator)
-            let viewModel = InsertCannulaViewModel(cannulaInsertion: MockCannulaInsertion(), navigator: self)
+            let viewModel = InsertCannulaViewModel(cannulaInserter: MockCannulaInserter(), navigator: self)
             #else
             guard let pumpManager = pumpManager else {
                 fatalError("Need pump manager for cannula insertion screen")

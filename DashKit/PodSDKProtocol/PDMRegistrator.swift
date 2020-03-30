@@ -1,5 +1,5 @@
 //
-//  RegistrationManager.swift
+//  PDMRegistrator.swift
 //  DashKit
 //
 //  Created by Pete Schwamb on 2/11/20.
@@ -9,4 +9,4 @@
 import Foundation
 import PodSDK
 
-extension RegistrationManager: RegistrationManagerProtocol { }
+extension RegistrationManager: PDMRegistrator { }

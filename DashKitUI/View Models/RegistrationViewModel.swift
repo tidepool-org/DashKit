@@ -52,13 +52,13 @@ class RegistrationViewModel: ObservableObject, Identifiable {
     
     @Published var isRegistering: Bool
     
-    private var registrationManager: RegistrationManagerProtocol
+    private var registrationManager: PDMRegistrator
 
     private let log = OSLog(category: "RegistrationViewModel")
     
     var completion: (() -> Void)?
 
-    init(registrationManager: RegistrationManagerProtocol) {
+    init(registrationManager: PDMRegistrator) {
         self.registrationManager = registrationManager
         isRegistered = registrationManager.isRegistered()
         isRegistering = false

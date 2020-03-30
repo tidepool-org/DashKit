@@ -255,7 +255,7 @@ public protocol PodCommManagerProtocol {
     var podCommState: PodSDK.PodCommState { get }
 }
 
-public protocol RegistrationManagerProtocol {
+public protocol PDMRegistrator {
     
     /**
      Starts a registration process without SMS validation.

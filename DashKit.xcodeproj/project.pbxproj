@@ -39,10 +39,10 @@
 		C107D17D226A24CE00D63775 /* TimeZone.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D11A22692FC400D63775 /* TimeZone.swift */; };
 		C10C758122C4041F00CCC20F /* PodSDKProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10C758022C4041F00CCC20F /* PodSDKProtocol.swift */; };
 		C10C758322C404B700CCC20F /* PodCommManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10C758222C404B700CCC20F /* PodCommManager.swift */; };
-		C10D1D77241169F50007ABF7 /* MockPodPairing.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10D1D76241169F50007ABF7 /* MockPodPairing.swift */; };
-		C10D1D7824117E990007ABF7 /* PodPairing.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10D1D74241168060007ABF7 /* PodPairing.swift */; };
+		C10D1D77241169F50007ABF7 /* MockPodPairer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10D1D76241169F50007ABF7 /* MockPodPairer.swift */; };
+		C10D1D7824117E990007ABF7 /* PodPairer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10D1D74241168060007ABF7 /* PodPairer.swift */; };
 		C10D6121240D65300081FFFA /* PairPodViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10D6120240D65300081FFFA /* PairPodViewModel.swift */; };
-		C10EF92E24044C000091392C /* SettingsProviding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10EF92C24044B560091392C /* SettingsProviding.swift */; };
+		C10EF92E24044C000091392C /* SettingsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10EF92C24044B560091392C /* SettingsProvider.swift */; };
 		C11097CE238F14A4004F1A04 /* PodSDK.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C11097CD238F14A4004F1A04 /* PodSDK.xcframework */; };
 		C11B2C2D2425846D00308035 /* MockNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11B2C2C2425846D00308035 /* MockNavigator.swift */; };
 		C1201E3123EDF498002DA84A /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1201E3023EDF498002DA84A /* Image.swift */; };
@@ -50,7 +50,7 @@
 		C127160C237A07B60093DAB7 /* UnfinalizedDoseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C127160B237A07B60093DAB7 /* UnfinalizedDoseTests.swift */; };
 		C12A06A123F217A40052195C /* RegistrationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12A06A023F217A40052195C /* RegistrationViewModel.swift */; };
 		C12A06AA23F2EFED0052195C /* MockRegistrationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12A06A923F2EFED0052195C /* MockRegistrationManager.swift */; };
-		C12A06AC23F2F0070052195C /* RegistrationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12A06AB23F2F0070052195C /* RegistrationManager.swift */; };
+		C12A06AC23F2F0070052195C /* PDMRegistrator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12A06AB23F2F0070052195C /* PDMRegistrator.swift */; };
 		C12AA74B231870160025FD45 /* ConnectionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12AA74A231870160025FD45 /* ConnectionState.swift */; };
 		C12C9C83229EDB7B00FF7632 /* InsulinStatusTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12C9C82229EDB7B00FF7632 /* InsulinStatusTableViewCell.swift */; };
 		C1344DE22304CE2B00973BE3 /* TimeInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D11422692BDE00D63775 /* TimeInterval.swift */; };
@@ -70,7 +70,7 @@
 		C1562F85241698C0006952D6 /* PodLifeState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1562F84241698C0006952D6 /* PodLifeState.swift */; };
 		C1562F8724169C41006952D6 /* DeactivatePodView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1562F8624169C41006952D6 /* DeactivatePodView.swift */; };
 		C1562F8924169C65006952D6 /* DeactivatePodViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1562F8824169C65006952D6 /* DeactivatePodViewModel.swift */; };
-		C1562F8B2416A7C8006952D6 /* MockPodDeactivating.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1562F8A2416A7C8006952D6 /* MockPodDeactivating.swift */; };
+		C1562F8B2416A7C8006952D6 /* MockPodDeactivater.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1562F8A2416A7C8006952D6 /* MockPodDeactivater.swift */; };
 		C1562F8D2416A945006952D6 /* MockPodStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1562F8C2416A945006952D6 /* MockPodStatus.swift */; };
 		C160FEBA2371EA050080031E /* AlarmCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = C160FEB92371EA050080031E /* AlarmCode.swift */; };
 		C16DA83622E7C6F2008624C2 /* DashKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; platformFilter = ios; };
@@ -101,9 +101,9 @@
 		C1D68E322284B50300019CAE /* TimeInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D11422692BDE00D63775 /* TimeInterval.swift */; };
 		C1D68E392284E0E000019CAE /* DashKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; };
 		C1DFF91F2417C88600EAC44E /* InsertCannulaViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1DFF91E2417C88600EAC44E /* InsertCannulaViewModel.swift */; };
-		C1DFF9212417C96E00EAC44E /* PodDeactivating.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1DFF9202417C96D00EAC44E /* PodDeactivating.swift */; };
-		C1DFF9232417C98700EAC44E /* CannulaInsertion.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1DFF9222417C98700EAC44E /* CannulaInsertion.swift */; };
-		C1DFF9252417CA5B00EAC44E /* MockCannulaInsertion.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1DFF9242417CA5B00EAC44E /* MockCannulaInsertion.swift */; };
+		C1DFF9212417C96E00EAC44E /* PodDeactivater.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1DFF9202417C96D00EAC44E /* PodDeactivater.swift */; };
+		C1DFF9232417C98700EAC44E /* CannulaInserter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1DFF9222417C98700EAC44E /* CannulaInserter.swift */; };
+		C1DFF9252417CA5B00EAC44E /* MockCannulaInserter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1DFF9242417CA5B00EAC44E /* MockCannulaInserter.swift */; };
 		C1E753E3226928F700A0BC48 /* DashKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; };
 		C1E753E8226928F700A0BC48 /* DashPumpManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E753E7226928F700A0BC48 /* DashPumpManagerTests.swift */; };
 		C1E753EA226928F700A0BC48 /* DashKit.h in Headers */ = {isa = PBXBuildFile; fileRef = C1E753DC226928F700A0BC48 /* DashKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -212,10 +212,10 @@
 		C107D17B226A243A00D63775 /* UITableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITableViewCell.swift; sourceTree = "<group>"; };
 		C10C758022C4041F00CCC20F /* PodSDKProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodSDKProtocol.swift; sourceTree = "<group>"; };
 		C10C758222C404B700CCC20F /* PodCommManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodCommManager.swift; sourceTree = "<group>"; };
-		C10D1D74241168060007ABF7 /* PodPairing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodPairing.swift; sourceTree = "<group>"; };
-		C10D1D76241169F50007ABF7 /* MockPodPairing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPodPairing.swift; sourceTree = "<group>"; };
+		C10D1D74241168060007ABF7 /* PodPairer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodPairer.swift; sourceTree = "<group>"; };
+		C10D1D76241169F50007ABF7 /* MockPodPairer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPodPairer.swift; sourceTree = "<group>"; };
 		C10D6120240D65300081FFFA /* PairPodViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairPodViewModel.swift; sourceTree = "<group>"; };
-		C10EF92C24044B560091392C /* SettingsProviding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsProviding.swift; sourceTree = "<group>"; };
+		C10EF92C24044B560091392C /* SettingsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsProvider.swift; sourceTree = "<group>"; };
 		C11097CD238F14A4004F1A04 /* PodSDK.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = PodSDK.xcframework; path = "dash-sdk-ios/frameworks/PodSDK.xcframework"; sourceTree = "<group>"; };
 		C11B2C2C2425846D00308035 /* MockNavigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNavigator.swift; sourceTree = "<group>"; };
 		C1201E3023EDF498002DA84A /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
@@ -223,7 +223,7 @@
 		C127160B237A07B60093DAB7 /* UnfinalizedDoseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnfinalizedDoseTests.swift; sourceTree = "<group>"; };
 		C12A06A023F217A40052195C /* RegistrationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationViewModel.swift; sourceTree = "<group>"; };
 		C12A06A923F2EFED0052195C /* MockRegistrationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockRegistrationManager.swift; sourceTree = "<group>"; };
-		C12A06AB23F2F0070052195C /* RegistrationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationManager.swift; sourceTree = "<group>"; };
+		C12A06AB23F2F0070052195C /* PDMRegistrator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDMRegistrator.swift; sourceTree = "<group>"; };
 		C12AA74A231870160025FD45 /* ConnectionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionState.swift; sourceTree = "<group>"; };
 		C12C9C82229EDB7B00FF7632 /* InsulinStatusTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsulinStatusTableViewCell.swift; sourceTree = "<group>"; };
 		C135D9192319AA4200774F82 /* Kronos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Kronos.framework; path = Carthage/Build/iOS/Kronos.framework; sourceTree = "<group>"; };
@@ -237,7 +237,7 @@
 		C1562F84241698C0006952D6 /* PodLifeState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodLifeState.swift; sourceTree = "<group>"; };
 		C1562F8624169C41006952D6 /* DeactivatePodView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeactivatePodView.swift; sourceTree = "<group>"; };
 		C1562F8824169C65006952D6 /* DeactivatePodViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeactivatePodViewModel.swift; sourceTree = "<group>"; };
-		C1562F8A2416A7C8006952D6 /* MockPodDeactivating.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPodDeactivating.swift; sourceTree = "<group>"; };
+		C1562F8A2416A7C8006952D6 /* MockPodDeactivater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPodDeactivater.swift; sourceTree = "<group>"; };
 		C1562F8C2416A945006952D6 /* MockPodStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPodStatus.swift; sourceTree = "<group>"; };
 		C160FEB92371EA050080031E /* AlarmCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmCode.swift; sourceTree = "<group>"; };
 		C194114522861E9100E886DD /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
@@ -265,9 +265,9 @@
 		C1D46D6522C56C2300978E59 /* MockPodCommManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPodCommManager.swift; sourceTree = "<group>"; };
 		C1D68E2F2284849D00019CAE /* BasalSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasalSchedule.swift; sourceTree = "<group>"; };
 		C1DFF91E2417C88600EAC44E /* InsertCannulaViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsertCannulaViewModel.swift; sourceTree = "<group>"; };
-		C1DFF9202417C96D00EAC44E /* PodDeactivating.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodDeactivating.swift; sourceTree = "<group>"; };
-		C1DFF9222417C98700EAC44E /* CannulaInsertion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CannulaInsertion.swift; sourceTree = "<group>"; };
-		C1DFF9242417CA5B00EAC44E /* MockCannulaInsertion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCannulaInsertion.swift; sourceTree = "<group>"; };
+		C1DFF9202417C96D00EAC44E /* PodDeactivater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodDeactivater.swift; sourceTree = "<group>"; };
+		C1DFF9222417C98700EAC44E /* CannulaInserter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CannulaInserter.swift; sourceTree = "<group>"; };
+		C1DFF9242417CA5B00EAC44E /* MockCannulaInserter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCannulaInserter.swift; sourceTree = "<group>"; };
 		C1E753D9226928F700A0BC48 /* DashKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DashKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1E753DC226928F700A0BC48 /* DashKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DashKit.h; sourceTree = "<group>"; };
 		C1E753DD226928F700A0BC48 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -425,10 +425,10 @@
 				C10C758022C4041F00CCC20F /* PodSDKProtocol.swift */,
 				C10C758222C404B700CCC20F /* PodCommManager.swift */,
 				C1F8403523D7A0B200673141 /* PodSDKLoggingShim.swift */,
-				C12A06AB23F2F0070052195C /* RegistrationManager.swift */,
-				C10D1D74241168060007ABF7 /* PodPairing.swift */,
-				C1DFF9202417C96D00EAC44E /* PodDeactivating.swift */,
-				C1DFF9222417C98700EAC44E /* CannulaInsertion.swift */,
+				C12A06AB23F2F0070052195C /* PDMRegistrator.swift */,
+				C10D1D74241168060007ABF7 /* PodPairer.swift */,
+				C1DFF9202417C96D00EAC44E /* PodDeactivater.swift */,
+				C1DFF9222417C98700EAC44E /* CannulaInserter.swift */,
 			);
 			path = PodSDKProtocol;
 			sourceTree = "<group>";
@@ -436,7 +436,7 @@
 		C10EF92B24044B3B0091392C /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
-				C10EF92C24044B560091392C /* SettingsProviding.swift */,
+				C10EF92C24044B560091392C /* SettingsProvider.swift */,
 				C1562F822415848D006952D6 /* DashSettingsViewModelProtocol.swift */,
 			);
 			path = Protocols;
@@ -477,11 +477,11 @@
 			isa = PBXGroup;
 			children = (
 				C12A06A923F2EFED0052195C /* MockRegistrationManager.swift */,
-				C10D1D76241169F50007ABF7 /* MockPodPairing.swift */,
+				C10D1D76241169F50007ABF7 /* MockPodPairer.swift */,
 				C1562F802415834D006952D6 /* MockDashSettingsViewModel.swift */,
-				C1562F8A2416A7C8006952D6 /* MockPodDeactivating.swift */,
+				C1562F8A2416A7C8006952D6 /* MockPodDeactivater.swift */,
 				C1562F8C2416A945006952D6 /* MockPodStatus.swift */,
-				C1DFF9242417CA5B00EAC44E /* MockCannulaInsertion.swift */,
+				C1DFF9242417CA5B00EAC44E /* MockCannulaInserter.swift */,
 				C11B2C2C2425846D00308035 /* MockNavigator.swift */,
 			);
 			path = Mocks;
@@ -834,9 +834,9 @@
 				C1562F85241698C0006952D6 /* PodLifeState.swift in Sources */,
 				C1562F812415834D006952D6 /* MockDashSettingsViewModel.swift in Sources */,
 				C1562F7F241581C7006952D6 /* DashSettingsViewModel.swift in Sources */,
-				C1DFF9252417CA5B00EAC44E /* MockCannulaInsertion.swift in Sources */,
+				C1DFF9252417CA5B00EAC44E /* MockCannulaInserter.swift in Sources */,
 				C1ED19D223F98C5C00D55049 /* DashUICoordinator.swift in Sources */,
-				C1562F8B2416A7C8006952D6 /* MockPodDeactivating.swift in Sources */,
+				C1562F8B2416A7C8006952D6 /* MockPodDeactivater.swift in Sources */,
 				C12A06A123F217A40052195C /* RegistrationViewModel.swift in Sources */,
 				C1D68E322284B50300019CAE /* TimeInterval.swift in Sources */,
 				C14C6F252419F95E00CF3408 /* LeadingImage.swift in Sources */,
@@ -855,7 +855,7 @@
 				C1ACF43222A03F0500F7DDB4 /* OmnipodReservoirView.swift in Sources */,
 				C107D17D226A24CE00D63775 /* TimeZone.swift in Sources */,
 				C194114E228DBEC000E886DD /* PodSetupCompleteViewController.swift in Sources */,
-				C10D1D77241169F50007ABF7 /* MockPodPairing.swift in Sources */,
+				C10D1D77241169F50007ABF7 /* MockPodPairer.swift in Sources */,
 				C107D16D226A143A00D63775 /* UIViewController.swift in Sources */,
 				C107D17C226A243A00D63775 /* UITableViewCell.swift in Sources */,
 				C1562F8724169C41006952D6 /* DeactivatePodView.swift in Sources */,
@@ -869,7 +869,7 @@
 				C1562F8D2416A945006952D6 /* MockPodStatus.swift in Sources */,
 				C107D176226A22BF00D63775 /* LocalizedString.swift in Sources */,
 				C1A701B923EB7EC2002D1E45 /* PairPodView.swift in Sources */,
-				C10EF92E24044C000091392C /* SettingsProviding.swift in Sources */,
+				C10EF92E24044C000091392C /* SettingsProvider.swift in Sources */,
 				C107D17A226A241200D63775 /* IdentifiableClass.swift in Sources */,
 				C1DFF91F2417C88600EAC44E /* InsertCannulaViewModel.swift in Sources */,
 				C10D6121240D65300081FFFA /* PairPodViewModel.swift in Sources */,
@@ -892,7 +892,7 @@
 			files = (
 				C10C758122C4041F00CCC20F /* PodSDKProtocol.swift in Sources */,
 				C1D68E302284849D00019CAE /* BasalSchedule.swift in Sources */,
-				C10D1D7824117E990007ABF7 /* PodPairing.swift in Sources */,
+				C10D1D7824117E990007ABF7 /* PodPairer.swift in Sources */,
 				C107D11B22692FC400D63775 /* TimeZone.swift in Sources */,
 				C10C758322C404B700CCC20F /* PodCommManager.swift in Sources */,
 				C107D10B22692A1700D63775 /* DashPumpManager.swift in Sources */,
@@ -901,11 +901,11 @@
 				C1ACF44222A1FC1F00F7DDB4 /* PodDoseProgressTimerEstimator.swift in Sources */,
 				C15424332280C75E006754B3 /* PodStatusExtension.swift in Sources */,
 				C1ACF44022A1F9B400F7DDB4 /* OSLog.swift in Sources */,
-				C12A06AC23F2F0070052195C /* RegistrationManager.swift in Sources */,
+				C12A06AC23F2F0070052195C /* PDMRegistrator.swift in Sources */,
 				C107D11522692BDE00D63775 /* TimeInterval.swift in Sources */,
-				C1DFF9232417C98700EAC44E /* CannulaInsertion.swift in Sources */,
+				C1DFF9232417C98700EAC44E /* CannulaInserter.swift in Sources */,
 				C107D11722692D9D00D63775 /* LocalizedString.swift in Sources */,
-				C1DFF9212417C96E00EAC44E /* PodDeactivating.swift in Sources */,
+				C1DFF9212417C96E00EAC44E /* PodDeactivater.swift in Sources */,
 				C1ACF44422A200B100F7DDB4 /* UnfinalizedDose.swift in Sources */,
 				C107D11922692E6B00D63775 /* DashPumpManagerState.swift in Sources */,
 				C1BC259C2314604800E80E3F /* DashPumpManagerError.swift in Sources */,

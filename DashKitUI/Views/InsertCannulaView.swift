@@ -82,7 +82,7 @@ struct InsertCannulaView_Previews: PreviewProvider {
         NavigationView {
             ZStack {
                 Color(UIColor.secondarySystemBackground).edgesIgnoringSafeArea(.all)
-                InsertCannulaView(viewModel: InsertCannulaViewModel(cannulaInsertion: MockCannulaInsertion(), navigator: MockNavigator()))
+                InsertCannulaView(viewModel: InsertCannulaViewModel(cannulaInserter: MockCannulaInserter(), navigator: MockNavigator()))
             }
         }
         //.environment(\.colorScheme, .dark)

@@ -20,11 +20,7 @@ struct RegisterView: View {
 
     var body: some View {
         GuidePage(content: {
-            Image(frameworkImage: "No Pod")
-                .resizable()
-                .aspectRatio(contentMode: ContentMode.fit)
-                .frame(height: self.verticalSizeClass == .compact ? 70 : 150)
-                .padding()
+            LeadingImage("No Pod")
 
             VStack(alignment: .leading, spacing: 8) {
                 Text("This device must be registered as a PDM. Registration requires internet connectivity and is only required once per device.")

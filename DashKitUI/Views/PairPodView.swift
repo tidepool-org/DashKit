@@ -81,7 +81,7 @@ struct PairPodView_Previews: PreviewProvider {
     
     static var previews: some View {
         NavigationView {
-            PairPodView(viewModel: PairPodViewModel(pairing: MockPodPairing(), navigator: MockNavigator()))
+            PairPodView(viewModel: PairPodViewModel(podPairer: MockPodPairer(), navigator: MockNavigator()))
         }
         //.environment(\.colorScheme, .dark)
         //.environment(\.sizeCategory, .accessibilityLarge)

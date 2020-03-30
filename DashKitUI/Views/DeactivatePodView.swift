@@ -73,6 +73,6 @@ struct DeactivatePodView: View {
 
 struct DeactivatePodView_Previews: PreviewProvider {
     static var previews: some View {
-        DeactivatePodView(viewModel: DeactivatePodViewModel(deactivating: MockPodDeactivating()))
+        DeactivatePodView(viewModel: DeactivatePodViewModel(podDeactivator: MockPodDeactivater()))
     }
 }

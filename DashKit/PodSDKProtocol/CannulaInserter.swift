@@ -1,5 +1,5 @@
 //
-//  CannulaInsertion.swift
+//  CannulaInserter.swift
 //  DashKit
 //
 //  Created by Pete Schwamb on 3/10/20.
@@ -9,11 +9,11 @@
 import Foundation
 import PodSDK
 
-public protocol CannulaInsertion {
+public protocol CannulaInserter {
     func insertCannula(eventListener: @escaping (ActivationStatus<ActivationStep2Event>) -> ())
 }
 
-extension DashPumpManager: CannulaInsertion {
+extension DashPumpManager: CannulaInserter {
     public func insertCannula(eventListener: @escaping (ActivationStatus<ActivationStep2Event>) -> ()) {
         let autoOffAlert = try! AutoOffAlert(enable: false)
         finishPodActivation(autoOffAlert: autoOffAlert, eventListener: eventListener)

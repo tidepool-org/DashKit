@@ -122,12 +122,12 @@ class InsertCannulaViewModel: ObservableObject, Identifiable {
     
     var didCancel: (() -> Void)?
     
-    var cannulaInsertion: CannulaInsertion
+    var cannulaInserter: CannulaInserter
     
     weak var navigator: DashUINavigator?
 
-    init(cannulaInsertion: CannulaInsertion, navigator: DashUINavigator) {
-        self.cannulaInsertion = cannulaInsertion
+    init(cannulaInserter: CannulaInserter, navigator: DashUINavigator) {
+        self.cannulaInserter = cannulaInserter
         self.navigator = navigator
     }
     
@@ -146,7 +146,7 @@ class InsertCannulaViewModel: ObservableObject, Identifiable {
     private func insertCannula() {
         state = .startingInsertion
         
-        cannulaInsertion.insertCannula { (status) in
+        cannulaInserter.insertCannula { (status) in
             switch status {
             case .error(let error):
                 self.state = .error(error)

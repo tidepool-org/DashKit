@@ -106,10 +106,10 @@ class DeactivatePodViewModel: ObservableObject, Identifiable {
     
     var didCancel: (() -> Void)?
     
-    var deactivating: PodDeactivating
+    var podDeactivator: PodDeactivater
 
-    init(deactivating: PodDeactivating) {
-        self.deactivating = deactivating
+    init(podDeactivator: PodDeactivater) {
+        self.podDeactivator = podDeactivator
     }
     
     public func continueButtonTapped() {
@@ -117,7 +117,7 @@ class DeactivatePodViewModel: ObservableObject, Identifiable {
             didFinish?()
         } else {
             self.state = .deactivating
-            deactivating.deactivatePod { (result) in
+            podDeactivator.deactivatePod { (result) in
                 switch result {
                 case .failure(let error):
                     self.state = .resultError(DeactivationError.podCommError(error))
@@ -129,7 +129,7 @@ class DeactivatePodViewModel: ObservableObject, Identifiable {
     }
     
     public func discardPodButtonTapped() {
-        deactivating.discardPod { (result) in
+        podDeactivator.discardPod { (result) in
             DispatchQueue.main.async {
                 switch result {
                 case .failure(let error):

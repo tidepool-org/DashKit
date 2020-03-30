@@ -1,5 +1,5 @@
 //
-//  MockCannulaInsertion.swift
+//  MockCannulaInserter.swift
 //  DashKitUI
 //
 //  Created by Pete Schwamb on 3/10/20.
@@ -9,7 +9,7 @@
 import DashKit
 import PodSDK
 
-class MockCannulaInsertion: CannulaInsertion {
+class MockCannulaInserter: CannulaInserter {
     
     private var attemptCount = 0
     
