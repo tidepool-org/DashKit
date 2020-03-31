@@ -52,6 +52,7 @@ struct MockPodStatus: PodStatus {
 }
 
 class MockPodCommManager: PodCommManagerProtocol {
+    
     func updateBeepOptions(bolusReminder: BeepOption, tempBasalReminder: BeepOption, completion: @escaping (PodCommResult<PodStatus>) -> ()) {
         completion(.success(podStatus))
     }
@@ -80,7 +81,7 @@ class MockPodCommManager: PodCommManagerProtocol {
 
     func setLogger(logger: LoggingProtocol) { }
 
-    func enableAutoConnection(launchOptions: [AnyHashable : Any]?) { }
+    func setup(withLaunchingOptions launchOptions: [AnyHashable : Any]?) {}
 
     func startPodActivation(lowReservoirAlert: LowReservoirAlert?, podExpirationAlert: PodExpirationAlert?, eventListener: @escaping (ActivationStatus<ActivationStep1Event>) -> ()) {
         return
@@ -142,9 +143,7 @@ class MockPodCommManager: PodCommManagerProtocol {
         completion(.success(MockPodStatus.normalPodStatus()))
     }
 
-    func clearUnacknowledgedCommand() {
-        return
-    }
+    func queryAndClearUnacknowledgedCommand(completion: @escaping (PodCommResult<PendingRetryResult>) -> ()) {}
 
     func getPodId() -> String? {
         return "MockPodID"

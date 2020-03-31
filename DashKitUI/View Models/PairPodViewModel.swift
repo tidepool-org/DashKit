@@ -202,7 +202,13 @@ class PairPodViewModel: ObservableObject, Identifiable {
     }
     
     public func cancelButtonTapped() {
-        didCancel?()
+        if case .discard = state.navBarButtonAction {
+            podPairer.discardPod { [weak self] (result) in
+                self?.state = .ready
+            }
+        } else {
+            didCancel?()
+        }
     }
 }
 
