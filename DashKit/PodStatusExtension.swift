@@ -24,19 +24,28 @@ public extension InternalErrorCode {
     var localizedDescription: String {
         switch self {
         case .invalidCommand:
-            return LocalizedString("Invalid command", comment: "Description for InternalErrorCode.invalidCommand")
+            return LocalizedString("Invalid command.", comment: "Description for InternalErrorCode.invalidCommand")
 
         case .invalidResponse:
-            return LocalizedString("Invalid response", comment: "Description for InternalErrorCode.invalidResponse")
+            return LocalizedString("Invalid response.", comment: "Description for InternalErrorCode.invalidResponse")
 
         case .incompatibleProductId:
-            return LocalizedString("Incompatible product ID", comment: "Description for InternalErrorCode.incompatibleProductId")
+            return LocalizedString("Pod not compatible.", comment: "Description for InternalErrorCode.incompatibleProductId")
 
         case .unexpectedMessageSequence:
-            return LocalizedString("Unexpected message sequence", comment: "Description for InternalErrorCode.unexpectedMessageSequence")
+            return LocalizedString("Unexpected message sequence.", comment: "Description for InternalErrorCode.unexpectedMessageSequence")
 
         case .invalidPodId:
-            return LocalizedString("Invalid Pod Identifier", comment: "Description for InternalErrorCode.invalidPodId")
+            return LocalizedString("Invalid Pod Identifier.", comment: "Description for InternalErrorCode.invalidPodId")
+        }
+    }
+    
+    var recoverySuggestion: String? {
+        switch self {
+        case .incompatibleProductId:
+            return LocalizedString("This Pod is not compatible with Tidepool Loop, and activation is not possible. Please discard the Pod.", comment: "Recovery suggestion for InternalErrorCode.incompatibleProductId")
+        default:
+            return LocalizedString("Please retry. If this problem persists, tap Discard Pod. You can then activate a new pod.", comment: "Recovery suggestion for InternalErrorCode.invalidCommand")
         }
     }
 }
@@ -45,23 +54,59 @@ public extension ActivationErrorCode {
     var localizedDescription: String {
         switch self {
         case .moreThanOnePodAvailable:
-            return LocalizedString("More than one Pod found during Pod activation", comment: "Description for ActivationErrorCode.moreThanOnePodAvailable")
+            return LocalizedString("More than one Pod discovered.", comment: "Description for ActivationErrorCode.moreThanOnePodAvailable")
 
         case .podIsLumpOfCoal1Hour:
-            return LocalizedString("Pod is not activated during 1 hour after UID is set", comment: "Description for ActivationErrorCode.podIsLumpOfCoal1Hour")
+            return LocalizedString("Pod was not activated within 1 hour of initial pairing.", comment: "Description for ActivationErrorCode.podIsLumpOfCoal1Hour")
 
         case .podIsLumpOfCoal2Hours:
-            return LocalizedString("Pod is not activated during the 2 hours after insulin is filled", comment: "Description for ActivationErrorCode.podIsLumpOfCoal2Hours")
+            return LocalizedString("Pod was not activated within 2 hours of filling reservoir.", comment: "Description for ActivationErrorCode.podIsLumpOfCoal2Hours")
 
         case .podActivationFailed:
-            return LocalizedString("Pod Activation Failed", comment: "Description for ActivationErrorCode.podActivationFailed")
+            return LocalizedString("Pod activation failed.", comment: "Description for ActivationErrorCode.podActivationFailed")
 
         case .activationPhase1NotCompleted:
-            return LocalizedString("Try to call activation phase 2 before completing phase 1", comment: "Description for ActivationErrorCode.activationPhase1NotCompleted")
+            return LocalizedString("Pod not paired.", comment: "Description for ActivationErrorCode.activationPhase1NotCompleted")
             
         case .podIsActivatedOrDeactivating:
-            return LocalizedString("Pod is activated or deactivating", comment: "Description for ActivationErrorCode.podIsActivatedOrDeactivating")
+            return LocalizedString("Pod is activated or deactivating.", comment: "Description for ActivationErrorCode.podIsActivatedOrDeactivating")
         }
+    }
+    
+    var recoverySuggestion: String? {
+        switch self {
+        case .moreThanOnePodAvailable:
+            return LocalizedString("Please move your Pod to a new location and try again.", comment: "Recovery suggestion when multiple pods detected.")
+        case .podIsLumpOfCoal1Hour:
+            return LocalizedString("The Pod was not activated within one hour after filling the reservoir and cannot be used.", comment: "Recovery suggestion when pod is lump of coal 1 hour")
+        case .podIsLumpOfCoal2Hours:
+            return LocalizedString("Pod activation was not finished within two hours after filling the reservoir and cannot be used.", comment: "Recovery suggestion when pod is lump of coal 2 hours")
+        default:
+            return nil
+        }
+    }
+}
+
+public extension SystemErrorCode {
+    var localizedDescription: String {
+        switch self {
+        case .crosscheckFailed:
+            return LocalizedString("Crosscheck failed.", comment: "Description for SystemErrorCode.crosscheckFailed")
+        case .podTimeDeviation:
+            return LocalizedString("Pod time and system time difference is too large.", comment: "Description for SystemErrorCode.podTimeDeviation")
+        case .unexpectedResponse:
+            return LocalizedString("Unexpected response.", comment: "Description for SystemErrorCode.unexpectedResponse")
+        }
+    }
+}
+
+public extension SystemError {
+    var localizedDescription: String {
+        return String(format: LocalizedString("%1$@: %2$@", comment: "Format string for error description for PodCommError.systemError (1: system error code description) (2: support reference code)"), self.errorCode.localizedDescription, self.referenceCode)
+    }
+    
+    var recoverySuggestion: String {
+        return LocalizedString("Pod must be deactivated.", comment: "Recovery suggestion for SystemErrorCode errors")
     }
 }
 
@@ -115,27 +160,17 @@ extension PodCommError: LocalizedError {
             return LocalizedString("Message signing failed.", comment: "Error description for PodCommError.messageSigningFailed")
 
         case .podNotAvailable:
-            return LocalizedString("Pod not available.", comment: "Error description for PodCommError.podNotAvailable")
+            return LocalizedString("Cannot locate Pod.", comment: "Error description for PodCommError.podNotAvailable")
 
         case .bluetoothOff:
             return LocalizedString("Bluetooth is off.", comment: "Error description for PodCommError.bluetoothOff")
 
         case .internalError(let internalErrorCode):
-            return String(format: LocalizedString("Internal error: %1$@.", comment: "Format string for error description for PodCommError.internalError (1: internal error code description)"), internalErrorCode.localizedDescription)
+            return internalErrorCode.localizedDescription
 
         case .activationError(let activationErrorCode):
-            switch activationErrorCode {
-            case .moreThanOnePodAvailable:
-                return LocalizedString("More than one Pod discovered.", comment: "Error description when multiple pods detected.")
-            case .podIsLumpOfCoal1Hour, .podIsLumpOfCoal2Hours:
-                return LocalizedString("Pod activation took too long.", comment: "Error description when pod is lump of coal")
-            case .podActivationFailed:
-                return LocalizedString("Pod activation failed.", comment: "Error description when pod activation failed")
-            case .podIsActivatedOrDeactivating:
-                return LocalizedString("Pod already active.", comment: "Error description when pod is activated or deactivating")
-            case .activationPhase1NotCompleted:
-                return LocalizedString("Priming not complete.", comment: "Error description when pod priming has not completed")
-            }
+            return activationErrorCode.localizedDescription
+            
         case .nackReceived(let nackCode):
             return String(format: LocalizedString("Nack received: %1$@.", comment: "Format string for error description for PodCommError.nackReceived (1: nack error code description)"), nackCode.localizedDescription)
 
@@ -164,7 +199,7 @@ extension PodCommError: LocalizedError {
             return LocalizedString("Bluetooth not authorized.", comment: "Error description for PodCommError.bluetoothUnauthorized")
             
         case .systemError(let systemError):
-            return String(format: LocalizedString("System error: %1$@", comment: "Format string for error description for PodCommError.systemError (1: system error code description)"), String(describing: systemError))
+            return systemError.localizedDescription
 
         case .sdkNotInitialized:
             return LocalizedString("SDK Not Initialized.", comment: "Error description for PodCommError.sdkNotInitialized")
@@ -173,21 +208,18 @@ extension PodCommError: LocalizedError {
 
     public var recoverySuggestion: String? {
         switch self {
-        case .activationError(let error):
-            switch error {
-            case .moreThanOnePodAvailable:
-                return LocalizedString("Please move to a new location and try again.", comment: "Recovery suggestion when multiple pods detected.")
-            case .podIsLumpOfCoal1Hour:
-                return LocalizedString("The pod was not activated within one hour after filling the reservoir and cannot be used.", comment: "Recovery suggestion when pod is lump of coal 1 hour")
-            case .podIsLumpOfCoal2Hours:
-                return LocalizedString("Pod activation was not finished within two hours after filling the reservoir and cannot be used.", comment: "Recovery suggestion when pod is lump of coal 2 hours")
-            default:
-                return nil
-            }
+        case .activationError(let activationError):
+            return activationError.recoverySuggestion
         case .bluetoothUnauthorized:
             return LocalizedString("Please authorize Loop for bluetooth in settings app.", comment: "Recovery suggestion for PodCommError.bluetoothUnauthorized")
         case .bluetoothOff:
             return LocalizedString("Please re-enable bluetooth and try again.", comment: "Recovery suggestion bluetooth not authorized.")
+        case .internalError(let internalErrorCode):
+            return internalErrorCode.recoverySuggestion
+        case .systemError(let systemError):
+            return systemError.recoverySuggestion
+        case .podNotAvailable:
+            return LocalizedString("Move to a new area, place your iPhone and Pod close to each other, and tap “Try Pairing Again”.", comment: "Recovery suggestion for PodCommError.podNotAvailable")
         default:
             return nil
         }

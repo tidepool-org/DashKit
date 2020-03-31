@@ -44,6 +44,7 @@ struct ErrorView: View {
 
             VStack(alignment: .leading, spacing: 10) {
                 Text(self.error.errorDescription ?? "")
+                    .bold()
                     .accessibility(identifier: "label_error_description")
                 Text(self.error.recoverySuggestion ?? "")
                     .accessibility(identifier: "label_recovery_suggestion")

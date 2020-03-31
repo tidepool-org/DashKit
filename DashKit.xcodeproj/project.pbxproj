@@ -85,6 +85,7 @@
 		C1A9194224325D3B008D216E /* DashKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C107D15322694B9C00D63775 /* DashKitUI.framework */; };
 		C1A9194924325DCB008D216E /* PairPodViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A9194824325DCB008D216E /* PairPodViewModelTests.swift */; };
 		C1A9194B2433917E008D216E /* MockPodAlarm.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A9194A2433917E008D216E /* MockPodAlarm.swift */; };
+		C1A9194D2433A3D5008D216E /* InsertCannulaViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A9194C2433A3D5008D216E /* InsertCannulaViewModelTests.swift */; };
 		C1ACF43222A03F0500F7DDB4 /* OmnipodReservoirView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ACF42E22A03F0400F7DDB4 /* OmnipodReservoirView.swift */; };
 		C1ACF43322A03F0500F7DDB4 /* OmnipodReservoirView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C1ACF42F22A03F0500F7DDB4 /* OmnipodReservoirView.xib */; };
 		C1ACF43422A03F0500F7DDB4 /* PodLifeHUDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ACF43022A03F0500F7DDB4 /* PodLifeHUDView.swift */; };
@@ -264,6 +265,7 @@
 		C1A9194124325D3B008D216E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C1A9194824325DCB008D216E /* PairPodViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairPodViewModelTests.swift; sourceTree = "<group>"; };
 		C1A9194A2433917E008D216E /* MockPodAlarm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPodAlarm.swift; sourceTree = "<group>"; };
+		C1A9194C2433A3D5008D216E /* InsertCannulaViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsertCannulaViewModelTests.swift; sourceTree = "<group>"; };
 		C1ACF42E22A03F0400F7DDB4 /* OmnipodReservoirView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OmnipodReservoirView.swift; sourceTree = "<group>"; };
 		C1ACF42F22A03F0500F7DDB4 /* OmnipodReservoirView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OmnipodReservoirView.xib; sourceTree = "<group>"; };
 		C1ACF43022A03F0500F7DDB4 /* PodLifeHUDView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PodLifeHUDView.swift; sourceTree = "<group>"; };
@@ -551,6 +553,7 @@
 				C1A9193F24325D3B008D216E /* DashKitUITests.swift */,
 				C1A9194124325D3B008D216E /* Info.plist */,
 				C1A9194824325DCB008D216E /* PairPodViewModelTests.swift */,
+				C1A9194C2433A3D5008D216E /* InsertCannulaViewModelTests.swift */,
 			);
 			path = DashKitUITests;
 			sourceTree = "<group>";
@@ -958,6 +961,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C1A9194924325DCB008D216E /* PairPodViewModelTests.swift in Sources */,
+				C1A9194D2433A3D5008D216E /* InsertCannulaViewModelTests.swift in Sources */,
 				C1A9194024325D3B008D216E /* DashKitUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

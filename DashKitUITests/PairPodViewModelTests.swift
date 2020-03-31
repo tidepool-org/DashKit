@@ -16,10 +16,12 @@ class PairPodViewModelTests: XCTestCase {
     var _podCommState: PodCommState = .active
     
     var pairingError: PodCommError?
-    var lastNavigation: DashUIScreen?
     
+    var lastNavigation: DashUIScreen?
     var didNavigateExpectation: XCTestExpectation?
+    
     var didPairExpectation: XCTestExpectation?
+    
     var discardPodExpectation: XCTestExpectation?
 
     override func setUp() {

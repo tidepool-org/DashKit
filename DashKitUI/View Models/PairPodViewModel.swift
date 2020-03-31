@@ -15,7 +15,7 @@ class PairPodViewModel: ObservableObject, Identifiable {
     enum NavBarButtonAction {
         case cancel
         case discard
-        
+
         var text: String {
             switch self {
             case .cancel:
@@ -44,8 +44,14 @@ class PairPodViewModel: ObservableObject, Identifiable {
         
         var instructionsColor: UIColor {
             switch self {
-            case .ready, .error:
+            case .ready:
                 return UIColor.label
+            case .error(let error, _):
+                if error.recoverable {
+                    return UIColor.label
+                } else {
+                    return UIColor.secondaryLabel
+                }
             default:
                 return UIColor.secondaryLabel
             }
@@ -74,7 +80,7 @@ class PairPodViewModel: ObservableObject, Identifiable {
                 if !error.recoverable {
                     return LocalizedString("Discard Pod", comment: "Pod pairing action button text while showing unrecoverable error")
                 } else {
-                    return LocalizedString("Pair Pod", comment: "Pod pairing action button text while showing recoverable error")
+                    return LocalizedString("Try Pairing Again", comment: "Pod pairing action button text while showing recoverable error")
                 }
             case .pairing:
                 return LocalizedString("Pairing...", comment: "Pod pairing action button text while pairing")
@@ -82,6 +88,14 @@ class PairPodViewModel: ObservableObject, Identifiable {
                 return LocalizedString("Priming...", comment: "Pod pairing action button text while priming")
             case .finished:
                 return LocalizedString("Continue", comment: "Pod pairing action button text when paired")
+            }
+        }
+        
+        var actionButtonType: ActionButton.ButtonType {
+            if case .error(let error, _) = self, !error.recoverable {
+                return .destructive
+            } else {
+                return .primary
             }
         }
         
@@ -95,6 +109,13 @@ class PairPodViewModel: ObservableObject, Identifiable {
                 break
             }
             return .cancel
+        }
+        
+        var navBarVisible: Bool {
+            if case .error(let (error, _)) = self {
+                return error.recoverable
+            }
+            return true
         }
                 
         var showProgressDetail: Bool {
@@ -220,8 +241,8 @@ enum DashPairingError : LocalizedError {
         switch self {
         case .podCommError(let error):
             switch error {
-                case .bleCommunicationError, .podNotAvailable:
-                    return String(format: LocalizedString("Please make sure the pod is filled with insulin and is close to your %1$@ and try again.", comment: "Format string for ble communication error recovery suggestion during pairing. (1: device model name)"), UIDevice.current.model)
+                case .podNotAvailable:
+                    return String(format: LocalizedString("Move to a new area, place your %1$@ and Pod close to each other, and tap “Try Pairing Again”", comment: "Format string for podNotAvailable recovery suggestion during pairing. (1: device model name)"), UIDevice.current.model)
             default:
                 return error.recoverySuggestion
             }
