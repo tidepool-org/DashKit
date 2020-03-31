@@ -15,10 +15,15 @@ import LoopKitUI
 import DashKit
 
 class PodSettingsSetupViewController: SetupTableViewController {
-
-    private var pumpManagerSetupViewController: DashPumpManagerSetupViewController? {
-        return navigationController as? DashPumpManagerSetupViewController
+    
+    static public func instantiateFromStoryboard() -> PodSettingsSetupViewController {
+        let storyboard = UIStoryboard(name: "DashPumpManager", bundle: Bundle(for: PodSettingsSetupViewController.self))
+        return storyboard.instantiateViewController(withIdentifier: "PodSettingsSetupViewController") as! PodSettingsSetupViewController
     }
+
+    weak var settingsProvider: SettingsProvider?
+    
+    var completion: (() -> Void)?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,9 +43,9 @@ class PodSettingsSetupViewController: SetupTableViewController {
 
     func updateContinueButton() {
         let enabled: Bool
-        if pumpManagerSetupViewController?.maxBolusUnits == nil || pumpManagerSetupViewController?.maxBasalRateUnitsPerHour == nil {
+        if settingsProvider?.maxBolusUnits == nil || settingsProvider?.maxBasalRateUnitsPerHour == nil {
             enabled = false
-        } else if let basalSchedule = pumpManagerSetupViewController?.basalSchedule {
+        } else if let basalSchedule = settingsProvider?.basalSchedule {
             enabled = !basalSchedule.items.isEmpty && !scheduleHasError
         } else {
             enabled = false
@@ -53,7 +58,7 @@ class PodSettingsSetupViewController: SetupTableViewController {
     }
 
     var scheduleErrorMessage: String? {
-        if let basalRateSchedule = pumpManagerSetupViewController?.basalSchedule {
+        if let basalRateSchedule = settingsProvider?.basalSchedule {
             if basalRateSchedule.items.count > Pod.maximumBasalScheduleEntryCount {
                 return LocalizedString("Too many entries", comment: "The error message shown when Loop's basal schedule has more entries than the pod can support")
             }
@@ -63,6 +68,10 @@ class PodSettingsSetupViewController: SetupTableViewController {
             }
         }
         return nil
+    }
+    
+    override func continueButtonPressed(_ sender: Any) {
+        completion?()
     }
 
     // MARK: - Table view data source
@@ -101,7 +110,7 @@ class PodSettingsSetupViewController: SetupTableViewController {
             case .basalRates:
                 cell.textLabel?.text = LocalizedString("Basal Rates", comment: "The title text for the basal rate schedule")
 
-                if let basalRateSchedule = pumpManagerSetupViewController?.basalSchedule, !basalRateSchedule.items.isEmpty {
+                if let basalRateSchedule = settingsProvider?.basalSchedule, !basalRateSchedule.items.isEmpty {
                     if let errorMessage = scheduleErrorMessage {
                         cell.detailTextLabel?.text = errorMessage
                     } else {
@@ -115,7 +124,7 @@ class PodSettingsSetupViewController: SetupTableViewController {
             case .deliveryLimits:
                 cell.textLabel?.text = LocalizedString("Delivery Limits", comment: "Title text for delivery limits")
 
-                if pumpManagerSetupViewController?.maxBolusUnits == nil || pumpManagerSetupViewController?.maxBasalRateUnitsPerHour == nil {
+                if settingsProvider?.maxBolusUnits == nil || settingsProvider?.maxBasalRateUnitsPerHour == nil {
                     cell.detailTextLabel?.text = SettingsTableViewCell.TapToSetString
                 } else {
                     cell.detailTextLabel?.text = SettingsTableViewCell.EnabledString
@@ -148,7 +157,7 @@ class PodSettingsSetupViewController: SetupTableViewController {
             case .basalRates:
                 let vc = BasalScheduleTableViewController(allowedBasalRates: Pod.supportedBasalRates, maximumScheduleItemCount: Pod.maximumBasalScheduleEntryCount, minimumTimeInterval: Pod.minimumBasalScheduleEntryDuration)
 
-                if let basalSchedule = pumpManagerSetupViewController?.basalSchedule {
+                if let basalSchedule = settingsProvider?.basalSchedule {
                     vc.scheduleItems = basalSchedule.items
                     vc.timeZone = basalSchedule.timeZone
                 } else {
@@ -163,8 +172,8 @@ class PodSettingsSetupViewController: SetupTableViewController {
             case .deliveryLimits:
                 let vc = DeliveryLimitSettingsTableViewController(style: .grouped)
 
-                vc.maximumBasalRatePerHour = pumpManagerSetupViewController?.maxBasalRateUnitsPerHour
-                vc.maximumBolus = pumpManagerSetupViewController?.maxBolusUnits
+                vc.maximumBasalRatePerHour = settingsProvider?.maxBasalRateUnitsPerHour
+                vc.maximumBolus = settingsProvider?.maxBolusUnits
 
                 vc.title = sender?.textLabel?.text
                 vc.delegate = self
@@ -179,7 +188,7 @@ extension PodSettingsSetupViewController: DailyValueScheduleTableViewControllerD
     func dailyValueScheduleTableViewControllerWillFinishUpdating(_ controller: DailyValueScheduleTableViewController) {
         if let controller = controller as? BasalScheduleTableViewController {
 
-            pumpManagerSetupViewController?.basalSchedule = BasalRateSchedule(dailyItems: controller.scheduleItems, timeZone: controller.timeZone)
+            settingsProvider?.basalSchedule = BasalRateSchedule(dailyItems: controller.scheduleItems, timeZone: controller.timeZone)
 
             footerView.primaryButton.isEnabled = controller.scheduleItems.count > 0 && !scheduleHasError
         }
@@ -190,14 +199,18 @@ extension PodSettingsSetupViewController: DailyValueScheduleTableViewControllerD
 
 extension PodSettingsSetupViewController: DeliveryLimitSettingsTableViewControllerDelegate {
     func deliveryLimitSettingsTableViewControllerDidUpdateMaximumBasalRatePerHour(_ vc: DeliveryLimitSettingsTableViewController) {
-        pumpManagerSetupViewController?.maxBasalRateUnitsPerHour = vc.maximumBasalRatePerHour
+        settingsProvider?.maxBasalRateUnitsPerHour = vc.maximumBasalRatePerHour
 
         tableView.reloadRows(at: [[Section.configuration.rawValue, ConfigurationRow.deliveryLimits.rawValue]], with: .none)
+        
+        updateContinueButton()
     }
 
     func deliveryLimitSettingsTableViewControllerDidUpdateMaximumBolus(_ vc: DeliveryLimitSettingsTableViewController) {
-        pumpManagerSetupViewController?.maxBolusUnits = vc.maximumBolus
+        settingsProvider?.maxBolusUnits = vc.maximumBolus
 
         tableView.reloadRows(at: [[Section.configuration.rawValue, ConfigurationRow.deliveryLimits.rawValue]], with: .none)
+
+        updateContinueButton()
     }
 }
