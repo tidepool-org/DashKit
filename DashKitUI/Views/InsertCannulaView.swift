@@ -67,6 +67,7 @@ struct InsertCannulaView: View {
             .background(Color(UIColor.systemBackground))
             .zIndex(1)
         }
+        .animation(.default)
         .navigationBarTitle("Insert Cannula", displayMode: .automatic)
         .navigationBarItems(trailing:
             Button("Cancel") {

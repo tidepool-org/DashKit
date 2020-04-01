@@ -218,10 +218,18 @@ extension PodCommError: LocalizedError {
             return internalErrorCode.recoverySuggestion
         case .systemError(let systemError):
             return systemError.recoverySuggestion
-        case .podNotAvailable:
-            return LocalizedString("Move to a new area, place your iPhone and Pod close to each other, and tap “Try Pairing Again”.", comment: "Recovery suggestion for PodCommError.podNotAvailable")
-        default:
-            return nil
+        case .bleCommunicationError, .podNotAvailable, .notConnected, .failToConnect:
+            return String(format: LocalizedString("Move to a new area, place your %1$@ and Pod close to each other, and tap “Try Pairing Again”", comment: "Format string for recovery suggestion when pod may be out of range of phone. (1: device model name)"), UIDevice.current.model)
+        case .phoneNotRegistered, .sdkNotInitialized, .messageSigningFailed:
+            return LocalizedString("Please re-attempt app configuration.", comment: "Recovery suggestion for errors that should not happen after configuration.")
+        case .podServiceIsBusy, .operationTimeout, .unknownError:
+            return LocalizedString("Please try again.", comment: "Recovery suggestion for temporary issues.")
+        case .podIsNotActive, .podIsInAlarm:
+            return LocalizedString("Please deactivate pod and pair new pod.", comment: "Recovery suggestion for podIsNotActive.")
+        case .unacknowledgedCommandPendingRetry, .noUnacknowledgedCommandToRetry, .nackReceived:
+            return LocalizedString("Please retry.", comment: "Recovery suggestion for unacknowledgedCommandPendingRetry and noUnacknowledgedCommandToRetry.")
+        case .invalidProgram, .invalidAlertSetting, .invalidProgramStatus:
+            return LocalizedString("Please check settings and try again.", comment: "Recovery suggestion for invalidProgram, invalidAlertSetting, and invalidProgramStatus.")
         }
     }
 }

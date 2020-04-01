@@ -15,8 +15,9 @@ class MockPodPairer: PodPairer {
     
     var podCommState: PodCommState = .noPod
     
-    var initialError: PodCommError = .internalError(.incompatibleProductId)
-    
+    //var initialError: PodCommError = .internalError(.incompatibleProductId)
+    var initialError: PodCommError = .podNotAvailable
+
     func pair(eventListener: @escaping (ActivationStatus<ActivationStep1Event>) -> ()) {
         attemptCount += 1
         
