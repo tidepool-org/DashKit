@@ -20,9 +20,10 @@ struct PairPodView: View {
 
                 HStack {
                     InstructionList(instructions: [
-                        "Fill a new pod with U-100 Insulin (leave blue Pod needle cap on)",
-                        "Listen for 2 beeps."
-                    ]).foregroundColor(Color(self.viewModel.state.instructionsColor))
+                        LocalizedString("Fill a new pod with U-100 Insulin (leave blue Pod needle cap on)", comment: "Label text for step 1 of pair pod instructions"),
+                        LocalizedString("Listen for 2 beeps.", comment: "Label text for step 2 of pair pod instructions")
+                    ])
+                        .foregroundColor(Color(self.viewModel.state.instructionsColor))
                     Spacer()
                 }
             }

@@ -22,9 +22,9 @@ struct InsertCannulaView: View {
 
                 HStack {
                     InstructionList(instructions: [
-                        "Prepare site.",
-                        "Remove blue Pod needle cap and check cannula. Then remove paper backing.",
-                        "Check Pod and then apply to site."
+                        LocalizedString("Prepare site.", comment: "Label text for step one of insert cannula instructions"),
+                        LocalizedString("Remove blue Pod needle cap and check cannula. Then remove paper backing.", comment: "Label text for step two of insert cannula instructions"),
+                        LocalizedString("Check Pod and then apply to site.", comment: "Label text for step three of insert cannula instructions")
                     ]).foregroundColor(Color(self.viewModel.state.instructionsColor))
                     Spacer()
                 }
