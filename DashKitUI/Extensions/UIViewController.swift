@@ -42,7 +42,7 @@ extension UIViewController {
     public func presentOkDialog(title: String, message: String) {
         let alertController = UIAlertController(title: title, message: message,
                                                 preferredStyle: UIAlertController.Style.alert)
-        let okAction = UIAlertAction(title: NSLocalizedString("OK", comment: "OK button in a dialog"),
+        let okAction = UIAlertAction(title: LocalizedString("OK", comment: "OK button in a dialog"),
                                      style: UIAlertAction.Style.default) {
                                         (result : UIAlertAction) -> Void in
                                         // user tapped OK
@@ -55,7 +55,7 @@ extension UIViewController {
     public func presentOkDialog(title: String, message: String, okButtonHandler: @escaping ((UIAlertAction) -> (Swift.Void))) {
         let alertController = UIAlertController(title: title, message: message,
                                                 preferredStyle: UIAlertController.Style.alert)
-        let okAction = UIAlertAction(title: NSLocalizedString("OK", comment: "OK button in a dialog"),
+        let okAction = UIAlertAction(title: LocalizedString("OK", comment: "OK button in a dialog"),
                                      style: UIAlertAction.Style.default,
                                      handler: okButtonHandler)
         alertController.addAction(okAction)
@@ -66,11 +66,11 @@ extension UIViewController {
     public func presentOkCancelDialog(title: String, message: String, okHandler: @escaping ((UIAlertAction) -> (Swift.Void)), cancelHandler: ((UIAlertAction) -> (Swift.Void))?) {
         let alertController = UIAlertController(title: title, message: message,
                                                 preferredStyle: UIAlertController.Style.alert)
-        let okAction = UIAlertAction(title: NSLocalizedString("Try again", comment: "Try again button in a dialog"),
+        let okAction = UIAlertAction(title: LocalizedString("Try again", comment: "Try again button in a dialog"),
                                      style: UIAlertAction.Style.default,
                                      handler: okHandler)
         alertController.addAction(okAction)
-        let cancelAction = UIAlertAction(title: NSLocalizedString("Deactivate Pod", comment: "Deactivate Pod button in a dialog"),
+        let cancelAction = UIAlertAction(title: LocalizedString("Deactivate Pod", comment: "Deactivate Pod button in a dialog"),
                                          style: UIAlertAction.Style.default,
                                          handler: cancelHandler)
         alertController.addAction(cancelAction)
