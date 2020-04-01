@@ -138,7 +138,7 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
             guard let pumpManager = pumpManager else {
                 fatalError("Missing pumpManager or settings for pairing new pod")
             }
-            let viewModel = PairPodViewModel(pairing: pumpManager, navigator: self)
+            let viewModel = PairPodViewModel(podPairer: pumpManager, navigator: self)
             #endif
 
             viewModel.didFinish = { [weak self] in
@@ -156,7 +156,7 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
             guard let pumpManager = pumpManager else {
                 fatalError("Need pump manager for cannula insertion screen")
             }
-            let viewModel = InsertCannulaViewModel(cannulaInsertion: pumpManager, navigator: self)
+            let viewModel = InsertCannulaViewModel(cannulaInserter: pumpManager, navigator: self)
             #endif
             
             viewModel.didFinish = { [weak self] in
