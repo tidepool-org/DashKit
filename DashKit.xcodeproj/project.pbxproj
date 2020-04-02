@@ -60,6 +60,7 @@
 		C136AA5823117A2F008A320D /* OSLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ACF43E22A1F9A700F7DDB4 /* OSLog.swift */; };
 		C14C6F252419F95E00CF3408 /* LeadingImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14C6F242419F95E00CF3408 /* LeadingImage.swift */; };
 		C14C6F27241A754B00CF3408 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14C6F26241A754B00CF3408 /* ErrorView.swift */; };
+		C14D0572243687E9005F7841 /* DeactivatePodViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14D0571243687E9005F7841 /* DeactivatePodViewModelTests.swift */; };
 		C15424312280C575006754B3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C15424302280C575006754B3 /* Assets.xcassets */; };
 		C15424332280C75E006754B3 /* PodStatusExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C15424322280C75D006754B3 /* PodStatusExtension.swift */; };
 		C1562F7F241581C7006952D6 /* DashSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1562F7E241581C7006952D6 /* DashSettingsViewModel.swift */; };
@@ -242,6 +243,7 @@
 		C135D9192319AA4200774F82 /* Kronos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Kronos.framework; path = Carthage/Build/iOS/Kronos.framework; sourceTree = "<group>"; };
 		C14C6F242419F95E00CF3408 /* LeadingImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeadingImage.swift; sourceTree = "<group>"; };
 		C14C6F26241A754B00CF3408 /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
+		C14D0571243687E9005F7841 /* DeactivatePodViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeactivatePodViewModelTests.swift; sourceTree = "<group>"; };
 		C15424302280C575006754B3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C15424322280C75D006754B3 /* PodStatusExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodStatusExtension.swift; sourceTree = "<group>"; };
 		C1562F7E241581C7006952D6 /* DashSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashSettingsViewModel.swift; sourceTree = "<group>"; };
@@ -556,6 +558,7 @@
 				C1A9194124325D3B008D216E /* Info.plist */,
 				C1A9194824325DCB008D216E /* PairPodViewModelTests.swift */,
 				C1A9194C2433A3D5008D216E /* InsertCannulaViewModelTests.swift */,
+				C14D0571243687E9005F7841 /* DeactivatePodViewModelTests.swift */,
 			);
 			path = DashKitUITests;
 			sourceTree = "<group>";
@@ -962,6 +965,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C14D0572243687E9005F7841 /* DeactivatePodViewModelTests.swift in Sources */,
 				C1A9194924325DCB008D216E /* PairPodViewModelTests.swift in Sources */,
 				C1A9194D2433A3D5008D216E /* InsertCannulaViewModelTests.swift in Sources */,
 				C1A9194024325D3B008D216E /* DashKitUITests.swift in Sources */,
