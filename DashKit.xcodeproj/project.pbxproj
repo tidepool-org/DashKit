@@ -74,6 +74,7 @@
 		C160FEBA2371EA050080031E /* AlarmCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = C160FEB92371EA050080031E /* AlarmCode.swift */; };
 		C16DA83622E7C6F2008624C2 /* DashKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; platformFilter = ios; };
 		C16DA85822E93973008624C2 /* DashKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C107D15322694B9C00D63775 /* DashKitUI.framework */; platformFilter = ios; };
+		C171758C2437AFF200199ABC /* CheckInsertedCannulaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C171758B2437AFF200199ABC /* CheckInsertedCannulaView.swift */; };
 		C176FE342435004F005258CD /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1D46D5E22C568F600978E59 /* RxSwift.framework */; };
 		C176FE3524350581005258CD /* INSSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E5622EA0DDB0035DCA0 /* INSSDK.framework */; };
 		C176FE3624350651005258CD /* INSSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C1FE2E5622EA0DDB0035DCA0 /* INSSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -255,6 +256,7 @@
 		C1562F8A2416A7C8006952D6 /* MockPodDeactivater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPodDeactivater.swift; sourceTree = "<group>"; };
 		C1562F8C2416A945006952D6 /* MockPodStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPodStatus.swift; sourceTree = "<group>"; };
 		C160FEB92371EA050080031E /* AlarmCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmCode.swift; sourceTree = "<group>"; };
+		C171758B2437AFF200199ABC /* CheckInsertedCannulaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInsertedCannulaView.swift; sourceTree = "<group>"; };
 		C194114522861E9100E886DD /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		C194114D228DBEC000E886DD /* PodSetupCompleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodSetupCompleteViewController.swift; sourceTree = "<group>"; };
 		C1941150228DBF2100E886DD /* ExpirationReminderDateTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpirationReminderDateTableViewCell.swift; sourceTree = "<group>"; };
@@ -434,6 +436,7 @@
 				C1ED19D523F9C63E00D55049 /* InsertCannulaView.swift */,
 				C1A701B823EB7EC2002D1E45 /* PairPodView.swift */,
 				C1201E3E23EE1B03002DA84A /* RegisterView.swift */,
+				C171758B2437AFF200199ABC /* CheckInsertedCannulaView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -909,6 +912,7 @@
 				C1562F812415834D006952D6 /* MockDashSettingsViewModel.swift in Sources */,
 				C1562F7F241581C7006952D6 /* DashSettingsViewModel.swift in Sources */,
 				C1A9194B2433917E008D216E /* MockPodAlarm.swift in Sources */,
+				C171758C2437AFF200199ABC /* CheckInsertedCannulaView.swift in Sources */,
 				C1DFF9252417CA5B00EAC44E /* MockCannulaInserter.swift in Sources */,
 				C1ED19D223F98C5C00D55049 /* DashUICoordinator.swift in Sources */,
 				C1562F8B2416A7C8006952D6 /* MockPodDeactivater.swift in Sources */,

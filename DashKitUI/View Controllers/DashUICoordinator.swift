@@ -24,6 +24,7 @@ enum DashUIScreen {
     case settingsSetup
     case pairPod
     case insertCannula
+    case checkInsertedCannula
     case setupComplete
     
     func next() -> DashUIScreen? {
@@ -47,6 +48,8 @@ enum DashUIScreen {
         case .pairPod:
             return .insertCannula
         case .insertCannula:
+            return .checkInsertedCannula
+        case .checkInsertedCannula:
             return .setupComplete
         case .setupComplete:
             return nil
@@ -167,6 +170,16 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
             }
 
             let view = InsertCannulaView(viewModel: viewModel)
+            return UIHostingController(rootView: view)
+        case .checkInsertedCannula:
+            var view = CheckInsertedCannulaView()
+            view.wasInsertedProperly = { [weak self] (ok) in
+                if ok {
+                    self?.stepFinished()
+                } else {
+                    self?.navigateTo(.deactivate)
+                }
+            }
             return UIHostingController(rootView: view)
         case .setupComplete:
             if let pumpManager = pumpManager {
