@@ -15,12 +15,15 @@ class MockPodPairer: PodPairer {
     
     var podCommState: PodCommState = .noPod
     
+    //var initialError: PodCommError = .internalError(.incompatibleProductId)
+    var initialError: PodCommError = .podNotAvailable
+
     func pair(eventListener: @escaping (ActivationStatus<ActivationStep1Event>) -> ()) {
         attemptCount += 1
         
         if attemptCount == 1 {
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                eventListener(.error(.bleCommunicationError))
+                eventListener(.error(self.initialError))
             }
         } else {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
@@ -31,7 +34,7 @@ class MockPodPairer: PodPairer {
                 eventListener(.event(.primingPod))
             }
             // Priming is normally 35s, but we'll send the completion faster in the mock
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1 + Pod.estimatedPrimingDuration) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
                 self.podCommState = .active
                 eventListener(.event(.step1Completed))
             }

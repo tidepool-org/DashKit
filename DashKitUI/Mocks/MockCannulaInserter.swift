@@ -12,6 +12,7 @@ import PodSDK
 class MockCannulaInserter: CannulaInserter {
     
     private var attemptCount = 0
+    var initialError: PodCommError = .bleCommunicationError
     
     func insertCannula(eventListener: @escaping (ActivationStatus<ActivationStep2Event>) -> ()) {
         attemptCount += 1

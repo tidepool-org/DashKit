@@ -57,7 +57,7 @@ struct PairPodView: View {
                 Text(self.viewModel.state.nextActionButtonDescription)
                     .accessibility(identifier: "button_next_action")
                     .accessibility(label: Text(self.viewModel.state.actionButtonAccessibilityLabel))
-                    .actionButtonStyle()
+                    .actionButtonStyle(self.viewModel.state.actionButtonType)
             }
             .disabled(self.viewModel.state.isProcessing)
             .animation(nil)
@@ -68,12 +68,13 @@ struct PairPodView: View {
         .animation(.default)
         .navigationBarTitle("Pod Pairing", displayMode: .automatic)
         .navigationBarBackButtonHidden(self.viewModel.state.isProcessing)
-        .navigationBarItems(trailing:
+        .navigationBarItems(trailing: self.viewModel.state.navBarVisible ?
             Button("Cancel") {
                 self.viewModel.cancelButtonTapped()
             }
             .accessibility(identifier: "button_cancel")
             .disabled(self.viewModel.state.isProcessing)
+            : nil
         )
     }
 }

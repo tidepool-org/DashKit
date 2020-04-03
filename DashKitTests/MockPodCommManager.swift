@@ -143,10 +143,8 @@ class MockPodCommManager: PodCommManagerProtocol {
         completion(.success(MockPodStatus.normalPodStatus()))
     }
 
-    func queryAndClearUnacknowledgedCommand(completion: @escaping (PodCommResult<PendingRetryResult>) -> ()) {
-        return
-    }
-    
+    func queryAndClearUnacknowledgedCommand(completion: @escaping (PodCommResult<PendingRetryResult>) -> ()) { }
+
     func getPodId() -> String? {
         return "MockPodID"
     }

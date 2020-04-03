@@ -60,6 +60,7 @@
 		C136AA5823117A2F008A320D /* OSLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ACF43E22A1F9A700F7DDB4 /* OSLog.swift */; };
 		C14C6F252419F95E00CF3408 /* LeadingImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14C6F242419F95E00CF3408 /* LeadingImage.swift */; };
 		C14C6F27241A754B00CF3408 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14C6F26241A754B00CF3408 /* ErrorView.swift */; };
+		C14D0572243687E9005F7841 /* DeactivatePodViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14D0571243687E9005F7841 /* DeactivatePodViewModelTests.swift */; };
 		C15424312280C575006754B3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C15424302280C575006754B3 /* Assets.xcassets */; };
 		C15424332280C75E006754B3 /* PodStatusExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C15424322280C75D006754B3 /* PodStatusExtension.swift */; };
 		C1562F7F241581C7006952D6 /* DashSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1562F7E241581C7006952D6 /* DashSettingsViewModel.swift */; };
@@ -83,6 +84,11 @@
 		C1941153228DBF8300E886DD /* NibLoadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1941152228DBF8300E886DD /* NibLoadable.swift */; };
 		C19BB3F022E7C64A00EA5C2E /* DashKitPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19BB3EF22E7C64A00EA5C2E /* DashKitPlugin.swift */; };
 		C1A701B923EB7EC2002D1E45 /* PairPodView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A701B823EB7EC2002D1E45 /* PairPodView.swift */; };
+		C1A9194024325D3B008D216E /* DashKitUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A9193F24325D3B008D216E /* DashKitUITests.swift */; };
+		C1A9194224325D3B008D216E /* DashKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C107D15322694B9C00D63775 /* DashKitUI.framework */; };
+		C1A9194924325DCB008D216E /* PairPodViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A9194824325DCB008D216E /* PairPodViewModelTests.swift */; };
+		C1A9194B2433917E008D216E /* MockPodAlarm.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A9194A2433917E008D216E /* MockPodAlarm.swift */; };
+		C1A9194D2433A3D5008D216E /* InsertCannulaViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A9194C2433A3D5008D216E /* InsertCannulaViewModelTests.swift */; };
 		C1ACF43222A03F0500F7DDB4 /* OmnipodReservoirView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ACF42E22A03F0400F7DDB4 /* OmnipodReservoirView.swift */; };
 		C1ACF43322A03F0500F7DDB4 /* OmnipodReservoirView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C1ACF42F22A03F0500F7DDB4 /* OmnipodReservoirView.xib */; };
 		C1ACF43422A03F0500F7DDB4 /* PodLifeHUDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ACF43022A03F0500F7DDB4 /* PodLifeHUDView.swift */; };
@@ -130,6 +136,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = C11615F0239588DB0039A072;
 			remoteInfo = Cartfile;
+		};
+		C1A9194324325D3B008D216E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C1E753D0226928F700A0BC48 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C107D15222694B9C00D63775;
+			remoteInfo = DashKitUI;
 		};
 		C1E753E4226928F700A0BC48 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -230,6 +243,7 @@
 		C135D9192319AA4200774F82 /* Kronos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Kronos.framework; path = Carthage/Build/iOS/Kronos.framework; sourceTree = "<group>"; };
 		C14C6F242419F95E00CF3408 /* LeadingImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeadingImage.swift; sourceTree = "<group>"; };
 		C14C6F26241A754B00CF3408 /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
+		C14D0571243687E9005F7841 /* DeactivatePodViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeactivatePodViewModelTests.swift; sourceTree = "<group>"; };
 		C15424302280C575006754B3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C15424322280C75D006754B3 /* PodStatusExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodStatusExtension.swift; sourceTree = "<group>"; };
 		C1562F7E241581C7006952D6 /* DashSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashSettingsViewModel.swift; sourceTree = "<group>"; };
@@ -249,6 +263,12 @@
 		C19BB3E722E776AE00EA5C2E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C19BB3EF22E7C64A00EA5C2E /* DashKitPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DashKitPlugin.swift; sourceTree = "<group>"; };
 		C1A701B823EB7EC2002D1E45 /* PairPodView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairPodView.swift; sourceTree = "<group>"; };
+		C1A9193D24325D3B008D216E /* DashKitUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DashKitUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C1A9193F24325D3B008D216E /* DashKitUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashKitUITests.swift; sourceTree = "<group>"; };
+		C1A9194124325D3B008D216E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C1A9194824325DCB008D216E /* PairPodViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairPodViewModelTests.swift; sourceTree = "<group>"; };
+		C1A9194A2433917E008D216E /* MockPodAlarm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPodAlarm.swift; sourceTree = "<group>"; };
+		C1A9194C2433A3D5008D216E /* InsertCannulaViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsertCannulaViewModelTests.swift; sourceTree = "<group>"; };
 		C1ACF42E22A03F0400F7DDB4 /* OmnipodReservoirView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OmnipodReservoirView.swift; sourceTree = "<group>"; };
 		C1ACF42F22A03F0500F7DDB4 /* OmnipodReservoirView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OmnipodReservoirView.xib; sourceTree = "<group>"; };
 		C1ACF43022A03F0500F7DDB4 /* PodLifeHUDView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PodLifeHUDView.swift; sourceTree = "<group>"; };
@@ -308,6 +328,14 @@
 				C135D91C2319AA5A00774F82 /* Kronos.framework in Frameworks */,
 				C16DA83622E7C6F2008624C2 /* DashKit.framework in Frameworks */,
 				C16DA85822E93973008624C2 /* DashKitUI.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C1A9193A24325D3B008D216E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C1A9194224325D3B008D216E /* DashKitUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -485,6 +513,7 @@
 				C1562F8C2416A945006952D6 /* MockPodStatus.swift */,
 				C1DFF9242417CA5B00EAC44E /* MockCannulaInserter.swift */,
 				C11B2C2C2425846D00308035 /* MockNavigator.swift */,
+				C1A9194A2433917E008D216E /* MockPodAlarm.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -522,6 +551,18 @@
 			path = DashKitPlugin;
 			sourceTree = "<group>";
 		};
+		C1A9193E24325D3B008D216E /* DashKitUITests */ = {
+			isa = PBXGroup;
+			children = (
+				C1A9193F24325D3B008D216E /* DashKitUITests.swift */,
+				C1A9194124325D3B008D216E /* Info.plist */,
+				C1A9194824325DCB008D216E /* PairPodViewModelTests.swift */,
+				C1A9194C2433A3D5008D216E /* InsertCannulaViewModelTests.swift */,
+				C14D0571243687E9005F7841 /* DeactivatePodViewModelTests.swift */,
+			);
+			path = DashKitUITests;
+			sourceTree = "<group>";
+		};
 		C1E680BD23F30987004DC719 /* Wrappers */ = {
 			isa = PBXGroup;
 			children = (
@@ -536,6 +577,7 @@
 				C1E753DB226928F700A0BC48 /* DashKit */,
 				C1E753E6226928F700A0BC48 /* DashKitTests */,
 				C107D15422694B9C00D63775 /* DashKitUI */,
+				C1A9193E24325D3B008D216E /* DashKitUITests */,
 				C19BB3E622E776AE00EA5C2E /* DashKitPlugin */,
 				C107D10C22692AE700D63775 /* Frameworks */,
 				C1E753DA226928F700A0BC48 /* Products */,
@@ -549,6 +591,7 @@
 				C1E753E2226928F700A0BC48 /* DashKitTests.xctest */,
 				C107D15322694B9C00D63775 /* DashKitUI.framework */,
 				C19BB3E522E776AE00EA5C2E /* DashKitPlugin.loopplugin */,
+				C1A9193D24325D3B008D216E /* DashKitUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -654,6 +697,24 @@
 			productReference = C19BB3E522E776AE00EA5C2E /* DashKitPlugin.loopplugin */;
 			productType = "com.apple.product-type.bundle";
 		};
+		C1A9193C24325D3B008D216E /* DashKitUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C1A9194524325D3B008D216E /* Build configuration list for PBXNativeTarget "DashKitUITests" */;
+			buildPhases = (
+				C1A9193924325D3B008D216E /* Sources */,
+				C1A9193A24325D3B008D216E /* Frameworks */,
+				C1A9193B24325D3B008D216E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C1A9194424325D3B008D216E /* PBXTargetDependency */,
+			);
+			name = DashKitUITests;
+			productName = DashKitUITests;
+			productReference = C1A9193D24325D3B008D216E /* DashKitUITests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		C1E753D8226928F700A0BC48 /* DashKit */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = C1E753ED226928F700A0BC48 /* Build configuration list for PBXNativeTarget "DashKit" */;
@@ -699,7 +760,7 @@
 		C1E753D0226928F700A0BC48 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1020;
+				LastSwiftUpdateCheck = 1130;
 				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = Tidepool;
 				TargetAttributes = {
@@ -713,6 +774,9 @@
 					C19BB3E422E776AE00EA5C2E = {
 						CreatedOnToolsVersion = 10.3;
 						LastSwiftMigration = 1030;
+					};
+					C1A9193C24325D3B008D216E = {
+						CreatedOnToolsVersion = 11.3.1;
 					};
 					C1E753D8226928F700A0BC48 = {
 						CreatedOnToolsVersion = 10.2;
@@ -739,6 +803,7 @@
 				C1E753D8226928F700A0BC48 /* DashKit */,
 				C1E753E1226928F700A0BC48 /* DashKitTests */,
 				C107D15222694B9C00D63775 /* DashKitUI */,
+				C1A9193C24325D3B008D216E /* DashKitUITests */,
 				C19BB3E422E776AE00EA5C2E /* DashKitPlugin */,
 				C11615F0239588DB0039A072 /* Cartfile */,
 			);
@@ -759,6 +824,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		C19BB3E322E776AE00EA5C2E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C1A9193B24325D3B008D216E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -836,6 +908,7 @@
 				C1562F85241698C0006952D6 /* PodLifeState.swift in Sources */,
 				C1562F812415834D006952D6 /* MockDashSettingsViewModel.swift in Sources */,
 				C1562F7F241581C7006952D6 /* DashSettingsViewModel.swift in Sources */,
+				C1A9194B2433917E008D216E /* MockPodAlarm.swift in Sources */,
 				C1DFF9252417CA5B00EAC44E /* MockCannulaInserter.swift in Sources */,
 				C1ED19D223F98C5C00D55049 /* DashUICoordinator.swift in Sources */,
 				C1562F8B2416A7C8006952D6 /* MockPodDeactivater.swift in Sources */,
@@ -888,6 +961,17 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C1A9193924325D3B008D216E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C14D0572243687E9005F7841 /* DeactivatePodViewModelTests.swift in Sources */,
+				C1A9194924325DCB008D216E /* PairPodViewModelTests.swift in Sources */,
+				C1A9194D2433A3D5008D216E /* InsertCannulaViewModelTests.swift in Sources */,
+				C1A9194024325D3B008D216E /* DashKitUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C1E753D5226928F700A0BC48 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -936,6 +1020,11 @@
 			isa = PBXTargetDependency;
 			target = C11615F0239588DB0039A072 /* Cartfile */;
 			targetProxy = C11615F5239589250039A072 /* PBXContainerItemProxy */;
+		};
+		C1A9194424325D3B008D216E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C107D15222694B9C00D63775 /* DashKitUI */;
+			targetProxy = C1A9194324325D3B008D216E /* PBXContainerItemProxy */;
 		};
 		C1E753E5226928F700A0BC48 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1119,6 +1208,44 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = loopplugin;
+			};
+			name = Release;
+		};
+		C1A9194624325D3B008D216E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 75U4X84TEG;
+				INFOPLIST_FILE = DashKitUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.tidepool.DashKitUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C1A9194724325D3B008D216E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 75U4X84TEG;
+				INFOPLIST_FILE = DashKitUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.tidepool.DashKitUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -1403,6 +1530,15 @@
 			buildConfigurations = (
 				C19BB3E922E776AE00EA5C2E /* Debug */,
 				C19BB3EA22E776AE00EA5C2E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C1A9194524325D3B008D216E /* Build configuration list for PBXNativeTarget "DashKitUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C1A9194624325D3B008D216E /* Debug */,
+				C1A9194724325D3B008D216E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
