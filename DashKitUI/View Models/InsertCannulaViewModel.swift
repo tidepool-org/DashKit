@@ -94,7 +94,7 @@ class InsertCannulaViewModel: ObservableObject, Identifiable {
         
         var isProcessing: Bool {
             switch self {
-            case .inserting:
+            case .startingInsertion, .inserting:
                 return true
             default:
                 return false
