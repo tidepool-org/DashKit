@@ -10,11 +10,51 @@ import Foundation
 
 import PodSDK
 import DashKit
+import SwiftUI
+
+enum PodDeliveryState {
+    case active
+    case suspending
+    case suspended
+    case resuming
+
+    var suspendResumeActionText: String {
+        switch self {
+        case .active:
+            return LocalizedString("Suspend Insulin Delivery", comment: "Text for suspend resume button when insulin delivery active")
+        case .suspending:
+            return LocalizedString("Suspending Delivery", comment: "Text for suspend resume button when insulin delivery is suspending")
+        case .suspended:
+            return LocalizedString("Resume Insulin Delivery", comment: "Text for suspend resume button when insulin delivery is suspended")
+        case .resuming:
+            return LocalizedString("Resuming Insulin Delivery", comment: "Text for suspend resume button when insulin delivery is resuming")
+        }
+    }
+    
+    var transitioning: Bool {
+        switch self {
+        case .suspending, .resuming:
+            return true
+        default:
+            return false
+        }
+    }
+    
+    var suspendResumeActionColor: Color {
+        switch self {
+        case .suspending, .resuming:
+            return Color.secondary
+        default:
+            return Color.accentColor
+        }
+    }
+
+}
 
 enum PodLifeState {
     case podActivating
-    case timeRemaining(TimeInterval)
-    case expiredSince(TimeInterval)
+    case timeRemaining(TimeInterval, PodDeliveryState)
+    case expiredSince(TimeInterval, PodDeliveryState)
     case podDeactivating
     case podAlarm(PodAlarm?)
     case systemError(SystemError?)
@@ -22,9 +62,9 @@ enum PodLifeState {
     
     var progress: Double {
         switch self {
-        case .timeRemaining(let timeRemaining):
+        case .timeRemaining(let timeRemaining, _):
             return max(0, min(1, timeRemaining / Pod.lifetime))
-        case .expiredSince(let expiryAge):
+        case .expiredSince(let expiryAge, _):
             return max(0, min(1, (Pod.expirationWindow - expiryAge) / Pod.expirationWindow))
         case .podAlarm, .systemError, .podDeactivating:
             return 1
@@ -60,7 +100,19 @@ enum PodLifeState {
             return LocalizedString("No Pod", comment: "Label for pod life state when no pod paired")
         }
     }
-    
+
+    var deliveryState: PodDeliveryState? {
+        switch self {
+        case .expiredSince(_, let deliveryState):
+            return deliveryState
+        case .timeRemaining(_, let deliveryState):
+            return deliveryState
+        default:
+            return nil
+        }
+    }
+
+
     var nextPodLifecycleAction: DashUIScreen {
         switch self {
         case .podActivating, .noPod:
@@ -81,6 +133,24 @@ enum PodLifeState {
         }
     }
     
+    var nextPodLifecycleActionColor: Color {
+        switch self {
+        case .podActivating, .noPod:
+            return .accentColor
+        default:
+            return .destructive
+        }
+    }
+
+    var isActive: Bool {
+        switch self {
+        case .expiredSince, .timeRemaining:
+            return true
+        default:
+            return false
+        }
+    }
+
     var allowsPumpManagerRemoval: Bool {
         if case .noPod = self {
             return true

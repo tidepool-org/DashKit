@@ -8,18 +8,65 @@
 
 import DashKit
 import SwiftUI
-
+import LoopKit
 
 class DashSettingsViewModel: DashSettingsViewModelProtocol {
     @Published var lifeState: PodLifeState
     
     private let pumpManager: DashPumpManager
-
+    
     init(pumpManager: DashPumpManager) {
         self.pumpManager = pumpManager
         
         lifeState = pumpManager.lifeState
-    }    
+        pumpManager.addStatusObserver(self, queue: DispatchQueue.main)
+    }
+
+    func suspendResumeTapped() {
+        guard let deliveryState = lifeState.deliveryState else {
+            return
+        }
+        
+        switch deliveryState {
+        case .active:
+            pumpManager.suspendDelivery { (error) in
+                if let error = error {
+                    // TODO: Display error
+                }
+            }
+        case .suspended:
+            pumpManager.resumeDelivery { (error) in
+                if let error = error {
+                    // TODO: Display error
+                }
+            }
+        default:
+            break
+        }
+    }
+}
+
+extension DashSettingsViewModel: PumpManagerStatusObserver {
+    func pumpManager(_ pumpManager: PumpManager, didUpdate status: PumpManagerStatus, oldStatus: PumpManagerStatus) {
+        self.lifeState = self.pumpManager.lifeState
+    }
+    
+    
+}
+
+extension PumpManagerStatus.BasalDeliveryState {
+    var podDeliveryState: PodDeliveryState {
+        switch self {
+        case .active, .initiatingTempBasal, .tempBasal, .cancelingTempBasal:
+            return .active
+        case .resuming:
+            return .resuming
+        case .suspending:
+            return .suspending
+        case .suspended:
+            return .suspended
+        }
+    }
 }
 
 extension DashPumpManager {
@@ -35,11 +82,13 @@ extension DashPumpManager {
             return .podDeactivating
         case .active:
             if let activationTime = podActivatedAt {
+                let podDeliveryState = status.basalDeliveryState.podDeliveryState
+                
                 let timeActive = Date().timeIntervalSince(activationTime)
                 if timeActive < Pod.lifetime {
-                    return .timeRemaining(Pod.lifetime - timeActive)
+                    return .timeRemaining(Pod.lifetime - timeActive, podDeliveryState)
                 } else {
-                    return .expiredSince(timeActive - Pod.lifetime)
+                    return .expiredSince(timeActive - Pod.lifetime, podDeliveryState)
                 }
             } else {
                 return .podDeactivating

@@ -12,7 +12,7 @@ import LoopKitUI
 struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol  {
     
     @ObservedObject var viewModel: Model
-
+    
     weak var navigator: DashUINavigator?
     
     var body: some View {
@@ -60,14 +60,37 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
             }
             
             Section(header: Text("Pod").font(.headline).foregroundColor(Color.primary)) {
+                self.viewModel.lifeState.deliveryState.map { (deliveryState) in
+                    HStack {
+                        Button(action: {
+                            self.viewModel.suspendResumeTapped()
+                        }) {
+                            Text(deliveryState.suspendResumeActionText)
+                                .foregroundColor(deliveryState.suspendResumeActionColor)
+                        }
+                        Spacer()
+                        if deliveryState.transitioning {
+                            ActivityIndicator(isAnimating: .constant(true), style: .medium)
+                        }
+                    }
+                }
+
+                if self.viewModel.lifeState.allowsPumpManagerRemoval {
+                    NavigationLink(destination: EmptyView()) {
+                        Text("Switch to other insulin delivery device")
+                            .foregroundColor(Color.destructive)
+                    }
+                }
                 Button(action: {
                     self.navigator?.navigateTo(self.viewModel.lifeState.nextPodLifecycleAction)
                 }) {
                     Text(self.viewModel.lifeState.nextPodLifecycleActionDescription)
+                        .foregroundColor(self.viewModel.lifeState.nextPodLifecycleActionColor)
                 }
                 if self.viewModel.lifeState.allowsPumpManagerRemoval {
                     NavigationLink(destination: EmptyView()) {
-                        Text("Switch to other insulin delivery device").foregroundColor(Color.red)
+                        Text("Switch to other insulin delivery device")
+                            .foregroundColor(Color.destructive)
                     }
                 }
             }

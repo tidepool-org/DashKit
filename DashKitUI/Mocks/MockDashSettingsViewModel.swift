@@ -9,10 +9,15 @@
 import SwiftUI
 
 class MockDashSettingsViewModel: DashSettingsViewModelProtocol {
+    
     @Published var lifeState: PodLifeState
     
     init() {
         lifeState = .noPod
+    }
+
+    func suspendResumeTapped() {
+        print("SuspendResumeTapped()")
     }
 }
 

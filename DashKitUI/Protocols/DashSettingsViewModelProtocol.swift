@@ -10,6 +10,8 @@ import Foundation
 
 protocol DashSettingsViewModelProtocol: ObservableObject, Identifiable {
     var lifeState: PodLifeState { get set }
+    
+    func suspendResumeTapped()
 }
 
 
