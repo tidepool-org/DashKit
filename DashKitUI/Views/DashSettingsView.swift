@@ -8,10 +8,21 @@
 
 import SwiftUI
 import LoopKitUI
+import DashKit
 
 struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol  {
     
     @ObservedObject var viewModel: Model
+    
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    
+    private lazy var dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .short
+        formatter.timeStyle = .short
+        return formatter
+    }()
+
     
     weak var navigator: DashUINavigator?
     
@@ -74,13 +85,36 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
                         }
                     }
                 }
+            }
 
+            Section() {
                 if self.viewModel.lifeState.allowsPumpManagerRemoval {
                     NavigationLink(destination: EmptyView()) {
                         Text("Switch to other insulin delivery device")
                             .foregroundColor(Color.destructive)
                     }
                 }
+                
+                NavigationLink(destination: EmptyView()) {
+                    Text("Pod Details").foregroundColor(Color.primary)
+                }
+                
+                self.viewModel.lifeState.activatedAt.map { (activatedAt) in
+                    HStack {
+                        Text("Pod Insertion")
+                        Spacer()
+                        Text(self.dateFormatter.format(activatedAt))
+                    }
+
+                    HStack {
+                        Text("Pod Expires")
+                        Spacer()
+                        Text(self.dateFormatter.format(activatedAt + Pod.lifetime))
+                    }
+                }
+            }
+            
+            Section() {
                 Button(action: {
                     self.navigator?.navigateTo(self.viewModel.lifeState.nextPodLifecycleAction)
                 }) {
@@ -103,7 +137,7 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
 
         }
         .listStyle(GroupedListStyle())
-        .environment(\.horizontalSizeClass, .regular)
+        .environment(\.horizontalSizeClass, self.horizontalSizeClass)
         .navigationBarTitle("Omnipod DASH", displayMode: .automatic)
     }
 }

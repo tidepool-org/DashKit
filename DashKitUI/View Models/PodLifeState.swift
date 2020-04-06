@@ -53,8 +53,8 @@ enum PodDeliveryState {
 
 enum PodLifeState {
     case podActivating
-    case timeRemaining(TimeInterval, PodDeliveryState)
-    case expiredSince(TimeInterval, PodDeliveryState)
+    case timeRemaining(TimeInterval, PodDeliveryState, Date)
+    case expiredSince(TimeInterval, PodDeliveryState, Date)
     case podDeactivating
     case podAlarm(PodAlarm?)
     case systemError(SystemError?)
@@ -62,9 +62,9 @@ enum PodLifeState {
     
     var progress: Double {
         switch self {
-        case .timeRemaining(let timeRemaining, _):
+        case .timeRemaining(let timeRemaining, _, _):
             return max(0, min(1, timeRemaining / Pod.lifetime))
-        case .expiredSince(let expiryAge, _):
+        case .expiredSince(let expiryAge, _, _):
             return max(0, min(1, (Pod.expirationWindow - expiryAge) / Pod.expirationWindow))
         case .podAlarm, .systemError, .podDeactivating:
             return 1
@@ -103,10 +103,21 @@ enum PodLifeState {
 
     var deliveryState: PodDeliveryState? {
         switch self {
-        case .expiredSince(_, let deliveryState):
+        case .expiredSince(_, let deliveryState, _):
             return deliveryState
-        case .timeRemaining(_, let deliveryState):
+        case .timeRemaining(_, let deliveryState, _):
             return deliveryState
+        default:
+            return nil
+        }
+    }
+    
+    var activatedAt: Date? {
+        switch self {
+        case .expiredSince(_, _, let activatedAt):
+            return activatedAt
+        case .timeRemaining(_, _, let activatedAt):
+            return activatedAt
         default:
             return nil
         }

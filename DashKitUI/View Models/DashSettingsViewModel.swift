@@ -86,9 +86,9 @@ extension DashPumpManager {
                 
                 let timeActive = Date().timeIntervalSince(activationTime)
                 if timeActive < Pod.lifetime {
-                    return .timeRemaining(Pod.lifetime - timeActive, podDeliveryState)
+                    return .timeRemaining(Pod.lifetime - timeActive, podDeliveryState, activationTime)
                 } else {
-                    return .expiredSince(timeActive - Pod.lifetime, podDeliveryState)
+                    return .expiredSince(timeActive - Pod.lifetime, podDeliveryState, activationTime)
                 }
             } else {
                 return .podDeactivating
