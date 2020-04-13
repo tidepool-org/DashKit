@@ -18,7 +18,10 @@ public protocol PodStatusObserver: class {
 }
 
 public class DashPumpManager: PumpManager {
-
+    public func acknowledgeAlert(typeIdentifier: DeviceAlert.TypeIdentifier) {
+        //NOOP
+    }
+    
     public static var managerIdentifier = "OmnipodDash"
     
     static let podAlarmNotificationIdentifier = "DASH:\(LoopNotificationCategory.pumpFault.rawValue)"
@@ -976,15 +979,14 @@ extension DashPumpManager: PodCommManagerDelegate {
             state.alarmCode = alarm.alarmCode
         }
         
-        let content = UNMutableNotificationContent()
-
-        content.title = alarm.alarmCode.notificationTitle
-        content.body = alarm.alarmCode.notificationBody
-        content.categoryIdentifier = LoopNotificationCategory.pumpFault.rawValue
-        content.threadIdentifier = LoopNotificationCategory.pumpFault.rawValue
-
-        pumpDelegate.notify { (delegate) in
-            delegate?.scheduleNotification(for: self, identifier: DashPumpManager.podAlarmNotificationIdentifier, content: content, trigger: nil)
+        pumpDelegate.notify { delegate in
+            let content = DeviceAlert.Content(title: alarm.alarmCode.notificationTitle,
+                                              body: alarm.alarmCode.notificationBody,
+                                              acknowledgeActionButtonLabel: LocalizedString("OK", comment: "Alert acknowledgment OK button"))
+            delegate?.issueAlert(DeviceAlert(identifier: DeviceAlert.Identifier(managerIdentifier: DashPumpManager.podAlarmNotificationIdentifier,
+                                                                                typeIdentifier: alarm.alarmCode.rawValue),
+                                             foregroundContent: content, backgroundContent: content,
+                                             trigger: .immediate))
         }
     }
     
