@@ -53,7 +53,9 @@ enum PodDeliveryState {
 
 enum PodLifeState {
     case podActivating
+    // Time remaining, delivery state, activatedAt
     case timeRemaining(TimeInterval, PodDeliveryState, Date)
+        // Time since exiry, delivery state, activatedAt
     case expiredSince(TimeInterval, PodDeliveryState, Date)
     case podDeactivating
     case podAlarm(PodAlarm?)

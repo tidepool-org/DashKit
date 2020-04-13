@@ -61,6 +61,7 @@
 		C14C6F252419F95E00CF3408 /* LeadingImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14C6F242419F95E00CF3408 /* LeadingImage.swift */; };
 		C14C6F27241A754B00CF3408 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14C6F26241A754B00CF3408 /* ErrorView.swift */; };
 		C14D0572243687E9005F7841 /* DeactivatePodViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14D0571243687E9005F7841 /* DeactivatePodViewModelTests.swift */; };
+		C1535D422444E3D6007DD6EA /* MockPodCommManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D46D6522C56C2300978E59 /* MockPodCommManager.swift */; };
 		C15424312280C575006754B3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C15424302280C575006754B3 /* Assets.xcassets */; };
 		C15424332280C75E006754B3 /* PodStatusExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C15424322280C75D006754B3 /* PodStatusExtension.swift */; };
 		C1562F7F241581C7006952D6 /* DashSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1562F7E241581C7006952D6 /* DashSettingsViewModel.swift */; };
@@ -104,7 +105,6 @@
 		C1ACF44522A200D700F7DDB4 /* NumberFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ACF43622A04B4800F7DDB4 /* NumberFormatter.swift */; };
 		C1BC259C2314604800E80E3F /* DashPumpManagerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BC259B2314604800E80E3F /* DashPumpManagerError.swift */; };
 		C1C72D8B241568E700DB224B /* DashSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C72D8A241568E700DB224B /* DashSettingsView.swift */; };
-		C1D46D6622C56C2400978E59 /* MockPodCommManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D46D6522C56C2300978E59 /* MockPodCommManager.swift */; };
 		C1D68E302284849D00019CAE /* BasalSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D68E2F2284849D00019CAE /* BasalSchedule.swift */; };
 		C1D68E322284B50300019CAE /* TimeInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D11422692BDE00D63775 /* TimeInterval.swift */; };
 		C1D68E392284E0E000019CAE /* DashKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; };
@@ -530,6 +530,14 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
+		C1535D412444E3C7007DD6EA /* Mocks */ = {
+			isa = PBXGroup;
+			children = (
+				C1D46D6522C56C2300978E59 /* MockPodCommManager.swift */,
+			);
+			path = Mocks;
+			sourceTree = "<group>";
+		};
 		C194114F228DBF0100E886DD /* UIViews */ = {
 			isa = PBXGroup;
 			children = (
@@ -602,6 +610,7 @@
 		C1E753DB226928F700A0BC48 /* DashKit */ = {
 			isa = PBXGroup;
 			children = (
+				C1535D412444E3C7007DD6EA /* Mocks */,
 				C12AA74923186FF50025FD45 /* Extensions */,
 				C10C757F22C4040800CCC20F /* PodSDKProtocol */,
 				C1D68E2F2284849D00019CAE /* BasalSchedule.swift */,
@@ -624,7 +633,6 @@
 			children = (
 				C1E753E7226928F700A0BC48 /* DashPumpManagerTests.swift */,
 				C1E753E9226928F700A0BC48 /* Info.plist */,
-				C1D46D6522C56C2300978E59 /* MockPodCommManager.swift */,
 				C127160B237A07B60093DAB7 /* UnfinalizedDoseTests.swift */,
 			);
 			path = DashKitTests;
@@ -995,6 +1003,7 @@
 				C107D11522692BDE00D63775 /* TimeInterval.swift in Sources */,
 				C1DFF9232417C98700EAC44E /* CannulaInserter.swift in Sources */,
 				C107D11722692D9D00D63775 /* LocalizedString.swift in Sources */,
+				C1535D422444E3D6007DD6EA /* MockPodCommManager.swift in Sources */,
 				C1DFF9212417C96E00EAC44E /* PodDeactivater.swift in Sources */,
 				C1ACF44422A200B100F7DDB4 /* UnfinalizedDose.swift in Sources */,
 				C107D11922692E6B00D63775 /* DashPumpManagerState.swift in Sources */,
@@ -1013,7 +1022,6 @@
 				C127160C237A07B60093DAB7 /* UnfinalizedDoseTests.swift in Sources */,
 				C1E753E8226928F700A0BC48 /* DashPumpManagerTests.swift in Sources */,
 				C1344DE22304CE2B00973BE3 /* TimeInterval.swift in Sources */,
-				C1D46D6622C56C2400978E59 /* MockPodCommManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

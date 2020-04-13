@@ -840,9 +840,22 @@ public class DashPumpManager: PumpManager {
         }
     }
 
-    public init(state: DashPumpManagerState, podCommManager: PodCommManagerProtocol = PodCommManager.shared, dateGenerator: @escaping () -> Date = Date.init) {
-        let loggingShim = PodSDKLoggingShim(target: podCommManager)
-        loggingShim.deviceIdentifier = podCommManager.getPodId()
+    public init(state: DashPumpManagerState, podCommManager: PodCommManagerProtocol? = nil, dateGenerator: @escaping () -> Date = Date.init) {
+        
+        let loggingShim: PodSDKLoggingShim
+        let actualPodCommManager: PodCommManagerProtocol
+
+        if let podCommManager = podCommManager {
+            actualPodCommManager = podCommManager
+        } else {
+            #if targetEnvironment(simulator)
+            actualPodCommManager = MockPodCommManager()
+            #else
+            actualPodCommManager = PodCommManager.shared
+            #endif
+        }
+        loggingShim = PodSDKLoggingShim(target: actualPodCommManager)
+        loggingShim.deviceIdentifier = actualPodCommManager.getPodId()
 
         self.lockedState = Locked(state)
         self.podCommManager = loggingShim
@@ -852,9 +865,9 @@ public class DashPumpManager: PumpManager {
 
         self.podCommManager.delegate = self
         
-        podCommManager.setLogger(logger: self)
+        actualPodCommManager.setLogger(logger: self)
 
-        podCommManager.setup(withLaunchingOptions: [:])
+        actualPodCommManager.setup(withLaunchingOptions: [:])
     }
 
     public convenience required init?(rawState: PumpManager.RawStateValue) {

@@ -16,15 +16,62 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
     
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     
-    private lazy var dateFormatter: DateFormatter = {
+    let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .short
         formatter.timeStyle = .short
         return formatter
     }()
 
-    
     weak var navigator: DashUINavigator?
+    
+    private var daysRemaining: Int? {
+        if case .timeRemaining(let remaining, _, _) = viewModel.lifeState, remaining > .days(1) {
+            return Int(remaining.days)
+        }
+        return nil
+    }
+    
+    private var hoursRemaining: Int? {
+        if case .timeRemaining(let remaining, _, _) = viewModel.lifeState, remaining > .hours(1) {
+            return Int(remaining.hours.truncatingRemainder(dividingBy: 24))
+        }
+        return nil
+    }
+    
+    private var minutesRemaining: Int? {
+        if case .timeRemaining(let remaining, _, _) = viewModel.lifeState, remaining < .hours(2) {
+            return Int(remaining.minutes.truncatingRemainder(dividingBy: 60))
+        }
+        return nil
+    }
+    
+    func timeComponent(value: Int, units: String) -> some View {
+        Group {
+            Text(String(value)).font(.title).fontWeight(.bold)
+            Text(units).foregroundColor(.secondary)
+        }
+    }
+    
+    var lifecycleProgress: some View {
+        VStack(spacing: 6) {
+            HStack(alignment: .lastTextBaseline, spacing: 3) {
+                Text(self.viewModel.lifeState.localizedLabelText)
+                    .foregroundColor(Color(UIColor.secondaryLabel))
+                Spacer()
+                daysRemaining.map { (days) in
+                    timeComponent(value: days, units: days == 1 ? "day" : "days")
+                }
+                hoursRemaining.map { (hours) in
+                    timeComponent(value: hours, units: hours == 1 ? "hour" : "hours")
+                }
+                minutesRemaining.map { (minutes) in
+                    timeComponent(value: minutes, units: minutes == 1 ? "minute" : "minutes")
+                }
+            }
+            ProgressView(progress: CGFloat(self.viewModel.lifeState.progress))
+        }
+    }
     
     var body: some View {
         List {
@@ -36,16 +83,9 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
                         .frame(height: 100)
                         .padding([.top,.horizontal])
                 }.frame(maxWidth: .infinity)
+                
+                lifecycleProgress
 
-                HStack(alignment: .lastTextBaseline, spacing: 3) {
-                    Text(self.viewModel.lifeState.localizedLabelText)
-                        .foregroundColor(Color(UIColor.secondaryLabel))
-                    Spacer()
-                    Text("3").font(.title).fontWeight(.bold)
-                    Text("days")
-                        .foregroundColor(Color(UIColor.secondaryLabel))
-                }
-                ProgressView(progress: CGFloat(self.viewModel.lifeState.progress))
                 HStack {
                     VStack(alignment: .leading) {
                         Text("Last Sync")
@@ -103,13 +143,15 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
                     HStack {
                         Text("Pod Insertion")
                         Spacer()
-                        Text(self.dateFormatter.format(activatedAt))
+                        Text(self.dateFormatter.string(from: activatedAt))
                     }
+                }
 
+                self.viewModel.lifeState.activatedAt.map { (activatedAt) in
                     HStack {
                         Text("Pod Expires")
                         Spacer()
-                        Text(self.dateFormatter.format(activatedAt + Pod.lifetime))
+                        Text(self.dateFormatter.string(from: activatedAt + Pod.lifetime))
                     }
                 }
             }
