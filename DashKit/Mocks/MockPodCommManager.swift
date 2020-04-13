@@ -203,7 +203,7 @@ public class MockPodCommManager: PodCommManagerProtocol {
         if let podStatus = podStatus {
             self.podStatus = podStatus
         } else {
-            let activation = Date() - TimeInterval(hours: 0.5)
+            let activation = Date() - TimeInterval(hours: 75)
             self.podStatus = MockPodStatus(
                 expirationDate: activation + TimeInterval(days: 3),
                 podState: .runningAboveMinVolume,

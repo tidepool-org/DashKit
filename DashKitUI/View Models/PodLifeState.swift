@@ -75,6 +75,14 @@ enum PodLifeState {
         }
     }
     
+    var progressColor: Color {
+        if case .timeRemaining = self {
+            return progress < 0.25 ? Color(.agingColor) : .accentColor
+        }
+        return Color(.staleColor)
+    }
+
+    
     var localizedLabelText: String {
         switch self {
         case .podActivating:

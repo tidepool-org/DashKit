@@ -69,7 +69,7 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
                     timeComponent(value: minutes, units: minutes == 1 ? "minute" : "minutes")
                 }
             }
-            ProgressView(progress: CGFloat(self.viewModel.lifeState.progress))
+            ProgressView(progress: CGFloat(self.viewModel.lifeState.progress)).accentColor(self.viewModel.lifeState.progressColor)
         }
     }
     
