@@ -158,29 +158,40 @@ public class MockPodCommManager: PodCommManagerProtocol {
             switch programType {
             case .basalProgram(let program, _):
                 lastBasalProgram = program
+                podStatus.programStatus.insert(.basalRunning)
             case .bolus(let bolus):
                 lastBolusVolume = bolus.immediateVolume
+                podStatus.programStatus.insert(.bolusRuning)
             case .tempBasal(let tempBasal):
                 lastTempBasal = tempBasal
+                podStatus.programStatus.insert(.tempBasalRunning)
             }
             completion(.success(podStatus))
         }
     }
 
     public func stopProgram(programType: StopProgramType, completion: @escaping (PodCommResult<PodStatus>) -> ()) {
-        completion(.success(MockPodStatus.normalPodStatus()))
+        switch programType {
+        case .bolus:
+            podStatus.programStatus.remove(.bolusRuning)
+        case .tempBasal:
+            podStatus.programStatus.remove(.tempBasalRunning)
+        case .stopAll:
+            podStatus.programStatus = []
+        }
+        completion(.success(podStatus))
     }
 
     public func updateAlertSetting(alertSetting: PodAlertSetting, completion: @escaping (PodCommResult<PodStatus>) -> ()) {
-        completion(.success(MockPodStatus.normalPodStatus()))
+        completion(.success(podStatus))
     }
 
     public func silenceAlerts(alert: PodAlerts, completion: @escaping (PodCommResult<PodStatus>) -> ()) {
-        completion(.success(MockPodStatus.normalPodStatus()))
+        completion(.success(podStatus))
     }
 
     public func retryUnacknowledgedCommand(completion: @escaping (PodCommResult<PodStatus>) -> ()) {
-        completion(.success(MockPodStatus.normalPodStatus()))
+        completion(.success(podStatus))
     }
 
     public func queryAndClearUnacknowledgedCommand(completion: @escaping (PodCommResult<PendingRetryResult>) -> ()) { }

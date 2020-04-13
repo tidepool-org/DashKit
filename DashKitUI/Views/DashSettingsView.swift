@@ -54,7 +54,7 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
     }
     
     var lifecycleProgress: some View {
-        VStack(spacing: 6) {
+        VStack(spacing: 10) {
             HStack(alignment: .lastTextBaseline, spacing: 3) {
                 Text(self.viewModel.lifeState.localizedLabelText)
                     .foregroundColor(Color(UIColor.secondaryLabel))
