@@ -17,10 +17,11 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     
     let dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .short
-        formatter.timeStyle = .short
-        return formatter
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeStyle = .short
+        dateFormatter.dateStyle = .medium
+        dateFormatter.doesRelativeDateFormatting = true
+        return dateFormatter
     }()
 
     weak var navigator: DashUINavigator?
@@ -149,7 +150,7 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
 
                 self.viewModel.lifeState.activatedAt.map { (activatedAt) in
                     HStack {
-                        Text("Pod Expires")
+                        Text("Pod Expiration")
                         Spacer()
                         Text(self.dateFormatter.string(from: activatedAt + Pod.lifetime))
                     }
