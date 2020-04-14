@@ -132,8 +132,7 @@ enum PodLifeState {
             return nil
         }
     }
-
-
+    
     var nextPodLifecycleAction: DashUIScreen {
         switch self {
         case .podActivating, .noPod:

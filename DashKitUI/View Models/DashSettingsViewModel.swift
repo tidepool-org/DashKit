@@ -12,6 +12,10 @@ import LoopKit
 
 class DashSettingsViewModel: DashSettingsViewModelProtocol {
     @Published var lifeState: PodLifeState
+    
+    var timeZone: TimeZone {
+        return pumpManager.status.timeZone
+    }
 
     var podDetails: PodDetails {
         return self.pumpManager
@@ -35,18 +39,21 @@ class DashSettingsViewModel: DashSettingsViewModelProtocol {
         switch deliveryState {
         case .active:
             pumpManager.suspendDelivery { (error) in
-                if let error = error {
-                    // TODO: Display error
-                }
+                // TODO: Display error
             }
         case .suspended:
             pumpManager.resumeDelivery { (error) in
-                if let error = error {
-                    // TODO: Display error
-                }
+                // TODO: Display error
             }
         default:
             break
+        }
+    }
+    
+    func changeTimeZoneTapped() {
+        pumpManager.setTime { (error) in
+            // TODO: handle error
+            self.lifeState = self.pumpManager.lifeState
         }
     }
 }

@@ -12,8 +12,12 @@ protocol DashSettingsViewModelProtocol: ObservableObject, Identifiable {
     var lifeState: PodLifeState { get }
     
     func suspendResumeTapped()
-    
+
+    func changeTimeZoneTapped()
+
     var podDetails: PodDetails { get }
+    
+    var timeZone: TimeZone { get }
 }
 
 

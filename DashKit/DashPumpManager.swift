@@ -324,19 +324,13 @@ public class DashPumpManager: PumpManager {
         }
     }
 
-    public func setBasalSchedule(dailyItems: [RepeatingScheduleValue<Double>], completion: @escaping (Error?) -> Void) {
-        // TODO: SDK needs to be updated to allow us to pass in TimeZone
-        guard let basalProgram = BasalProgram(items: dailyItems) else {
-            completion(DashPumpManagerError.invalidBasalSchedule)
-            return
-        }
-        
+    public func setBasalSchedule(basalProgram: BasalProgram, timeZone: TimeZone, completion: @escaping (Error?) -> Void) {
         suspendDelivery { (error) in
             if let error = error {
                 completion(error)
                 return
             }
-            let offset = self.state.timeZone.scheduleOffset(forDate: self.dateGenerator())
+            let offset = timeZone.scheduleOffset(forDate: self.dateGenerator())
 
             self.podCommManager.sendProgram(programType: .basalProgram(basal: basalProgram, secondsSinceMidnight: Int(offset.rounded())), beepOption: .none) { (result) in
                 switch result {
@@ -348,12 +342,27 @@ public class DashPumpManager: PumpManager {
                         state.basalProgram = basalProgram
                         state.updateFromPodStatus(status: podStatus)
                         state.unfinalizedResume = UnfinalizedDose(resumeStartTime: now, scheduledCertainty: .certain)
+                        state.timeZone = timeZone
                         state.suspendState = .resumed(now)
                     })
                     completion(nil)
                 }
             }
         }
+    }
+
+    public func setBasalSchedule(dailyItems: [RepeatingScheduleValue<Double>], completion: @escaping (Error?) -> Void) {
+        guard let basalProgram = BasalProgram(items: dailyItems) else {
+            completion(DashPumpManagerError.invalidBasalSchedule)
+            return
+        }
+        
+        setBasalSchedule(basalProgram: basalProgram, timeZone: self.state.timeZone, completion: completion)
+        
+    }
+    
+    public func setTime(completion: @escaping (Error?) -> Void) {
+        setBasalSchedule(basalProgram: state.basalProgram, timeZone: TimeZone.currentFixed, completion: completion)
     }
 
     private var isPumpDataStale: Bool {

@@ -9,7 +9,10 @@
 import SwiftUI
 
 class MockDashSettingsViewModel: DashSettingsViewModelProtocol {
-        
+    var timeZone: TimeZone {
+        return TimeZone.currentFixed
+    }
+
     @Published var lifeState: PodLifeState
     
     var podDetails: PodDetails
@@ -23,5 +26,8 @@ class MockDashSettingsViewModel: DashSettingsViewModelProtocol {
         print("SuspendResumeTapped()")
     }
     
+    func changeTimeZoneTapped() {
+        print("changeTimeZoneTapped()")
+    }
 }
 

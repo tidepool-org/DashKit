@@ -74,6 +74,18 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
         }
     }
     
+    var timeZoneString: String {
+        let localTimeZone = TimeZone.current
+        let localTimeZoneName = localTimeZone.abbreviation() ?? localTimeZone.identifier
+        
+        let timeZoneDiff = TimeInterval(viewModel.timeZone.secondsFromGMT() - localTimeZone.secondsFromGMT())
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.hour, .minute]
+        let diffString = timeZoneDiff != 0 ? formatter.string(from: abs(timeZoneDiff)) ?? String(abs(timeZoneDiff)) : ""
+        
+        return String(format: LocalizedString("%1$@%2$@%3$@", comment: "The format string for displaying an offset from a time zone: (1: GMT)(2: -)(3: 4:00)"), localTimeZoneName, timeZoneDiff != 0 ? (timeZoneDiff < 0 ? "-" : "+") : "", diffString)
+    }
+    
     var body: some View {
         List {
             VStack(alignment: .leading) {
@@ -154,6 +166,20 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
                         Spacer()
                         Text(self.dateFormatter.string(from: activatedAt + Pod.lifetime))
                     }
+                }
+                
+                HStack {
+                    if self.viewModel.timeZone != TimeZone.currentFixed {
+                        Button(action: {
+                            self.viewModel.changeTimeZoneTapped()
+                        }) {
+                            Text(LocalizedString("Change Time Zone", comment: "The title of the command to change pump time zone"))
+                        }
+                    } else {
+                        Text(LocalizedString("Schedule Time Zone", comment: "Label for row showing pump time zone"))
+                    }
+                    Spacer()
+                    Text(timeZoneString)
                 }
             }
             
