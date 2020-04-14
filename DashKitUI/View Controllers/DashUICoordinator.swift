@@ -109,6 +109,9 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
                 fatalError("Cannot create settings without PumpManager")
             }
             let viewModel = DashSettingsViewModel(pumpManager: pumpManager)
+            viewModel.didFinish = { [weak self] in
+                self?.stepFinished()
+            }
             let view = DashSettingsView(viewModel: viewModel, navigator: self)
             return UIHostingController(rootView: view)
         case .registration:

@@ -20,9 +20,10 @@ class DashSettingsViewModel: DashSettingsViewModelProtocol {
     var podDetails: PodDetails {
         return self.pumpManager
     }
-
-    private let pumpManager: DashPumpManager
     
+    var didFinish: (() -> Void)?
+    
+    private let pumpManager: DashPumpManager
     
     init(pumpManager: DashPumpManager) {
         self.pumpManager = pumpManager
@@ -56,14 +57,20 @@ class DashSettingsViewModel: DashSettingsViewModelProtocol {
             self.lifeState = self.pumpManager.lifeState
         }
     }
+    
+    func stopUsingOmnipodTapped() {
+        self.pumpManager.notifyDelegateOfDeactivation {
+            DispatchQueue.main.async {
+                self.didFinish?()
+            }
+        }
+    }
 }
 
 extension DashSettingsViewModel: PumpManagerStatusObserver {
     func pumpManager(_ pumpManager: PumpManager, didUpdate status: PumpManagerStatus, oldStatus: PumpManagerStatus) {
         self.lifeState = self.pumpManager.lifeState
     }
-    
-    
 }
 
 extension PumpManagerStatus.BasalDeliveryState {

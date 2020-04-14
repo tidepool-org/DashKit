@@ -9,6 +9,7 @@
 import SwiftUI
 
 class MockDashSettingsViewModel: DashSettingsViewModelProtocol {
+    
     var timeZone: TimeZone {
         return TimeZone.currentFixed
     }
@@ -28,6 +29,10 @@ class MockDashSettingsViewModel: DashSettingsViewModelProtocol {
     
     func changeTimeZoneTapped() {
         print("changeTimeZoneTapped()")
+    }
+
+    func stopUsingOmnipodTapped() {
+        print("stopUsingOmnipodTapped()")
     }
 }
 

@@ -14,6 +14,8 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
     
     @ObservedObject var viewModel: Model
     
+    @State private var showingDeleteConfirmation = false
+    
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     
     let dateFormatter: DateFormatter = {
@@ -86,6 +88,10 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
         return String(format: LocalizedString("%1$@%2$@%3$@", comment: "The format string for displaying an offset from a time zone: (1: GMT)(2: -)(3: 4:00)"), localTimeZoneName, timeZoneDiff != 0 ? (timeZoneDiff < 0 ? "-" : "+") : "", diffString)
     }
     
+    func cancelDelete() {
+        showingDeleteConfirmation = false
+    }
+    
     var body: some View {
         List {
             VStack(alignment: .leading) {
@@ -123,63 +129,59 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
                 }.padding(.bottom, 8)
             }
             
-            Section(header: Text("Pod").font(.headline).foregroundColor(Color.primary)) {
-                self.viewModel.lifeState.deliveryState.map { (deliveryState) in
-                    HStack {
-                        Button(action: {
-                            self.viewModel.suspendResumeTapped()
-                        }) {
-                            Text(deliveryState.suspendResumeActionText)
-                                .foregroundColor(deliveryState.suspendResumeActionColor)
+            if self.viewModel.havePod {
+                Section(header: Text("Pod").font(.headline).foregroundColor(Color.primary)) {
+                    self.viewModel.lifeState.deliveryState.map { (deliveryState) in
+                        HStack {
+                            Button(action: {
+                                self.viewModel.suspendResumeTapped()
+                            }) {
+                                Text(deliveryState.suspendResumeActionText)
+                                    .foregroundColor(deliveryState.suspendResumeActionColor)
+                            }
+                            Spacer()
+                            if deliveryState.transitioning {
+                                ActivityIndicator(isAnimating: .constant(true), style: .medium)
+                            }
                         }
-                        Spacer()
-                        if deliveryState.transitioning {
-                            ActivityIndicator(isAnimating: .constant(true), style: .medium)
-                        }
-                    }
-                }
-            }
-
-            Section() {
-                if self.viewModel.lifeState.allowsPumpManagerRemoval {
-                    NavigationLink(destination: EmptyView()) {
-                        Text("Switch to other insulin delivery device")
-                            .foregroundColor(Color.destructive)
-                    }
-                }
-                
-                NavigationLink(destination: PodDetailsView(podDetails: self.viewModel.podDetails)) {
-                    Text("Pod Details").foregroundColor(Color.primary)
-                }
-                
-                self.viewModel.lifeState.activatedAt.map { (activatedAt) in
-                    HStack {
-                        Text("Pod Insertion")
-                        Spacer()
-                        Text(self.dateFormatter.string(from: activatedAt))
                     }
                 }
 
-                self.viewModel.lifeState.activatedAt.map { (activatedAt) in
-                    HStack {
-                        Text("Pod Expiration")
-                        Spacer()
-                        Text(self.dateFormatter.string(from: activatedAt + Pod.lifetime))
+                Section() {
+                    
+                    NavigationLink(destination: PodDetailsView(podDetails: self.viewModel.podDetails)) {
+                        Text("Pod Details").foregroundColor(Color.primary)
                     }
-                }
-                
-                HStack {
-                    if self.viewModel.timeZone != TimeZone.currentFixed {
-                        Button(action: {
-                            self.viewModel.changeTimeZoneTapped()
-                        }) {
-                            Text(LocalizedString("Change Time Zone", comment: "The title of the command to change pump time zone"))
+                        
+                    self.viewModel.lifeState.activatedAt.map { (activatedAt) in
+                        HStack {
+                            Text("Pod Insertion")
+                            Spacer()
+                            Text(self.dateFormatter.string(from: activatedAt))
                         }
-                    } else {
-                        Text(LocalizedString("Schedule Time Zone", comment: "Label for row showing pump time zone"))
                     }
-                    Spacer()
-                    Text(timeZoneString)
+
+                    self.viewModel.lifeState.activatedAt.map { (activatedAt) in
+                        HStack {
+                            Text("Pod Expiration")
+                            Spacer()
+                            Text(self.dateFormatter.string(from: activatedAt + Pod.lifetime))
+                        }
+                    }
+                    
+                    HStack {
+                        if self.viewModel.timeZone != TimeZone.currentFixed {
+                            Button(action: {
+                                self.viewModel.changeTimeZoneTapped()
+                            }) {
+                                Text(LocalizedString("Change Time Zone", comment: "The title of the command to change pump time zone"))
+                            }
+                        } else {
+                            Text(LocalizedString("Schedule Time Zone", comment: "Label for row showing pump time zone"))
+                        }
+                        Spacer()
+                        Text(timeZoneString)
+                    }
                 }
             }
             
@@ -190,10 +192,18 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
                     Text(self.viewModel.lifeState.nextPodLifecycleActionDescription)
                         .foregroundColor(self.viewModel.lifeState.nextPodLifecycleActionColor)
                 }
-                if self.viewModel.lifeState.allowsPumpManagerRemoval {
-                    NavigationLink(destination: EmptyView()) {
+            }
+            
+            if self.viewModel.lifeState.allowsPumpManagerRemoval {
+                Section() {
+                    Button(action: {
+                        self.showingDeleteConfirmation = true
+                    }) {
                         Text("Switch to other insulin delivery device")
                             .foregroundColor(Color.destructive)
+                    }
+                    .actionSheet(isPresented: $showingDeleteConfirmation) {
+                        removePumpManagerActionSheet
                     }
                 }
             }
@@ -208,6 +218,15 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
         .listStyle(GroupedListStyle())
         .environment(\.horizontalSizeClass, self.horizontalSizeClass)
         .navigationBarTitle("Omnipod DASH", displayMode: .automatic)
+    }
+    
+    var removePumpManagerActionSheet: ActionSheet {
+        ActionSheet(title: Text("Remove Pump"), message: Text("Are you sure you want to stop using Omnipod?"), buttons: [
+            .destructive(Text("Delete Omnipod")) {
+                self.viewModel.stopUsingOmnipodTapped()
+            },
+            .cancel()
+        ])
     }
 }
 
@@ -243,3 +262,4 @@ struct DashSettingsSheetView: View {
         .background(Color.green)
     }
 }
+

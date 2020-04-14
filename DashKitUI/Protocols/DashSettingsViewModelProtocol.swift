@@ -15,9 +15,20 @@ protocol DashSettingsViewModelProtocol: ObservableObject, Identifiable {
 
     func changeTimeZoneTapped()
 
+    func stopUsingOmnipodTapped()
+    
     var podDetails: PodDetails { get }
     
     var timeZone: TimeZone { get }
+}
+
+extension DashSettingsViewModelProtocol {
+    var havePod: Bool {
+        if case .noPod = lifeState {
+            return false
+        }
+        return true
+    }
 }
 
 

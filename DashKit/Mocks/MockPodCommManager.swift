@@ -74,6 +74,8 @@ public class MockPodCommManager: PodCommManagerProtocol {
     
 
     var podStatus: MockPodStatus
+    
+    public var podCommState: PodCommState = .noPod
 
     var sendProgramFailureError: PodCommError?
 
@@ -136,6 +138,8 @@ public class MockPodCommManager: PodCommManagerProtocol {
     }
 
     public func deactivatePod(completion: @escaping (PodCommResult<PodStatus>) -> ()) {
+        self.podStatus = MockPodStatus(expirationDate: podStatus.expirationDate, podState: .deactivated, programStatus: [], activeAlerts: [], isOcclusionAlertActive: false, bolusUnitsRemaining: 0, totalUnitsDelivered: 0, reservoirUnitsRemaining: 0, timeElapsedSinceActivation: Date().timeIntervalSince(podStatus.activationTime), activationTime: podStatus.activationTime)
+        self.podCommState = .noPod
         completion(.success(podStatus))
     }
 
@@ -207,8 +211,6 @@ public class MockPodCommManager: PodCommManagerProtocol {
     public func getEstimatedBolusRemaining() -> Int {
         return 0
     }
-
-    public var podCommState: PodCommState = .noPod
 
     public init(podStatus: MockPodStatus? = nil) {
         if let podStatus = podStatus {
