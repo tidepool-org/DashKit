@@ -882,11 +882,15 @@ public class DashPumpManager: PumpManager {
     public var rawState: PumpManager.RawStateValue {
         return state.rawValue
     }
+    
+    public var sdkVersion: String {
+        Bundle(for: PodCommManager.self).infoDictionary?["CFBundleShortVersionString"] as? String ?? "?"
+    }
 
     public var debugDescription: String {
         var lines = [
             "## DashPumpManager",
-            "* PodSDK Version: \(Bundle(for: PodCommManager.self).infoDictionary?["CFBundleShortVersionString"] ?? "?")",
+            "* PodSDK Version: \(sdkVersion)",
             "* PodSDK Build: \(PodSDKVersionNumber)",
             "* podCommState: \(podCommManager.podCommState)",
             "* podId: \(String(describing: podCommManager.getPodId()))",

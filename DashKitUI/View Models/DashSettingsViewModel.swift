@@ -12,8 +12,13 @@ import LoopKit
 
 class DashSettingsViewModel: DashSettingsViewModelProtocol {
     @Published var lifeState: PodLifeState
-    
+
+    var podDetails: PodDetails {
+        return self.pumpManager
+    }
+
     private let pumpManager: DashPumpManager
+    
     
     init(pumpManager: DashPumpManager) {
         self.pumpManager = pumpManager
@@ -97,4 +102,27 @@ extension DashPumpManager {
             return .systemError(error)
         }
     }
+}
+
+extension DashPumpManager: PodDetails {
+    var podIdentifier: String {
+        return podId ?? "None"
+    }
+    
+    var lot: String {
+        return "TODO"
+    }
+    
+    var tid: String {
+        return "TODO"
+    }
+    
+    var piPmVersion: String {
+        return "TODO"
+    }
+    
+    var pdmIdentifier: String {
+        return "TODO"
+    }
+    
 }

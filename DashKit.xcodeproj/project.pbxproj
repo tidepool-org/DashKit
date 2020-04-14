@@ -73,6 +73,9 @@
 		C1562F8B2416A7C8006952D6 /* MockPodDeactivater.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1562F8A2416A7C8006952D6 /* MockPodDeactivater.swift */; };
 		C1562F8D2416A945006952D6 /* MockPodStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1562F8C2416A945006952D6 /* MockPodStatus.swift */; };
 		C160FEBA2371EA050080031E /* AlarmCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = C160FEB92371EA050080031E /* AlarmCode.swift */; };
+		C168F18624460A0A002447D5 /* PodDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C168F18524460A0A002447D5 /* PodDetailsView.swift */; };
+		C168F188244611E7002447D5 /* PodDetails .swift in Sources */ = {isa = PBXBuildFile; fileRef = C168F187244611E7002447D5 /* PodDetails .swift */; };
+		C168F18A244616E1002447D5 /* MockPodDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = C168F189244616E1002447D5 /* MockPodDetails.swift */; };
 		C16DA83622E7C6F2008624C2 /* DashKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; platformFilter = ios; };
 		C16DA85822E93973008624C2 /* DashKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C107D15322694B9C00D63775 /* DashKitUI.framework */; platformFilter = ios; };
 		C171758C2437AFF200199ABC /* CheckInsertedCannulaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C171758B2437AFF200199ABC /* CheckInsertedCannulaView.swift */; };
@@ -256,6 +259,9 @@
 		C1562F8A2416A7C8006952D6 /* MockPodDeactivater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPodDeactivater.swift; sourceTree = "<group>"; };
 		C1562F8C2416A945006952D6 /* MockPodStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPodStatus.swift; sourceTree = "<group>"; };
 		C160FEB92371EA050080031E /* AlarmCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmCode.swift; sourceTree = "<group>"; };
+		C168F18524460A0A002447D5 /* PodDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodDetailsView.swift; sourceTree = "<group>"; };
+		C168F187244611E7002447D5 /* PodDetails .swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PodDetails .swift"; sourceTree = "<group>"; };
+		C168F189244616E1002447D5 /* MockPodDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPodDetails.swift; sourceTree = "<group>"; };
 		C171758B2437AFF200199ABC /* CheckInsertedCannulaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInsertedCannulaView.swift; sourceTree = "<group>"; };
 		C194114522861E9100E886DD /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		C194114D228DBEC000E886DD /* PodSetupCompleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodSetupCompleteViewController.swift; sourceTree = "<group>"; };
@@ -437,6 +443,7 @@
 				C1A701B823EB7EC2002D1E45 /* PairPodView.swift */,
 				C1201E3E23EE1B03002DA84A /* RegisterView.swift */,
 				C171758B2437AFF200199ABC /* CheckInsertedCannulaView.swift */,
+				C168F18524460A0A002447D5 /* PodDetailsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -471,6 +478,7 @@
 			children = (
 				C10EF92C24044B560091392C /* SettingsProvider.swift */,
 				C1562F822415848D006952D6 /* DashSettingsViewModelProtocol.swift */,
+				C168F187244611E7002447D5 /* PodDetails .swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -517,6 +525,7 @@
 				C1DFF9242417CA5B00EAC44E /* MockCannulaInserter.swift */,
 				C11B2C2C2425846D00308035 /* MockNavigator.swift */,
 				C1A9194A2433917E008D216E /* MockPodAlarm.swift */,
+				C168F189244616E1002447D5 /* MockPodDetails.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -923,6 +932,7 @@
 				C171758C2437AFF200199ABC /* CheckInsertedCannulaView.swift in Sources */,
 				C1DFF9252417CA5B00EAC44E /* MockCannulaInserter.swift in Sources */,
 				C1ED19D223F98C5C00D55049 /* DashUICoordinator.swift in Sources */,
+				C168F188244611E7002447D5 /* PodDetails .swift in Sources */,
 				C1562F8B2416A7C8006952D6 /* MockPodDeactivater.swift in Sources */,
 				C12A06A123F217A40052195C /* RegistrationViewModel.swift in Sources */,
 				C1D68E322284B50300019CAE /* TimeInterval.swift in Sources */,
@@ -949,8 +959,10 @@
 				C1941153228DBF8300E886DD /* NibLoadable.swift in Sources */,
 				C107D161226A0DCF00D63775 /* DashPumpManager+UI.swift in Sources */,
 				C14C6F27241A754B00CF3408 /* ErrorView.swift in Sources */,
+				C168F18A244616E1002447D5 /* MockPodDetails.swift in Sources */,
 				C1201E3F23EE1B03002DA84A /* RegisterView.swift in Sources */,
 				C1ED19D623F9C63E00D55049 /* InsertCannulaView.swift in Sources */,
+				C168F18624460A0A002447D5 /* PodDetailsView.swift in Sources */,
 				C1ACF43722A04B4800F7DDB4 /* NumberFormatter.swift in Sources */,
 				C12A06AA23F2EFED0052195C /* MockRegistrationManager.swift in Sources */,
 				C1562F8D2416A945006952D6 /* MockPodStatus.swift in Sources */,

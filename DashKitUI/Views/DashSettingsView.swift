@@ -136,7 +136,7 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
                     }
                 }
                 
-                NavigationLink(destination: EmptyView()) {
+                NavigationLink(destination: PodDetailsView(podDetails: self.viewModel.podDetails)) {
                     Text("Pod Details").foregroundColor(Color.primary)
                 }
                 
