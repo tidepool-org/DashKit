@@ -10,7 +10,7 @@ import Foundation
 
 protocol PodDetails {
     var podIdentifier: String { get }
-    var lot: String { get }
+    var lotNumber: String { get }
     var tid: String { get }
     var piPmVersion: String { get }
     var pdmIdentifier: String { get }

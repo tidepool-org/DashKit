@@ -123,7 +123,7 @@ extension DashPumpManager: PodDetails {
         return podId ?? "None"
     }
     
-    var lot: String {
+    var lotNumber: String {
         return "TODO"
     }
     

@@ -1,6 +1,6 @@
 //
 //  MockPodCommManager.swift
-//  DashKitTests
+//  DashKit
 //
 //  Created by Pete Schwamb on 6/27/19.
 //  Copyright © 2019 Tidepool. All rights reserved.

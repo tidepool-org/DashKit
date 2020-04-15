@@ -63,13 +63,19 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
                     .foregroundColor(Color(UIColor.secondaryLabel))
                 Spacer()
                 daysRemaining.map { (days) in
-                    timeComponent(value: days, units: days == 1 ? "day" : "days")
+                    timeComponent(value: days, units: days == 1 ?
+                        LocalizedString("day", comment: "Unit for singular day in pod life remaining") :
+                        LocalizedString("days", comment: "Unit for plural days in pod life remaining"))
                 }
                 hoursRemaining.map { (hours) in
-                    timeComponent(value: hours, units: hours == 1 ? "hour" : "hours")
+                    timeComponent(value: hours, units: hours == 1 ?
+                        LocalizedString("hour", comment: "Unit for singular hour in pod life remaining") :
+                        LocalizedString("hours", comment: "Unit for plural hours in pod life remaining"))
                 }
                 minutesRemaining.map { (minutes) in
-                    timeComponent(value: minutes, units: minutes == 1 ? "minute" : "minutes")
+                    timeComponent(value: minutes, units: minutes == 1 ?
+                        LocalizedString("minute", comment: "Unit for singular minute in pod life remaining") :
+                        LocalizedString("minutes", comment: "Unit for plural minutes in pod life remaining"))
                 }
             }
             ProgressView(progress: CGFloat(self.viewModel.lifeState.progress)).accentColor(self.viewModel.lifeState.progressColor)

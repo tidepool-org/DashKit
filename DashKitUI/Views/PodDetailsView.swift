@@ -24,7 +24,7 @@ struct PodDetailsView: View {
     var body: some View {
         List {
             row(LocalizedString("Pod Identifier", comment: "description label for pod identifer pod details row"), value: podDetails.podIdentifier)
-            row(LocalizedString("Lot", comment: "description label for lot id pod details row"), value: podDetails.lot)
+            row(LocalizedString("Lot Number", comment: "description label for lot number pod details row"), value: podDetails.lotNumber)
             row(LocalizedString("TID", comment: "description label for tid pod details row"), value: podDetails.tid)
             row(LocalizedString("PI / PM Version", comment: "description label for pi/pm version pod details row"), value: podDetails.piPmVersion)
             row(LocalizedString("PDM Identifier", comment: "description label for pdm identifier details row"), value: podDetails.pdmIdentifier)

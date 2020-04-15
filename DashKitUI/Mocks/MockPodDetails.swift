@@ -11,7 +11,7 @@ import Foundation
 struct MockPodDetails: PodDetails {
     var podIdentifier = "123"
     
-    var lot = "L44716"
+    var lotNumber = "L44716"
     
     var tid = "0531513"
     
