@@ -109,6 +109,9 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
                 fatalError("Cannot create settings without PumpManager")
             }
             let viewModel = DashSettingsViewModel(pumpManager: pumpManager)
+            viewModel.didFinish = { [weak self] in
+                self?.stepFinished()
+            }
             let view = DashSettingsView(viewModel: viewModel, navigator: self)
             return UIHostingController(rootView: view)
         case .registration:
@@ -126,14 +129,15 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
             settingsVC.settingsProvider = self
             return settingsVC
         case .pairPod:
-            #if targetEnvironment(simulator)
-            let viewModel = PairPodViewModel(podPairer: MockPodPairer(), navigator: self)
-            #else
             if pumpManager == nil,
                 let basalRateSchedule = basalSchedule,
                 let pumpManagerState = DashPumpManagerState(basalRateSchedule: basalRateSchedule)
             {
+                #if targetEnvironment(simulator)
+                let pumpManager = DashPumpManager(state: pumpManagerState, podCommManager: MockPodCommManager())
+                #else
                 let pumpManager = DashPumpManager(state: pumpManagerState)
+                #endif
                 self.pumpManager = pumpManager
                 setupDelegate?.pumpManagerSetupViewController(self, didSetUpPumpManager: pumpManager)
             }
@@ -141,8 +145,8 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
             guard let pumpManager = pumpManager else {
                 fatalError("Missing pumpManager or settings for pairing new pod")
             }
+
             let viewModel = PairPodViewModel(podPairer: pumpManager, navigator: self)
-            #endif
 
             viewModel.didFinish = { [weak self] in
                 self?.stepFinished()
@@ -153,14 +157,10 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
             let view = PairPodView(viewModel: viewModel)
             return UIHostingController(rootView: view)
         case .insertCannula:
-            #if targetEnvironment(simulator)
-            let viewModel = InsertCannulaViewModel(cannulaInserter: MockCannulaInserter(), navigator: self)
-            #else
             guard let pumpManager = pumpManager else {
                 fatalError("Need pump manager for cannula insertion screen")
             }
             let viewModel = InsertCannulaViewModel(cannulaInserter: pumpManager, navigator: self)
-            #endif
             
             viewModel.didFinish = { [weak self] in
                 self?.stepFinished()

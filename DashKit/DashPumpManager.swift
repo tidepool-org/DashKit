@@ -324,19 +324,13 @@ public class DashPumpManager: PumpManager {
         }
     }
 
-    public func setBasalSchedule(dailyItems: [RepeatingScheduleValue<Double>], completion: @escaping (Error?) -> Void) {
-        // TODO: SDK needs to be updated to allow us to pass in TimeZone
-        guard let basalProgram = BasalProgram(items: dailyItems) else {
-            completion(DashPumpManagerError.invalidBasalSchedule)
-            return
-        }
-        
+    public func setBasalSchedule(basalProgram: BasalProgram, timeZone: TimeZone, completion: @escaping (Error?) -> Void) {
         suspendDelivery { (error) in
             if let error = error {
                 completion(error)
                 return
             }
-            let offset = self.state.timeZone.scheduleOffset(forDate: self.dateGenerator())
+            let offset = timeZone.scheduleOffset(forDate: self.dateGenerator())
 
             self.podCommManager.sendProgram(programType: .basalProgram(basal: basalProgram, secondsSinceMidnight: Int(offset.rounded())), beepOption: .none) { (result) in
                 switch result {
@@ -348,12 +342,27 @@ public class DashPumpManager: PumpManager {
                         state.basalProgram = basalProgram
                         state.updateFromPodStatus(status: podStatus)
                         state.unfinalizedResume = UnfinalizedDose(resumeStartTime: now, scheduledCertainty: .certain)
+                        state.timeZone = timeZone
                         state.suspendState = .resumed(now)
                     })
                     completion(nil)
                 }
             }
         }
+    }
+
+    public func setBasalSchedule(dailyItems: [RepeatingScheduleValue<Double>], completion: @escaping (Error?) -> Void) {
+        guard let basalProgram = BasalProgram(items: dailyItems) else {
+            completion(DashPumpManagerError.invalidBasalSchedule)
+            return
+        }
+        
+        setBasalSchedule(basalProgram: basalProgram, timeZone: self.state.timeZone, completion: completion)
+        
+    }
+    
+    public func setTime(completion: @escaping (Error?) -> Void) {
+        setBasalSchedule(basalProgram: state.basalProgram, timeZone: TimeZone.currentFixed, completion: completion)
     }
 
     private var isPumpDataStale: Bool {
@@ -840,9 +849,22 @@ public class DashPumpManager: PumpManager {
         }
     }
 
-    public init(state: DashPumpManagerState, podCommManager: PodCommManagerProtocol = PodCommManager.shared, dateGenerator: @escaping () -> Date = Date.init) {
-        let loggingShim = PodSDKLoggingShim(target: podCommManager)
-        loggingShim.deviceIdentifier = podCommManager.getPodId()
+    public init(state: DashPumpManagerState, podCommManager: PodCommManagerProtocol? = nil, dateGenerator: @escaping () -> Date = Date.init) {
+        
+        let loggingShim: PodSDKLoggingShim
+        let actualPodCommManager: PodCommManagerProtocol
+
+        if let podCommManager = podCommManager {
+            actualPodCommManager = podCommManager
+        } else {
+            #if targetEnvironment(simulator)
+            actualPodCommManager = MockPodCommManager()
+            #else
+            actualPodCommManager = PodCommManager.shared
+            #endif
+        }
+        loggingShim = PodSDKLoggingShim(target: actualPodCommManager)
+        loggingShim.deviceIdentifier = actualPodCommManager.getPodId()
 
         self.lockedState = Locked(state)
         self.podCommManager = loggingShim
@@ -852,9 +874,9 @@ public class DashPumpManager: PumpManager {
 
         self.podCommManager.delegate = self
         
-        podCommManager.setLogger(logger: self)
+        actualPodCommManager.setLogger(logger: self)
 
-        podCommManager.setup(withLaunchingOptions: [:])
+        actualPodCommManager.setup(withLaunchingOptions: [:])
     }
 
     public convenience required init?(rawState: PumpManager.RawStateValue) {
@@ -869,11 +891,15 @@ public class DashPumpManager: PumpManager {
     public var rawState: PumpManager.RawStateValue {
         return state.rawValue
     }
+    
+    public var sdkVersion: String {
+        Bundle(for: PodCommManager.self).infoDictionary?["CFBundleShortVersionString"] as? String ?? "?"
+    }
 
     public var debugDescription: String {
         var lines = [
             "## DashPumpManager",
-            "* PodSDK Version: \(Bundle(for: PodCommManager.self).infoDictionary?["CFBundleShortVersionString"] ?? "?")",
+            "* PodSDK Version: \(sdkVersion)",
             "* PodSDK Build: \(PodSDKVersionNumber)",
             "* podCommState: \(podCommManager.podCommState)",
             "* podId: \(String(describing: podCommManager.getPodId()))",

@@ -8,18 +8,84 @@
 
 import DashKit
 import SwiftUI
-
+import LoopKit
 
 class DashSettingsViewModel: DashSettingsViewModelProtocol {
     @Published var lifeState: PodLifeState
     
-    private let pumpManager: DashPumpManager
+    var timeZone: TimeZone {
+        return pumpManager.status.timeZone
+    }
 
+    var podDetails: PodDetails {
+        return self.pumpManager
+    }
+    
+    var didFinish: (() -> Void)?
+    
+    private let pumpManager: DashPumpManager
+    
     init(pumpManager: DashPumpManager) {
         self.pumpManager = pumpManager
         
         lifeState = pumpManager.lifeState
-    }    
+        pumpManager.addStatusObserver(self, queue: DispatchQueue.main)
+    }
+
+    func suspendResumeTapped() {
+        guard let deliveryState = lifeState.deliveryState else {
+            return
+        }
+        
+        switch deliveryState {
+        case .active:
+            pumpManager.suspendDelivery { (error) in
+                // TODO: Display error
+            }
+        case .suspended:
+            pumpManager.resumeDelivery { (error) in
+                // TODO: Display error
+            }
+        default:
+            break
+        }
+    }
+    
+    func changeTimeZoneTapped() {
+        pumpManager.setTime { (error) in
+            // TODO: handle error
+            self.lifeState = self.pumpManager.lifeState
+        }
+    }
+    
+    func stopUsingOmnipodTapped() {
+        self.pumpManager.notifyDelegateOfDeactivation {
+            DispatchQueue.main.async {
+                self.didFinish?()
+            }
+        }
+    }
+}
+
+extension DashSettingsViewModel: PumpManagerStatusObserver {
+    func pumpManager(_ pumpManager: PumpManager, didUpdate status: PumpManagerStatus, oldStatus: PumpManagerStatus) {
+        self.lifeState = self.pumpManager.lifeState
+    }
+}
+
+extension PumpManagerStatus.BasalDeliveryState {
+    var podDeliveryState: PodDeliveryState {
+        switch self {
+        case .active, .initiatingTempBasal, .tempBasal, .cancelingTempBasal:
+            return .active
+        case .resuming:
+            return .resuming
+        case .suspending:
+            return .suspending
+        case .suspended:
+            return .suspended
+        }
+    }
 }
 
 extension DashPumpManager {
@@ -35,11 +101,13 @@ extension DashPumpManager {
             return .podDeactivating
         case .active:
             if let activationTime = podActivatedAt {
+                let podDeliveryState = status.basalDeliveryState.podDeliveryState
+                
                 let timeActive = Date().timeIntervalSince(activationTime)
                 if timeActive < Pod.lifetime {
-                    return .timeRemaining(Pod.lifetime - timeActive)
+                    return .timeRemaining(Pod.lifetime - timeActive, podDeliveryState, activationTime)
                 } else {
-                    return .expiredSince(timeActive - Pod.lifetime)
+                    return .expiredSince(timeActive - Pod.lifetime, podDeliveryState, activationTime)
                 }
             } else {
                 return .podDeactivating
@@ -48,4 +116,27 @@ extension DashPumpManager {
             return .systemError(error)
         }
     }
+}
+
+extension DashPumpManager: PodDetails {
+    var podIdentifier: String {
+        return podId ?? "None"
+    }
+    
+    var lotNumber: String {
+        return "TODO"
+    }
+    
+    var tid: String {
+        return "TODO"
+    }
+    
+    var piPmVersion: String {
+        return "TODO"
+    }
+    
+    var pdmIdentifier: String {
+        return "TODO"
+    }
+    
 }
