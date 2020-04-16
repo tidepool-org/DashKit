@@ -392,10 +392,7 @@ extension DashPumpManagerTests: PumpManagerDelegate {
 
     func clearNotification(for manager: DeviceManager, identifier: String) {
     }
-    
-    func showAlert(_ manager: DeviceManager, title: String, message: String) {
-    }
-    
+        
     func deviceManager(_ manager: DeviceManager, logEventForDeviceIdentifier deviceIdentifier: String?, type: DeviceLogEntryType, message: String, completion: ((Error?) -> Void)?) {
     }
 }
