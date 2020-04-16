@@ -18,7 +18,7 @@ public protocol PodStatusObserver: class {
 }
 
 public class DashPumpManager: PumpManager {
-    public func acknowledgeAlert(typeIdentifier: DeviceAlert.TypeIdentifier) {
+    public func acknowledgeAlert(alertIdentifier: DeviceAlert.AlertIdentifier) {
         //NOOP
     }
     
@@ -984,7 +984,7 @@ extension DashPumpManager: PodCommManagerDelegate {
                                               body: alarm.alarmCode.notificationBody,
                                               acknowledgeActionButtonLabel: LocalizedString("OK", comment: "Alert acknowledgment OK button"))
             delegate?.issueAlert(DeviceAlert(identifier: DeviceAlert.Identifier(managerIdentifier: DashPumpManager.podAlarmNotificationIdentifier,
-                                                                                typeIdentifier: alarm.alarmCode.rawValue),
+                                                                                alertIdentifier: alarm.alarmCode.rawValue),
                                              foregroundContent: content, backgroundContent: content,
                                              trigger: .immediate))
         }
