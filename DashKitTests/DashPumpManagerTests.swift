@@ -332,6 +332,19 @@ extension DashPumpManagerTests: PumpManagerStatusObserver {
 }
 
 extension DashPumpManagerTests: PumpManagerDelegate {
+        
+    func issueAlert(_ alert: DeviceAlert) {
+        
+    }
+    
+    func removePendingAlert(identifier: DeviceAlert.Identifier) {
+        
+    }
+    
+    func removeDeliveredAlert(identifier: DeviceAlert.Identifier) {
+        
+    }
+
     func pumpManagerBLEHeartbeatDidFire(_ pumpManager: PumpManager) {
     }
 
@@ -379,7 +392,7 @@ extension DashPumpManagerTests: PumpManagerDelegate {
 
     func clearNotification(for manager: DeviceManager, identifier: String) {
     }
-    
+        
     func deviceManager(_ manager: DeviceManager, logEventForDeviceIdentifier deviceIdentifier: String?, type: DeviceLogEntryType, message: String, completion: ((Error?) -> Void)?) {
     }
 }
