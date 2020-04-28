@@ -35,6 +35,8 @@ extension UIColor {
 
     @nonobjc static let deleteColor = UIColor.HIGRedColor()
 
+    @nonobjc static let alarmColor = UIColor.HIGRedColor()
+
     // MARK: - HIG colors
     // See: https://developer.apple.com/ios/human-interface-guidelines/visual-design/color/
 

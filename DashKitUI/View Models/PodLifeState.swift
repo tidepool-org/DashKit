@@ -12,51 +12,12 @@ import PodSDK
 import DashKit
 import SwiftUI
 
-enum PodDeliveryState {
-    case active
-    case suspending
-    case suspended
-    case resuming
-
-    var suspendResumeActionText: String {
-        switch self {
-        case .active:
-            return LocalizedString("Suspend Insulin Delivery", comment: "Text for suspend resume button when insulin delivery active")
-        case .suspending:
-            return LocalizedString("Suspending Delivery", comment: "Text for suspend resume button when insulin delivery is suspending")
-        case .suspended:
-            return LocalizedString("Resume Insulin Delivery", comment: "Text for suspend resume button when insulin delivery is suspended")
-        case .resuming:
-            return LocalizedString("Resuming Insulin Delivery", comment: "Text for suspend resume button when insulin delivery is resuming")
-        }
-    }
-    
-    var transitioning: Bool {
-        switch self {
-        case .suspending, .resuming:
-            return true
-        default:
-            return false
-        }
-    }
-    
-    var suspendResumeActionColor: Color {
-        switch self {
-        case .suspending, .resuming:
-            return Color.secondary
-        default:
-            return Color.accentColor
-        }
-    }
-
-}
-
 enum PodLifeState {
     case podActivating
-    // Time remaining, delivery state, activatedAt
-    case timeRemaining(TimeInterval, PodDeliveryState, Date)
-    // Time since expiry, delivery state, activatedAt
-    case expiredSince(TimeInterval, PodDeliveryState, Date)
+    // Time remaining
+    case timeRemaining(TimeInterval)
+    // Time since expiry
+    case expiredFor(TimeInterval)
     case podDeactivating
     case podAlarm(PodAlarm?)
     case systemError(SystemError?)
@@ -64,10 +25,10 @@ enum PodLifeState {
     
     var progress: Double {
         switch self {
-        case .timeRemaining(let timeRemaining, _, _):
+        case .timeRemaining(let timeRemaining):
             return max(0, min(1, timeRemaining / Pod.lifetime))
-        case .expiredSince(let expiryAge, _, _):
-            return max(0, min(1, (Pod.expirationWindow - expiryAge) / Pod.expirationWindow))
+        case .expiredFor(let expiryAge):
+            return max(0, min(1, expiryAge / Pod.expirationWindow))
         case .podAlarm, .systemError, .podDeactivating:
             return 1
         case .noPod, .podActivating:
@@ -79,7 +40,14 @@ enum PodLifeState {
         if case .timeRemaining = self {
             return progress < 0.25 ? Color(.agingColor) : .accentColor
         }
-        return Color(.staleColor)
+        return Color(.alarmColor)
+    }
+    
+    var labelColor: Color {
+        if case .podAlarm = self {
+            return Color(.alarmColor)
+        }
+        return Color(.secondaryLabel)
     }
 
     
@@ -89,7 +57,7 @@ enum PodLifeState {
             return LocalizedString("Unfinished Activation", comment: "Label for pod life state when pod not fully activated")
         case .timeRemaining:
             return LocalizedString("Pod expires in", comment: "Label for pod life state when time remaining")
-        case .expiredSince:
+        case .expiredFor:
             return LocalizedString("Pod expired", comment: "Label for pod life state when within pod expiration window")
         case .podDeactivating:
             return LocalizedString("Unfinished deactivation", comment: "Label for pod life state when pod not fully deactivated")
@@ -111,28 +79,6 @@ enum PodLifeState {
         }
     }
 
-    var deliveryState: PodDeliveryState? {
-        switch self {
-        case .expiredSince(_, let deliveryState, _):
-            return deliveryState
-        case .timeRemaining(_, let deliveryState, _):
-            return deliveryState
-        default:
-            return nil
-        }
-    }
-    
-    var activatedAt: Date? {
-        switch self {
-        case .expiredSince(_, _, let activatedAt):
-            return activatedAt
-        case .timeRemaining(_, _, let activatedAt):
-            return activatedAt
-        default:
-            return nil
-        }
-    }
-    
     var nextPodLifecycleAction: DashUIScreen {
         switch self {
         case .podActivating, .noPod:
@@ -164,7 +110,7 @@ enum PodLifeState {
 
     var isActive: Bool {
         switch self {
-        case .expiredSince, .timeRemaining:
+        case .expiredFor, .timeRemaining:
             return true
         default:
             return false

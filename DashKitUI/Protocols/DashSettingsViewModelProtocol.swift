@@ -7,27 +7,59 @@
 //
 
 import Foundation
+import LoopKit
+import PodSDK
+
+struct BasalDeliveryRate {
+    var absoluteRate: Double
+    var netPercent: Double
+}
 
 protocol DashSettingsViewModelProtocol: ObservableObject, Identifiable {
     var lifeState: PodLifeState { get }
+
+    var activatedAt: Date? { get }
     
+    var basalDeliveryState: PumpManagerStatus.BasalDeliveryState { get }
+    
+    var basalDeliveryRate: BasalDeliveryRate? { get }
+
+    var podDetails: PodDetails { get }
+    
+    var dateFormatter: DateFormatter { get }
+    
+    var basalRateFormatter: NumberFormatter { get }
+
+    var timeZone: TimeZone { get }
+
     func suspendResumeTapped()
 
     func changeTimeZoneTapped()
 
     func stopUsingOmnipodTapped()
     
-    var podDetails: PodDetails { get }
-    
-    var timeZone: TimeZone { get }
 }
 
 extension DashSettingsViewModelProtocol {
-    var havePod: Bool {
-        if case .noPod = lifeState {
+    var podOk: Bool {
+        switch lifeState {
+        case .noPod, .podAlarm, .systemError, .podActivating, .podDeactivating:
             return false
+        default:
+            return true
         }
-        return true
+    }
+    
+    var alarmReferenceCode: String? {
+        switch lifeState {
+        case .podAlarm(let alarm):
+            if let alarm = alarm, alarm.alarmCode != .podExpired {
+                return alarm.referenceCode
+            }
+        default:
+            break
+        }
+        return nil
     }
 }
 

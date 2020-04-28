@@ -18,6 +18,7 @@ public protocol PodStatusObserver: class {
 }
 
 public class DashPumpManager: PumpManager {
+    
     public func acknowledgeAlert(alertIdentifier: DeviceAlert.AlertIdentifier) {
         //NOOP
     }
@@ -364,6 +365,12 @@ public class DashPumpManager: PumpManager {
         
     }
     
+    public func setMaximumTempBasalRate(_ rate: Double) {
+        lockedState.mutate { (state) in
+            state.maximumTempBasalRate = rate
+        }
+    }
+
     public func setTime(completion: @escaping (Error?) -> Void) {
         setBasalSchedule(basalProgram: state.basalProgram, timeZone: TimeZone.currentFixed, completion: completion)
     }
@@ -1007,6 +1014,7 @@ extension DashPumpManager: PodCommManagerDelegate {
     }
     
     public func podCommManager(_ podCommManager: PodCommManager, connectionStateDidChange connectionState: ConnectionState) {
+        // TODO: log this as a connection event.
         logPodCommManagerDelegateMessage("connectionStateDidChange: \(String(describing: connectionState))")
         
         self.mutateState { (state) in

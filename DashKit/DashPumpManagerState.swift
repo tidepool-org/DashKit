@@ -51,6 +51,8 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
     public var unfinalizedResume: UnfinalizedDose?
 
     var finishedDoses: [UnfinalizedDose]
+    
+    public var maximumTempBasalRate: Double
 
     public var suspendState: SuspendState
 
@@ -91,7 +93,7 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
         return dateGeneratorWrapper.dateGenerator()
     }
 
-    public init?(basalRateSchedule: BasalRateSchedule, dateGenerator: @escaping () -> Date = Date.init) {
+    public init?(basalRateSchedule: BasalRateSchedule, maximumTempBasalRate: Double, dateGenerator: @escaping () -> Date = Date.init) {
         self.timeZone = basalRateSchedule.timeZone
         guard let basalProgram = BasalProgram(items: basalRateSchedule.items) else {
             return nil
@@ -100,6 +102,7 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
         self.dateGeneratorWrapper = DateGeneratorWrapper(dateGenerator: dateGenerator)
         self.finishedDoses = []
         self.suspendState = .resumed(dateGenerator())
+        self.maximumTempBasalRate = maximumTempBasalRate
     }
 
 
@@ -109,8 +112,9 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
             let rawBasalProgram = rawValue["basalProgram"] as? BasalProgram.RawValue,
             let basalProgram = BasalProgram(rawValue: rawBasalProgram),
             let rawSuspendState = rawValue["suspendState"] as? SuspendState.RawValue,
-            let suspendState = SuspendState(rawValue: rawSuspendState)
-            else {
+            let suspendState = SuspendState(rawValue: rawSuspendState),
+            let maximumTempBasalRate = rawValue["maximumTempBasalRate"] as? Double
+        else {
             return nil
         }
         
@@ -118,6 +122,8 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
 
         self.basalProgram = basalProgram
         self.suspendState = suspendState
+        
+        self.maximumTempBasalRate = maximumTempBasalRate
 
         self.podActivatedAt = rawValue["podActivatedAt"] as? Date
         self.lastStatusDate = rawValue["lastStatusDate"] as? Date
@@ -184,6 +190,7 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
             "finishedDoses": finishedDoses.map( { $0.rawValue }),
             "basalProgram": basalProgram.rawValue,
             "suspendState": suspendState.rawValue,
+            "maximumTempBasalRate": maximumTempBasalRate,
         ]
 
         rawValue["lastStatusDate"] = lastStatusDate

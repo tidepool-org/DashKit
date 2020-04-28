@@ -17,7 +17,6 @@ import DashKit
 import PodSDK
 
 enum DashUIScreen {
-    case alarm
     case deactivate
     case settings
     case registration
@@ -29,8 +28,6 @@ enum DashUIScreen {
     
     func next() -> DashUIScreen? {
         switch self {
-        case .alarm:
-            return .deactivate
         case .deactivate:
             return .pairPod
         case .settings:
@@ -86,10 +83,6 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
     
     private func viewControllerForScreen(_ screen: DashUIScreen) -> UIViewController {
         switch screen {
-        case .alarm:
-            // TODO
-            let view = PairPodView(viewModel: PairPodViewModel(podPairer: MockPodPairer(), navigator: self))
-            return UIHostingController(rootView: view)
         case .deactivate:
             guard let pumpManager = pumpManager else {
                 fatalError("Need pump manager for pod deactivate screen")
@@ -131,7 +124,8 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
         case .pairPod:
             if pumpManager == nil,
                 let basalRateSchedule = basalSchedule,
-                let pumpManagerState = DashPumpManagerState(basalRateSchedule: basalRateSchedule)
+                let maxBasalRateUnitsPerHour = maxBasalRateUnitsPerHour,
+                let pumpManagerState = DashPumpManagerState(basalRateSchedule: basalRateSchedule, maximumTempBasalRate: maxBasalRateUnitsPerHour)
             {
                 #if targetEnvironment(simulator)
                 let pumpManager = DashPumpManager(state: pumpManagerState, podCommManager: MockPodCommManager())
@@ -220,9 +214,7 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
     }
     
     private func determineInitialStep() -> DashUIScreen {
-        if let pumpManager = pumpManager, case .alarm = pumpManager.podCommState {
-            return .alarm
-        } else if !registrationManager.isRegistered() {
+        if !registrationManager.isRegistered() {
             return .registration
         } else if let pumpManager = pumpManager {
             if pumpManager.podCommState == .activating {

@@ -18,32 +18,24 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
     
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     
-    let dateFormatter: DateFormatter = {
-        let dateFormatter = DateFormatter()
-        dateFormatter.timeStyle = .short
-        dateFormatter.dateStyle = .medium
-        dateFormatter.doesRelativeDateFormatting = true
-        return dateFormatter
-    }()
-
     weak var navigator: DashUINavigator?
     
     private var daysRemaining: Int? {
-        if case .timeRemaining(let remaining, _, _) = viewModel.lifeState, remaining > .days(1) {
+        if case .timeRemaining(let remaining) = viewModel.lifeState, remaining > .days(1) {
             return Int(remaining.days)
         }
         return nil
     }
     
     private var hoursRemaining: Int? {
-        if case .timeRemaining(let remaining, _, _) = viewModel.lifeState, remaining > .hours(1) {
+        if case .timeRemaining(let remaining) = viewModel.lifeState, remaining > .hours(1) {
             return Int(remaining.hours.truncatingRemainder(dividingBy: 24))
         }
         return nil
     }
     
     private var minutesRemaining: Int? {
-        if case .timeRemaining(let remaining, _, _) = viewModel.lifeState, remaining < .hours(2) {
+        if case .timeRemaining(let remaining) = viewModel.lifeState, remaining < .hours(2) {
             return Int(remaining.minutes.truncatingRemainder(dividingBy: 60))
         }
         return nil
@@ -60,7 +52,7 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
         VStack(spacing: 10) {
             HStack(alignment: .lastTextBaseline, spacing: 3) {
                 Text(self.viewModel.lifeState.localizedLabelText)
-                    .foregroundColor(Color(UIColor.secondaryLabel))
+                    .foregroundColor(self.viewModel.lifeState.labelColor)
                 Spacer()
                 daysRemaining.map { (days) in
                     timeComponent(value: days, units: days == 1 ?
@@ -98,6 +90,53 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
         showingDeleteConfirmation = false
     }
     
+    var deliveryStatus: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text(self.viewModel.basalDeliveryState.headerText)
+                .foregroundColor(Color(UIColor.secondaryLabel))
+            self.viewModel.basalDeliveryRate.map { (rate) in
+                HStack(alignment: .center) {
+                    BasalStateSwiftUIView(netBasalPercent: rate.netPercent)
+                        .frame(width: 42, height: 20, alignment: .center)
+                    HStack(alignment: .lastTextBaseline, spacing: 3) {
+                        Text(self.viewModel.basalRateFormatter.string(from: rate.absoluteRate) ?? "")
+                            .font(.title)
+                            .fontWeight(.bold)
+                        Text("U/hr").foregroundColor(.secondary)
+                    }
+                }
+            }
+        }
+    }
+    
+    var reservoirStatus: some View {
+        VStack(alignment: .leading) {
+            Text("Insulin Remaining")
+                .foregroundColor(Color(UIColor.secondaryLabel))
+            HStack {
+                Image(systemName: "x.circle.fill")
+                    .foregroundColor(Color(UIColor.secondaryLabel))
+                
+                Text("No Pod").fontWeight(.bold)
+            }
+        }
+    }
+
+    var suspendResumeRow: some View {
+        HStack {
+            Button(action: {
+                self.viewModel.suspendResumeTapped()
+            }) {
+                Text(self.viewModel.basalDeliveryState.suspendResumeActionText)
+                    .foregroundColor(self.viewModel.basalDeliveryState.suspendResumeActionColor)
+            }
+            Spacer()
+            if self.viewModel.basalDeliveryState.transitioning {
+                ActivityIndicator(isAnimating: .constant(true), style: .medium)
+            }
+        }
+    }
+    
     var body: some View {
         List {
             VStack(alignment: .leading) {
@@ -111,46 +150,22 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
                 
                 lifecycleProgress
 
-                HStack {
-                    VStack(alignment: .leading) {
-                        Text("Last Sync")
-                            .foregroundColor(Color(UIColor.secondaryLabel))
-                        HStack {
-                            Image(systemName: "x.circle.fill")
-                                .foregroundColor(Color(UIColor.secondaryLabel))
-                            Text("No Pod").fontWeight(.bold)
-                        }
+                if self.viewModel.podOk {
+                    HStack(alignment: .top) {
+                        deliveryStatus
+                        Spacer()
+                        reservoirStatus
                     }
-                    Spacer()
-                    VStack(alignment: .leading) {
-                        Text("Insulin Remaining")
-                            .foregroundColor(Color(UIColor.secondaryLabel))
-                        HStack {
-                            Image(systemName: "x.circle.fill")
-                                .foregroundColor(Color(UIColor.secondaryLabel))
-                            
-                            Text("No Pod").fontWeight(.bold)
-                        }
-                    }
-                }.padding(.bottom, 8)
-            }
+                }
+                self.viewModel.alarmReferenceCode.map { (alarmReferenceCode) in
+                    Text(String(format: LocalizedString("Reference Code: %1$@", comment: "Reference code label on settings screen. (1: reference code)"), alarmReferenceCode))
+                        .foregroundColor(Color.secondary)
+                }
+            }.padding(.bottom, 8)
             
-            if self.viewModel.havePod {
+            if self.viewModel.podOk {
                 Section(header: Text("Pod").font(.headline).foregroundColor(Color.primary)) {
-                    self.viewModel.lifeState.deliveryState.map { (deliveryState) in
-                        HStack {
-                            Button(action: {
-                                self.viewModel.suspendResumeTapped()
-                            }) {
-                                Text(deliveryState.suspendResumeActionText)
-                                    .foregroundColor(deliveryState.suspendResumeActionColor)
-                            }
-                            Spacer()
-                            if deliveryState.transitioning {
-                                ActivityIndicator(isAnimating: .constant(true), style: .medium)
-                            }
-                        }
-                    }
+                    suspendResumeRow
                 }
 
                 Section() {
@@ -159,19 +174,19 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
                         Text("Pod Details").foregroundColor(Color.primary)
                     }
                         
-                    self.viewModel.lifeState.activatedAt.map { (activatedAt) in
+                    self.viewModel.activatedAt.map { (activatedAt) in
                         HStack {
                             Text("Pod Insertion")
                             Spacer()
-                            Text(self.dateFormatter.string(from: activatedAt))
+                            Text(self.viewModel.dateFormatter.string(from: activatedAt))
                         }
                     }
 
-                    self.viewModel.lifeState.activatedAt.map { (activatedAt) in
+                    self.viewModel.activatedAt.map { (activatedAt) in
                         HStack {
                             Text("Pod Expiration")
                             Spacer()
-                            Text(self.dateFormatter.string(from: activatedAt + Pod.lifetime))
+                            Text(self.viewModel.dateFormatter.string(from: activatedAt + Pod.lifetime))
                         }
                     }
                     

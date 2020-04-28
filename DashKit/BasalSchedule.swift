@@ -37,6 +37,14 @@ extension BasalProgram {
             return nil
         }
     }
+    
+    // Only valid for fixed offset timezones
+    public func currentRate(using calendar: Calendar, at date: Date = Date()) -> BasalSegment {
+        let midnight = calendar.startOfDay(for: date)
+        let offset = date.timeIntervalSince(midnight)
+        let interval = Int(round(offset/Pod.minimumBasalScheduleEntryDuration))
+        return basalSegments.first { interval >= $0.startTime && interval < $0.endTime }!
+    }
 }
 
 extension BasalSegment: RawRepresentable {
@@ -63,6 +71,10 @@ extension BasalSegment: RawRepresentable {
             "startTime": startTime,
             "endTime": endTime,
         ]
+    }
+    
+    public var basalRateUnitsPerHour: Double {
+        return Double(basalRate) / Pod.podSDKInsulinMultiplier
     }
 }
 
