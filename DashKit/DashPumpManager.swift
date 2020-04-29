@@ -1014,9 +1014,18 @@ extension DashPumpManager: PodCommManagerDelegate {
         logPodCommManagerDelegateMessage("didAlarm: \(String(describing: alarm))")
         
         self.mutateState { (state) in
+            
+            if alarm.alarmTime == nil {
+                log.error("Pod alarm failed to include time of alarm. Using current time as time of alarm.")
+            }
+            let alarmTime = alarm.alarmTime ?? self.dateGenerator()
             state.alarmCode = alarm.alarmCode
+            state.unfinalizedBolus?.cancel(at: alarmTime, withRemaining: alarm.podStatus.bolusUnitsRemaining)
+            state.unfinalizedTempBasal?.cancel(at: alarmTime)
+            state.suspendState = .suspended(alarmTime)
+            state.updateFromPodStatus(status: alarm.podStatus)
         }
-        
+
         pumpDelegate.notify { delegate in
             let content = DeviceAlert.Content(title: alarm.alarmCode.notificationTitle,
                                               body: alarm.alarmCode.notificationBody,
