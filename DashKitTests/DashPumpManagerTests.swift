@@ -52,7 +52,7 @@ class DashPumpManagerTests: XCTestCase {
 
         let basalScheduleItems = [RepeatingScheduleValue(startTime: 0, value: 5.0)]
         let schedule = BasalRateSchedule(dailyItems: basalScheduleItems, timeZone: .current)!
-        var state = DashPumpManagerState(basalRateSchedule: schedule, dateGenerator: dateGenerator)!
+        var state = DashPumpManagerState(basalRateSchedule: schedule, maximumTempBasalRate: 3.0, dateGenerator: dateGenerator)!
         state.podActivatedAt = Date().addingTimeInterval(.days(1))
 
         mockPodCommManager = MockPodCommManager()
