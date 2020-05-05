@@ -9,28 +9,54 @@
 import Foundation
 import PodSDK
 
-struct MockPodAlarm: PodAlarm {
-    var alarmCode: AlarmCode = .podExpired
+public struct MockPodAlarm: PodAlarm {
+    public var alarmCode: AlarmCode
     
-    var alarmDescription: String = "Pod Expired"
+    public var alarmDescription: String
     
-    var podStatus: PodStatus = MockPodStatus.normal
+    public var podStatus: PodStatus
     
-    var occlusionType: OcclusionType = .none
+    public var occlusionType: OcclusionType
     
-    var didErrorOccuredFetchingBolusInfo: Bool = false
+    public var didErrorOccuredFetchingBolusInfo: Bool
     
-    var wasBolusActiveWhenPodAlarmed: Bool = false
+    public var wasBolusActiveWhenPodAlarmed: Bool
     
-    var podStateWhenPodAlarmed: PodState = .basalProgramRunning
+    public var podStateWhenPodAlarmed: PodState
     
-    var podStateWhenAlarmOccurred: PodState = .basalProgramRunning
+    public var podStateWhenAlarmOccurred: PodState
     
-    var alarmTime: Date? = Date()
+    public var alarmTime: Date?
     
-    var activationTime: Date = Date() - 10 * 60 * 60
+    public var activationTime: Date
     
-    var referenceCode: String = "123"
+    public var referenceCode: String
+    
+    public init(
+        alarmCode: AlarmCode = .podExpired,
+        alarmDescription: String = "Pod Expired",
+        podStatus: PodStatus = MockPodStatus.normal,
+        occlusionType: OcclusionType = .none,
+        didErrorOccuredFetchingBolusInfo: Bool = false,
+        wasBolusActiveWhenPodAlarmed: Bool = false,
+        podStateWhenPodAlarmed: PodState = .basalProgramRunning,
+        podStateWhenAlarmOccurred: PodState = .basalProgramRunning,
+        alarmTime: Date? = Date(),
+        activationTime: Date = Date() - 10 * 60 * 60,
+        referenceCode: String = "123"
+    ) {
+        self.alarmCode = alarmCode
+        self.alarmDescription = alarmDescription
+        self.podStatus = podStatus
+        self.occlusionType = occlusionType
+        self.didErrorOccuredFetchingBolusInfo = didErrorOccuredFetchingBolusInfo
+        self.wasBolusActiveWhenPodAlarmed = wasBolusActiveWhenPodAlarmed
+        self.podStateWhenPodAlarmed = podStateWhenPodAlarmed
+        self.podStateWhenAlarmOccurred = podStateWhenAlarmOccurred
+        self.alarmTime = alarmTime
+        self.activationTime = activationTime
+        self.referenceCode = referenceCode
+    }
     
     public static var occlusion: MockPodAlarm {
         return MockPodAlarm(
