@@ -1,6 +1,6 @@
 //
 //  MockPodStatus.swift
-//  DashKitUI
+//  DashKit
 //
 //  Created by Pete Schwamb on 3/9/20.
 //  Copyright © 2020 Tidepool. All rights reserved.
@@ -9,32 +9,32 @@
 import Foundation
 import PodSDK
 
-struct MockPodStatus: PodStatus {
-    var expirationDate: Date
+public struct MockPodStatus: PodStatus {
+    public var expirationDate: Date
 
-    var podState: PodState
+    public var podState: PodState
 
-    var programStatus: ProgramStatus
+    public var programStatus: ProgramStatus
 
-    var activeAlerts: PodAlerts
+    public var activeAlerts: PodAlerts
 
-    var isOcclusionAlertActive: Bool
+    public var isOcclusionAlertActive: Bool
 
-    var bolusUnitsRemaining: Int
+    public var bolusUnitsRemaining: Int
 
-    var totalUnitsDelivered: Int
+    public var totalUnitsDelivered: Int
 
-    var reservoirUnitsRemaining: Int
+    public var reservoirUnitsRemaining: Int
 
-    var timeElapsedSinceActivation: TimeInterval
+    public var timeElapsedSinceActivation: TimeInterval
 
-    var activationTime: Date
+    public var activationTime: Date
 
-    func hasAlerts() -> Bool {
+    public func hasAlerts() -> Bool {
         return !activeAlerts.isEmpty
     }
     
-    static var normal: MockPodStatus {
+    public static var normal: MockPodStatus {
         let activation = Date().addingTimeInterval(.hours(-2))
         return MockPodStatus(
             expirationDate: activation + TimeInterval(days: 3),

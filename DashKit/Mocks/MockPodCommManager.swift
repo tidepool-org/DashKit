@@ -9,46 +9,6 @@
 import Foundation
 import PodSDK
 
-public struct MockPodStatus: PodStatus {
-    public var expirationDate: Date
-
-    public var podState: PodState
-
-    public var programStatus: ProgramStatus
-
-    public var activeAlerts: PodAlerts
-
-    public var isOcclusionAlertActive: Bool
-
-    public var bolusUnitsRemaining: Int
-
-    public var totalUnitsDelivered: Int
-
-    public var reservoirUnitsRemaining: Int
-
-    var timeElapsedSinceActivation: TimeInterval
-
-    var activationTime: Date
-
-    func hasAlerts() -> Bool {
-        return !activeAlerts.isEmpty
-    }
-    
-    static func normalPodStatus() -> MockPodStatus {
-        let activation = Date().addingTimeInterval(.hours(-2))
-        return MockPodStatus(
-            expirationDate: activation + TimeInterval(days: 3),
-            podState: .runningAboveMinVolume,
-            programStatus: .basalRunning,
-            activeAlerts: PodAlerts([]),
-            isOcclusionAlertActive: false,
-            bolusUnitsRemaining: 0,
-            totalUnitsDelivered: 38,
-            reservoirUnitsRemaining: 1023,
-            timeElapsedSinceActivation: 2,
-            activationTime: activation)
-    }
-}
 
 public class MockPodCommManager: PodCommManagerProtocol {
 
@@ -216,10 +176,10 @@ public class MockPodCommManager: PodCommManagerProtocol {
         if let podStatus = podStatus {
             self.podStatus = podStatus
         } else {
-            let activation = Date() - TimeInterval(hours: 35)
+            let activation = Date() - TimeInterval(hours: 81)
             self.podStatus = MockPodStatus(
                 expirationDate: activation + TimeInterval(days: 3),
-                podState: .runningAboveMinVolume,
+                podState: .alarm,
                 programStatus: .basalRunning,
                 activeAlerts: PodAlerts([]),
                 isOcclusionAlertActive: false,
@@ -228,7 +188,7 @@ public class MockPodCommManager: PodCommManagerProtocol {
                 reservoirUnitsRemaining: 1023,
                 timeElapsedSinceActivation: 2,
                 activationTime: activation)
-            self.podCommState = .active
+            self.podCommState = .alarm(MockPodAlarm.occlusion)
         }
     }
 }
