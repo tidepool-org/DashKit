@@ -125,7 +125,6 @@ struct BasalStateSwiftUIViewPreviewWrapper: View {
             BasalStateSwiftUIView(netBasalPercent: percent).frame(width: 100, height: 100, alignment: .center)
             Button(action: {
                 self.percent = self.percent * -1
-                print("sign changed")
             }) {
                 Text("Toggle sign")
             }
