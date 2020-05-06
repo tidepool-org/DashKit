@@ -19,10 +19,6 @@ public protocol PodStatusObserver: class {
 
 public class DashPumpManager: PumpManager {
     
-    public func acknowledgeAlert(alertIdentifier: DeviceAlert.AlertIdentifier) {
-        //NOOP
-    }
-    
     public static var managerIdentifier = "OmnipodDash"
     
     static let podAlarmNotificationIdentifier = "DASH:\(LoopNotificationCategory.pumpFault.rawValue)"
@@ -1030,3 +1026,15 @@ extension DashPumpManager: PodSDKLoggingShimDelegate {
         }
     }
 }
+
+// MARK: - DeviceAlertResponder implementation
+extension DashPumpManager {
+    public func acknowledgeAlert(alertIdentifier: DeviceAlert.AlertIdentifier) { }
+}
+
+// MARK: - DeviceAlertSoundVendor implementation
+extension DashPumpManager {
+    public func getSoundBaseURL() -> URL? { return nil }
+    public func getSounds() -> [DeviceAlert.Sound] { return [] }
+}
+
