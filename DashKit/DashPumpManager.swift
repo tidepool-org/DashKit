@@ -165,14 +165,27 @@ public class DashPumpManager: PumpManager {
     }
 
     private var device: HKDevice {
+        let hardwareVersion: String?
+        let firmwareVersion: String?
+        let localIdentifier: String?
+        if let podVersion = podCommManager.podVersionAbstracted {
+            hardwareVersion = "LOT: \(podVersion.lotNumber)"
+            firmwareVersion = podVersion.firmwareVersion
+            localIdentifier = "SEQ: \(podVersion.sequenceNumber)"
+        } else {
+            hardwareVersion = nil
+            firmwareVersion = nil
+            localIdentifier = nil
+        }
+        
         return HKDevice(
             name: type(of: self).managerIdentifier,
             manufacturer: "Insulet",
             model: "DASH",
-            hardwareVersion: nil,
-            firmwareVersion: nil,
+            hardwareVersion: hardwareVersion,
+            firmwareVersion: firmwareVersion,
             softwareVersion: String(DashKitVersionNumber),
-            localIdentifier: podCommManager.getPodId(),
+            localIdentifier: localIdentifier,
             udiDeviceIdentifier: nil
         )
     }
@@ -241,10 +254,6 @@ public class DashPumpManager: PumpManager {
         return podCommManager.podCommState
     }
 
-    public var podId: String? {
-        return podCommManager.getPodId()
-    }
-
     public var isPeriodicStatusCheckConfigured: Bool = false
 
     public func getPodStatus(completion: @escaping (PodCommResult<PodStatus>) -> ()) {
@@ -302,28 +311,38 @@ public class DashPumpManager: PumpManager {
         }
     }
     
+    public func clearPodState() {
+        self.mutateState({ (state) in
+            let now = self.dateGenerator()
+            state.unfinalizedBolus?.cancel(at: now)
+            state.unfinalizedTempBasal?.cancel(at: now)
+            state.suspendState = .suspended(now)
+            state.podActivatedAt = nil
+            state.lastStatusDate = nil
+            state.reservoirLevel = nil
+            state.podTotalDelivery = nil
+            state.alarmCode = nil
+        })
+    }
+    
     public func discardPod(completion: @escaping (PodCommResult<Bool>) -> ()) {
         
         podCommManager.discardPod { (result) in
-            self.mutateState({ (state) in
-                let now = self.dateGenerator()
-                state.unfinalizedBolus?.cancel(at: now)
-                state.unfinalizedTempBasal?.cancel(at: now)
-                state.suspendState = .suspended(now)
-                state.podActivatedAt = nil
-                state.lastStatusDate = nil
-                state.reservoirLevel = nil
-                state.podTotalDelivery = nil
-                state.alarmCode = nil
-            })
+            self.clearPodState()
             self.finalizeAndStoreDoses(completion: { (_) in
                 completion(result)
             })
         }
     }
 
-    public func deactivatePod(completion: @escaping (PodCommResult<PodStatus>) -> ()) {
+    public func deactivatePod(completion: @escaping (PodCommResult<PartialPodStatus>) -> ()) {
         podCommManager.deactivatePod { (result) in
+            switch result {
+            case .success:
+                self.clearPodState()
+            default:
+                break
+            }
             completion(result)
         }
     }
@@ -874,7 +893,8 @@ public class DashPumpManager: PumpManager {
             #endif
         }
         loggingShim = PodSDKLoggingShim(target: actualPodCommManager)
-        loggingShim.deviceIdentifier = actualPodCommManager.getPodId()
+        
+        loggingShim.deviceIdentifier = actualPodCommManager.deviceIdentifier
 
         self.lockedState = Locked(state)
         self.podCommManager = loggingShim
@@ -905,6 +925,14 @@ public class DashPumpManager: PumpManager {
     public var sdkVersion: String {
         Bundle(for: PodCommManager.self).infoDictionary?["CFBundleShortVersionString"] as? String ?? "?"
     }
+    
+    public var podVersion: PodVersionProtocol? {
+        return podCommManager.podVersionAbstracted
+    }
+    
+    public var pdmIdentifier: String? {
+        return podCommManager.retrievePDMId()
+    }
 
     public var debugDescription: String {
         var lines = [
@@ -912,8 +940,15 @@ public class DashPumpManager: PumpManager {
             "* PodSDK Version: \(sdkVersion)",
             "* PodSDK Build: \(PodSDKVersionNumber)",
             "* podCommState: \(podCommManager.podCommState)",
-            "* podId: \(String(describing: podCommManager.getPodId()))",
         ]
+        
+        if let version = podCommManager.podVersionAbstracted {
+            lines.append(contentsOf: [
+                "* Pod Lot Number: \(version.lotNumber))",
+                "* Pod Sequence Number: \(version.sequenceNumber)",
+                "* Pod Firmware Version: \(version.firmwareVersion)"
+            ])
+        }
         
         let semaphore = DispatchSemaphore(value: 0)
         podCommManager.getPodStatus(userInitiated: false) { (result) in
@@ -967,7 +1002,7 @@ extension DashPumpManager: LoggingProtocol {
 extension DashPumpManager: PodCommManagerDelegate {
     private func logPodCommManagerDelegateMessage(_ message: String) {
         self.pumpDelegate.notify { (delegate) in
-            delegate?.deviceManager(self, logEventForDeviceIdentifier: self.podId, type: .delegate, message: message, completion: nil)
+            delegate?.deviceManager(self, logEventForDeviceIdentifier: self.podCommManager.deviceIdentifier, type: .delegate, message: message, completion: nil)
         }
     }
     

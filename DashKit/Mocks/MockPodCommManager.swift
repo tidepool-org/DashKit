@@ -97,12 +97,12 @@ public class MockPodCommManager: PodCommManagerProtocol {
         completion(.success(true))
     }
 
-    public func deactivatePod(completion: @escaping (PodCommResult<PodStatus>) -> ()) {
+    public func deactivatePod(completion: @escaping (PodCommResult<PartialPodStatus>) -> ()) {
         self.podStatus = MockPodStatus(expirationDate: podStatus.expirationDate, podState: .deactivated, programStatus: [], activeAlerts: [], isOcclusionAlertActive: false, bolusUnitsRemaining: 0, totalUnitsDelivered: 0, reservoirUnitsRemaining: 0, timeElapsedSinceActivation: Date().timeIntervalSince(podStatus.activationTime), activationTime: podStatus.activationTime)
         self.podCommState = .noPod
         completion(.success(podStatus))
     }
-
+    
     public func getPodStatus(userInitiated: Bool, completion: @escaping (PodCommResult<PodStatus>) -> ()) {
         completion(.success(podStatus))
     }
@@ -125,7 +125,7 @@ public class MockPodCommManager: PodCommManagerProtocol {
                 podStatus.programStatus.insert(.basalRunning)
             case .bolus(let bolus):
                 lastBolusVolume = bolus.immediateVolume
-                podStatus.programStatus.insert(.bolusRuning)
+                podStatus.programStatus.insert(.bolusRunning)
             case .tempBasal(let tempBasal):
                 lastTempBasal = tempBasal
                 podStatus.programStatus.insert(.tempBasalRunning)
@@ -137,7 +137,7 @@ public class MockPodCommManager: PodCommManagerProtocol {
     public func stopProgram(programType: StopProgramType, completion: @escaping (PodCommResult<PodStatus>) -> ()) {
         switch programType {
         case .bolus:
-            podStatus.programStatus.remove(.bolusRuning)
+            podStatus.programStatus.remove(.bolusRunning)
         case .tempBasal:
             podStatus.programStatus.remove(.tempBasalRunning)
         case .stopAll:
@@ -160,10 +160,14 @@ public class MockPodCommManager: PodCommManagerProtocol {
 
     public func queryAndClearUnacknowledgedCommand(completion: @escaping (PodCommResult<PendingRetryResult>) -> ()) { }
 
-    public func getPodId() -> String? {
-        return "MockPodID"
+    public func retrievePDMId() -> String? {
+        return "Mock PDM Identifier"
     }
-
+    
+    public var podVersionAbstracted: PodVersionProtocol? {
+        return MockPodVersion(lotNumber: 123, sequenceNumber: 1234, majorVersion: 1, minorVersion: 1, interimVersion: 1, bleMajorVersion: 1, bleMinorVersion: 1, bleInterimVersion: 1)
+    }
+    
     public func getEstimatedBolusDeliveryTime() -> TimeInterval? {
         return nil
     }

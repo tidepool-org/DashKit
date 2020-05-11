@@ -9,6 +9,7 @@
 import Foundation
 import LoopKit
 import PodSDK
+import DashKit
 
 struct BasalDeliveryRate {
     var absoluteRate: Double
@@ -24,7 +25,11 @@ protocol DashSettingsViewModelProtocol: ObservableObject, Identifiable {
     
     var basalDeliveryRate: BasalDeliveryRate? { get }
 
-    var podDetails: PodDetails { get }
+    var podVersion: PodVersionProtocol? { get }
+    
+    var sdkVersion: String { get }
+    
+    var pdmIdentifier: String? { get }
     
     var dateFormatter: DateFormatter { get }
     
@@ -50,12 +55,10 @@ extension DashSettingsViewModelProtocol {
         }
     }
     
-    var alarmReferenceCode: String? {
+    var systemErrorDescription: String? {
         switch lifeState {
-        case .podAlarm(let alarm):
-            if let alarm = alarm, alarm.alarmCode != .podExpired {
-                return alarm.referenceCode
-            }
+        case .systemError(let systemError):
+            return systemError.localizedDescription
         default:
             break
         }

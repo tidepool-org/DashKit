@@ -12,7 +12,7 @@ import PodSDK
 class MockPodDeactivater: PodDeactivater {
     private var attemptCount = 0
     
-    func deactivatePod(completion: @escaping (PodCommResult<PodStatus>) -> ()) {
+    func deactivatePod(completion: @escaping (PodCommResult<PartialPodStatus>) -> ()) {
         attemptCount += 1
         
         if attemptCount == 1 {

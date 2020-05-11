@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>com.loopkit.Loop.PumpManagerDisplayName</key>
-	<string>Omnipod DASH</string>
+	<string>Omnipod</string>
 	<key>com.loopkit.Loop.PumpManagerIdentifier</key>
 	<string>OmnipodDash</string>
 	<key>CFBundleDevelopmentRegion</key>

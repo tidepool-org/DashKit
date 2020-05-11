@@ -9,12 +9,12 @@
 import Foundation
 import PodSDK
 
-public struct MockPodAlarm: PodAlarm {
+public struct MockPodAlarm: PodAlarmDetail {
     public var alarmCode: AlarmCode
     
     public var alarmDescription: String
     
-    public var podStatus: PodStatus
+    public var podStatus: PartialPodStatus
     
     public var occlusionType: OcclusionType
     

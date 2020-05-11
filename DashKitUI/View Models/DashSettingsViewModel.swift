@@ -25,9 +25,18 @@ class DashSettingsViewModel: DashSettingsViewModelProtocol {
         return pumpManager.status.timeZone
     }
     
-    var podDetails: PodDetails {
-        return self.pumpManager
+    var podVersion: PodVersionProtocol? {
+        return self.pumpManager.podVersion
     }
+    
+    var sdkVersion: String {
+        return self.pumpManager.sdkVersion
+    }
+    
+    var pdmIdentifier: String? {
+        return self.pumpManager.pdmIdentifier
+    }
+    
     
     let dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
@@ -152,29 +161,6 @@ extension DashPumpManager {
         }
         return BasalDeliveryRate(absoluteRate: absoluteRate, netPercent: netBasalPercent)
     }
-}
-
-extension DashPumpManager: PodDetails {
-    var podIdentifier: String {
-        return podId ?? "None"
-    }
-    
-    var lotNumber: String {
-        return "TODO"
-    }
-    
-    var tid: String {
-        return "TODO"
-    }
-    
-    var piPmVersion: String {
-        return "TODO"
-    }
-    
-    var pdmIdentifier: String {
-        return "TODO"
-    }
-    
 }
 
 extension PumpManagerStatus.BasalDeliveryState {
