@@ -234,11 +234,6 @@ public protocol PodCommManagerProtocol {
     func disablePeriodicStatusCheck(completion: @escaping (PodSDK.PodCommResult<Bool>) -> ())
     
     /**
-     - returns: an ID of the currently paired Pod
-     */
-    //func getPodId() -> String?
-    
-    /**
      - returns: The unique identifier of the controller. The ID is issued by Insulet Cloud during device registration.
      */
     func retrievePDMId() -> String?
