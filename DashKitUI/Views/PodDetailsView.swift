@@ -8,10 +8,11 @@
 
 import SwiftUI
 import LoopKitUI
+import DashKit
 
 struct PodDetailsView: View {
     
-    var podDetails: PodDetails
+    var podVersion: PodVersionProtocol
     
     private func row(_ label: String, value: String) -> some View {
         HStack {
@@ -23,12 +24,9 @@ struct PodDetailsView: View {
     
     var body: some View {
         List {
-            row(LocalizedString("Pod Identifier", comment: "description label for pod identifer pod details row"), value: podDetails.podIdentifier)
-            row(LocalizedString("Lot Number", comment: "description label for lot number pod details row"), value: podDetails.lotNumber)
-            row(LocalizedString("TID", comment: "description label for tid pod details row"), value: podDetails.tid)
-            row(LocalizedString("PI / PM Version", comment: "description label for pi/pm version pod details row"), value: podDetails.piPmVersion)
-            row(LocalizedString("PDM Identifier", comment: "description label for pdm identifier details row"), value: podDetails.pdmIdentifier)
-            row(LocalizedString("SDK Version", comment: "description label for sdk version details row"), value: podDetails.sdkVersion)
+            row(LocalizedString("Lot Number", comment: "description label for lot number pod details row"), value: String(describing: podVersion.lotNumber))
+            row(LocalizedString("Sequence Number", comment: "description label for sequence number pod details row"), value: String(describing: podVersion.sequenceNumber))
+            row(LocalizedString("Firmware Version", comment: "description label for firmware version pod details row"), value: podVersion.firmwareVersion)
         }
         .navigationBarTitle("Pod Details", displayMode: .automatic)
     }
@@ -36,6 +34,6 @@ struct PodDetailsView: View {
 
 struct PodDetailsView_Previews: PreviewProvider {
     static var previews: some View {
-        PodDetailsView(podDetails: MockPodDetails())
+        PodDetailsView(podVersion: MockPodVersion(lotNumber: 1, sequenceNumber: 1, majorVersion: 1, minorVersion: 1, interimVersion: 1, bleMajorVersion: 1, bleMinorVersion: 1, bleInterimVersion: 1))
     }
 }

@@ -20,7 +20,7 @@ enum PodLifeState {
     case expiredFor(TimeInterval)
     case podDeactivating
     case podAlarm(PodAlarm?)
-    case systemError(SystemError?)
+    case systemError(SystemError)
     case noPod
     
     var progress: Double {
@@ -67,13 +67,8 @@ enum PodLifeState {
             } else {
                 return LocalizedString("Pod alarm", comment: "Label for pod life state when pod is in alarm state")
             }
-        case .systemError(let error):
-            if let error = error {
-                // TODO: Localize system errors
-                return String(describing: error)
-            } else {
-                return LocalizedString("Pod system error", comment: "Label for pod life state when pod is in system error state")
-            }
+        case .systemError:
+            return LocalizedString("Pod system error", comment: "Label for pod life state when pod is in system error state")
         case .noPod:
             return LocalizedString("No Pod", comment: "Label for pod life state when no pod paired")
         }

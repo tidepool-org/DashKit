@@ -9,9 +9,10 @@
 import SwiftUI
 import LoopKit
 import HealthKit
+import DashKit
 
 class MockDashSettingsViewModel: DashSettingsViewModelProtocol {
-        
+            
     var activatedAt: Date?
 
     var basalDeliveryState: PumpManagerStatus.BasalDeliveryState
@@ -24,7 +25,11 @@ class MockDashSettingsViewModel: DashSettingsViewModelProtocol {
 
     var lifeState: PodLifeState
     
-    var podDetails: PodDetails
+    var podVersion: PodVersionProtocol?
+    
+    var sdkVersion: String
+
+    var pdmIdentifier: String?
 
     let dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
@@ -45,10 +50,12 @@ class MockDashSettingsViewModel: DashSettingsViewModelProtocol {
 
     init() {
         lifeState = .noPod
-        podDetails = MockPodDetails()
+        podVersion = MockPodVersion(lotNumber: 1, sequenceNumber: 1, majorVersion: 1, minorVersion: 1, interimVersion: 1, bleMajorVersion: 1, bleMinorVersion: 1, bleInterimVersion: 1)
         activatedAt = Date().addingTimeInterval(-TimeInterval(days: 1))
         basalDeliveryState = .active(Date())
         basalDeliveryRate = BasalDeliveryRate(absoluteRate: 1.1, netPercent: 1.1)
+        sdkVersion = "1.2.3"
+        pdmIdentifier = "1.2.3"
     }
 
     func suspendResumeTapped() {

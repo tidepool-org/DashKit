@@ -76,7 +76,7 @@ extension PodSDKLoggingShim: PodCommManagerProtocol {
         }
     }
     
-    func deactivatePod(completion: @escaping (PodCommResult<PodStatus>) -> ()) {
+    func deactivatePod(completion: @escaping (PodCommResult<PartialPodStatus>) -> ()) {
         logSend("deactivatePod()")
         target.deactivatePod { (result) in
             self.logReceive("deactivatePod result: \(result)")
@@ -180,11 +180,14 @@ extension PodSDKLoggingShim: PodCommManagerProtocol {
         }
     }
     
-    func getPodId() -> String? {
-        // Pass-through. No need to log.
-        return target.getPodId()
+    func retrievePDMId() -> String? {
+        return target.retrievePDMId()
     }
     
+    var podVersionAbstracted: PodVersionProtocol? {
+        return target.podVersionAbstracted
+    }
+
     func getEstimatedBolusDeliveryTime() -> TimeInterval? {
         // Pass-through. No need to log.
         return target.getEstimatedBolusDeliveryTime()

@@ -10,7 +10,7 @@ import Foundation
 import PodSDK
 
 public protocol PodDeactivater {
-    func deactivatePod(completion: @escaping (PodCommResult<PodStatus>) -> ())
+    func deactivatePod(completion: @escaping (PodCommResult<PartialPodStatus>) -> ())
     func discardPod(completion: @escaping (PodCommResult<Bool>) -> ())
 }
 

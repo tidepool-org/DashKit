@@ -91,18 +91,24 @@ public extension SystemErrorCode {
     var localizedDescription: String {
         switch self {
         case .crosscheckFailed:
-            return LocalizedString("Crosscheck failed.", comment: "Description for SystemErrorCode.crosscheckFailed")
+            return LocalizedString("Crosscheck failed", comment: "Description for SystemErrorCode.crosscheckFailed")
         case .podTimeDeviation:
-            return LocalizedString("Pod time and system time difference is too large.", comment: "Description for SystemErrorCode.podTimeDeviation")
+            return LocalizedString("Pod time and system time difference is too large", comment: "Description for SystemErrorCode.podTimeDeviation")
         case .unexpectedResponse:
-            return LocalizedString("Unexpected response.", comment: "Description for SystemErrorCode.unexpectedResponse")
+            return LocalizedString("Unexpected response", comment: "Description for SystemErrorCode.unexpectedResponse")
+        case .dataCorruption:
+            return LocalizedString("Data on pod corrupted", comment: "Description for SystemErrorCode.dataCorruption")
         }
     }
 }
 
 public extension SystemError {
     var localizedDescription: String {
-        return String(format: LocalizedString("%1$@: %2$@", comment: "Format string for error description for PodCommError.systemError (1: system error code description) (2: support reference code)"), self.errorCode.localizedDescription, self.referenceCode)
+        if self.referenceCode.count > 0 {
+            return String(format: LocalizedString("%1$@: %2$@", comment: "Format string for error description for PodCommError.systemError (1: system error code description) (2: support reference code)"), self.errorCode.localizedDescription, self.referenceCode)
+        } else {
+            return self.errorCode.localizedDescription
+        }
     }
     
     var recoverySuggestion: String {

@@ -132,8 +132,8 @@ extension DeactivatePodViewModelTests: DashUINavigator {
     }
 }
 
-extension DeactivatePodViewModelTests: PodDeactivater {
-    func deactivatePod(completion: @escaping (PodCommResult<PodStatus>) -> ()) {
+extension DeactivatePodViewModelTests: PodDeactivater {    
+    func deactivatePod(completion: @escaping (PodCommResult<PartialPodStatus>) -> ()) {
         if let deactivationError = deactivationError {
             completion(.failure(deactivationError))
         } else {

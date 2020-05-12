@@ -56,6 +56,7 @@
 		C12AA74B231870160025FD45 /* ConnectionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12AA74A231870160025FD45 /* ConnectionState.swift */; };
 		C12C9C83229EDB7B00FF7632 /* InsulinStatusTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12C9C82229EDB7B00FF7632 /* InsulinStatusTableViewCell.swift */; };
 		C1344DE22304CE2B00973BE3 /* TimeInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D11422692BDE00D63775 /* TimeInterval.swift */; };
+		C134E91924645D5100DB95AF /* MockPodVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = C134E91824645D5100DB95AF /* MockPodVersion.swift */; };
 		C135D91A2319AA4200774F82 /* Kronos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C135D9192319AA4200774F82 /* Kronos.framework */; };
 		C135D91B2319AA5900774F82 /* Kronos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C135D9192319AA4200774F82 /* Kronos.framework */; };
 		C135D91C2319AA5A00774F82 /* Kronos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C135D9192319AA4200774F82 /* Kronos.framework */; };
@@ -245,6 +246,7 @@
 		C12A06AB23F2F0070052195C /* PDMRegistrator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDMRegistrator.swift; sourceTree = "<group>"; };
 		C12AA74A231870160025FD45 /* ConnectionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionState.swift; sourceTree = "<group>"; };
 		C12C9C82229EDB7B00FF7632 /* InsulinStatusTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsulinStatusTableViewCell.swift; sourceTree = "<group>"; };
+		C134E91824645D5100DB95AF /* MockPodVersion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPodVersion.swift; sourceTree = "<group>"; };
 		C135D9192319AA4200774F82 /* Kronos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Kronos.framework; path = Carthage/Build/iOS/Kronos.framework; sourceTree = "<group>"; };
 		C14386B8244F59800070B0FF /* BasalStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasalStateView.swift; sourceTree = "<group>"; };
 		C14C6F242419F95E00CF3408 /* LeadingImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeadingImage.swift; sourceTree = "<group>"; };
@@ -545,6 +547,7 @@
 				C1D46D6522C56C2300978E59 /* MockPodCommManager.swift */,
 				C1A9194A2433917E008D216E /* MockPodAlarm.swift */,
 				C1562F8C2416A945006952D6 /* MockPodStatus.swift */,
+				C134E91824645D5100DB95AF /* MockPodVersion.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -1015,6 +1018,7 @@
 				C1DFF9212417C96E00EAC44E /* PodDeactivater.swift in Sources */,
 				C1ACF44422A200B100F7DDB4 /* UnfinalizedDose.swift in Sources */,
 				C107D11922692E6B00D63775 /* DashPumpManagerState.swift in Sources */,
+				C134E91924645D5100DB95AF /* MockPodVersion.swift in Sources */,
 				C1BC259C2314604800E80E3F /* DashPumpManagerError.swift in Sources */,
 				C160FEBA2371EA050080031E /* AlarmCode.swift in Sources */,
 				C1ACF44522A200D700F7DDB4 /* NumberFormatter.swift in Sources */,

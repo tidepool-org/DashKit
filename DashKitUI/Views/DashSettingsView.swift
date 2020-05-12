@@ -157,8 +157,8 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
                         reservoirStatus
                     }
                 }
-                self.viewModel.alarmReferenceCode.map { (alarmReferenceCode) in
-                    Text(String(format: LocalizedString("Reference Code: %1$@", comment: "Reference code label on settings screen. (1: reference code)"), alarmReferenceCode))
+                self.viewModel.systemErrorDescription.map { (systemErrorDescription) in
+                    Text(systemErrorDescription)
                         .foregroundColor(Color.secondary)
                 }
             }.padding(.bottom, 8)
@@ -170,8 +170,10 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
 
                 Section() {
                     
-                    NavigationLink(destination: PodDetailsView(podDetails: self.viewModel.podDetails)) {
-                        Text("Pod Details").foregroundColor(Color.primary)
+                    self.viewModel.podVersion.map { (podVersion) in
+                        NavigationLink(destination: PodDetailsView(podVersion: podVersion)) {
+                            Text("Pod Details").foregroundColor(Color.primary)
+                        }
                     }
                         
                     self.viewModel.activatedAt.map { (activatedAt) in
@@ -190,6 +192,7 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
                         }
                     }
                     
+                    
                     HStack {
                         if self.viewModel.timeZone != TimeZone.currentFixed {
                             Button(action: {
@@ -205,7 +208,7 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
                     }
                 }
             }
-            
+                        
             Section() {
                 Button(action: {
                     self.navigator?.navigateTo(self.viewModel.lifeState.nextPodLifecycleAction)
@@ -214,7 +217,22 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
                         .foregroundColor(self.viewModel.lifeState.nextPodLifecycleActionColor)
                 }
             }
-            
+
+            Section() {
+                HStack {
+                    Text(LocalizedString("SDK Version", comment: "description label for sdk version in pod settings"))
+                    Spacer()
+                    Text(self.viewModel.sdkVersion)
+                }
+                self.viewModel.pdmIdentifier.map { (pdmIdentifier) in
+                    HStack {
+                        Text(LocalizedString("PDM Identifier", comment: "description label for pdm identifier in pod settings"))
+                        Spacer()
+                        Text(pdmIdentifier)
+                    }
+                }
+            }
+
             if self.viewModel.lifeState.allowsPumpManagerRemoval {
                 Section() {
                     Button(action: {
@@ -231,14 +249,14 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
 
             Section(header: Text("Support").font(.headline).foregroundColor(Color.primary)) {
                 NavigationLink(destination: EmptyView()) {
-                    Text("Get Help with Insulet Omnipod DASH").foregroundColor(Color.primary)
+                    Text("Get Help with Insulet Omnipod").foregroundColor(Color.primary)
                 }
             }
 
         }
         .listStyle(GroupedListStyle())
         .environment(\.horizontalSizeClass, self.horizontalSizeClass)
-        .navigationBarTitle("Omnipod DASH", displayMode: .automatic)
+        .navigationBarTitle("Omnipod", displayMode: .automatic)
     }
     
     var removePumpManagerActionSheet: ActionSheet {

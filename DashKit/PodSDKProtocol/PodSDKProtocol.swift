@@ -100,8 +100,7 @@ public protocol PodCommManagerProtocol {
      - completion: a closure to be called when `PodCommResult` is issued by the comm. layer on the main thread
      - result: If successful, result is `PodCommResult.success(...)` or in case of an error, result is `PodCommResult.failure(...)`
      */
-    func deactivatePod(completion: @escaping (PodSDK.PodCommResult<PodStatus>) -> ())
-    
+    func deactivatePod(completion: @escaping (_ result: PodCommResult<PartialPodStatus>)->())
     /**
      Sends a command to the Pod to retrieve its status.
      
@@ -235,9 +234,9 @@ public protocol PodCommManagerProtocol {
     func disablePeriodicStatusCheck(completion: @escaping (PodSDK.PodCommResult<Bool>) -> ())
     
     /**
-     - returns: an ID of the currently paired Pod
+     - returns: The unique identifier of the controller. The ID is issued by Insulet Cloud during device registration.
      */
-    func getPodId() -> String?
+    func retrievePDMId() -> String?
     
     /**
      - returns: an estimated remaining delivery time of the currently running bolus
@@ -253,22 +252,43 @@ public protocol PodCommManagerProtocol {
      - returns: a `PodCommState`
      */
     var podCommState: PodSDK.PodCommState { get }
+        
+    /**
+     - returns: a `PodVersionProtocol`
+     */
+    var podVersionAbstracted: PodVersionProtocol? { get }
 }
 
-public protocol PDMRegistrator {
+extension PodCommManagerProtocol {
+    var deviceIdentifier: String? {
+        if let version = podVersionAbstracted {
+            return "\(version.lotNumber).\(version.sequenceNumber)"
+        }
+        return nil
+    }
+}
+
+public protocol PodVersionProtocol {
     
-    /**
-     Starts a registration process without SMS validation.
-     
-     - parameters:
-        - completion: A closure to be called when a `PodCommEvent` is issued by the comm. layer.
-            - status: Registration status.
-     
-     - Note: Only use this API if your app does not require SMS validation (as per the Insulet Cloud configuration set for your team).
-     */
-    func startRegistration(completion: @escaping (PodSDK.RegistrationStatus) -> ())
+    var lotNumber: Int { get }
 
-    /// Registration is complete.
-    func isRegistered() -> Bool
+    var sequenceNumber: Int { get }
 
+    var majorVersion: Int { get }
+
+    var minorVersion: Int { get }
+
+    var interimVersion: Int { get }
+
+    var bleMajorVersion: Int { get }
+
+    var bleMinorVersion: Int { get }
+
+    var bleInterimVersion: Int { get }
+}
+
+public extension PodVersionProtocol {
+    var firmwareVersion: String {
+        return "\(majorVersion).\(minorVersion).\(interimVersion), BLE:\(bleMajorVersion).\(bleMinorVersion).\(bleInterimVersion)"
+    }
 }

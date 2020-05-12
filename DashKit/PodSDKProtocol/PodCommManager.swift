@@ -9,4 +9,10 @@
 import Foundation
 import PodSDK
 
-extension PodCommManager: PodCommManagerProtocol {}
+extension PodCommManager: PodCommManagerProtocol {
+    public var podVersionAbstracted: PodVersionProtocol? {
+        return self.podVersion
+    }
+}
+
+extension PodVersion: PodVersionProtocol {}
