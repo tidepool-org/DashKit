@@ -24,8 +24,6 @@ public struct MockPodAlarm: PodAlarmDetail {
     
     public var podStateWhenPodAlarmed: PodState
     
-    public var podStateWhenAlarmOccurred: PodState
-    
     public var alarmTime: Date?
     
     public var activationTime: Date
@@ -40,7 +38,6 @@ public struct MockPodAlarm: PodAlarmDetail {
         didErrorOccuredFetchingBolusInfo: Bool = false,
         wasBolusActiveWhenPodAlarmed: Bool = false,
         podStateWhenPodAlarmed: PodState = .basalProgramRunning,
-        podStateWhenAlarmOccurred: PodState = .basalProgramRunning,
         alarmTime: Date? = Date(),
         activationTime: Date = Date() - 10 * 60 * 60,
         referenceCode: String = "123"
@@ -52,7 +49,6 @@ public struct MockPodAlarm: PodAlarmDetail {
         self.didErrorOccuredFetchingBolusInfo = didErrorOccuredFetchingBolusInfo
         self.wasBolusActiveWhenPodAlarmed = wasBolusActiveWhenPodAlarmed
         self.podStateWhenPodAlarmed = podStateWhenPodAlarmed
-        self.podStateWhenAlarmOccurred = podStateWhenAlarmOccurred
         self.alarmTime = alarmTime
         self.activationTime = activationTime
         self.referenceCode = referenceCode
@@ -67,7 +63,6 @@ public struct MockPodAlarm: PodAlarmDetail {
             didErrorOccuredFetchingBolusInfo: false,
             wasBolusActiveWhenPodAlarmed: false,
             podStateWhenPodAlarmed: .runningAboveMinVolume,
-            podStateWhenAlarmOccurred: .runningAboveMinVolume,
             alarmTime: Date().addingTimeInterval(.minutes(10)),
             activationTime: Date().addingTimeInterval(.hours(24)),
             referenceCode: "123")

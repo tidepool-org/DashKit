@@ -314,6 +314,55 @@ class DashPumpManagerTests: XCTestCase {
             XCTFail("PumpManager should indicate suspended delivery after pod discarded")
         }
     }
+    
+    func testAlarmDuringBolusShouldUseRemainingInsulinField() {
+        
+        let bolusCallbacks = expectation(description: "bolus callbacks")
+        bolusCallbacks.expectedFulfillmentCount = 2
+
+        pumpEventStorageExpectation = expectation(description: "pumpmanager stores bolus")
+
+        pumpManager.enactBolus(units: 5, at: simulatedDate, willRequest: { (dose) in
+            bolusCallbacks.fulfill()
+        }) { (result) in
+            bolusCallbacks.fulfill()
+        }
+
+        waitForExpectations(timeout: 3)
+        
+        timeTravel(30)
+
+        var podStatus = mockPodCommManager.podStatus
+        podStatus.bolusUnitsRemaining = 2 * Int(Pod.podSDKInsulinMultiplier)
+        
+        let alarm = MockPodAlarm(
+            alarmCode: AlarmCode.occlusion,
+            alarmDescription: "Occlusion",
+            podStatus: podStatus,
+            occlusionType: .stallDuringRuntime,
+            didErrorOccuredFetchingBolusInfo: false,
+            wasBolusActiveWhenPodAlarmed: true,
+            podStateWhenPodAlarmed: podStatus.podState,
+            alarmTime: simulatedDate.advanced(by: 29),
+            activationTime: podStatus.activationTime,
+            referenceCode: "1234")
+
+        pumpEventStorageExpectation = expectation(description: "pumpmanager stores interrupted bolus")
+
+        pumpManager.podCommManager(mockPodCommManager!, didAlarm: alarm)
+
+        waitForExpectations(timeout: 3)
+
+        XCTAssertEqual(2, reportedPumpEvents.count)
+        
+        let bolusInProgress = reportedPumpEvents[0]
+        XCTAssertEqual(5, bolusInProgress.dose!.programmedUnits)
+        XCTAssertNil(bolusInProgress.dose!.deliveredUnits)
+        
+        let interruptedBolus = reportedPumpEvents[1]
+        XCTAssertEqual(5, interruptedBolus.dose!.programmedUnits)
+        XCTAssertEqual(3, interruptedBolus.dose!.deliveredUnits)
+    }
 
 }
 
