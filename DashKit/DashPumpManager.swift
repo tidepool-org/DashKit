@@ -1009,14 +1009,34 @@ extension DashPumpManager: PodCommManagerDelegate {
     public func podCommManager(_ podCommManager: PodCommManager, hasAlerts alerts: PodAlerts) {
         logPodCommManagerDelegateMessage("hasAlerts: \(String(describing: alerts))")
     }
-    
-    public func podCommManager(_ podCommManager: PodCommManager, didAlarm alarm: PodAlarm) {
+
+    public func podCommManager(_ podCommManager: PodCommManagerProtocol, didAlarm alarm: PodAlarm) {
         logPodCommManagerDelegateMessage("didAlarm: \(String(describing: alarm))")
         
         self.mutateState { (state) in
-            state.alarmCode = alarm.alarmCode
+            if let alarmDetail = alarm as? PodAlarmDetail {
+                if alarmDetail.alarmTime == nil {
+                    log.error("Pod alarm failed to include time of alarm. Using current time as time of alarm.")
+                }
+                let alarmTime = alarmDetail.alarmTime ?? self.dateGenerator()
+                state.alarmCode = alarm.alarmCode
+                state.unfinalizedTempBasal?.cancel(at: alarmTime)
+                state.suspendState = .suspended(alarmTime)
+                if let podStatus = alarmDetail.podStatus as? PodStatus {
+                    state.unfinalizedBolus?.cancel(at: alarmTime, withRemaining: podStatus.bolusUnitsRemaining)
+                    state.updateFromPodStatus(status: podStatus)
+                } else {
+                    log.error("Partial status for pod returned with alarm.")
+                    state.unfinalizedBolus?.cancel(at: alarmTime)
+                }
+            } else {
+                log.error("Pod alarm did not include alarm details. Using current time to mark delivery suspended.")
+                let alarmTime = dateGenerator()
+                state.unfinalizedBolus?.cancel(at: alarmTime)
+                state.unfinalizedTempBasal?.cancel(at: alarmTime)
+            }
         }
-        
+
         pumpDelegate.notify { delegate in
             let content = DeviceAlert.Content(title: alarm.alarmCode.notificationTitle,
                                               body: alarm.alarmCode.notificationBody,
@@ -1026,6 +1046,12 @@ extension DashPumpManager: PodCommManagerDelegate {
                                              foregroundContent: content, backgroundContent: content,
                                              trigger: .immediate))
         }
+        
+        self.finalizeAndStoreDoses()
+    }
+    
+    public func podCommManager(_ podCommManager: PodCommManager, didAlarm alarm: PodAlarm) {
+        self.podCommManager(podCommManager as PodCommManagerProtocol, didAlarm: alarm)
     }
     
     public func podCommManager(_ podCommManager: PodCommManager, didCheckPeriodicStatus status: PodStatus) {
