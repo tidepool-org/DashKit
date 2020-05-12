@@ -47,15 +47,13 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
 
     public var unfinalizedBolus: UnfinalizedDose?
     public var unfinalizedTempBasal: UnfinalizedDose?
-    public var unfinalizedSuspend: UnfinalizedDose?
-    public var unfinalizedResume: UnfinalizedDose?
 
     var finishedDoses: [UnfinalizedDose]
     
     public var maximumTempBasalRate: Double
 
     public var suspendState: SuspendState
-
+    
     public var isSuspended: Bool {
         if case .suspended = suspendState {
             return true
@@ -160,22 +158,6 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
             self.unfinalizedTempBasal = nil
         }
 
-        if let rawUnfinalizedSuspend = rawValue["unfinalizedSuspend"] as? UnfinalizedDose.RawValue,
-            let unfinalizedSuspend = UnfinalizedDose(rawValue: rawUnfinalizedSuspend)
-        {
-            self.unfinalizedSuspend = unfinalizedSuspend
-        } else {
-            self.unfinalizedSuspend = nil
-        }
-
-        if let rawUnfinalizedResume = rawValue["unfinalizedResume"] as? UnfinalizedDose.RawValue,
-            let unfinalizedResume = UnfinalizedDose(rawValue: rawUnfinalizedResume)
-        {
-            self.unfinalizedResume = unfinalizedResume
-        } else {
-            self.unfinalizedResume = nil
-        }
-
         if let rawFinishedDoses = rawValue["finishedDoses"] as? [UnfinalizedDose.RawValue] {
             self.finishedDoses = rawFinishedDoses.compactMap( { UnfinalizedDose(rawValue: $0) } )
         } else {
@@ -200,8 +182,6 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
         rawValue["podActivatedAt"] = podActivatedAt
         rawValue["unfinalizedBolus"] = unfinalizedBolus?.rawValue
         rawValue["unfinalizedTempBasal"] = unfinalizedTempBasal?.rawValue
-        rawValue["unfinalizedSuspend"] = unfinalizedSuspend?.rawValue
-        rawValue["unfinalizedResume"] = unfinalizedResume?.rawValue
         rawValue["alarmCode"] = alarmCode?.rawValue
 
         return rawValue
@@ -212,6 +192,19 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
         reservoirLevel = ReservoirLevel(rawValue: status.reservoirUnitsRemaining)
         podActivatedAt = status.expirationDate - .days(3)
         podTotalDelivery = status.delivered
+    }
+    
+    mutating func finalizeDoses() {
+        if let bolus = unfinalizedBolus, bolus.isFinished(at: dateGenerator()) {
+            finishedDoses.append(bolus)
+            unfinalizedBolus = nil
+        }
+
+        if let tempBasal = unfinalizedTempBasal, tempBasal.isFinished(at: dateGenerator()) {
+            finishedDoses.append(tempBasal)
+            unfinalizedTempBasal = nil
+        }
+
     }
 }
 
@@ -225,8 +218,6 @@ extension DashPumpManagerState: CustomDebugStringConvertible {
             "* finishedDoses: \(finishedDoses)",
             "* unfinalizedBolus: \(String(describing: unfinalizedBolus))",
             "* unfinalizedTempBasal: \(String(describing: unfinalizedTempBasal))",
-            "* unfinalizedSuspend: \(String(describing: unfinalizedSuspend))",
-            "* unfinalizedResume: \(String(describing: unfinalizedResume))",
             "* reservoirLevel: \(String(describing: reservoirLevel))",
             "* lastStatusDate: \(String(describing: lastStatusDate))",
             ].joined(separator: "\n")

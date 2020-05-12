@@ -79,7 +79,7 @@ public struct UnfinalizedDose: RawRepresentable, Equatable, CustomStringConverti
     }
 
     public func isFinished(at date: Date) -> Bool {
-        return progress(at: date) >= 1
+        return duration == nil || progress(at: date) >= 1
     }
 
     // Units per hour
