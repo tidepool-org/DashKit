@@ -69,5 +69,9 @@ class MockDashSettingsViewModel: DashSettingsViewModelProtocol {
     func stopUsingOmnipodTapped() {
         print("stopUsingOmnipodTapped()")
     }
+    
+    func doneTapped() {
+        print("doneTapped()")
+    }
 }
 

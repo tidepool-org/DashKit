@@ -93,6 +93,10 @@ class DashSettingsViewModel: DashSettingsViewModelProtocol {
         }
     }
     
+    func doneTapped() {
+        self.didFinish?()
+    }
+    
     func stopUsingOmnipodTapped() {
         self.pumpManager.notifyDelegateOfDeactivation {
             DispatchQueue.main.async {

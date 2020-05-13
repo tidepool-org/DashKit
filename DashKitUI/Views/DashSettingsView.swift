@@ -137,6 +137,12 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
         }
     }
     
+    private var doneButton: some View {
+        Button("Done", action: {
+            self.viewModel.doneTapped()
+        })
+    }
+    
     var body: some View {
         List {
             VStack(alignment: .leading) {
@@ -256,6 +262,7 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
         }
         .listStyle(GroupedListStyle())
         .environment(\.horizontalSizeClass, self.horizontalSizeClass)
+        .navigationBarItems(trailing: doneButton)
         .navigationBarTitle("Omnipod", displayMode: .automatic)
     }
     
