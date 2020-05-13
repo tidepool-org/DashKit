@@ -25,7 +25,6 @@ class DashPumpManagerTests: XCTestCase {
     private var reportedPumpEvents: [NewPumpEvent] = []
     private var pumpEventStorageExpectation: XCTestExpectation?
 
-
     private var pumpManager: DashPumpManager!
     private var mockPodCommManager: MockPodCommManager!
     
@@ -303,10 +302,15 @@ class DashPumpManagerTests: XCTestCase {
         }
         waitForExpectations(timeout: 3)
 
-        XCTAssertEqual(2, reportedPumpEvents.count)
-        let finalReportedTemp = reportedPumpEvents.last!
+        XCTAssertEqual(3, reportedPumpEvents.count)
+        let finalReportedTemp = reportedPumpEvents[1]
         XCTAssertEqual(false, finalReportedTemp.isMutable)
         XCTAssertEqual(0.05, finalReportedTemp.dose?.deliveredUnits)
+        
+        let finalSuspend = reportedPumpEvents.last!
+        XCTAssertEqual(false, finalSuspend.isMutable)
+        XCTAssertEqual(.suspend, finalSuspend.type)
+
         let lastPumpManagerStatus = pumpManagerStatusUpdates.last!
         if case .suspended(let date) = lastPumpManagerStatus.basalDeliveryState {
             XCTAssertEqual(dateGenerator(), date)
