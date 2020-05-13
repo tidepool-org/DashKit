@@ -43,6 +43,7 @@ protocol DashSettingsViewModelProtocol: ObservableObject, Identifiable {
 
     func stopUsingOmnipodTapped()
     
+    func doneTapped()
 }
 
 extension DashSettingsViewModelProtocol {
