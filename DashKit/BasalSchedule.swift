@@ -24,7 +24,6 @@ extension BasalProgram {
             let podRate = Int(round(rate * Pod.podSDKInsulinMultiplier))
 
             do {
-                print("Creating segment for \(BasalProgram.indexFor(start)) to \(BasalProgram.indexFor(end))")
                 let segment = try BasalSegment(startTime: BasalProgram.indexFor(start), endTime: BasalProgram.indexFor(end), basalRate: podRate)
                 basalSegments.append(segment)
             } catch {
