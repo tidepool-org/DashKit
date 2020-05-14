@@ -62,6 +62,7 @@
 		C135D91C2319AA5A00774F82 /* Kronos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C135D9192319AA4200774F82 /* Kronos.framework */; };
 		C136AA5823117A2F008A320D /* OSLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ACF43E22A1F9A700F7DDB4 /* OSLog.swift */; };
 		C14386B9244F59800070B0FF /* BasalStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14386B8244F59800070B0FF /* BasalStateView.swift */; };
+		C1467BD2246D7E9500B97F77 /* BasalProgramTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1467BD1246D7E9500B97F77 /* BasalProgramTests.swift */; };
 		C14C6F252419F95E00CF3408 /* LeadingImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14C6F242419F95E00CF3408 /* LeadingImage.swift */; };
 		C14C6F27241A754B00CF3408 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14C6F26241A754B00CF3408 /* ErrorView.swift */; };
 		C14D0572243687E9005F7841 /* DeactivatePodViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14D0571243687E9005F7841 /* DeactivatePodViewModelTests.swift */; };
@@ -249,6 +250,7 @@
 		C134E91824645D5100DB95AF /* MockPodVersion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPodVersion.swift; sourceTree = "<group>"; };
 		C135D9192319AA4200774F82 /* Kronos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Kronos.framework; path = Carthage/Build/iOS/Kronos.framework; sourceTree = "<group>"; };
 		C14386B8244F59800070B0FF /* BasalStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasalStateView.swift; sourceTree = "<group>"; };
+		C1467BD1246D7E9500B97F77 /* BasalProgramTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasalProgramTests.swift; sourceTree = "<group>"; };
 		C14C6F242419F95E00CF3408 /* LeadingImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeadingImage.swift; sourceTree = "<group>"; };
 		C14C6F26241A754B00CF3408 /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
 		C14D0571243687E9005F7841 /* DeactivatePodViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeactivatePodViewModelTests.swift; sourceTree = "<group>"; };
@@ -641,6 +643,7 @@
 				C1E753E7226928F700A0BC48 /* DashPumpManagerTests.swift */,
 				C1E753E9226928F700A0BC48 /* Info.plist */,
 				C127160B237A07B60093DAB7 /* UnfinalizedDoseTests.swift */,
+				C1467BD1246D7E9500B97F77 /* BasalProgramTests.swift */,
 			);
 			path = DashKitTests;
 			sourceTree = "<group>";
@@ -1031,6 +1034,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C1467BD2246D7E9500B97F77 /* BasalProgramTests.swift in Sources */,
 				C127160C237A07B60093DAB7 /* UnfinalizedDoseTests.swift in Sources */,
 				C1E753E8226928F700A0BC48 /* DashPumpManagerTests.swift in Sources */,
 				C1344DE22304CE2B00973BE3 /* TimeInterval.swift in Sources */,
