@@ -11,6 +11,7 @@ import PodSDK
 import LoopKit
 
 extension BasalProgram {
+    
     public init?(items: [RepeatingScheduleValue<Double>]) {
         var basalSegments = [BasalSegment]()
 
@@ -19,12 +20,11 @@ extension BasalProgram {
         var endTimes = startTimes.suffix(from: 1)
         endTimes.append(.hours(24))
 
-        let segmentUnit = Pod.minimumBasalScheduleEntryDuration
         for (rate, (start, end)) in zip(rates, zip(startTimes, endTimes)) {
             let podRate = Int(round(rate * Pod.podSDKInsulinMultiplier))
 
             do {
-                let segment = try BasalSegment(startTime: Int(round(start/segmentUnit)), endTime: Int(round(end/segmentUnit)), basalRate: podRate)
+                let segment = try BasalSegment(startTime: BasalProgram.indexFor(start), endTime: BasalProgram.indexFor(end), basalRate: podRate)
                 basalSegments.append(segment)
             } catch {
                 return nil
@@ -38,12 +38,15 @@ extension BasalProgram {
         }
     }
     
+    private static func indexFor(_ interval: TimeInterval) -> Int {
+        return Int(floor(interval/Pod.minimumBasalScheduleEntryDuration))
+    }
+    
     // Only valid for fixed offset timezones
     public func currentRate(using calendar: Calendar, at date: Date = Date()) -> BasalSegment {
         let midnight = calendar.startOfDay(for: date)
-        let offset = date.timeIntervalSince(midnight)
-        let interval = Int(round(offset/Pod.minimumBasalScheduleEntryDuration))
-        return basalSegments.first { interval >= $0.startTime && interval < $0.endTime }!
+        let index = BasalProgram.indexFor(date.timeIntervalSince(midnight))
+        return basalSegments.first { index >= $0.startTime && index < $0.endTime }!
     }
 }
 
