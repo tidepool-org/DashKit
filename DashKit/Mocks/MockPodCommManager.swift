@@ -28,10 +28,10 @@ public class MockPodCommManager: PodCommManagerProtocol {
         completion(.success(true))
     }
     
+    // Record for test inspection
     var lastBolusVolume: Int?
     var lastBasalProgram: BasalProgram?
     var lastTempBasal: TempBasal?
-    
 
     var podStatus: MockPodStatus
     
@@ -180,9 +180,9 @@ public class MockPodCommManager: PodCommManagerProtocol {
         if let podStatus = podStatus {
             self.podStatus = podStatus
         } else {
-            let activation = Date() - TimeInterval(hours: 81)
+            let activation = Date() - TimeInterval(hours: 35)
             self.podStatus = MockPodStatus(
-                expirationDate: activation + TimeInterval(days: 3),
+                expirationDate: activation + Pod.lifetime,
                 podState: .alarm,
                 programStatus: .basalRunning,
                 activeAlerts: PodAlerts([]),
@@ -192,7 +192,7 @@ public class MockPodCommManager: PodCommManagerProtocol {
                 reservoirUnitsRemaining: 1023,
                 timeElapsedSinceActivation: 2,
                 activationTime: activation)
-            self.podCommState = .alarm(MockPodAlarm.occlusion)
+            self.podCommState = .active // .alarm(MockPodAlarm.occlusion)
         }
     }
 }
