@@ -218,9 +218,9 @@ extension PumpManagerStatus.BasalDeliveryState {
             let rate = dose.unitsPerHour - scheduledRate
             
             if rate < 0 {
-                return rate / dose.unitsPerHour
+                return rate / scheduledRate
             } else {
-                return rate / (maximumTempBasalRate - dose.unitsPerHour )
+                return rate / (maximumTempBasalRate - scheduledRate )
             }
         case .active:
             return 0
