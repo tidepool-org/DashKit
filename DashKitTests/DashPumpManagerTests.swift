@@ -390,14 +390,10 @@ extension DashPumpManagerTests: PumpManagerDelegate {
         
     }
     
-    func removePendingAlert(identifier: DeviceAlert.Identifier) {
+    func retractAlert(identifier: DeviceAlert.Identifier) {
         
     }
     
-    func removeDeliveredAlert(identifier: DeviceAlert.Identifier) {
-        
-    }
-
     func pumpManagerBLEHeartbeatDidFire(_ pumpManager: PumpManager) {
     }
 
