@@ -43,7 +43,7 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
     
     func timeComponent(value: Int, units: String) -> some View {
         Group {
-            Text(String(value)).font(.title).fontWeight(.bold)
+            Text(String(value)).font(.system(size: 28)).fontWeight(.bold)
             Text(units).foregroundColor(.secondary)
         }
     }
@@ -97,11 +97,12 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
             self.viewModel.basalDeliveryRate.map { (rate) in
                 HStack(alignment: .center) {
                     BasalStateSwiftUIView(netBasalPercent: rate.netPercent)
-                        .frame(width: 42, height: 20, alignment: .center)
+                        .frame(width: 38, height: 20, alignment: .center)
                     HStack(alignment: .lastTextBaseline, spacing: 3) {
                         Text(self.viewModel.basalRateFormatter.string(from: rate.absoluteRate) ?? "")
-                            .font(.title)
+                            .font(.system(size: 28))
                             .fontWeight(.bold)
+                            .fixedSize()
                         Text("U/hr").foregroundColor(.secondary)
                     }
                 }
@@ -111,7 +112,7 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
     
     var reservoirStatus: some View {
         VStack(alignment: .leading) {
-            Text("Insulin Remaining")
+            Text(LocalizedString("Insulin Remaining", comment: "Header for insulin remaining on pod settings screen"))
                 .foregroundColor(Color(UIColor.secondaryLabel))
             HStack {
                 Image(systemName: "x.circle.fill")
