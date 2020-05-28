@@ -66,11 +66,12 @@ extension DashPumpManager {
 extension DashPumpManager {
 
     public func syncScheduleValues(for viewController: BasalScheduleTableViewController, completion: @escaping (SyncBasalScheduleResult<Double>) -> Void) {
-        setBasalSchedule(dailyItems: viewController.scheduleItems) { (error) in
-            if let error = error {
+        syncBasalRateSchedule(items: viewController.scheduleItems) { result in
+            switch result {
+            case .success(let schedule):
+                completion(.success(scheduleItems: schedule.items, timeZone: schedule.timeZone))
+            case .failure(let error):
                 completion(.failure(error))
-            } else {
-                completion(.success(scheduleItems: viewController.scheduleItems, timeZone: self.state.timeZone))
             }
         }
     }
