@@ -866,6 +866,16 @@ public class DashPumpManager: PumpManager {
         }
     }
 
+    public func syncBasalRateSchedule(items scheduleItems: [RepeatingScheduleValue<Double>], completion: @escaping (Result<BasalRateSchedule, Error>) -> Void) {
+        setBasalSchedule(dailyItems: scheduleItems) { error in
+            if let error = error {
+                completion(.failure(error))
+            } else {
+                completion(.success(BasalRateSchedule(dailyItems: scheduleItems, timeZone: self.state.timeZone)!))
+            }
+        }
+    }
+
     public init(state: DashPumpManagerState, podCommManager: PodCommManagerProtocol? = nil, dateGenerator: @escaping () -> Date = Date.init) {
         
         let loggingShim: PodSDKLoggingShim
