@@ -891,7 +891,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "echo \"Bootstrapping carthage dependencies\"\nunset LLVM_TARGET_TRIPLE_SUFFIX\n/usr/local/bin/carthage bootstrap --project-directory \"$SRCROOT\" --platform ios,watchos --cache-builds --verbose\n";
+			shellScript = "echo \"Bootstrapping carthage dependencies\"\nunset LLVM_TARGET_TRIPLE_SUFFIX\n\nif ! cmp -s Cartfile.Resolved Carthage/Cartfile.resolved; then\n    time /usr/local/bin/carthage bootstrap --project-directory \"$SRCROOT\" --platform ios,watchos --cache-builds --verbose\n    cp Cartfile.resolved Carthage\nelse\n    echo \"Carthage: not bootstrapping\"\nfi\n";
 		};
 		C1D1406322FBB1F300DA6242 /* Copy Frameworks with Carthage */ = {
 			isa = PBXShellScriptBuildPhase;
