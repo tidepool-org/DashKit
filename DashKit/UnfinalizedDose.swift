@@ -12,6 +12,16 @@ import LoopKit
 public struct UnfinalizedDose: RawRepresentable, Equatable, CustomStringConvertible {
     public typealias RawValue = [String: Any]
 
+    private enum UnfinalizedDoseKey {
+        static let duration = "duration"
+        static let programmedUnits = "programmedUnits"
+        static let programmedRate = "programmedRate"
+        static let rawDoseType = "rawDoseType"
+        static let rawScheduledCertainty = "rawScheduledCertainty"
+        static let startTime = "startTime"
+        static let units = "units"
+    }
+    
     enum DoseType: Int {
         case bolus = 0
         case tempBasal
@@ -54,11 +64,17 @@ public struct UnfinalizedDose: RawRepresentable, Equatable, CustomStringConverti
     }
 
     let doseType: DoseType
+    
     public var units: Double
+    
     var programmedUnits: Double? // Tracks the programmed units, as boluses may be canceled before finishing, at which point units would reflect actual delivered volume.
+    
     var programmedRate: Double?  // Tracks the original temp rate, as during finalization the units are discretized to pump pulses, changing the actual rate
+    
     let startTime: Date
+    
     var duration: TimeInterval?
+    
     var scheduledCertainty: ScheduledCertainty
 
     var endTime: Date? {
@@ -81,7 +97,7 @@ public struct UnfinalizedDose: RawRepresentable, Equatable, CustomStringConverti
     public func isFinished(at date: Date) -> Bool {
         return duration == nil || progress(at: date) >= 1
     }
-
+    
     // Units per hour
     public var rate: Double {
         guard let duration = duration else {
@@ -175,11 +191,11 @@ public struct UnfinalizedDose: RawRepresentable, Equatable, CustomStringConverti
     // RawRepresentable
     public init?(rawValue: RawValue) {
         guard
-            let rawDoseType = rawValue["doseType"] as? Int,
+            let rawDoseType = rawValue[UnfinalizedDoseKey.rawDoseType] as? Int,
             let doseType = DoseType(rawValue: rawDoseType),
-            let units = rawValue["units"] as? Double,
-            let startTime = rawValue["startTime"] as? Date,
-            let rawScheduledCertainty = rawValue["scheduledCertainty"] as? Int,
+            let units = rawValue[UnfinalizedDoseKey.units] as? Double,
+            let startTime = rawValue[UnfinalizedDoseKey.startTime] as? Date,
+            let rawScheduledCertainty = rawValue[UnfinalizedDoseKey.rawScheduledCertainty] as? Int,
             let scheduledCertainty = ScheduledCertainty(rawValue: rawScheduledCertainty)
             else {
                 return nil
@@ -190,37 +206,37 @@ public struct UnfinalizedDose: RawRepresentable, Equatable, CustomStringConverti
         self.startTime = startTime
         self.scheduledCertainty = scheduledCertainty
 
-        if let programmedUnits = rawValue["programmedUnits"] as? Double {
+        if let programmedUnits = rawValue[UnfinalizedDoseKey.programmedUnits] as? Double {
             self.programmedUnits = programmedUnits
         }
 
-        if let programmedRate = rawValue["programmedRate"] as? Double {
+        if let programmedRate = rawValue[UnfinalizedDoseKey.programmedRate] as? Double {
             self.programmedRate = programmedRate
         }
 
-        if let duration = rawValue["duration"] as? Double {
+        if let duration = rawValue[UnfinalizedDoseKey.duration] as? Double {
             self.duration = duration
         }
     }
 
     public var rawValue: RawValue {
         var rawValue: RawValue = [
-            "doseType": doseType.rawValue,
-            "units": units,
-            "startTime": startTime,
-            "scheduledCertainty": scheduledCertainty.rawValue
+            UnfinalizedDoseKey.rawDoseType: doseType.rawValue,
+            UnfinalizedDoseKey.units: units,
+            UnfinalizedDoseKey.startTime: startTime,
+            UnfinalizedDoseKey.rawScheduledCertainty: scheduledCertainty.rawValue
         ]
 
-        if let scheduledUnits = programmedUnits {
-            rawValue["scheduledUnits"] = scheduledUnits
+        if let programmedUnits = programmedUnits {
+            rawValue[UnfinalizedDoseKey.programmedUnits] = programmedUnits
         }
 
-        if let scheduledTempRate = programmedRate {
-            rawValue["scheduledTempRate"] = scheduledTempRate
+        if let programmedRate = programmedRate {
+            rawValue[UnfinalizedDoseKey.programmedRate] = programmedRate
         }
 
         if let duration = duration {
-            rawValue["duration"] = duration
+            rawValue[UnfinalizedDoseKey.duration] = duration
         }
 
         return rawValue
@@ -267,3 +283,4 @@ extension UnfinalizedDose {
         return DoseEntry(self, at: date)
     }
 }
+
