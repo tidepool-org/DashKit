@@ -1040,10 +1040,10 @@ extension DashPumpManager: PodCommManagerDelegate {
         }
 
         pumpDelegate.notify { delegate in
-            let content = DeviceAlert.Content(title: alarm.alarmCode.notificationTitle,
+            let content = Alert.Content(title: alarm.alarmCode.notificationTitle,
                                               body: alarm.alarmCode.notificationBody,
                                               acknowledgeActionButtonLabel: LocalizedString("OK", comment: "Alert acknowledgment OK button"))
-            delegate?.issueAlert(DeviceAlert(identifier: DeviceAlert.Identifier(managerIdentifier: DashPumpManager.podAlarmNotificationIdentifier,
+            delegate?.issueAlert(Alert(identifier: Alert.Identifier(managerIdentifier: DashPumpManager.podAlarmNotificationIdentifier,
                                                                                 alertIdentifier: alarm.alarmCode.rawValue),
                                              foregroundContent: content, backgroundContent: content,
                                              trigger: .immediate))
@@ -1090,14 +1090,14 @@ extension DashPumpManager: PodSDKLoggingShimDelegate {
     }
 }
 
-// MARK: - DeviceAlertResponder implementation
+// MARK: - AlertResponder implementation
 extension DashPumpManager {
-    public func acknowledgeAlert(alertIdentifier: DeviceAlert.AlertIdentifier) { }
+    public func acknowledgeAlert(alertIdentifier: Alert.AlertIdentifier) { }
 }
 
-// MARK: - DeviceAlertSoundVendor implementation
+// MARK: - AlertSoundVendor implementation
 extension DashPumpManager {
     public func getSoundBaseURL() -> URL? { return nil }
-    public func getSounds() -> [DeviceAlert.Sound] { return [] }
+    public func getSounds() -> [Alert.Sound] { return [] }
 }
 
