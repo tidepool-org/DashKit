@@ -54,7 +54,7 @@ internal class DashHUDProvider: NSObject, HUDProvider {
             updateFaultDisplay()
         }
 
-        return [reservoirView, podLifeView].compactMap { $0 }
+        return [reservoirView].compactMap { $0 }
     }
 
     public func didTapOnHUDView(_ view: BaseHUDView) -> HUDTapAction? {
