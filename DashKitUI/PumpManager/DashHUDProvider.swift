@@ -43,7 +43,7 @@ internal class DashHUDProvider: NSObject, HUDProvider {
         self.pumpManager.addPodStatusObserver(self, queue: .main)
     }
 
-    public func createHUDViews() -> [BaseHUDView] {
+    public func createHUDViews() -> [LevelHUDView] {
         reservoirView = OmnipodReservoirView.instantiate()
         updateReservoirView()
 
@@ -81,7 +81,7 @@ internal class DashHUDProvider: NSObject, HUDProvider {
         return rawValue
     }
 
-    public static func createHUDViews(rawValue: HUDProvider.HUDViewsRawState) -> [BaseHUDView] {
+    public static func createHUDViews(rawValue: HUDProvider.HUDViewsRawState) -> [LevelHUDView] {
         guard let podActivatedAt = rawValue["podActivatedAt"] as? Date,
             let rawReservoirLevel = rawValue["reservoirLevel"] as? ReservoirLevel.RawValue else
         {
@@ -103,7 +103,7 @@ internal class DashHUDProvider: NSObject, HUDProvider {
         let podLifeHUDView = PodLifeHUDView.instantiate()
         podLifeHUDView.setPodLifeCycle(startTime: podActivatedAt, lifetime: Pod.lifetime)
 
-        return [reservoirView, podLifeHUDView].compactMap({ $0 })
+        return [reservoirView].compactMap({ $0 })
     }
 
     private func updateReservoirView() {
