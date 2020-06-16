@@ -99,8 +99,6 @@
 		C1A9194D2433A3D5008D216E /* InsertCannulaViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A9194C2433A3D5008D216E /* InsertCannulaViewModelTests.swift */; };
 		C1ACF43222A03F0500F7DDB4 /* OmnipodReservoirView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ACF42E22A03F0400F7DDB4 /* OmnipodReservoirView.swift */; };
 		C1ACF43322A03F0500F7DDB4 /* OmnipodReservoirView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C1ACF42F22A03F0500F7DDB4 /* OmnipodReservoirView.xib */; };
-		C1ACF43422A03F0500F7DDB4 /* PodLifeHUDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ACF43022A03F0500F7DDB4 /* PodLifeHUDView.swift */; };
-		C1ACF43522A03F0500F7DDB4 /* PodLifeHUDView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C1ACF43122A03F0500F7DDB4 /* PodLifeHUDView.xib */; };
 		C1ACF43722A04B4800F7DDB4 /* NumberFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ACF43622A04B4800F7DDB4 /* NumberFormatter.swift */; };
 		C1ACF43B22A173FF00F7DDB4 /* ReservoirLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ACF43A22A173FF00F7DDB4 /* ReservoirLevel.swift */; };
 		C1ACF43D22A1D00500F7DDB4 /* PodExpirationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ACF43C22A1D00500F7DDB4 /* PodExpirationTableViewCell.swift */; };
@@ -285,8 +283,6 @@
 		C1A9194C2433A3D5008D216E /* InsertCannulaViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsertCannulaViewModelTests.swift; sourceTree = "<group>"; };
 		C1ACF42E22A03F0400F7DDB4 /* OmnipodReservoirView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OmnipodReservoirView.swift; sourceTree = "<group>"; };
 		C1ACF42F22A03F0500F7DDB4 /* OmnipodReservoirView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OmnipodReservoirView.xib; sourceTree = "<group>"; };
-		C1ACF43022A03F0500F7DDB4 /* PodLifeHUDView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PodLifeHUDView.swift; sourceTree = "<group>"; };
-		C1ACF43122A03F0500F7DDB4 /* PodLifeHUDView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PodLifeHUDView.xib; sourceTree = "<group>"; };
 		C1ACF43622A04B4800F7DDB4 /* NumberFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberFormatter.swift; sourceTree = "<group>"; };
 		C1ACF43A22A173FF00F7DDB4 /* ReservoirLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReservoirLevel.swift; sourceTree = "<group>"; };
 		C1ACF43C22A1D00500F7DDB4 /* PodExpirationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodExpirationTableViewCell.swift; sourceTree = "<group>"; };
@@ -560,8 +556,6 @@
 				C1FDF4AB235EC930008B0251 /* HUDAssets.xcassets */,
 				C1ACF42E22A03F0400F7DDB4 /* OmnipodReservoirView.swift */,
 				C1ACF42F22A03F0500F7DDB4 /* OmnipodReservoirView.xib */,
-				C1ACF43022A03F0500F7DDB4 /* PodLifeHUDView.swift */,
-				C1ACF43122A03F0500F7DDB4 /* PodLifeHUDView.xib */,
 				C1941150228DBF2100E886DD /* ExpirationReminderDateTableViewCell.swift */,
 				C12C9C82229EDB7B00FF7632 /* InsulinStatusTableViewCell.swift */,
 				C1ACF43C22A1D00500F7DDB4 /* PodExpirationTableViewCell.swift */,
@@ -839,7 +833,6 @@
 				C15424312280C575006754B3 /* Assets.xcassets in Resources */,
 				C1ACF43322A03F0500F7DDB4 /* OmnipodReservoirView.xib in Resources */,
 				C1FDF4AC235EC930008B0251 /* HUDAssets.xcassets in Resources */,
-				C1ACF43522A03F0500F7DDB4 /* PodLifeHUDView.xib in Resources */,
 				C107D166226A0EED00D63775 /* DashPumpManager.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -942,7 +935,6 @@
 				C1201E3123EDF498002DA84A /* Image.swift in Sources */,
 				C107D171226A1AD100D63775 /* PodSettingsSetupViewControllers.swift in Sources */,
 				C1941151228DBF2100E886DD /* ExpirationReminderDateTableViewCell.swift in Sources */,
-				C1ACF43422A03F0500F7DDB4 /* PodLifeHUDView.swift in Sources */,
 				C194114622861E9100E886DD /* UIColor.swift in Sources */,
 				C1562F8924169C65006952D6 /* DeactivatePodViewModel.swift in Sources */,
 				C1C72D8B241568E700DB224B /* DashSettingsView.swift in Sources */,

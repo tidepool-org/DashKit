@@ -30,8 +30,8 @@ extension DashPumpManager: PumpManagerUI {
         return DashHUDProvider(pumpManager: self)
     }
 
-    public static func createHUDViews(rawValue: HUDProvider.HUDViewsRawState) -> [LevelHUDView] {
-        return DashHUDProvider.createHUDViews(rawValue: rawValue)
+    public static func createHUDView(rawValue: HUDProvider.HUDViewsRawState) -> LevelHUDView? {
+        return DashHUDProvider.createHUDView(rawValue: rawValue)
     }
 
 }
