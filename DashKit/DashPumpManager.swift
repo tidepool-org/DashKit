@@ -584,7 +584,15 @@ public class DashPumpManager: PumpManager {
     }
 
     public func cancelBolus(completion: @escaping (PumpManagerResult<DoseEntry?>) -> Void) {
-        
+        cancelBolusInternal {
+            if case .failure = $0 {
+                self.issueCancelBolusErrorAlert()
+            }
+            completion($0)
+        }
+    }
+    
+    private func cancelBolusInternal (completion: @escaping (PumpManagerResult<DoseEntry?>) -> Void) {
         let preflightError = self.setStateWithResult({ (state) -> DashPumpManagerError? in
             if state.activeTransition != nil {
                 return DashPumpManagerError.busy
