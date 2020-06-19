@@ -386,11 +386,11 @@ extension DashPumpManagerTests: PumpManagerStatusObserver {
 
 extension DashPumpManagerTests: PumpManagerDelegate {
         
-    func issueAlert(_ alert: DeviceAlert) {
+    func issueAlert(_ alert: Alert) {
         
     }
     
-    func retractAlert(identifier: DeviceAlert.Identifier) {
+    func retractAlert(identifier: Alert.Identifier) {
         
     }
     
