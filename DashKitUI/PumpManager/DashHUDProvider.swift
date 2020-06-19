@@ -57,8 +57,8 @@ internal class DashHUDProvider: NSObject, HUDProvider {
         pumpManager.getPodStatus { (_) in }
     }
     
-    public var hudViewsRawState: HUDProvider.HUDViewsRawState {
-        var rawValue: HUDProvider.HUDViewsRawState = [:]
+    public var hudViewRawState: HUDProvider.HUDViewRawState {
+        var rawValue: HUDProvider.HUDViewRawState = [:]
         
         rawValue["lastStatusDate"] = pumpManager.lastStatusDate
 
@@ -69,7 +69,7 @@ internal class DashHUDProvider: NSObject, HUDProvider {
         return rawValue
     }
 
-    public static func createHUDView(rawValue: HUDProvider.HUDViewsRawState) -> LevelHUDView? {
+    public static func createHUDView(rawValue: HUDProvider.HUDViewRawState) -> LevelHUDView? {
         guard let rawReservoirLevel = rawValue["reservoirLevel"] as? ReservoirLevel.RawValue else {
             return nil
         }
