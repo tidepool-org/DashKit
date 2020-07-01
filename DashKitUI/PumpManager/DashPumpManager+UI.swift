@@ -12,18 +12,17 @@ import LoopKitUI
 import DashKit
 import SwiftUI
 
-extension DashPumpManager: PumpManagerUI {
+extension DashPumpManager: PumpManagerUI {    
+    public static var smallImage: UIImage? {
+        return UIImage(named: "Pod", in: Bundle(for: DashSettingsViewModel.self), compatibleWith: nil)!
+    }
 
-    static public func setupViewController() -> (UIViewController & PumpManagerSetupViewController & CompletionNotifying) {
+    public static func setupViewController() -> (UIViewController & PumpManagerSetupViewController & CompletionNotifying) {
         return DashUICoordinator()
     }
 
     public func settingsViewController() -> (UIViewController & CompletionNotifying) {
         return DashUICoordinator(pumpManager: self)
-    }
-
-    public var smallImage: UIImage? {
-        return UIImage(named: "Pod", in: Bundle(for: DashSettingsViewModel.self), compatibleWith: nil)!
     }
 
     public func hudProvider() -> HUDProvider? {
