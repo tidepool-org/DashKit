@@ -13,7 +13,7 @@ import DashKit
 import SwiftUI
 
 extension DashPumpManager: PumpManagerUI {    
-    public static var smallImage: UIImage? {
+    public var smallImage: UIImage? {
         return UIImage(named: "Pod", in: Bundle(for: DashSettingsViewModel.self), compatibleWith: nil)!
     }
 
