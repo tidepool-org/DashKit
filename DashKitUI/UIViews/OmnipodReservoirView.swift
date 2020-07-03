@@ -51,9 +51,9 @@ public final class OmnipodReservoirView: LevelHUDView, NibLoadable {
     private func updateColor() {
         switch reservoirAlertState {
         case .lowReservoir, .empty:
-            alertLabel.backgroundColor = stateColors?.warning
+            alertLabel?.backgroundColor = stateColors?.warning
         case .ok:
-            alertLabel.backgroundColor = stateColors?.normal
+            alertLabel?.backgroundColor = stateColors?.normal
         }
     }
 
@@ -108,7 +108,7 @@ public final class OmnipodReservoirView: LevelHUDView, NibLoadable {
                 }
 
                 if let units = numberFormatter.string(from: value) {
-                    volumeLabel.text = String(format: LocalizedString("%@ U", comment: "Format string for reservoir volume. (1: The localized volume)"), units)
+                    volumeLabel.text = String(format: LocalizedString("%@U", comment: "Format string for reservoir volume. (1: The localized volume)"), units)
 
                     accessibilityValue = String(format: LocalizedString("%1$@ units remaining at %2$@", comment: "Accessibility format string for (1: localized volume)(2: time)"), units, time)
                 }
@@ -123,13 +123,13 @@ public final class OmnipodReservoirView: LevelHUDView, NibLoadable {
         case .ok:
             alertLabelAlpha = 0
         case .lowReservoir, .empty:
-            alertLabel.text = "!"
+            alertLabel?.text = "!"
         }
 
         updateColor()
 
         UIView.animate(withDuration: 0.25, animations: {
-            self.alertLabel.alpha = alertLabelAlpha
+            self.alertLabel?.alpha = alertLabelAlpha
         })
     }
 
