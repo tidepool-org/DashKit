@@ -69,7 +69,7 @@
         </view>
     </objects>
     <resources>
-        <image name="pod_reservoir" width="31" height="40"/>
-        <image name="pod_reservoir_mask" width="31" height="40"/>
+        <image name="pod_reservoir" width="26" height="34"/>
+        <image name="pod_reservoir_mask" width="24" height="32"/>
     </resources>
 </document>
