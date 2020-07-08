@@ -102,7 +102,7 @@ public final class OmnipodReservoirView: LevelHUDView, NibLoadable {
                 case let x? where x > 0.25:
                     volumeLabel.textColor = stateColors?.normal
                 case let x? where x > 0.10:
-                    volumeLabel.textColor = stateColors?.normal
+                    volumeLabel.textColor = stateColors?.warning
                 default:
                     volumeLabel.textColor = stateColors?.error
                 }
