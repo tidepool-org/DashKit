@@ -260,6 +260,14 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
 
     public func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
                 
+        // Deal with UIHostingController navigationItem.backBarButtonItem being nil at view load time
+        // Seems like an iOS bug; hopefully fixed with later SwiftUI updates.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            if viewController.navigationItem.backBarButtonItem == nil, let title = viewController.navigationItem.title {
+                viewController.navigationItem.backBarButtonItem = UIBarButtonItem(title: title, style: .plain, target: nil, action: nil)
+            }
+        }
+
         setOverrideTraitCollection(customTraitCollection, forChild: viewController)
         
         if viewControllers.count < screenStack.count {
