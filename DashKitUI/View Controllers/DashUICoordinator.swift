@@ -96,7 +96,9 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
                 self?.setupCanceled()
             }
             let view = DeactivatePodView(viewModel: viewModel)
-            return UIHostingController(rootView: view)
+            let hostedView = UIHostingController(rootView: view)
+            hostedView.navigationItem.title = LocalizedString("Deactivate Pod", comment: "Title for deactivate pod screen")
+            return hostedView
         case .settings:
             guard let pumpManager = pumpManager else {
                 fatalError("Cannot create settings without PumpManager")
@@ -112,8 +114,9 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
             viewModel.completion = { [weak self] in
                 self?.stepFinished()
             }
-            let view = RegisterView(viewModel: viewModel)
-            return UIHostingController(rootView: view)
+            let view = UIHostingController(rootView: RegisterView(viewModel: viewModel))
+            view.navigationItem.title = LocalizedString("Register Device", comment: "Title for register device screen")
+            return view
         case .settingsSetup:
             let settingsVC = PodSettingsSetupViewController.instantiateFromStoryboard()
             settingsVC.completion = { [weak self] in
@@ -148,8 +151,9 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
             viewModel.didCancel = { [weak self] in
                 self?.setupCanceled()
             }
-            let view = PairPodView(viewModel: viewModel)
-            return UIHostingController(rootView: view)
+            let view = UIHostingController(rootView: PairPodView(viewModel: viewModel))
+            view.navigationItem.title = LocalizedString("Pod Pairing", comment: "Title for pod pairing screen")
+            return view
         case .insertCannula:
             guard let pumpManager = pumpManager else {
                 fatalError("Need pump manager for cannula insertion screen")
@@ -163,8 +167,9 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
                 self?.setupCanceled()
             }
 
-            let view = InsertCannulaView(viewModel: viewModel)
-            return UIHostingController(rootView: view)
+            let view = UIHostingController(rootView: InsertCannulaView(viewModel: viewModel))
+            view.navigationItem.title = LocalizedString("Insert Cannula", comment: "Title for insert cannula screen")
+            return view
         case .checkInsertedCannula:
             var view = CheckInsertedCannulaView()
             view.wasInsertedProperly = { [weak self] (ok) in
@@ -174,7 +179,9 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
                     self?.navigateTo(.deactivate)
                 }
             }
-            return UIHostingController(rootView: view)
+            let hostedView = UIHostingController(rootView: view)
+            hostedView.navigationItem.title = LocalizedString("Check Cannula", comment: "Title for check cannula screen")
+            return hostedView
         case .setupComplete:
             if let pumpManager = pumpManager {
                 let vc = PodSetupCompleteViewController.instantiateFromStoryboard(pumpManager, navigator: self)
@@ -252,15 +259,7 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
     }
 
     public func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
-        
-        // Deal with UIHostingController navigationItem.backBarButtonItem being nil at view load time
-        // Seems like an iOS bug; hopefully fixed with later SwiftUI updates.
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            if viewController.navigationItem.backBarButtonItem == nil, let title = viewController.navigationItem.title {
-                viewController.navigationItem.backBarButtonItem = UIBarButtonItem(title: title, style: .plain, target: nil, action: nil)
-            }
-        }
-
+                
         setOverrideTraitCollection(customTraitCollection, forChild: viewController)
         
         if viewControllers.count < screenStack.count {
