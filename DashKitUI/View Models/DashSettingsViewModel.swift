@@ -70,22 +70,6 @@ class DashSettingsViewModel: DashSettingsViewModelProtocol {
         pumpManager.addStatusObserver(self, queue: DispatchQueue.main)
     }
     
-    func suspendResumeTapped() {
-        
-        switch basalDeliveryState {
-        case .active, .tempBasal:
-            pumpManager.suspendDelivery { (error) in
-                // TODO: Display error
-            }
-        case .suspended:
-            pumpManager.resumeDelivery { (error) in
-                // TODO: Display error
-            }
-        default:
-            break
-        }
-    }
-    
     func changeTimeZoneTapped() {
         pumpManager.setTime { (error) in
             // TODO: handle error
@@ -102,6 +86,18 @@ class DashSettingsViewModel: DashSettingsViewModelProtocol {
             DispatchQueue.main.async {
                 self.didFinish?()
             }
+        }
+    }
+    
+    func suspendDelivery(duration: TimeInterval) {
+        pumpManager.suspendDelivery { (error) in
+            // TODO: Display error
+        }
+    }
+    
+    func resumeDelivery() {
+        pumpManager.resumeDelivery { (error) in
+            // TODO: Display error
         }
     }
 }

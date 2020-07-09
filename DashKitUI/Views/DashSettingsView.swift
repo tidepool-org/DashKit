@@ -16,6 +16,8 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
     
     @State private var showingDeleteConfirmation = false
     
+    @State private var showSuspendOptions = false;
+    
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     
     weak var navigator: DashUINavigator?
@@ -126,10 +128,13 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
     var suspendResumeRow: some View {
         HStack {
             Button(action: {
-                self.viewModel.suspendResumeTapped()
+                self.suspendResumeTapped()
             }) {
                 Text(self.viewModel.basalDeliveryState.suspendResumeActionText)
                     .foregroundColor(self.viewModel.basalDeliveryState.suspendResumeActionColor)
+            }
+            .actionSheet(isPresented: $showSuspendOptions) {
+                suspendOptionsActionSheet
             }
             Spacer()
             if self.viewModel.basalDeliveryState.transitioning {
@@ -275,6 +280,32 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
             .cancel()
         ])
     }
+
+    var suspendOptionsActionSheet: ActionSheet {
+        ActionSheet(
+            title: Text("Suspend Insulin Delivery"),
+            message: Text("How long would you like to suspend insulin delivery?"),
+            buttons: [
+                .default(Text("30 minutes"), action: { self.viewModel.suspendDelivery(duration: .minutes(30)) }),
+                .default(Text("1 hour"), action: { self.viewModel.suspendDelivery(duration: .hours(1)) }),
+                .default(Text("1 hour 30 minutes"), action: { self.viewModel.suspendDelivery(duration: .hours(1.5)) }),
+                .default(Text("2 hours"), action: { self.viewModel.suspendDelivery(duration: .hours(2)) }),
+                .cancel()
+            ])
+    }
+
+    func suspendResumeTapped() {
+        switch self.viewModel.basalDeliveryState {
+        case .active, .tempBasal:
+            showSuspendOptions = true
+        case .suspended:
+            self.viewModel.resumeDelivery()
+        default:
+            break
+        }
+    }
+    
+
 }
 
 struct DashSettingsView_Previews: PreviewProvider {
@@ -297,7 +328,7 @@ struct DashSettingsSheetView: View {
             }.sheet(isPresented: $showingDetail) {
                 NavigationView {
                     ZStack {
-                        DashSettingsView(viewModel: MockDashSettingsViewModel(), navigator: MockNavigator())
+                        DashSettingsView(viewModel: MockDashSettingsViewModel.livePod(), navigator: MockNavigator())
                     }
                 }
             }
