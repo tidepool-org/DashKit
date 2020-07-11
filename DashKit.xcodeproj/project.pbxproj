@@ -49,6 +49,9 @@
 		C11B2C2D2425846D00308035 /* MockNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11B2C2C2425846D00308035 /* MockNavigator.swift */; };
 		C1201E3123EDF498002DA84A /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1201E3023EDF498002DA84A /* Image.swift */; };
 		C1201E3F23EE1B03002DA84A /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1201E3E23EE1B03002DA84A /* RegisterView.swift */; };
+		C1245D4C24B78FFA0065120F /* PodAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1245D4B24B78FFA0065120F /* PodAlert.swift */; };
+		C1245D4D24B8D5510065120F /* PodSDK.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C11097CD238F14A4004F1A04 /* PodSDK.xcframework */; };
+		C1245D4E24B8D59B0065120F /* PodSDK.xcframework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C11097CD238F14A4004F1A04 /* PodSDK.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		C127160C237A07B60093DAB7 /* UnfinalizedDoseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C127160B237A07B60093DAB7 /* UnfinalizedDoseTests.swift */; };
 		C12A06A123F217A40052195C /* RegistrationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12A06A023F217A40052195C /* RegistrationViewModel.swift */; };
 		C12A06AA23F2EFED0052195C /* MockRegistrationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12A06A923F2EFED0052195C /* MockRegistrationManager.swift */; };
@@ -195,6 +198,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				C1245D4E24B8D59B0065120F /* PodSDK.xcframework in CopyFiles */,
 				C176FE372435065B005258CD /* RxSwift.framework in CopyFiles */,
 				C176FE3624350651005258CD /* INSSDK.framework in CopyFiles */,
 			);
@@ -239,6 +243,7 @@
 		C11B2C2C2425846D00308035 /* MockNavigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNavigator.swift; sourceTree = "<group>"; };
 		C1201E3023EDF498002DA84A /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		C1201E3E23EE1B03002DA84A /* RegisterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
+		C1245D4B24B78FFA0065120F /* PodAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodAlert.swift; sourceTree = "<group>"; };
 		C127160B237A07B60093DAB7 /* UnfinalizedDoseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnfinalizedDoseTests.swift; sourceTree = "<group>"; };
 		C12A06A023F217A40052195C /* RegistrationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationViewModel.swift; sourceTree = "<group>"; };
 		C12A06A923F2EFED0052195C /* MockRegistrationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockRegistrationManager.swift; sourceTree = "<group>"; };
@@ -369,6 +374,7 @@
 				C176FE342435004F005258CD /* RxSwift.framework in Frameworks */,
 				C1E753E3226928F700A0BC48 /* DashKit.framework in Frameworks */,
 				C176FE3524350581005258CD /* INSSDK.framework in Frameworks */,
+				C1245D4D24B8D5510065120F /* PodSDK.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -627,6 +633,7 @@
 				C1ACF43A22A173FF00F7DDB4 /* ReservoirLevel.swift */,
 				C1ACF44122A1FC1F00F7DDB4 /* PodDoseProgressTimerEstimator.swift */,
 				C1ACF44322A200B100F7DDB4 /* UnfinalizedDose.swift */,
+				C1245D4B24B78FFA0065120F /* PodAlert.swift */,
 			);
 			path = DashKit;
 			sourceTree = "<group>";
@@ -1004,6 +1011,7 @@
 				C115A5FC245B41B9005ACEF7 /* MockPodStatus.swift in Sources */,
 				C15424332280C75E006754B3 /* PodStatusExtension.swift in Sources */,
 				C1ACF44022A1F9B400F7DDB4 /* OSLog.swift in Sources */,
+				C1245D4C24B78FFA0065120F /* PodAlert.swift in Sources */,
 				C12A06AC23F2F0070052195C /* PDMRegistrator.swift in Sources */,
 				C107D11522692BDE00D63775 /* TimeInterval.swift in Sources */,
 				C115A5FB245B4069005ACEF7 /* MockPodAlarm.swift in Sources */,

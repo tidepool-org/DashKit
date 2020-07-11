@@ -35,6 +35,8 @@ public class MockPodCommManager: PodCommManagerProtocol {
 
     var podStatus: MockPodStatus
     
+    public var silencedAlerts: [PodAlerts] = []
+    
     public var podCommState: PodCommState = .noPod
 
     var sendProgramFailureError: PodCommError?
@@ -151,6 +153,7 @@ public class MockPodCommManager: PodCommManagerProtocol {
     }
 
     public func silenceAlerts(alert: PodAlerts, completion: @escaping (PodCommResult<PodStatus>) -> ()) {
+        silencedAlerts.append(alert)
         completion(.success(podStatus))
     }
 

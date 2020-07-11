@@ -10,6 +10,7 @@ import DashKit
 import SwiftUI
 import LoopKit
 import HealthKit
+import PodSDK
 
 class DashSettingsViewModel: DashSettingsViewModelProtocol {
     
@@ -90,8 +91,13 @@ class DashSettingsViewModel: DashSettingsViewModelProtocol {
     }
     
     func suspendDelivery(duration: TimeInterval) {
-        pumpManager.suspendDelivery { (error) in
-            // TODO: Display error
+        guard let reminder = try? StopProgramReminder(value: duration) else {
+            assertionFailure("Invalid StopProgramReminder duration of \(duration)")
+            return
+        }
+
+        pumpManager.suspendDelivery(withReminder: reminder) { (error) in
+            
         }
     }
     
