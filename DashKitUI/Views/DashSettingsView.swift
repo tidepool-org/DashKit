@@ -283,7 +283,7 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
 
     var suspendOptionsActionSheet: ActionSheet {
         ActionSheet(
-            title: Text("Suspend Insulin Delivery"),
+            title: Text("Delivery Suspension Reminder"),
             message: Text("How long would you like to suspend insulin delivery?"),
             buttons: [
                 .default(Text("30 minutes"), action: { self.viewModel.suspendDelivery(duration: .minutes(30)) }),

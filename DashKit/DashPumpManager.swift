@@ -96,13 +96,70 @@ public class DashPumpManager: PumpManager {
         return lockedState.value
     }
     
+    private func pumpStatusHighlight(for state: DashPumpManagerState) -> PumpManagerStatus.PumpStatusHighlight? {
+        switch podCommManager.podCommState {
+        case .activating:
+            return PumpManagerStatus.PumpStatusHighlight(
+                localizedMessage: NSLocalizedString("Pod Activating", comment: "Status highlight that when pod is activating."),
+                imageName: "exclamationmark.circle.fill",
+                state: .warning)
+        case .deactivating:
+            return PumpManagerStatus.PumpStatusHighlight(
+                localizedMessage: NSLocalizedString("Pod Deactivating", comment: "Status highlight that when pod is deactivating."),
+                imageName: "exclamationmark.circle.fill",
+                state: .warning)
+        case .noPod:
+            return PumpManagerStatus.PumpStatusHighlight(
+                localizedMessage: NSLocalizedString("No Pod", comment: "Status highlight that when no pod is paired."),
+                imageName: "exclamationmark.circle.fill",
+                state: .warning)
+        case .alarm(let detail):
+            if let detail = detail, detail.occlusionType != .none {
+                return PumpManagerStatus.PumpStatusHighlight(
+                    localizedMessage: NSLocalizedString("Occlusion", comment: "Status highlight that when pod is alarming with occlusion."),
+                    imageName: "exclamationmark.circle.fill",
+                    state: .critical)
+            } else {
+                return PumpManagerStatus.PumpStatusHighlight(
+                    localizedMessage: NSLocalizedString("Pod Alarm", comment: "Status highlight that when pod has non-occlusion alarm."),
+                    imageName: "exclamationmark.circle.fill",
+                    state: .critical)
+            }
+        case .systemError:
+            return PumpManagerStatus.PumpStatusHighlight(
+                localizedMessage: NSLocalizedString("System Error", comment: "Status highlight that when pod has a system error."),
+                imageName: "exclamationmark.circle.fill",
+                state: .critical)
+        case .active:
+            if let reservoirPercent = state.reservoirLevel?.asPercentage(), reservoirPercent == 0 {
+                return PumpManagerStatus.PumpStatusHighlight(
+                    localizedMessage: NSLocalizedString("No Insulin", comment: "Status highlight that a pump is out of insulin."),
+                    imageName: "exclamationmark.circle.fill",
+                    state: .critical)
+            } else if state.isPodAlarming {
+                return PumpManagerStatus.PumpStatusHighlight(
+                    localizedMessage: NSLocalizedString("Pump Alarm", comment: "Status highlight that an alarm was detected."),
+                    imageName: "exclamationmark.circle.fill",
+                    state: .critical)
+            } else if case .suspended = state.suspendState {
+                return PumpManagerStatus.PumpStatusHighlight(
+                    localizedMessage: NSLocalizedString("Insulin Suspended", comment: "Status highlight that insulin delivery was suspended."),
+                    imageName: "pause.circle.fill",
+                    state: .warning)
+            }
+            return nil
+        }
+    }
+
+    
     private func status(for state: DashPumpManagerState) -> PumpManagerStatus {
         return PumpManagerStatus(
             timeZone: state.timeZone,
             device: device,
             pumpBatteryChargeRemaining: nil,
             basalDeliveryState: basalDeliveryState(for: state),
-            bolusState: bolusState(for: state)
+            bolusState: bolusState(for: state),
+            pumpStatusHighlight: pumpStatusHighlight(for: state)
         )
     }
     
@@ -857,6 +914,10 @@ public class DashPumpManager: PumpManager {
                 })
                 completion(error)
             case .success(let podStatus):
+                self.pumpDelegate.notify { (delegate) in
+                    let identifier = Alert.Identifier(managerIdentifier: self.managerIdentifier, alertIdentifier: PodAlert.suspendEnded.alertIdentifier)
+                    delegate?.retractAlert(identifier: identifier)
+                }
                 self.mutateState({ (state) in
                     let now = self.dateGenerator()
                     state.finishedDoses.append(UnfinalizedDose(resumeStartTime: now, scheduledCertainty: .certain))
@@ -1162,9 +1223,6 @@ extension DashPumpManager {
                 delegate?.issueAlert(loopAlert)
             }
         default:
-            pumpDelegate.notify { (delegate) in
-                delegate?.retractAlert(identifier: identifier)
-            }
             break
         }
     }
