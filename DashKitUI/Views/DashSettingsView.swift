@@ -105,7 +105,7 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
                             .font(.system(size: 28))
                             .fontWeight(.bold)
                             .fixedSize()
-                        Text("U/hr").foregroundColor(.secondary)
+                        FrameworkLocalText("U/hr", comment: "Units for showing temp basal rate").foregroundColor(.secondary)
                     }
                 }
             }
@@ -120,7 +120,7 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
                 Image(systemName: "x.circle.fill")
                     .foregroundColor(Color(UIColor.secondaryLabel))
                 
-                Text("No Pod").fontWeight(.bold)
+                FrameworkLocalText("No Pod", comment: "Text shown in insulin remaining space when no pod is paired").fontWeight(.bold)
             }
         }
     }
@@ -176,7 +176,7 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
             }.padding(.bottom, 8)
             
             if self.viewModel.podOk {
-                Section(header: Text("Pod").font(.headline).foregroundColor(Color.primary)) {
+                Section(header: FrameworkLocalText("Pod", comment: "Section header for pod section").font(.headline).foregroundColor(Color.primary)) {
                     suspendResumeRow
                 }
 
@@ -184,13 +184,13 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
                     
                     self.viewModel.podVersion.map { (podVersion) in
                         NavigationLink(destination: PodDetailsView(podVersion: podVersion)) {
-                            Text("Pod Details").foregroundColor(Color.primary)
+                            FrameworkLocalText("Pod Details", comment: "Text for pod details disclosure row").foregroundColor(Color.primary)
                         }
                     }
                         
                     self.viewModel.activatedAt.map { (activatedAt) in
                         HStack {
-                            Text("Pod Insertion")
+                            FrameworkLocalText("Pod Insertion", comment: "Label for pod insertion row")
                             Spacer()
                             Text(self.viewModel.dateFormatter.string(from: activatedAt))
                         }
@@ -198,7 +198,7 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
 
                     self.viewModel.activatedAt.map { (activatedAt) in
                         HStack {
-                            Text("Pod Expiration")
+                            FrameworkLocalText("Pod Expiration", comment: "Label for pod expiration row")
                             Spacer()
                             Text(self.viewModel.dateFormatter.string(from: activatedAt + Pod.lifetime))
                         }
@@ -210,10 +210,10 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
                             Button(action: {
                                 self.viewModel.changeTimeZoneTapped()
                             }) {
-                                Text(LocalizedString("Change Time Zone", comment: "The title of the command to change pump time zone"))
+                                FrameworkLocalText("Change Time Zone", comment: "The title of the command to change pump time zone")
                             }
                         } else {
-                            Text(LocalizedString("Schedule Time Zone", comment: "Label for row showing pump time zone"))
+                            FrameworkLocalText("Schedule Time Zone", comment: "Label for row showing pump time zone")
                         }
                         Spacer()
                         Text(timeZoneString)
@@ -250,7 +250,7 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
                     Button(action: {
                         self.showingDeleteConfirmation = true
                     }) {
-                        Text("Switch to other insulin delivery device")
+                        FrameworkLocalText("Switch to other insulin delivery device", comment: "Label for PumpManager deletion button")
                             .foregroundColor(Color.destructive)
                     }
                     .actionSheet(isPresented: $showingDeleteConfirmation) {
@@ -259,8 +259,9 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
                 }
             }
 
-            Section(header: Text("Support").font(.headline).foregroundColor(Color.primary)) {
+            Section(header: FrameworkLocalText("Support", comment: "Label for support disclosure row").font(.headline).foregroundColor(Color.primary)) {
                 NavigationLink(destination: EmptyView()) {
+                    // Placeholder
                     Text("Get Help with Insulet Omnipod").foregroundColor(Color.primary)
                 }
             }
@@ -273,8 +274,8 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
     }
     
     var removePumpManagerActionSheet: ActionSheet {
-        ActionSheet(title: Text("Remove Pump"), message: Text("Are you sure you want to stop using Omnipod?"), buttons: [
-            .destructive(Text("Delete Omnipod")) {
+        ActionSheet(title: FrameworkLocalText("Remove Pump", comment: "Title for Omnipod PumpManager deletion action sheet."), message: FrameworkLocalText("Are you sure you want to stop using Omnipod?", comment: "Message for Omnipod PumpManager deletion action sheet"), buttons: [
+            .destructive(FrameworkLocalText("Delete Omnipod", comment: "Button text to confirm Omnipod PumpManager deletion")) {
                 self.viewModel.stopUsingOmnipodTapped()
             },
             .cancel()
@@ -283,13 +284,13 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
 
     var suspendOptionsActionSheet: ActionSheet {
         ActionSheet(
-            title: Text("Delivery Suspension Reminder"),
-            message: Text("How long would you like to suspend insulin delivery?"),
+            title: FrameworkLocalText("Delivery Suspension Reminder", comment: "Title for suspend duration selection action sheet"),
+            message: FrameworkLocalText("How long would you like to suspend insulin delivery?", comment: "Message for suspend duration selection action sheet"),
             buttons: [
-                .default(Text("30 minutes"), action: { self.viewModel.suspendDelivery(duration: .minutes(30)) }),
-                .default(Text("1 hour"), action: { self.viewModel.suspendDelivery(duration: .hours(1)) }),
-                .default(Text("1 hour 30 minutes"), action: { self.viewModel.suspendDelivery(duration: .hours(1.5)) }),
-                .default(Text("2 hours"), action: { self.viewModel.suspendDelivery(duration: .hours(2)) }),
+                .default(FrameworkLocalText("30 minutes", comment: "Button text for 30 minute suspend duration"), action: { self.viewModel.suspendDelivery(duration: .minutes(30)) }),
+                .default(FrameworkLocalText("1 hour", comment: "Button text for 1 hour suspend duration"), action: { self.viewModel.suspendDelivery(duration: .hours(1)) }),
+                .default(FrameworkLocalText("1 hour 30 minutes", comment: "Button text for 1 hour 30 minute suspend duration"), action: { self.viewModel.suspendDelivery(duration: .hours(1.5)) }),
+                .default(FrameworkLocalText("2 hours", comment: "Button text for 2 hour suspend duration"), action: { self.viewModel.suspendDelivery(duration: .hours(2)) }),
                 .cancel()
             ])
     }

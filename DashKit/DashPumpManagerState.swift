@@ -41,10 +41,6 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
     
     public var alarmCode: AlarmCode?
     
-    public var isPodAlarming: Bool {
-        return alarmCode != nil
-    }
-
     public var unfinalizedBolus: UnfinalizedDose?
     public var unfinalizedTempBasal: UnfinalizedDose?
 

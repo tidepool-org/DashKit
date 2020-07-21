@@ -42,7 +42,7 @@ struct PairPodView: View {
                             ProgressIndicatorView(state: self.viewModel.state.progressState)
                                 .padding(.horizontal)
                             if self.viewModel.state.isFinished {
-                                Text("Paired")
+                                FrameworkLocalText("Paired", comment: "Label text indicating pairing finished.")
                                     .padding(.top)
                             }
                         }

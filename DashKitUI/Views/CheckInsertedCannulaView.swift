@@ -19,11 +19,11 @@ struct CheckInsertedCannulaView: View {
                 LeadingImage("Cannula Inserted")
             
                 HStack {
-                    Text("Is the cannula inserted properly?").bold()
+                    FrameworkLocalText("Is the cannula inserted properly?", comment: "Question to confirm the cannula is inserted properly").bold()
                     Spacer()
                 }
                 HStack {
-                    Text("The window on the top of the Pod should be colored pink when the cannula is properly inserted into the skin.")
+                    FrameworkLocalText("The window on the top of the Pod should be colored pink when the cannula is properly inserted into the skin.", comment: "Description of proper cannula insertion")
                     Spacer()
                 }.padding(.vertical)
             }

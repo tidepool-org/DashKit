@@ -113,6 +113,7 @@
 		C1ACF44522A200D700F7DDB4 /* NumberFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ACF43622A04B4800F7DDB4 /* NumberFormatter.swift */; };
 		C1BC259C2314604800E80E3F /* DashPumpManagerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BC259B2314604800E80E3F /* DashPumpManagerError.swift */; };
 		C1C72D8B241568E700DB224B /* DashSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C72D8A241568E700DB224B /* DashSettingsView.swift */; };
+		C1C799F424C7749B008E0A1A /* FrameworkLocalText.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C799F324C7749B008E0A1A /* FrameworkLocalText.swift */; };
 		C1D68E302284849D00019CAE /* BasalSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D68E2F2284849D00019CAE /* BasalSchedule.swift */; };
 		C1D68E322284B50300019CAE /* TimeInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D11422692BDE00D63775 /* TimeInterval.swift */; };
 		C1D68E392284E0E000019CAE /* DashKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; };
@@ -298,6 +299,7 @@
 		C1ACF44322A200B100F7DDB4 /* UnfinalizedDose.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnfinalizedDose.swift; sourceTree = "<group>"; };
 		C1BC259B2314604800E80E3F /* DashPumpManagerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashPumpManagerError.swift; sourceTree = "<group>"; };
 		C1C72D8A241568E700DB224B /* DashSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashSettingsView.swift; sourceTree = "<group>"; };
+		C1C799F324C7749B008E0A1A /* FrameworkLocalText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrameworkLocalText.swift; sourceTree = "<group>"; };
 		C1D46D5E22C568F600978E59 /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = Carthage/Build/iOS/RxSwift.framework; sourceTree = "<group>"; };
 		C1D46D5F22C568F600978E59 /* ObjectMapper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ObjectMapper.framework; path = Carthage/Build/iOS/ObjectMapper.framework; sourceTree = "<group>"; };
 		C1D46D6522C56C2300978E59 /* MockPodCommManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPodCommManager.swift; sourceTree = "<group>"; };
@@ -409,6 +411,7 @@
 				C1941152228DBF8300E886DD /* NibLoadable.swift */,
 				C1ACF43622A04B4800F7DDB4 /* NumberFormatter.swift */,
 				C1ACF43E22A1F9A700F7DDB4 /* OSLog.swift */,
+				C1C799F324C7749B008E0A1A /* FrameworkLocalText.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -951,6 +954,7 @@
 				C12C9C83229EDB7B00FF7632 /* InsulinStatusTableViewCell.swift in Sources */,
 				C107D175226A1C7800D63775 /* DashHUDProvider.swift in Sources */,
 				C11B2C2D2425846D00308035 /* MockNavigator.swift in Sources */,
+				C1C799F424C7749B008E0A1A /* FrameworkLocalText.swift in Sources */,
 				C1562F832415848D006952D6 /* DashSettingsViewModelProtocol.swift in Sources */,
 				C1ACF43222A03F0500F7DDB4 /* OmnipodReservoirView.swift in Sources */,
 				C107D17D226A24CE00D63775 /* TimeZone.swift in Sources */,
@@ -1338,6 +1342,8 @@
 					NSLocalizedString,
 					CFCopyLocalizedString,
 					LocalizedString,
+					FrameworkLocalText,
+					Text,
 				);
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -1401,6 +1407,8 @@
 					NSLocalizedString,
 					CFCopyLocalizedString,
 					LocalizedString,
+					FrameworkLocalText,
+					Text,
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;

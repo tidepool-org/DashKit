@@ -136,11 +136,6 @@ public class DashPumpManager: PumpManager {
                     localizedMessage: NSLocalizedString("No Insulin", comment: "Status highlight that a pump is out of insulin."),
                     imageName: "exclamationmark.circle.fill",
                     state: .critical)
-            } else if state.isPodAlarming {
-                return PumpManagerStatus.PumpStatusHighlight(
-                    localizedMessage: NSLocalizedString("Pump Alarm", comment: "Status highlight that an alarm was detected."),
-                    imageName: "exclamationmark.circle.fill",
-                    state: .critical)
             } else if case .suspended = state.suspendState {
                 return PumpManagerStatus.PumpStatusHighlight(
                     localizedMessage: NSLocalizedString("Insulin Suspended", comment: "Status highlight that insulin delivery was suspended."),
@@ -295,10 +290,6 @@ public class DashPumpManager: PumpManager {
         return false  // TODO
     }
 
-    public var isPodAlarming: Bool {
-        return state.isPodAlarming
-    }
-    
     public var lastStatusDate: Date? {
         return state.lastStatusDate
     }

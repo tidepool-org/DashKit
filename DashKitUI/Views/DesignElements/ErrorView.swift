@@ -40,7 +40,7 @@ struct ErrorView: View {
                 Text(" ") // Vertical alignment hack
             }
             .accessibilityElement(children: .ignore)
-            .accessibility(label: Text("Error"))
+            .accessibility(label: FrameworkLocalText("Error", comment: "Accessibility label indicating an error occurred"))
 
             VStack(alignment: .leading, spacing: 10) {
                 Text(self.error.errorDescription ?? "")
