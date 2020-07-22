@@ -90,7 +90,7 @@ public class DashPumpManager: PumpManager {
     }
     
     // Primarily used for testing
-    private let dateGenerator: () -> Date
+    public let dateGenerator: () -> Date
 
     public var state: DashPumpManagerState {
         return lockedState.value

@@ -129,7 +129,7 @@ extension DashPumpManager {
             return .podDeactivating
         case .active:
             if let activationTime = podActivatedAt {                
-                let timeActive = Date().timeIntervalSince(activationTime)
+                let timeActive = dateGenerator().timeIntervalSince(activationTime)
                 if timeActive < Pod.lifetime {
                     return .timeRemaining(Pod.lifetime - timeActive)
                 } else {
@@ -146,13 +146,13 @@ extension DashPumpManager {
     var basalDeliveryRate: BasalDeliveryRate? {
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = state.timeZone
-        let scheduledRate = state.basalProgram.currentRate(using: calendar, at: Date()).basalRateUnitsPerHour
+        let scheduledRate = state.basalProgram.currentRate(using: calendar, at: dateGenerator()).basalRateUnitsPerHour
         let maximumTempBasalRate = state.maximumTempBasalRate
         
         var netBasalPercent: Double
         var absoluteRate: Double
 
-        if let tempBasal = state.unfinalizedTempBasal, !tempBasal.isFinished(at: Date()) {
+        if let tempBasal = state.unfinalizedTempBasal, !tempBasal.isFinished(at: dateGenerator()) {
             
             absoluteRate = tempBasal.rate
             

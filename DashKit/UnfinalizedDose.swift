@@ -29,7 +29,7 @@ public struct UnfinalizedDose: RawRepresentable, Equatable, CustomStringConverti
         case resume
     }
 
-    enum ScheduledCertainty: Int {
+    public enum ScheduledCertainty: Int {
         case certain = 0
         case uncertain
 
@@ -113,7 +113,7 @@ public struct UnfinalizedDose: RawRepresentable, Equatable, CustomStringConverti
         return units
     }
 
-    init(bolusAmount: Double, startTime: Date, scheduledCertainty: ScheduledCertainty) {
+    public init(bolusAmount: Double, startTime: Date, scheduledCertainty: ScheduledCertainty) {
         self.doseType = .bolus
         self.units = bolusAmount
         self.startTime = startTime
@@ -122,7 +122,7 @@ public struct UnfinalizedDose: RawRepresentable, Equatable, CustomStringConverti
         self.programmedUnits = nil
     }
 
-    init(tempBasalRate: Double, startTime: Date, duration: TimeInterval, scheduledCertainty: ScheduledCertainty) {
+    public init(tempBasalRate: Double, startTime: Date, duration: TimeInterval, scheduledCertainty: ScheduledCertainty) {
         self.doseType = .tempBasal
         self.units = tempBasalRate * duration.hours
         self.startTime = startTime
@@ -131,14 +131,14 @@ public struct UnfinalizedDose: RawRepresentable, Equatable, CustomStringConverti
         self.programmedUnits = nil
     }
 
-    init(suspendStartTime: Date, scheduledCertainty: ScheduledCertainty) {
+    public init(suspendStartTime: Date, scheduledCertainty: ScheduledCertainty) {
         self.doseType = .suspend
         self.units = 0
         self.startTime = suspendStartTime
         self.scheduledCertainty = scheduledCertainty
     }
 
-    init(resumeStartTime: Date, scheduledCertainty: ScheduledCertainty) {
+    public init(resumeStartTime: Date, scheduledCertainty: ScheduledCertainty) {
         self.doseType = .resume
         self.units = 0
         self.startTime = resumeStartTime

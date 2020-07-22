@@ -114,6 +114,7 @@
 		C1BC259C2314604800E80E3F /* DashPumpManagerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BC259B2314604800E80E3F /* DashPumpManagerError.swift */; };
 		C1C72D8B241568E700DB224B /* DashSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C72D8A241568E700DB224B /* DashSettingsView.swift */; };
 		C1C799F424C7749B008E0A1A /* FrameworkLocalText.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C799F324C7749B008E0A1A /* FrameworkLocalText.swift */; };
+		C1C799F624C7A3E4008E0A1A /* DashSettingsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C799F524C7A3E4008E0A1A /* DashSettingsViewModelTests.swift */; };
 		C1D68E302284849D00019CAE /* BasalSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D68E2F2284849D00019CAE /* BasalSchedule.swift */; };
 		C1D68E322284B50300019CAE /* TimeInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D11422692BDE00D63775 /* TimeInterval.swift */; };
 		C1D68E392284E0E000019CAE /* DashKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; };
@@ -300,6 +301,7 @@
 		C1BC259B2314604800E80E3F /* DashPumpManagerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashPumpManagerError.swift; sourceTree = "<group>"; };
 		C1C72D8A241568E700DB224B /* DashSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashSettingsView.swift; sourceTree = "<group>"; };
 		C1C799F324C7749B008E0A1A /* FrameworkLocalText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrameworkLocalText.swift; sourceTree = "<group>"; };
+		C1C799F524C7A3E4008E0A1A /* DashSettingsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashSettingsViewModelTests.swift; sourceTree = "<group>"; };
 		C1D46D5E22C568F600978E59 /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = Carthage/Build/iOS/RxSwift.framework; sourceTree = "<group>"; };
 		C1D46D5F22C568F600978E59 /* ObjectMapper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ObjectMapper.framework; path = Carthage/Build/iOS/ObjectMapper.framework; sourceTree = "<group>"; };
 		C1D46D6522C56C2300978E59 /* MockPodCommManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPodCommManager.swift; sourceTree = "<group>"; };
@@ -592,6 +594,7 @@
 				C1A9194824325DCB008D216E /* PairPodViewModelTests.swift */,
 				C1A9194C2433A3D5008D216E /* InsertCannulaViewModelTests.swift */,
 				C14D0571243687E9005F7841 /* DeactivatePodViewModelTests.swift */,
+				C1C799F524C7A3E4008E0A1A /* DashSettingsViewModelTests.swift */,
 			);
 			path = DashKitUITests;
 			sourceTree = "<group>";
@@ -998,6 +1001,7 @@
 				C14D0572243687E9005F7841 /* DeactivatePodViewModelTests.swift in Sources */,
 				C1A9194924325DCB008D216E /* PairPodViewModelTests.swift in Sources */,
 				C1A9194D2433A3D5008D216E /* InsertCannulaViewModelTests.swift in Sources */,
+				C1C799F624C7A3E4008E0A1A /* DashSettingsViewModelTests.swift in Sources */,
 				C1A9194024325D3B008D216E /* DashKitUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
