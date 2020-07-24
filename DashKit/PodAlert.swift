@@ -8,6 +8,7 @@
 
 import Foundation
 import PodSDK
+import LoopKit
 
 public enum PodAlert: String {
     case autoOff
@@ -28,8 +29,25 @@ public enum PodAlert: String {
         }
     }
     
+    var isRepeating: Bool {
+        return repeatInterval != nil
+    }
+    
+    var repeatInterval: TimeInterval? {
+        switch self {
+        case .suspendEnded:
+            return .minutes(15)
+        default:
+            return nil
+        }
+    }
+    
     var alertIdentifier: String {
         return rawValue
+    }
+    
+    var repeatingAlertIdentifier: String {
+        return rawValue + "-repeating"
     }
     
     var contentTitle: String {
@@ -56,32 +74,49 @@ public enum PodAlert: String {
     var contentBody: String {
         switch self {
         case .autoOff:
-            return LocalizedString("Auto Off Alert", comment: "Alert content title for autoOff pod alert")
+            return LocalizedString("Auto Off Alert", comment: "Alert content body for autoOff pod alert")
         case .multiCommand:
-            return LocalizedString("Multiple Command Alert", comment: "Alert content title for multiCommand pod alert")
+            return LocalizedString("Multiple Command Alert", comment: "Alert content body for multiCommand pod alert")
         case .podExpireImminent:
-            return LocalizedString("Pod Expiration Imminent", comment: "Alert content title for podExpireImminent pod alert")
+            return LocalizedString("Pod Expiration Imminent", comment: "Alert content body for podExpireImminent pod alert")
         case .userPodExpiration:
-            return LocalizedString("Pod Expiration Reminder", comment: "Alert content title for userPodExpiration pod alert")
+            return LocalizedString("Pod Expiration Reminder", comment: "Alert content body for userPodExpiration pod alert")
         case .lowReservoir:
-            return LocalizedString("Low Reservoir Alert", comment: "Alert content title for lowReservoir pod alert")
+            return LocalizedString("Low Reservoir Alert", comment: "Alert content body for lowReservoir pod alert")
         case .suspendInProgress:
-            return LocalizedString("Suspend In Progress Reminder", comment: "Alert content title for suspendInProgress pod alert")
+            return LocalizedString("Suspend In Progress Reminder", comment: "Alert content body for suspendInProgress pod alert")
         case .suspendEnded:
-            return LocalizedString("The insulin suspension period has ended. Please resume insulin from the pod settings screen.", comment: "Alert content title for suspendEnded pod alert")
+            return LocalizedString("The insulin suspension period has ended.\n\nYou can resume delivery from the banner on the home screen or from your pump settings screen. You will be reminded again in 15 minutes.", comment: "Alert content body for suspendEnded pod alert")
         case .podExpiring:
-            return LocalizedString("Pod Expiring", comment: "Alert content title for podExpiring pod alert")
+            return LocalizedString("Pod Expiring", comment: "Alert content body for podExpiring pod alert")
         }
     }
     
-    var actionButtonLabel: String {
+    var backgroundContentBody: String {
         switch self {
         case .suspendEnded:
-            return LocalizedString("Remind me in 15 minutes", comment: "Action button text for suspendEnded PodAlert")
+            return LocalizedString("Suspension time is up. Open the app and resume.", comment: "Alert notification body for suspendEnded pod alert")
+        default:
+            return contentBody
+        }
+    }
+
+    
+    var actionButtonLabel: String {
+        switch self {
         default:
             return LocalizedString("Acknowledge", comment: "Action button default text for PodAlerts")
         }
     }
+    
+    var foregroundContent: Alert.Content {
+        return Alert.Content(title: contentTitle, body: contentBody, acknowledgeActionButtonLabel: actionButtonLabel)
+    }
+    
+    var backgroundContent: Alert.Content {
+        return Alert.Content(title: contentTitle, body: backgroundContentBody, acknowledgeActionButtonLabel: actionButtonLabel)
+    }
+
     
     var podAlerts: PodAlerts {
         switch self {

@@ -397,62 +397,31 @@ class DashPumpManagerTests: XCTestCase {
         let suspendEndedAlert = PodAlerts.suspendEnded
         
         pumpManagerAlertIssuanceExpectation = expectation(description: "DashPumpManager should issue alert")
+        pumpManagerAlertIssuanceExpectation?.expectedFulfillmentCount = 2 // One for the current alert, one for recurring.
         
         pumpManager.podCommManagerHasAlerts(suspendEndedAlert)
 
         waitForExpectations(timeout: 3)
-
-        XCTAssert(!alertsIssued.isEmpty)
         
-        let issuedAlert = alertsIssued.last!
+        pumpManagerAlertIssuanceExpectation = nil
+
+        XCTAssertEqual(2, alertsIssued.count)
+        
+        let issuedAlert = alertsIssued.first!
         
         pumpManagerAlertRetractionExpectation = expectation(description: "DashPumpManager should retract alert")
-        
+        pumpManagerAlertRetractionExpectation?.expectedFulfillmentCount = 2 // One for the current alert, one for recurring.
+
         pumpManager.podCommManagerHasAlerts([])
 
         waitForExpectations(timeout: 3)
 
-        XCTAssert(!alertsRetracted.isEmpty)
-        
-        let retractedAlert = alertsRetracted.last!
+        XCTAssertEqual(2, alertsRetracted.count)
+
+        let retractedAlert = alertsRetracted.first!
         
         XCTAssertEqual(issuedAlert.identifier, retractedAlert)
-    }
-    
-    func testSuspendAcknowledgementSchedulesRecurringAlert() {
-        let suspendEndedAlert = PodAlerts.suspendEnded
-        
-        pumpManagerAlertIssuanceExpectation = expectation(description: "DashPumpManager should issue alert")
-        
-        pumpManager.podCommManagerHasAlerts(suspendEndedAlert)
-
-        waitForExpectations(timeout: 3)
-
-        XCTAssert(!alertsIssued.isEmpty)
-        
-        let issuedAlert = alertsIssued.last!
-        
-        alertsIssued = []
-
-        pumpManagerAlertIssuanceExpectation = expectation(description: "DashPumpManager should issue alert")
-
-        pumpManager.acknowledgeAlert(alertIdentifier: issuedAlert.identifier.alertIdentifier)
-
-        waitForExpectations(timeout: 3)
-
-        // Assert pod is silenced
-        XCTAssert(!mockPodCommManager.silencedAlerts.isEmpty)
-        
-        // Assert new alert is scheduled
-        XCTAssert(!alertsIssued.isEmpty)
-        
-        let scheduledAlert = alertsIssued.last!
-        
-        XCTAssertEqual(Alert.Trigger.repeating(repeatInterval: TimeInterval(minutes: 15)), scheduledAlert.trigger)
-        
-    }
-
-
+    }    
 }
 
 extension DashPumpManagerTests: PodStatusObserver {

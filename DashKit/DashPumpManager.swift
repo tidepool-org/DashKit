@@ -906,8 +906,8 @@ public class DashPumpManager: PumpManager {
                 completion(error)
             case .success(let podStatus):
                 self.pumpDelegate.notify { (delegate) in
-                    let identifier = Alert.Identifier(managerIdentifier: self.managerIdentifier, alertIdentifier: PodAlert.suspendEnded.alertIdentifier)
-                    delegate?.retractAlert(identifier: identifier)
+                    delegate?.retractAlert(identifier: Alert.Identifier(managerIdentifier: self.managerIdentifier, alertIdentifier: PodAlert.suspendEnded.alertIdentifier))
+                    delegate?.retractAlert(identifier: Alert.Identifier(managerIdentifier: self.managerIdentifier, alertIdentifier: PodAlert.suspendEnded.repeatingAlertIdentifier))
                 }
                 self.mutateState({ (state) in
                     let now = self.dateGenerator()
@@ -1074,10 +1074,18 @@ extension DashPumpManager: PodCommManagerDelegate {
             for alert in newAlerts.allPodAlerts {
                 if !alert.isIgnored {
                     let identifier = Alert.Identifier(managerIdentifier: self.managerIdentifier, alertIdentifier: alert.alertIdentifier)
-                    let content = Alert.Content(title: alert.contentTitle, body: alert.contentBody, acknowledgeActionButtonLabel: alert.actionButtonLabel)
-                    let loopAlert = Alert(identifier: identifier, foregroundContent: content, backgroundContent: content, trigger: .immediate)
+                    let loopAlert = Alert(identifier: identifier, foregroundContent: alert.foregroundContent, backgroundContent: alert.backgroundContent, trigger: .immediate)
                     pumpDelegate.notify { (delegate) in
                         delegate?.issueAlert(loopAlert)
+                    }
+                    
+                    if let repeatInterval = alert.repeatInterval {
+                        // Schedule an additional repeating 15 minute reminder for suspend period ended.
+                        let repeatingIdentifier = Alert.Identifier(managerIdentifier: self.managerIdentifier, alertIdentifier: alert.repeatingAlertIdentifier)
+                        let loopAlert = Alert(identifier: repeatingIdentifier, foregroundContent: alert.foregroundContent, backgroundContent: alert.backgroundContent, trigger: .repeating(repeatInterval: repeatInterval))
+                        pumpDelegate.notify { (delegate) in
+                            delegate?.issueAlert(loopAlert)
+                        }
                     }
                 }
             }
@@ -1090,6 +1098,12 @@ extension DashPumpManager: PodCommManagerDelegate {
                     pumpDelegate.notify { (delegate) in
                         let identifier = Alert.Identifier(managerIdentifier: self.managerIdentifier, alertIdentifier: alert.alertIdentifier)
                         delegate?.retractAlert(identifier: identifier)
+                    }
+                    if alert.isRepeating {
+                        let repeatingIdentifier = Alert.Identifier(managerIdentifier: self.managerIdentifier, alertIdentifier: alert.repeatingAlertIdentifier)
+                        pumpDelegate.notify { (delegate) in
+                            delegate?.retractAlert(identifier: repeatingIdentifier)
+                        }
                     }
                 }
             }
@@ -1201,20 +1215,6 @@ extension DashPumpManager {
                     break
                 }
             }
-        }
-        
-        let identifier = Alert.Identifier(managerIdentifier: self.managerIdentifier, alertIdentifier: podAlert.alertIdentifier)
-
-        switch podAlert {
-        case .suspendEnded:
-            // Once user acknowledges suspend period expiration, schedule a repeating 15 minute reminder
-            let content = Alert.Content(title: podAlert.contentTitle, body: podAlert.contentBody, acknowledgeActionButtonLabel: podAlert.actionButtonLabel)
-            let loopAlert = Alert(identifier: identifier, foregroundContent: content, backgroundContent: content, trigger: .repeating(repeatInterval: .minutes(15)))
-            pumpDelegate.notify { (delegate) in
-                delegate?.issueAlert(loopAlert)
-            }
-        default:
-            break
         }
     }
 }
