@@ -357,7 +357,7 @@ public class DashPumpManager: PumpManager {
     }
     
     public func podDeactivated() {
-        self.mutateState({ (state) in
+        mutateState({ (state) in
             let now = self.dateGenerator()
             state.unfinalizedBolus?.cancel(at: now)
             state.unfinalizedTempBasal?.cancel(at: now)
@@ -370,6 +370,7 @@ public class DashPumpManager: PumpManager {
             state.podTotalDelivery = nil
             state.alarmCode = nil
         })
+        clearSuspendReminder()
     }
     
     public func discardPod(completion: @escaping (PodCommResult<Bool>) -> ()) {
@@ -880,6 +881,13 @@ public class DashPumpManager: PumpManager {
         }
     }
 
+    fileprivate func clearSuspendReminder() {
+        self.pumpDelegate.notify { (delegate) in
+            delegate?.retractAlert(identifier: Alert.Identifier(managerIdentifier: self.managerIdentifier, alertIdentifier: PodAlert.suspendEnded.alertIdentifier))
+            delegate?.retractAlert(identifier: Alert.Identifier(managerIdentifier: self.managerIdentifier, alertIdentifier: PodAlert.suspendEnded.repeatingAlertIdentifier))
+        }
+    }
+    
     public func resumeDelivery(completion: @escaping (Error?) -> Void) {
         let preflightError = self.setStateWithResult({ (state) -> Error? in
             if state.activeTransition != nil {
@@ -905,10 +913,7 @@ public class DashPumpManager: PumpManager {
                 })
                 completion(error)
             case .success(let podStatus):
-                self.pumpDelegate.notify { (delegate) in
-                    delegate?.retractAlert(identifier: Alert.Identifier(managerIdentifier: self.managerIdentifier, alertIdentifier: PodAlert.suspendEnded.alertIdentifier))
-                    delegate?.retractAlert(identifier: Alert.Identifier(managerIdentifier: self.managerIdentifier, alertIdentifier: PodAlert.suspendEnded.repeatingAlertIdentifier))
-                }
+                self.clearSuspendReminder()
                 self.mutateState({ (state) in
                     let now = self.dateGenerator()
                     state.finishedDoses.append(UnfinalizedDose(resumeStartTime: now, scheduledCertainty: .certain))
@@ -1063,6 +1068,14 @@ extension DashPumpManager: PodCommManagerDelegate {
     public func podCommManager(_ podCommManager: PodCommManager, hasSystemError error: SystemError) {
         logPodCommManagerDelegateMessage("hasSystemError: \(String(describing: error))")
     }
+    
+    private func shouldIgnorePodAlert(_ alert: PodAlert) -> Bool {
+        // Ignore podExpiring alert during activation.
+        if case .podExpiring = alert, podCommManager.podCommState == .activating {
+            return true
+        }
+        return alert.isIgnored
+    }
 
     // Add additional optional signature for this method for testing, as PodCommManager cannot be instantiate on the simulator
     public func podCommManagerHasAlerts(_ alerts: PodAlerts) {
@@ -1072,7 +1085,7 @@ extension DashPumpManager: PodCommManagerDelegate {
         
         if !newAlerts.isEmpty {
             for alert in newAlerts.allPodAlerts {
-                if !alert.isIgnored {
+                if !shouldIgnorePodAlert(alert) {
                     let identifier = Alert.Identifier(managerIdentifier: self.managerIdentifier, alertIdentifier: alert.alertIdentifier)
                     let loopAlert = Alert(identifier: identifier, foregroundContent: alert.foregroundContent, backgroundContent: alert.backgroundContent, trigger: .immediate)
                     pumpDelegate.notify { (delegate) in
