@@ -12,22 +12,21 @@ import HealthKit
 import DashKit
 
 class MockDashSettingsViewModel: DashSettingsViewModelProtocol {
-            
     var activatedAt: Date?
 
-    var basalDeliveryState: PumpManagerStatus.BasalDeliveryState
+    var basalDeliveryState: PumpManagerStatus.BasalDeliveryState = .suspended(Date())
 
-    var basalDeliveryRate: BasalDeliveryRate?
+    var basalDeliveryRate: BasalDeliveryRate? = BasalDeliveryRate(absoluteRate: 1.1, netPercent: 1.1)
 
     var timeZone: TimeZone {
         return TimeZone.currentFixed
     }
 
-    var lifeState: PodLifeState
+    var lifeState: PodLifeState = .noPod
     
-    var podVersion: PodVersionProtocol?
+    var podVersion: PodVersionProtocol? = MockPodVersion(lotNumber: 1, sequenceNumber: 1, majorVersion: 1, minorVersion: 1, interimVersion: 1, bleMajorVersion: 1, bleMinorVersion: 1, bleInterimVersion: 1)
     
-    var sdkVersion: String
+    var sdkVersion: String = "1.2.3"
 
     var pdmIdentifier: String?
 
@@ -48,18 +47,20 @@ class MockDashSettingsViewModel: DashSettingsViewModelProtocol {
         return numberFormatter
     }()
 
-    init() {
-        lifeState = .noPod
-        podVersion = MockPodVersion(lotNumber: 1, sequenceNumber: 1, majorVersion: 1, minorVersion: 1, interimVersion: 1, bleMajorVersion: 1, bleMinorVersion: 1, bleInterimVersion: 1)
-        activatedAt = Date().addingTimeInterval(-TimeInterval(days: 1))
-        basalDeliveryState = .active(Date())
-        basalDeliveryRate = BasalDeliveryRate(absoluteRate: 1.1, netPercent: 1.1)
-        sdkVersion = "1.2.3"
-        pdmIdentifier = "1.2.3"
+    func suspendDelivery(duration: TimeInterval) {
+        basalDeliveryState = .suspending
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            self.basalDeliveryState = .suspended(Date())
+            self.basalDeliveryRate = nil
+        }
     }
-
-    func suspendResumeTapped() {
-        print("SuspendResumeTapped()")
+    
+    func resumeDelivery() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            self.basalDeliveryState = .active(Date())
+            self.basalDeliveryRate = BasalDeliveryRate(absoluteRate: 1.0, netPercent: 1.0)
+        }
     }
     
     func changeTimeZoneTapped() {
@@ -72,6 +73,17 @@ class MockDashSettingsViewModel: DashSettingsViewModelProtocol {
     
     func doneTapped() {
         print("doneTapped()")
+    }
+
+    static func noPod() -> MockDashSettingsViewModel {
+        return MockDashSettingsViewModel()
+    }
+    
+    static func livePod() -> MockDashSettingsViewModel {
+        let model = MockDashSettingsViewModel()
+        model.basalDeliveryState = .active(Date())
+        model.lifeState = .timeRemaining(.days(2.5))
+        return model
     }
 }
 

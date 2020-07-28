@@ -10,6 +10,7 @@ import DashKit
 import SwiftUI
 import LoopKit
 import HealthKit
+import PodSDK
 
 class DashSettingsViewModel: DashSettingsViewModelProtocol {
     
@@ -70,22 +71,6 @@ class DashSettingsViewModel: DashSettingsViewModelProtocol {
         pumpManager.addStatusObserver(self, queue: DispatchQueue.main)
     }
     
-    func suspendResumeTapped() {
-        
-        switch basalDeliveryState {
-        case .active, .tempBasal:
-            pumpManager.suspendDelivery { (error) in
-                // TODO: Display error
-            }
-        case .suspended:
-            pumpManager.resumeDelivery { (error) in
-                // TODO: Display error
-            }
-        default:
-            break
-        }
-    }
-    
     func changeTimeZoneTapped() {
         pumpManager.setTime { (error) in
             // TODO: handle error
@@ -102,6 +87,23 @@ class DashSettingsViewModel: DashSettingsViewModelProtocol {
             DispatchQueue.main.async {
                 self.didFinish?()
             }
+        }
+    }
+    
+    func suspendDelivery(duration: TimeInterval) {
+        guard let reminder = try? StopProgramReminder(value: duration) else {
+            assertionFailure("Invalid StopProgramReminder duration of \(duration)")
+            return
+        }
+
+        pumpManager.suspendDelivery(withReminder: reminder) { (error) in
+            
+        }
+    }
+    
+    func resumeDelivery() {
+        pumpManager.resumeDelivery { (error) in
+            // TODO: Display error
         }
     }
 }
@@ -127,7 +129,7 @@ extension DashPumpManager {
             return .podDeactivating
         case .active:
             if let activationTime = podActivatedAt {                
-                let timeActive = Date().timeIntervalSince(activationTime)
+                let timeActive = dateGenerator().timeIntervalSince(activationTime)
                 if timeActive < Pod.lifetime {
                     return .timeRemaining(Pod.lifetime - timeActive)
                 } else {
@@ -144,25 +146,34 @@ extension DashPumpManager {
     var basalDeliveryRate: BasalDeliveryRate? {
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = state.timeZone
-        let scheduledRate = state.basalProgram.currentRate(using: calendar, at: Date()).basalRateUnitsPerHour
+        let scheduledRate = state.basalProgram.currentRate(using: calendar, at: dateGenerator()).basalRateUnitsPerHour
         let maximumTempBasalRate = state.maximumTempBasalRate
         
-        guard let netBasalPercent = status.basalDeliveryState.netBasalPercent(
-            scheduledRate: scheduledRate,
-            maximumTempBasalRate: maximumTempBasalRate
-        ) else {
-            return nil
+        var netBasalPercent: Double
+        var absoluteRate: Double
+
+        if let tempBasal = state.unfinalizedTempBasal, !tempBasal.isFinished(at: dateGenerator()) {
+            
+            absoluteRate = tempBasal.rate
+            
+            let rate = tempBasal.rate - scheduledRate
+            
+            if rate < 0 {
+                netBasalPercent = rate / scheduledRate
+            } else {
+                netBasalPercent = rate / (maximumTempBasalRate - scheduledRate )
+            }
+        } else {
+            switch state.suspendState {
+            case .resumed:
+                absoluteRate = scheduledRate
+                netBasalPercent = 0
+            case .suspended:
+                absoluteRate = 0
+                netBasalPercent = -1
+            }
         }
         
-        var absoluteRate: Double
-        switch status.basalDeliveryState {
-        case .tempBasal(let dose):
-            absoluteRate = dose.unitsPerHour
-        case .suspended:
-            absoluteRate = 0
-        default:
-            absoluteRate = scheduledRate
-        }
         return BasalDeliveryRate(absoluteRate: absoluteRate, netPercent: netBasalPercent)
     }
 }
@@ -170,11 +181,11 @@ extension DashPumpManager {
 extension PumpManagerStatus.BasalDeliveryState {
     var headerText: String {
         switch self {
-        case .active:
+        case .active, .suspending:
              return LocalizedString("Scheduled Basal", comment: "Header text for basal delivery view when scheduled basal active")
         case .tempBasal:
              return LocalizedString("Temporary Basal", comment: "Header text for basal delivery view when temporary basal running")
-        case .suspended:
+        case .suspended, .resuming:
             return LocalizedString("Basal Suspended", comment: "Header text for basal delivery view when basal is suspended")
         default:
             return ""
@@ -186,11 +197,11 @@ extension PumpManagerStatus.BasalDeliveryState {
         case .active, .tempBasal, .cancelingTempBasal, .initiatingTempBasal:
             return LocalizedString("Suspend Insulin Delivery", comment: "Text for suspend resume button when insulin delivery active")
         case .suspending:
-            return LocalizedString("Suspending Delivery", comment: "Text for suspend resume button when insulin delivery is suspending")
+            return LocalizedString("Suspending insulin delivery...", comment: "Text for suspend resume button when insulin delivery is suspending")
         case .suspended:
             return LocalizedString("Resume Insulin Delivery", comment: "Text for suspend resume button when insulin delivery is suspended")
         case .resuming:
-            return LocalizedString("Resuming Insulin Delivery", comment: "Text for suspend resume button when insulin delivery is resuming")
+            return LocalizedString("Resuming insulin delivery...", comment: "Text for suspend resume button when insulin delivery is resuming")
         }
     }
     
@@ -209,25 +220,6 @@ extension PumpManagerStatus.BasalDeliveryState {
             return Color.secondary
         default:
             return Color.accentColor
-        }
-    }
-    
-    func netBasalPercent(scheduledRate: Double, maximumTempBasalRate: Double) -> Double? {
-        switch self {
-        case .tempBasal(let dose):
-            let rate = dose.unitsPerHour - scheduledRate
-            
-            if rate < 0 {
-                return rate / scheduledRate
-            } else {
-                return rate / (maximumTempBasalRate - scheduledRate )
-            }
-        case .active:
-            return 0
-        case .suspended:
-            return -1
-        default:
-            return nil
         }
     }
 }

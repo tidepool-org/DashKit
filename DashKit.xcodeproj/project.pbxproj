@@ -49,6 +49,9 @@
 		C11B2C2D2425846D00308035 /* MockNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11B2C2C2425846D00308035 /* MockNavigator.swift */; };
 		C1201E3123EDF498002DA84A /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1201E3023EDF498002DA84A /* Image.swift */; };
 		C1201E3F23EE1B03002DA84A /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1201E3E23EE1B03002DA84A /* RegisterView.swift */; };
+		C1245D4C24B78FFA0065120F /* PodAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1245D4B24B78FFA0065120F /* PodAlert.swift */; };
+		C1245D4D24B8D5510065120F /* PodSDK.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C11097CD238F14A4004F1A04 /* PodSDK.xcframework */; };
+		C1245D4E24B8D59B0065120F /* PodSDK.xcframework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C11097CD238F14A4004F1A04 /* PodSDK.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		C127160C237A07B60093DAB7 /* UnfinalizedDoseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C127160B237A07B60093DAB7 /* UnfinalizedDoseTests.swift */; };
 		C12A06A123F217A40052195C /* RegistrationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12A06A023F217A40052195C /* RegistrationViewModel.swift */; };
 		C12A06AA23F2EFED0052195C /* MockRegistrationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12A06A923F2EFED0052195C /* MockRegistrationManager.swift */; };
@@ -87,6 +90,7 @@
 		C176FE3524350581005258CD /* INSSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E5622EA0DDB0035DCA0 /* INSSDK.framework */; };
 		C176FE3624350651005258CD /* INSSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C1FE2E5622EA0DDB0035DCA0 /* INSSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C176FE372435065B005258CD /* RxSwift.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C1D46D5E22C568F600978E59 /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C188E42624C61E98002701AB /* PodAlerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = C188E42524C61E98002701AB /* PodAlerts.swift */; };
 		C194114622861E9100E886DD /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C194114522861E9100E886DD /* UIColor.swift */; };
 		C194114E228DBEC000E886DD /* PodSetupCompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C194114D228DBEC000E886DD /* PodSetupCompleteViewController.swift */; };
 		C1941151228DBF2100E886DD /* ExpirationReminderDateTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1941150228DBF2100E886DD /* ExpirationReminderDateTableViewCell.swift */; };
@@ -109,6 +113,8 @@
 		C1ACF44522A200D700F7DDB4 /* NumberFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ACF43622A04B4800F7DDB4 /* NumberFormatter.swift */; };
 		C1BC259C2314604800E80E3F /* DashPumpManagerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BC259B2314604800E80E3F /* DashPumpManagerError.swift */; };
 		C1C72D8B241568E700DB224B /* DashSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C72D8A241568E700DB224B /* DashSettingsView.swift */; };
+		C1C799F424C7749B008E0A1A /* FrameworkLocalText.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C799F324C7749B008E0A1A /* FrameworkLocalText.swift */; };
+		C1C799F624C7A3E4008E0A1A /* DashSettingsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C799F524C7A3E4008E0A1A /* DashSettingsViewModelTests.swift */; };
 		C1D68E302284849D00019CAE /* BasalSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D68E2F2284849D00019CAE /* BasalSchedule.swift */; };
 		C1D68E322284B50300019CAE /* TimeInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D11422692BDE00D63775 /* TimeInterval.swift */; };
 		C1D68E392284E0E000019CAE /* DashKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; };
@@ -195,6 +201,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				C1245D4E24B8D59B0065120F /* PodSDK.xcframework in CopyFiles */,
 				C176FE372435065B005258CD /* RxSwift.framework in CopyFiles */,
 				C176FE3624350651005258CD /* INSSDK.framework in CopyFiles */,
 			);
@@ -239,6 +246,7 @@
 		C11B2C2C2425846D00308035 /* MockNavigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNavigator.swift; sourceTree = "<group>"; };
 		C1201E3023EDF498002DA84A /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		C1201E3E23EE1B03002DA84A /* RegisterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
+		C1245D4B24B78FFA0065120F /* PodAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodAlert.swift; sourceTree = "<group>"; };
 		C127160B237A07B60093DAB7 /* UnfinalizedDoseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnfinalizedDoseTests.swift; sourceTree = "<group>"; };
 		C12A06A023F217A40052195C /* RegistrationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationViewModel.swift; sourceTree = "<group>"; };
 		C12A06A923F2EFED0052195C /* MockRegistrationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockRegistrationManager.swift; sourceTree = "<group>"; };
@@ -267,6 +275,7 @@
 		C168F187244611E7002447D5 /* PodDetails .swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PodDetails .swift"; sourceTree = "<group>"; };
 		C168F189244616E1002447D5 /* MockPodDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPodDetails.swift; sourceTree = "<group>"; };
 		C171758B2437AFF200199ABC /* CheckInsertedCannulaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInsertedCannulaView.swift; sourceTree = "<group>"; };
+		C188E42524C61E98002701AB /* PodAlerts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodAlerts.swift; sourceTree = "<group>"; };
 		C194114522861E9100E886DD /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		C194114D228DBEC000E886DD /* PodSetupCompleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodSetupCompleteViewController.swift; sourceTree = "<group>"; };
 		C1941150228DBF2100E886DD /* ExpirationReminderDateTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpirationReminderDateTableViewCell.swift; sourceTree = "<group>"; };
@@ -291,6 +300,8 @@
 		C1ACF44322A200B100F7DDB4 /* UnfinalizedDose.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnfinalizedDose.swift; sourceTree = "<group>"; };
 		C1BC259B2314604800E80E3F /* DashPumpManagerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashPumpManagerError.swift; sourceTree = "<group>"; };
 		C1C72D8A241568E700DB224B /* DashSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashSettingsView.swift; sourceTree = "<group>"; };
+		C1C799F324C7749B008E0A1A /* FrameworkLocalText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrameworkLocalText.swift; sourceTree = "<group>"; };
+		C1C799F524C7A3E4008E0A1A /* DashSettingsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashSettingsViewModelTests.swift; sourceTree = "<group>"; };
 		C1D46D5E22C568F600978E59 /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = Carthage/Build/iOS/RxSwift.framework; sourceTree = "<group>"; };
 		C1D46D5F22C568F600978E59 /* ObjectMapper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ObjectMapper.framework; path = Carthage/Build/iOS/ObjectMapper.framework; sourceTree = "<group>"; };
 		C1D46D6522C56C2300978E59 /* MockPodCommManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPodCommManager.swift; sourceTree = "<group>"; };
@@ -369,6 +380,7 @@
 				C176FE342435004F005258CD /* RxSwift.framework in Frameworks */,
 				C1E753E3226928F700A0BC48 /* DashKit.framework in Frameworks */,
 				C176FE3524350581005258CD /* INSSDK.framework in Frameworks */,
+				C1245D4D24B8D5510065120F /* PodSDK.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -401,6 +413,7 @@
 				C1941152228DBF8300E886DD /* NibLoadable.swift */,
 				C1ACF43622A04B4800F7DDB4 /* NumberFormatter.swift */,
 				C1ACF43E22A1F9A700F7DDB4 /* OSLog.swift */,
+				C1C799F324C7749B008E0A1A /* FrameworkLocalText.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -535,6 +548,7 @@
 			children = (
 				C12AA74A231870160025FD45 /* ConnectionState.swift */,
 				C160FEB92371EA050080031E /* AlarmCode.swift */,
+				C188E42524C61E98002701AB /* PodAlerts.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -580,6 +594,7 @@
 				C1A9194824325DCB008D216E /* PairPodViewModelTests.swift */,
 				C1A9194C2433A3D5008D216E /* InsertCannulaViewModelTests.swift */,
 				C14D0571243687E9005F7841 /* DeactivatePodViewModelTests.swift */,
+				C1C799F524C7A3E4008E0A1A /* DashSettingsViewModelTests.swift */,
 			);
 			path = DashKitUITests;
 			sourceTree = "<group>";
@@ -627,6 +642,7 @@
 				C1ACF43A22A173FF00F7DDB4 /* ReservoirLevel.swift */,
 				C1ACF44122A1FC1F00F7DDB4 /* PodDoseProgressTimerEstimator.swift */,
 				C1ACF44322A200B100F7DDB4 /* UnfinalizedDose.swift */,
+				C1245D4B24B78FFA0065120F /* PodAlert.swift */,
 			);
 			path = DashKit;
 			sourceTree = "<group>";
@@ -941,6 +957,7 @@
 				C12C9C83229EDB7B00FF7632 /* InsulinStatusTableViewCell.swift in Sources */,
 				C107D175226A1C7800D63775 /* DashHUDProvider.swift in Sources */,
 				C11B2C2D2425846D00308035 /* MockNavigator.swift in Sources */,
+				C1C799F424C7749B008E0A1A /* FrameworkLocalText.swift in Sources */,
 				C1562F832415848D006952D6 /* DashSettingsViewModelProtocol.swift in Sources */,
 				C1ACF43222A03F0500F7DDB4 /* OmnipodReservoirView.swift in Sources */,
 				C107D17D226A24CE00D63775 /* TimeZone.swift in Sources */,
@@ -984,6 +1001,7 @@
 				C14D0572243687E9005F7841 /* DeactivatePodViewModelTests.swift in Sources */,
 				C1A9194924325DCB008D216E /* PairPodViewModelTests.swift in Sources */,
 				C1A9194D2433A3D5008D216E /* InsertCannulaViewModelTests.swift in Sources */,
+				C1C799F624C7A3E4008E0A1A /* DashSettingsViewModelTests.swift in Sources */,
 				C1A9194024325D3B008D216E /* DashKitUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1004,6 +1022,7 @@
 				C115A5FC245B41B9005ACEF7 /* MockPodStatus.swift in Sources */,
 				C15424332280C75E006754B3 /* PodStatusExtension.swift in Sources */,
 				C1ACF44022A1F9B400F7DDB4 /* OSLog.swift in Sources */,
+				C1245D4C24B78FFA0065120F /* PodAlert.swift in Sources */,
 				C12A06AC23F2F0070052195C /* PDMRegistrator.swift in Sources */,
 				C107D11522692BDE00D63775 /* TimeInterval.swift in Sources */,
 				C115A5FB245B4069005ACEF7 /* MockPodAlarm.swift in Sources */,
@@ -1018,6 +1037,7 @@
 				C160FEBA2371EA050080031E /* AlarmCode.swift in Sources */,
 				C1ACF44522A200D700F7DDB4 /* NumberFormatter.swift in Sources */,
 				C1ACF43B22A173FF00F7DDB4 /* ReservoirLevel.swift in Sources */,
+				C188E42624C61E98002701AB /* PodAlerts.swift in Sources */,
 				C107D11222692B7200D63775 /* Pod.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1326,6 +1346,8 @@
 					NSLocalizedString,
 					CFCopyLocalizedString,
 					LocalizedString,
+					FrameworkLocalText,
+					Text,
 				);
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -1389,6 +1411,8 @@
 					NSLocalizedString,
 					CFCopyLocalizedString,
 					LocalizedString,
+					FrameworkLocalText,
+					Text,
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;

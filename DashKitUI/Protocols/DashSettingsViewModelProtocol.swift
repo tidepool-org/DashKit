@@ -37,7 +37,9 @@ protocol DashSettingsViewModelProtocol: ObservableObject, Identifiable {
 
     var timeZone: TimeZone { get }
 
-    func suspendResumeTapped()
+    func suspendDelivery(duration: TimeInterval)
+
+    func resumeDelivery()
 
     func changeTimeZoneTapped()
 

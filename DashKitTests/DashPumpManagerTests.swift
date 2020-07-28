@@ -28,6 +28,12 @@ class DashPumpManagerTests: XCTestCase {
     private var pumpManager: DashPumpManager!
     private var mockPodCommManager: MockPodCommManager!
     
+    private var alertsIssued: [Alert] = []
+    private var pumpManagerAlertIssuanceExpectation: XCTestExpectation?
+    
+    private var alertsRetracted: [Alert.Identifier] = []
+    private var pumpManagerAlertRetractionExpectation: XCTestExpectation?
+
     // Date simulation
     private var dateFormatter = ISO8601DateFormatter()
     private var simulatedDate: Date = ISO8601DateFormatter().date(from: "2019-10-02T00:00:00Z")!
@@ -367,7 +373,55 @@ class DashPumpManagerTests: XCTestCase {
         XCTAssertEqual(5, interruptedBolus.dose!.programmedUnits)
         XCTAssertEqual(3, interruptedBolus.dose!.deliveredUnits)
     }
+    
+    func testAlertIssuanceAndAcknowledgement() {
+        let suspendEndedAlert = PodAlerts.podExpiring
+        
+        pumpManagerAlertIssuanceExpectation = expectation(description: "DashPumpManager should issue alert")
+        
+        
+        pumpManager.podCommManagerHasAlerts(suspendEndedAlert)
 
+        waitForExpectations(timeout: 3)
+
+        XCTAssert(!alertsIssued.isEmpty)
+        
+        let issuedAlert = alertsIssued.last!
+        
+        pumpManager.acknowledgeAlert(alertIdentifier: issuedAlert.identifier.alertIdentifier)
+        
+        XCTAssert(!mockPodCommManager.silencedAlerts.isEmpty)
+    }
+
+    func testAlertIssuanceAndRetraction() {
+        let suspendEndedAlert = PodAlerts.suspendEnded
+        
+        pumpManagerAlertIssuanceExpectation = expectation(description: "DashPumpManager should issue alert")
+        pumpManagerAlertIssuanceExpectation?.expectedFulfillmentCount = 2 // One for the current alert, one for recurring.
+        
+        pumpManager.podCommManagerHasAlerts(suspendEndedAlert)
+
+        waitForExpectations(timeout: 3)
+        
+        pumpManagerAlertIssuanceExpectation = nil
+
+        XCTAssertEqual(2, alertsIssued.count)
+        
+        let issuedAlert = alertsIssued.first!
+        
+        pumpManagerAlertRetractionExpectation = expectation(description: "DashPumpManager should retract alert")
+        pumpManagerAlertRetractionExpectation?.expectedFulfillmentCount = 2 // One for the current alert, one for recurring.
+
+        pumpManager.podCommManagerHasAlerts([])
+
+        waitForExpectations(timeout: 3)
+
+        XCTAssertEqual(2, alertsRetracted.count)
+
+        let retractedAlert = alertsRetracted.first!
+        
+        XCTAssertEqual(issuedAlert.identifier, retractedAlert)
+    }    
 }
 
 extension DashPumpManagerTests: PodStatusObserver {
@@ -387,11 +441,13 @@ extension DashPumpManagerTests: PumpManagerStatusObserver {
 extension DashPumpManagerTests: PumpManagerDelegate {
         
     func issueAlert(_ alert: Alert) {
-        
+        pumpManagerAlertIssuanceExpectation?.fulfill()
+        alertsIssued.append(alert)
     }
     
     func retractAlert(identifier: Alert.Identifier) {
-        
+        pumpManagerAlertRetractionExpectation?.fulfill()
+        alertsRetracted.append(identifier)
     }
     
     func pumpManagerBLEHeartbeatDidFire(_ pumpManager: PumpManager) {

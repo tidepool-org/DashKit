@@ -21,7 +21,7 @@ struct DeactivatePodView: View {
                 LeadingImage("Pod")
 
                 HStack {
-                    Text("Please deactivate the pod. When deactivation is complete, remove pod from body.")
+                    FrameworkLocalText("Please deactivate the pod. When deactivation is complete, remove pod from body.", comment: "Header for pod deactivation view")
                         .fixedSize(horizontal: false, vertical: true)
                     Spacer()
                 }
@@ -37,7 +37,7 @@ struct DeactivatePodView: View {
                             ProgressIndicatorView(state: self.viewModel.state.progressState)
                                 .padding(.horizontal)
                             if self.viewModel.state.isFinished {
-                                Text("Deactivated")
+                                FrameworkLocalText("Deactivated", comment: "Label text showing pod is deactivated")
                                     .padding(.top)
                             }
                         }

@@ -41,10 +41,6 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
     
     public var alarmCode: AlarmCode?
     
-    public var isPodAlarming: Bool {
-        return alarmCode != nil
-    }
-
     public var unfinalizedBolus: UnfinalizedDose?
     public var unfinalizedTempBasal: UnfinalizedDose?
 
@@ -70,6 +66,8 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
         }
         return false
     }
+    
+    public var activeAlerts: PodAlerts
 
     // Temporal state not persisted
     
@@ -101,6 +99,7 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
         self.finishedDoses = []
         self.suspendState = .resumed(dateGenerator())
         self.maximumTempBasalRate = maximumTempBasalRate
+        self.activeAlerts = []
     }
 
 
@@ -163,6 +162,13 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
         } else {
             self.finishedDoses = []
         }
+        
+    
+        if let rawActiveAlerts = rawValue["activeAlerts"] as? PodAlerts.RawValue {
+            self.activeAlerts = PodAlerts(rawValue: rawActiveAlerts)
+        } else {
+            self.activeAlerts = []
+        }
     }
 
     public var rawValue: RawValue {
@@ -173,6 +179,7 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
             "basalProgram": basalProgram.rawValue,
             "suspendState": suspendState.rawValue,
             "maximumTempBasalRate": maximumTempBasalRate,
+            "activeAlerts": activeAlerts.rawValue
         ]
 
         rawValue["lastStatusDate"] = lastStatusDate

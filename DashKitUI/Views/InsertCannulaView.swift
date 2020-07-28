@@ -44,7 +44,7 @@ struct InsertCannulaView: View {
                             ProgressIndicatorView(state: self.viewModel.state.progressState)
                                 .padding(.horizontal)
                             if self.viewModel.state.isFinished {
-                                Text("Inserted")
+                                FrameworkLocalText("Inserted", comment: "Label text indicating cannula inserted")
                                     .padding(.top)
                             }
                         }

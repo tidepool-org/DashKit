@@ -23,7 +23,7 @@ struct RegisterView: View {
             LeadingImage("No Pod")
 
             VStack(alignment: .leading, spacing: 8) {
-                Text("This device must be registered as a PDM. Registration requires internet connectivity and is only required once per device.")
+                FrameworkLocalText("This device must be registered as a PDM. Registration requires internet connectivity and is only required once per device.", comment: "Label text when phone not registered as PDM.")
                     .fixedSize(horizontal: false, vertical: true)
             }
 
