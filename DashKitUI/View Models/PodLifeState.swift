@@ -99,7 +99,7 @@ enum PodLifeState {
         case .podActivating, .noPod:
             return .accentColor
         default:
-            return .destructive
+            return .red
         }
     }
 

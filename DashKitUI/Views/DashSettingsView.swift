@@ -251,7 +251,7 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
                         self.showingDeleteConfirmation = true
                     }) {
                         FrameworkLocalText("Switch to other insulin delivery device", comment: "Label for PumpManager deletion button")
-                            .foregroundColor(Color.destructive)
+                            .foregroundColor(Color.red)
                     }
                     .actionSheet(isPresented: $showingDeleteConfirmation) {
                         removePumpManagerActionSheet
