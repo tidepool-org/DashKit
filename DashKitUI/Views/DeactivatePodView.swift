@@ -14,6 +14,7 @@ struct DeactivatePodView: View {
     @ObservedObject var viewModel: DeactivatePodViewModel
 
     @Environment(\.verticalSizeClass) var verticalSizeClass
+    @Environment(\.guidanceColors) var guidanceColors
 
     var body: some View {
         GuidePage(content: {
@@ -65,7 +66,7 @@ struct DeactivatePodView: View {
             self.viewModel.error != nil ?
                 Button("Discard Pod") {
                     self.viewModel.discardPodButtonTapped()
-                }.foregroundColor(Color.red) : nil
+                }.foregroundColor(guidanceColors.critical) : nil
         )
     }
     

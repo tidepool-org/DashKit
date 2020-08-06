@@ -91,7 +91,6 @@
 		C176FE3624350651005258CD /* INSSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C1FE2E5622EA0DDB0035DCA0 /* INSSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C176FE372435065B005258CD /* RxSwift.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C1D46D5E22C568F600978E59 /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C188E42624C61E98002701AB /* PodAlerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = C188E42524C61E98002701AB /* PodAlerts.swift */; };
-		C194114622861E9100E886DD /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C194114522861E9100E886DD /* UIColor.swift */; };
 		C194114E228DBEC000E886DD /* PodSetupCompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C194114D228DBEC000E886DD /* PodSetupCompleteViewController.swift */; };
 		C1941151228DBF2100E886DD /* ExpirationReminderDateTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1941150228DBF2100E886DD /* ExpirationReminderDateTableViewCell.swift */; };
 		C1941153228DBF8300E886DD /* NibLoadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1941152228DBF8300E886DD /* NibLoadable.swift */; };
@@ -276,7 +275,6 @@
 		C168F189244616E1002447D5 /* MockPodDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPodDetails.swift; sourceTree = "<group>"; };
 		C171758B2437AFF200199ABC /* CheckInsertedCannulaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInsertedCannulaView.swift; sourceTree = "<group>"; };
 		C188E42524C61E98002701AB /* PodAlerts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodAlerts.swift; sourceTree = "<group>"; };
-		C194114522861E9100E886DD /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		C194114D228DBEC000E886DD /* PodSetupCompleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodSetupCompleteViewController.swift; sourceTree = "<group>"; };
 		C1941150228DBF2100E886DD /* ExpirationReminderDateTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpirationReminderDateTableViewCell.swift; sourceTree = "<group>"; };
 		C1941152228DBF8300E886DD /* NibLoadable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NibLoadable.swift; sourceTree = "<group>"; };
@@ -466,7 +464,6 @@
 		C107D16B226A142500D63775 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				C194114522861E9100E886DD /* UIColor.swift */,
 				C107D16C226A143A00D63775 /* UIViewController.swift */,
 				C107D17B226A243A00D63775 /* UITableViewCell.swift */,
 				C1201E3023EDF498002DA84A /* Image.swift */,
@@ -951,7 +948,6 @@
 				C1201E3123EDF498002DA84A /* Image.swift in Sources */,
 				C107D171226A1AD100D63775 /* PodSettingsSetupViewControllers.swift in Sources */,
 				C1941151228DBF2100E886DD /* ExpirationReminderDateTableViewCell.swift in Sources */,
-				C194114622861E9100E886DD /* UIColor.swift in Sources */,
 				C1562F8924169C65006952D6 /* DeactivatePodViewModel.swift in Sources */,
 				C1C72D8B241568E700DB224B /* DashSettingsView.swift in Sources */,
 				C12C9C83229EDB7B00FF7632 /* InsulinStatusTableViewCell.swift in Sources */,

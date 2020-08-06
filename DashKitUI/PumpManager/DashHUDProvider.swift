@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftUI
 import LoopKit
 import LoopKitUI
 import DashKit
@@ -26,6 +27,10 @@ internal class DashHUDProvider: NSObject, HUDProvider {
     private let pumpManager: DashPumpManager
 
     private var reservoirView: OmnipodReservoirView?
+    
+    private let insulinTintColor: Color
+    
+    private let guidanceColors: GuidanceColors
 
     var visible: Bool = false {
         didSet {
@@ -35,8 +40,10 @@ internal class DashHUDProvider: NSObject, HUDProvider {
         }
     }
 
-    public init(pumpManager: DashPumpManager) {
+    public init(pumpManager: DashPumpManager, insulinTintColor: Color, guidanceColors: GuidanceColors) {
         self.pumpManager = pumpManager
+        self.insulinTintColor = insulinTintColor
+        self.guidanceColors = guidanceColors
         super.init()
         self.pumpManager.addPodStatusObserver(self, queue: .main)
     }
@@ -49,7 +56,7 @@ internal class DashHUDProvider: NSObject, HUDProvider {
     }
 
     public func didTapOnHUDView(_ view: BaseHUDView) -> HUDTapAction? {
-        return HUDTapAction.presentViewController(pumpManager.settingsViewController())
+        return HUDTapAction.presentViewController(pumpManager.settingsViewController(insulinTintColor: insulinTintColor, guidanceColors: guidanceColors))
     }
 
     func hudDidAppear() {
