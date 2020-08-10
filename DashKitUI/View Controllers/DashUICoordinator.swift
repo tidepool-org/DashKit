@@ -81,6 +81,10 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
     
     var screenStack = [DashUIScreen]()
     
+    private let insulinTintColor: Color
+    
+    private let guidanceColors: GuidanceColors
+    
     private func viewControllerForScreen(_ screen: DashUIScreen) -> UIViewController {
         switch screen {
         case .deactivate:
@@ -96,7 +100,7 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
                 self?.setupCanceled()
             }
             let view = DeactivatePodView(viewModel: viewModel)
-            let hostedView = UIHostingController(rootView: view)
+            let hostedView = hostingController(rootView: view)
             hostedView.navigationItem.title = LocalizedString("Deactivate Pod", comment: "Title for deactivate pod screen")
             return hostedView
         case .settings:
@@ -108,13 +112,13 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
                 self?.stepFinished()
             }
             let view = DashSettingsView(viewModel: viewModel, navigator: self)
-            return UIHostingController(rootView: view)
+            return hostingController(rootView: view)
         case .registration:
             let viewModel = RegistrationViewModel(registrationManager: registrationManager)
             viewModel.completion = { [weak self] in
                 self?.stepFinished()
             }
-            let view = UIHostingController(rootView: RegisterView(viewModel: viewModel))
+            let view = hostingController(rootView: RegisterView(viewModel: viewModel))
             view.navigationItem.title = LocalizedString("Register Device", comment: "Title for register device screen")
             return view
         case .settingsSetup:
@@ -151,7 +155,7 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
             viewModel.didCancel = { [weak self] in
                 self?.setupCanceled()
             }
-            let view = UIHostingController(rootView: PairPodView(viewModel: viewModel))
+            let view = hostingController(rootView: PairPodView(viewModel: viewModel))
             view.navigationItem.title = LocalizedString("Pod Pairing", comment: "Title for pod pairing screen")
             return view
         case .insertCannula:
@@ -167,7 +171,7 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
                 self?.setupCanceled()
             }
 
-            let view = UIHostingController(rootView: InsertCannulaView(viewModel: viewModel))
+            let view = hostingController(rootView: InsertCannulaView(viewModel: viewModel))
             view.navigationItem.title = LocalizedString("Insert Cannula", comment: "Title for insert cannula screen")
             return view
         case .checkInsertedCannula:
@@ -179,7 +183,7 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
                     self?.navigateTo(.deactivate)
                 }
             }
-            let hostedView = UIHostingController(rootView: view)
+            let hostedView = hostingController(rootView: view)
             hostedView.navigationItem.title = LocalizedString("Check Cannula", comment: "Title for check cannula screen")
             return hostedView
         case .setupComplete:
@@ -195,6 +199,10 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
         }
     }
     
+    private func hostingController<Content: View>(rootView: Content) -> DismissibleHostingController {
+        return DismissibleHostingController(rootView: rootView, guidanceColors: guidanceColors, insulinTintColor: insulinTintColor)
+    }
+    
     private func stepFinished() {
         if let nextStep = currentScreen.next() {
             navigateTo(nextStep)
@@ -207,7 +215,7 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
         completionDelegate?.completionNotifyingDidComplete(self)
     }
     
-    init(pumpManager: DashPumpManager? = nil) {
+    init(pumpManager: DashPumpManager? = nil, insulinTintColor: Color, guidanceColors: GuidanceColors) {
         #if targetEnvironment(simulator)
         self.registrationManager = MockRegistrationManager(isRegistered: true)
         #else
@@ -215,6 +223,8 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
         #endif
                 
         self.pumpManager = pumpManager
+        self.insulinTintColor = insulinTintColor
+        self.guidanceColors = guidanceColors
         
         super.init(navigationBarClass: UINavigationBar.self, toolbarClass: UIToolbar.self)
                 

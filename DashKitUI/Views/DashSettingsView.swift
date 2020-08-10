@@ -19,6 +19,8 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
     @State private var showSuspendOptions = false;
     
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    @Environment(\.guidanceColors) var guidanceColors
+    @Environment(\.insulinTintColor) var insulinTintColor
     
     weak var navigator: DashUINavigator?
     
@@ -54,7 +56,7 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
         VStack(spacing: 10) {
             HStack(alignment: .lastTextBaseline, spacing: 3) {
                 Text(self.viewModel.lifeState.localizedLabelText)
-                    .foregroundColor(self.viewModel.lifeState.labelColor)
+                    .foregroundColor(self.viewModel.lifeState.labelColor(using: guidanceColors))
                 Spacer()
                 daysRemaining.map { (days) in
                     timeComponent(value: days, units: days == 1 ?
@@ -72,7 +74,7 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
                         LocalizedString("minutes", comment: "Unit for plural minutes in pod life remaining"))
                 }
             }
-            ProgressView(progress: CGFloat(self.viewModel.lifeState.progress)).accentColor(self.viewModel.lifeState.progressColor)
+            ProgressView(progress: CGFloat(self.viewModel.lifeState.progress)).accentColor(self.viewModel.lifeState.progressColor(insulinTintColor: insulinTintColor, guidanceColors: guidanceColors))
         }
     }
     
@@ -251,7 +253,7 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
                         self.showingDeleteConfirmation = true
                     }) {
                         FrameworkLocalText("Switch to other insulin delivery device", comment: "Label for PumpManager deletion button")
-                            .foregroundColor(Color.red)
+                            .foregroundColor(guidanceColors.critical)
                     }
                     .actionSheet(isPresented: $showingDeleteConfirmation) {
                         removePumpManagerActionSheet

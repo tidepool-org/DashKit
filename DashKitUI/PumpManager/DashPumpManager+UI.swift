@@ -14,20 +14,20 @@ import SwiftUI
 
 extension DashPumpManager: PumpManagerUI {
 
-    static public func setupViewController() -> (UIViewController & PumpManagerSetupViewController & CompletionNotifying) {
-        return DashUICoordinator()
+    static public func setupViewController(insulinTintColor: Color, guidanceColors: GuidanceColors) -> (UIViewController & PumpManagerSetupViewController & CompletionNotifying) {
+        return DashUICoordinator(insulinTintColor: insulinTintColor, guidanceColors: guidanceColors)
     }
 
-    public func settingsViewController() -> (UIViewController & CompletionNotifying) {
-        return DashUICoordinator(pumpManager: self)
+    public func settingsViewController(insulinTintColor: Color, guidanceColors: GuidanceColors) -> (UIViewController & CompletionNotifying) {
+        return DashUICoordinator(pumpManager: self, insulinTintColor: insulinTintColor, guidanceColors: guidanceColors)
     }
 
     public var smallImage: UIImage? {
         return UIImage(named: "Pod", in: Bundle(for: DashSettingsViewModel.self), compatibleWith: nil)!
     }
 
-    public func hudProvider() -> HUDProvider? {
-        return DashHUDProvider(pumpManager: self)
+    public func hudProvider(insulinTintColor: Color, guidanceColors: GuidanceColors) -> HUDProvider? {
+        return DashHUDProvider(pumpManager: self, insulinTintColor: insulinTintColor, guidanceColors: guidanceColors)
     }
 
     public static func createHUDView(rawValue: HUDProvider.HUDViewRawState) -> LevelHUDView? {

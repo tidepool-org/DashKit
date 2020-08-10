@@ -6,8 +6,9 @@
 //  Copyright © 2020 Tidepool. All rights reserved.
 //
 
-import DashKit
+import SwiftUI
 import LoopKitUI
+import DashKit
 import PodSDK
 
 class PairPodViewModel: ObservableObject, Identifiable {
@@ -24,11 +25,11 @@ class PairPodViewModel: ObservableObject, Identifiable {
                 return LocalizedString("Discard Pod", comment: "Pairing interface navigation bar button text for discard pod action")
             }
         }
-        
-        var color: UIColor? {
+
+        func color(using guidanceColors: GuidanceColors) -> Color? {
             switch self {
             case .discard:
-                return UIColor.deleteColor
+                return guidanceColors.critical
             case .cancel:
                 return nil
             }

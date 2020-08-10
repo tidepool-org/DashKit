@@ -7,22 +7,25 @@
 //
 
 import SwiftUI
+import LoopKitUI
 
 struct ErrorView: View {
     var error: LocalizedError
     
     var errorClass: ErrorClass
     
+    @Environment(\.guidanceColors) var guidanceColors
+    
     public enum ErrorClass {
         case critical
         case normal
         
-        var symbolColor: UIColor {
+        func symbolColor(using guidanceColors: GuidanceColors) -> Color {
             switch self {
             case .critical:
-                return .deleteColor
+                return guidanceColors.critical
             case .normal:
-                return .systemOrange
+                return guidanceColors.warning
             }
         }
     }
@@ -36,7 +39,7 @@ struct ErrorView: View {
         HStack(alignment: .top) {
             ZStack {
                 Image(systemName: "exclamationmark.triangle.fill")
-                    .foregroundColor(Color(self.errorClass.symbolColor))
+                    .foregroundColor(self.errorClass.symbolColor(using: guidanceColors))
                 Text(" ") // Vertical alignment hack
             }
             .accessibilityElement(children: .ignore)

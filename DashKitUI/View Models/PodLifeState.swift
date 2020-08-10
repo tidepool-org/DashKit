@@ -7,10 +7,11 @@
 //
 
 import Foundation
-
-import PodSDK
-import DashKit
 import SwiftUI
+
+import LoopKitUI
+import DashKit
+import PodSDK
 
 enum PodLifeState {
     case podActivating
@@ -36,18 +37,18 @@ enum PodLifeState {
         }
     }
     
-    var progressColor: Color {
+    func progressColor(insulinTintColor: Color, guidanceColors: GuidanceColors) -> Color {
         if case .timeRemaining = self {
-            return progress < 0.25 ? Color(.agingColor) : .accentColor
+            return progress < 0.25 ? guidanceColors.warning : insulinTintColor
         }
-        return Color(.alarmColor)
+        return guidanceColors.critical
     }
     
-    var labelColor: Color {
+    func labelColor(using guidanceColors: GuidanceColors) -> Color  {
         if case .podAlarm = self {
-            return Color(.alarmColor)
+            return guidanceColors.critical
         }
-        return Color(.secondaryLabel)
+        return .secondary
     }
 
     
