@@ -16,7 +16,17 @@ struct BasalDeliveryRate {
     var netPercent: Double
 }
 
+enum DashSettingsViewAlert {
+    case suspendError(DashPumpManagerError)
+    case resumeError(DashPumpManagerError)
+}
+
 protocol DashSettingsViewModelProtocol: ObservableObject, Identifiable {
+    
+    var activeAlert: DashSettingsViewAlert? { get }
+    
+    var alertIsPresented: Bool { get set }
+    
     var lifeState: PodLifeState { get }
 
     var activatedAt: Date? { get }

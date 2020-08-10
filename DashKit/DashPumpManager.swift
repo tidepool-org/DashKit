@@ -828,11 +828,11 @@ public class DashPumpManager: PumpManager {
         suspendDelivery(withReminder: reminder, completion: completion)
     }
 
-    public func suspendDelivery(withReminder reminder: StopProgramReminder, completion: @escaping (Error?) -> Void) {
+    public func suspendDelivery(withReminder reminder: StopProgramReminder, completion: @escaping (DashPumpManagerError?) -> Void) {
         
-        let preflightError = self.setStateWithResult({ (state) -> Error? in
+        let preflightError = self.setStateWithResult({ (state) -> DashPumpManagerError? in
             if state.activeTransition != nil {
-                return SetBolusError.certain(DashPumpManagerError.busy)
+                return DashPumpManagerError.busy
             }
             state.activeTransition = .suspendingPump
             return nil
@@ -887,9 +887,13 @@ public class DashPumpManager: PumpManager {
             delegate?.retractAlert(identifier: Alert.Identifier(managerIdentifier: self.managerIdentifier, alertIdentifier: PodAlert.suspendEnded.repeatingAlertIdentifier))
         }
     }
-    
+
     public func resumeDelivery(completion: @escaping (Error?) -> Void) {
-        let preflightError = self.setStateWithResult({ (state) -> Error? in
+        self.resumeInsulinDelivery(completion: completion)
+    }
+
+    public func resumeInsulinDelivery(completion: @escaping (DashPumpManagerError?) -> Void) {
+        let preflightError = self.setStateWithResult({ (state) -> DashPumpManagerError? in
             if state.activeTransition != nil {
                 return DashPumpManagerError.busy
             }
@@ -911,7 +915,7 @@ public class DashPumpManager: PumpManager {
                 self.mutateState({ (state) in
                     state.activeTransition = nil
                 })
-                completion(error)
+                completion(DashPumpManagerError(error))
             case .success(let podStatus):
                 self.clearSuspendReminder()
                 self.mutateState({ (state) in

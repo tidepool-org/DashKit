@@ -21,7 +21,23 @@ class DashSettingsViewModel: DashSettingsViewModelProtocol {
     @Published var basalDeliveryState: PumpManagerStatus.BasalDeliveryState
 
     @Published var basalDeliveryRate: BasalDeliveryRate?
-    
+
+    @Published var activeAlert: DashSettingsViewAlert? = nil {
+        didSet {
+            if activeAlert != nil {
+                alertIsPresented = true
+            }
+        }
+    }
+
+    @Published var alertIsPresented: Bool = false {
+        didSet {
+            if !alertIsPresented {
+                activeAlert = nil
+            }
+        }
+    }
+
     var timeZone: TimeZone {
         return pumpManager.status.timeZone
     }
@@ -97,13 +113,17 @@ class DashSettingsViewModel: DashSettingsViewModelProtocol {
         }
 
         pumpManager.suspendDelivery(withReminder: reminder) { (error) in
-            
+            if let error = error {
+                self.activeAlert = .suspendError(error)
+            }
         }
     }
     
     func resumeDelivery() {
-        pumpManager.resumeDelivery { (error) in
-            // TODO: Display error
+        pumpManager.resumeInsulinDelivery { (error) in
+            if let error = error {
+                self.activeAlert = .resumeError(error)
+            }
         }
     }
 }

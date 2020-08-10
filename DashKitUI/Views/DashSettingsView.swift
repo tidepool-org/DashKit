@@ -269,10 +269,12 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
             }
 
         }
+        .alert(isPresented: $viewModel.alertIsPresented, content: { alert(for: viewModel.activeAlert!) })
         .listStyle(GroupedListStyle())
         .environment(\.horizontalSizeClass, self.horizontalSizeClass)
         .navigationBarItems(trailing: doneButton)
         .navigationBarTitle("Omnipod", displayMode: .automatic)
+        
     }
     
     var removePumpManagerActionSheet: ActionSheet {
@@ -308,7 +310,21 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
         }
     }
     
+    private func alert(for alert: DashSettingsViewAlert) -> SwiftUI.Alert {
+        switch alert {
+        case .suspendError(let error):
+            return SwiftUI.Alert(
+                title: Text("Failed to Suspend Insulin Delivery", comment: "Alert title for suspend error"),
+                message: Text(error.localizedDescription)
+            )
 
+        case .resumeError(let error):
+            return SwiftUI.Alert(
+                title: Text("Failed to Resume Insulin Delivery", comment: "Alert title for resume error"),
+                message: Text(error.localizedDescription)
+            )
+        }
+    }
 }
 
 struct DashSettingsView_Previews: PreviewProvider {
