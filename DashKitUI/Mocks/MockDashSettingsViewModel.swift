@@ -29,6 +29,17 @@ class MockDashSettingsViewModel: DashSettingsViewModelProtocol {
     var sdkVersion: String = "1.2.3"
 
     var pdmIdentifier: String?
+    
+    var activeAlert: DashSettingsViewAlert? = nil {
+        didSet {
+            if activeAlert != nil {
+                alertIsPresented = true
+            }
+        }
+    }
+
+    @Published var alertIsPresented: Bool = false
+
 
     let dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()

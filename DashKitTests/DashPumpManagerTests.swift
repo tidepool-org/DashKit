@@ -173,7 +173,7 @@ class DashPumpManagerTests: XCTestCase {
             XCTAssertEqual(startDate, dose.startDate)
         }) { (result) in
             bolusCallbacks.fulfill()
-            guard case .failure(DashPumpManagerError.podCommError(description: "podNotAvailable")) = result else {
+            guard case .failure(DashPumpManagerError.podCommError(.podNotAvailable)) = result else {
                 XCTFail("Expected podNotAvailable error")
                 return
             }
@@ -285,7 +285,7 @@ class DashPumpManagerTests: XCTestCase {
                 XCTFail("Unexpected error: \(String(describing: error))")
                 return
             }
-            guard case DashPumpManagerError.podCommError(description: "podNotAvailable") = pumpManagerError else {
+            guard case DashPumpManagerError.podCommError(.podNotAvailable) = pumpManagerError else {
                 XCTFail("Expected podNotAvailable error")
                 return
             }
