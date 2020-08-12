@@ -104,6 +104,8 @@ public enum PodAlert: String {
     
     var actionButtonLabel: String {
         switch self {
+        case .suspendEnded:
+            return LocalizedString("OK", comment: "Action button text to acknowledge pump resume")
         default:
             return LocalizedString("Acknowledge", comment: "Action button default text for PodAlerts")
         }
