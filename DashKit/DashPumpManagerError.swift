@@ -12,6 +12,8 @@ import PodSDK
 public enum DashPumpManagerError: Error, LocalizedError {
     case missingSettings
     case invalidBasalSchedule
+    case invalidBolusVolume
+    case invalidTempBasalRate
     case podCommError(PodCommError)
     case busy
     
@@ -19,9 +21,13 @@ public enum DashPumpManagerError: Error, LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .missingSettings:
-            return LocalizedString("Missing Settings.", comment: "Description of DashPumpManagerError for .missingSettings.")
+            return LocalizedString("Missing settings.", comment: "Description of DashPumpManagerError for .missingSettings.")
         case .invalidBasalSchedule:
-            return LocalizedString("Invalid Basal Schedule.", comment: "Description of DashPumpManagerError for .invalidBasalSchedule")
+            return LocalizedString("Invalid basal schedule.", comment: "Description of DashPumpManagerError for .invalidBasalSchedule")
+        case .invalidBolusVolume:
+            return LocalizedString("Invalid bolus bolume.", comment: "Description of DashPumpManagerError for .invalidBolusVolume")
+        case .invalidTempBasalRate:
+            return LocalizedString("Invalid temp basal rate.", comment: "Description of DashPumpManagerError for .invalidTempBasalRate")
         case .podCommError(let error):
             return error.errorDescription
         case .busy:
