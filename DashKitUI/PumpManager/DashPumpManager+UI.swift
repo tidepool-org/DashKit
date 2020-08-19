@@ -13,6 +13,10 @@ import DashKit
 import SwiftUI
 
 extension DashPumpManager: PumpManagerUI {
+    public func deliveryUncertaintyRecoveryView() -> AnyView {
+        return AnyView(Text("Hello"))
+    }
+    
 
     static public func setupViewController(insulinTintColor: Color, guidanceColors: GuidanceColors) -> (UIViewController & PumpManagerSetupViewController & CompletionNotifying) {
         return DashUICoordinator(insulinTintColor: insulinTintColor, guidanceColors: guidanceColors)

@@ -97,7 +97,6 @@ class DashPumpManagerTests: XCTestCase {
         XCTAssertEqual(pumpManager.hasActivePod, true)
 
         let bolusCallbacks = expectation(description: "bolus callbacks")
-        bolusCallbacks.expectedFulfillmentCount = 2
 
         let startDate = Date()
 
@@ -113,10 +112,7 @@ class DashPumpManagerTests: XCTestCase {
         // Set a new reservoir value to make sure the result of the set program is used (5U)
         mockPodCommManager.podStatus.reservoirUnitsRemaining = 500
 
-        pumpManager.enactBolus(units: 1, at: startDate, willRequest: { (dose) in
-            bolusCallbacks.fulfill()
-            XCTAssertEqual(startDate, dose.startDate)
-        }) { (result) in
+        pumpManager.enactBolus(units: 1, at: startDate) { (result) in
             bolusCallbacks.fulfill()
             switch result {
             case .failure(let error):
@@ -156,7 +152,6 @@ class DashPumpManagerTests: XCTestCase {
         XCTAssertEqual(pumpManager.hasActivePod, true)
 
         let bolusCallbacks = expectation(description: "bolus callbacks")
-        bolusCallbacks.expectedFulfillmentCount = 2
 
         let startDate = Date()
 
@@ -168,14 +163,18 @@ class DashPumpManagerTests: XCTestCase {
 
         mockPodCommManager.sendProgramFailureError = .podNotAvailable
 
-        pumpManager.enactBolus(units: 1, at: startDate, willRequest: { (dose) in
+        pumpManager.enactBolus(units: 1, at: startDate) { (result) in
             bolusCallbacks.fulfill()
-            XCTAssertEqual(startDate, dose.startDate)
-        }) { (result) in
-            bolusCallbacks.fulfill()
-            guard case .failure(DashPumpManagerError.podCommError(.podNotAvailable)) = result else {
-                XCTFail("Expected podNotAvailable error")
-                return
+            switch result {
+            case .success:
+                XCTFail("Enact bolus with no pod should return error")
+            case .failure(let error):
+                switch error {
+                case .communication:
+                    break
+                default:
+                    XCTFail("Expected communication error")
+                }
             }
         }
         waitForExpectations(timeout: 3)
@@ -328,13 +327,10 @@ class DashPumpManagerTests: XCTestCase {
     func testAlarmDuringBolusShouldUseRemainingInsulinField() {
         
         let bolusCallbacks = expectation(description: "bolus callbacks")
-        bolusCallbacks.expectedFulfillmentCount = 2
 
         pumpEventStorageExpectation = expectation(description: "pumpmanager stores bolus")
 
-        pumpManager.enactBolus(units: 5, at: simulatedDate, willRequest: { (dose) in
-            bolusCallbacks.fulfill()
-        }) { (result) in
+        pumpManager.enactBolus(units: 5, at: simulatedDate) { (result) in
             bolusCallbacks.fulfill()
         }
 
@@ -421,7 +417,30 @@ class DashPumpManagerTests: XCTestCase {
         let retractedAlert = alertsRetracted.first!
         
         XCTAssertEqual(issuedAlert.identifier, retractedAlert)
-    }    
+    }
+    
+    func testUnacknowledgedCommandOnBolus() {
+        mockPodCommManager.sendProgramFailureError = .unacknowledgedCommandPendingRetry
+        let bolusCallbacks = expectation(description: "bolus callbacks")
+
+        pumpManager.enactBolus(units: 1, at: Date()) { (result) in
+            switch result {
+            case .failure(let error):
+                switch error {
+                case .communication:
+                    break
+                default:
+                    XCTFail("Enact bolus should fail with communication error when unacknowledged command")
+                }
+            case .success:
+                XCTFail("Enact bolus should not succeed when send program fails with unacknowledged command")
+            }
+            bolusCallbacks.fulfill()
+        }
+        
+        waitForExpectations(timeout: 3)
+
+    }
 }
 
 extension DashPumpManagerTests: PodStatusObserver {
