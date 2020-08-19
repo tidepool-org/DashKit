@@ -154,7 +154,8 @@ public class DashPumpManager: PumpManager {
             pumpBatteryChargeRemaining: nil,
             basalDeliveryState: basalDeliveryState(for: state),
             bolusState: bolusState(for: state),
-            pumpStatusHighlight: pumpStatusHighlight(for: state)
+            pumpStatusHighlight: pumpStatusHighlight(for: state),
+            deliveryIsUncertain: state.pendingCommand != nil
         )
     }
     
@@ -405,7 +406,7 @@ public class DashPumpManager: PumpManager {
             }
             let offset = timeZone.scheduleOffset(forDate: self.dateGenerator())
 
-            self.podCommManager.sendProgram(programType: .basalProgram(basal: basalProgram, secondsSinceMidnight: Int(offset.rounded())), beepOption: .none) { (result) in
+            self.sendProgram(programType: .basalProgram(basal: basalProgram, secondsSinceMidnight: Int(offset.rounded())), beepOption: .none) { (result) in
                 switch result {
                 case .failure(let error):
                     completion(DashPumpManagerError(error))
@@ -488,7 +489,7 @@ public class DashPumpManager: PumpManager {
 
     public func assertCurrentPumpData() {
 
-        guard hasActivePod else {
+        guard hasActivePod, state.pendingCommand == nil else {
             return
         }
 
@@ -577,6 +578,30 @@ public class DashPumpManager: PumpManager {
         }
         return nil
     }
+    
+    func sendProgram(programType: ProgramType, beepOption: BeepOption?, completion: @escaping (PodCommResult<PodStatus>) -> ()) {
+        let commandDate = dateGenerator()
+        podCommManager.sendProgram(programType: programType, beepOption: beepOption) { (result) in
+            if case .failure(.unacknowledgedCommandPendingRetry) = result {
+                self.mutateState { (state) in
+                    state.pendingCommand = .program(programType, commandDate)
+                }
+            }
+            completion(result)
+        }
+    }
+    
+    func stopProgram(stopProgramType: StopProgramType, completion: @escaping (PodCommResult<PodStatus>) -> ()) {
+        let commandDate = dateGenerator()
+        podCommManager.stopProgram(programType: stopProgramType) { (result) in
+            if case .failure(.unacknowledgedCommandPendingRetry) = result {
+                self.mutateState { (state) in
+                    state.pendingCommand = .stopProgram(stopProgramType, commandDate)
+                }
+            }
+            completion(result)
+        }
+    }
 
     public func enactBolus(units: Double, at startDate: Date, completion: @escaping (PumpManagerResult<DoseEntry>) -> Void) {
         let preflightError = self.setStateWithResult({ (state) -> PumpManagerError? in
@@ -609,7 +634,7 @@ public class DashPumpManager: PumpManager {
         let endDate = startDate.addingTimeInterval(enactUnits / Pod.bolusDeliveryRate)
         let dose = DoseEntry(type: .bolus, startDate: startDate, endDate: endDate, value: enactUnits, unit: .units)
 
-        podCommManager.sendProgram(programType: program, beepOption: nil) { (result) in
+        sendProgram(programType: program, beepOption: nil) { (result) in
             switch result {
             case .success(let podStatus):
                 self.mutateState({ (state) in
@@ -627,7 +652,11 @@ public class DashPumpManager: PumpManager {
                     state.activeTransition = nil
                 })
                 self.finalizeAndStoreDoses()
-                completion(.failure(.communication(DashPumpManagerError(error))))
+                if self.state.pendingCommand != nil {
+                    completion(.failure(.uncertainDelivery))
+                } else {
+                    completion(.failure(.communication(DashPumpManagerError(error))))
+                }
             }
         }
     }
@@ -719,7 +748,7 @@ public class DashPumpManager: PumpManager {
                 // secondsSinceMidnight not used for absolute rate temp basals; SDK api will change in future so this is only specified for percent value types
                 program = ProgramType.tempBasal(tempBasal: tempBasal)
             }
-        } catch let error {
+        } catch {
             completion(.failure(.configuration(DashPumpManagerError.invalidTempBasalRate)))
             return
         }
@@ -785,7 +814,7 @@ public class DashPumpManager: PumpManager {
                 
                 // SDK not allowing us to make calls from a callback thread, so dispatch.
                 DispatchQueue.global(qos: .userInteractive).async {
-                    self.podCommManager.sendProgram(programType: program, beepOption: .init(beepAtEnd: false)) { (result) in
+                    self.sendProgram(programType: program, beepOption: .init(beepAtEnd: false)) { (result) in
                         switch result {
                         case .failure(let error):
                             self.mutateState({ (state) in
@@ -909,7 +938,7 @@ public class DashPumpManager: PumpManager {
         let offset = state.timeZone.scheduleOffset(forDate: dateGenerator())
         let programType = ProgramType.basalProgram(basal: state.basalProgram, secondsSinceMidnight: Int(offset.rounded()))
 
-        podCommManager.sendProgram(programType: programType, beepOption: .none) { (result) in
+        sendProgram(programType: programType, beepOption: .none) { (result) in
             switch result {
             case .failure(let error):
                 self.mutateState({ (state) in
@@ -937,6 +966,31 @@ public class DashPumpManager: PumpManager {
                 completion(.failure(error))
             } else {
                 completion(.success(BasalRateSchedule(dailyItems: scheduleItems, timeZone: self.state.timeZone)!))
+            }
+        }
+    }
+    
+    private func pendingCommandSucceeded(pendingCommand: PendingCommand) {
+        
+    }
+
+    private func pendingCommandFailed(pendingCommand: PendingCommand) {
+        
+    }
+
+    private func attemptUnacknowledgedCommandRecovery() {
+        if let pendingCommand = self.state.pendingCommand {
+            podCommManager.queryAndClearUnacknowledgedCommand { (result) in
+                switch result {
+                case .success(let retryResult):
+                    if retryResult.hasPendingCommandProgrammed {
+                        self.pendingCommandSucceeded(pendingCommand: pendingCommand)
+                    } else {
+                        self.pendingCommandFailed(pendingCommand: pendingCommand)
+                    }
+                case .failure:
+                    break
+                }
             }
         }
     }
@@ -1047,6 +1101,8 @@ public class DashPumpManager: PumpManager {
     }
 }
 
+// MARK: - LoggingProtocol
+
 // Capture dash logs
 extension DashPumpManager: LoggingProtocol {
     public func info(_ message: String) {
@@ -1061,6 +1117,8 @@ extension DashPumpManager: LoggingProtocol {
         log.default("PodSDK Error: %{public}@", message)
     }
 }
+
+// MARK: - PodCommManagerDelegate
 
 extension DashPumpManager: PodCommManagerDelegate {
     private func logPodCommManagerDelegateMessage(_ message: String) {
@@ -1195,7 +1253,7 @@ extension DashPumpManager: PodCommManagerDelegate {
         logPodCommManagerDelegateMessage("podCommStateDidChange: \(String(describing: podCommState))")
     }
     
-    public func podCommManager(_ podCommManager: PodCommManager, connectionStateDidChange connectionState: ConnectionState) {
+    public func podCommManager(_ podCommManager: PodCommManagerProtocol, connectionStateDidChange connectionState: ConnectionState) {
         // TODO: log this as a connection event.
         logPodCommManagerDelegateMessage("connectionStateDidChange: \(String(describing: connectionState))")
         
@@ -1203,6 +1261,11 @@ extension DashPumpManager: PodCommManagerDelegate {
             state.connectionState = connectionState
         }
     }
+    
+    public func podCommManager(_ podCommManager: PodCommManager, connectionStateDidChange connectionState: ConnectionState) {
+        self.podCommManager(podCommManager as PodCommManagerProtocol, connectionStateDidChange: connectionState)
+    }
+
 }
 
 extension DashPumpManager: PodSDKLoggingShimDelegate {

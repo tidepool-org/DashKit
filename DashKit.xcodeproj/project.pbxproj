@@ -94,6 +94,7 @@
 		C194114E228DBEC000E886DD /* PodSetupCompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C194114D228DBEC000E886DD /* PodSetupCompleteViewController.swift */; };
 		C1941151228DBF2100E886DD /* ExpirationReminderDateTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1941150228DBF2100E886DD /* ExpirationReminderDateTableViewCell.swift */; };
 		C1941153228DBF8300E886DD /* NibLoadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1941152228DBF8300E886DD /* NibLoadable.swift */; };
+		C196751124EDD15A00118EC4 /* PendingCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C196751024EDD15A00118EC4 /* PendingCommand.swift */; };
 		C19BB3F022E7C64A00EA5C2E /* DashKitPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19BB3EF22E7C64A00EA5C2E /* DashKitPlugin.swift */; };
 		C1A701B923EB7EC2002D1E45 /* PairPodView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A701B823EB7EC2002D1E45 /* PairPodView.swift */; };
 		C1A9194024325D3B008D216E /* DashKitUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A9193F24325D3B008D216E /* DashKitUITests.swift */; };
@@ -278,6 +279,7 @@
 		C194114D228DBEC000E886DD /* PodSetupCompleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodSetupCompleteViewController.swift; sourceTree = "<group>"; };
 		C1941150228DBF2100E886DD /* ExpirationReminderDateTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpirationReminderDateTableViewCell.swift; sourceTree = "<group>"; };
 		C1941152228DBF8300E886DD /* NibLoadable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NibLoadable.swift; sourceTree = "<group>"; };
+		C196751024EDD15A00118EC4 /* PendingCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingCommand.swift; sourceTree = "<group>"; };
 		C19BB3E522E776AE00EA5C2E /* DashKitPlugin.loopplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DashKitPlugin.loopplugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		C19BB3E722E776AE00EA5C2E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C19BB3EF22E7C64A00EA5C2E /* DashKitPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DashKitPlugin.swift; sourceTree = "<group>"; };
@@ -640,6 +642,7 @@
 				C1ACF44122A1FC1F00F7DDB4 /* PodDoseProgressTimerEstimator.swift */,
 				C1ACF44322A200B100F7DDB4 /* UnfinalizedDose.swift */,
 				C1245D4B24B78FFA0065120F /* PodAlert.swift */,
+				C196751024EDD15A00118EC4 /* PendingCommand.swift */,
 			);
 			path = DashKit;
 			sourceTree = "<group>";
@@ -1009,6 +1012,7 @@
 				C10C758122C4041F00CCC20F /* PodSDKProtocol.swift in Sources */,
 				C1D68E302284849D00019CAE /* BasalSchedule.swift in Sources */,
 				C10D1D7824117E990007ABF7 /* PodPairer.swift in Sources */,
+				C196751124EDD15A00118EC4 /* PendingCommand.swift in Sources */,
 				C107D11B22692FC400D63775 /* TimeZone.swift in Sources */,
 				C10C758322C404B700CCC20F /* PodCommManager.swift in Sources */,
 				C107D10B22692A1700D63775 /* DashPumpManager.swift in Sources */,

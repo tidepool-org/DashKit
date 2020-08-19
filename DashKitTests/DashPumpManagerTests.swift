@@ -422,15 +422,18 @@ class DashPumpManagerTests: XCTestCase {
     func testUnacknowledgedCommandOnBolus() {
         mockPodCommManager.sendProgramFailureError = .unacknowledgedCommandPendingRetry
         let bolusCallbacks = expectation(description: "bolus callbacks")
+        
+        pumpManagerStatusUpdateExpectation = expectation(description: "pumpmanager status updates")
+        pumpManagerStatusUpdateExpectation?.assertForOverFulfill = false
 
         pumpManager.enactBolus(units: 1, at: Date()) { (result) in
             switch result {
             case .failure(let error):
                 switch error {
-                case .communication:
+                case .uncertainDelivery:
                     break
                 default:
-                    XCTFail("Enact bolus should fail with communication error when unacknowledged command")
+                    XCTFail("Enact bolus should fail with uncertainDelivery error on unacknowledged command")
                 }
             case .success:
                 XCTFail("Enact bolus should not succeed when send program fails with unacknowledged command")
@@ -439,7 +442,15 @@ class DashPumpManagerTests: XCTestCase {
         }
         
         waitForExpectations(timeout: 3)
-
+        
+        XCTAssertEqual(true, pumpManagerStatusUpdates.last!.deliveryIsUncertain)
+        
+        // DashPumpManager should attempt to recover from uncertain state when bluetooth connection returns
+        mockPodCommManager.unacknowledgedCommandRetryResult = PendingRetryResult.wasProgrammed
+        
+        pumpManager.podCommManager(mockPodCommManager, connectionStateDidChange: ConnectionState.connected)
+        
+        
     }
 }
 

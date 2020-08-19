@@ -9,7 +9,6 @@
 import Foundation
 import PodSDK
 
-
 public class MockPodCommManager: PodCommManagerProtocol {
 
     public func updateBeepOptions(bolusReminder: BeepOption, tempBasalReminder: BeepOption, completion: @escaping (PodCommResult<PodStatus>) -> ()) {
@@ -49,6 +48,8 @@ public class MockPodCommManager: PodCommManagerProtocol {
 
     var pairAttemptCount = 0
     var initialPairError: PodCommError = .podNotAvailable
+    
+    var unacknowledgedCommandRetryResult: PendingRetryResult?
 
     public func startPodActivation(lowReservoirAlert: LowReservoirAlert?, podExpirationAlert: PodExpirationAlert?, eventListener: @escaping (ActivationStatus<ActivationStep1Event>) -> ()) {
 
@@ -161,7 +162,13 @@ public class MockPodCommManager: PodCommManagerProtocol {
         completion(.success(podStatus))
     }
 
-    public func queryAndClearUnacknowledgedCommand(completion: @escaping (PodCommResult<PendingRetryResult>) -> ()) { }
+    public func queryAndClearUnacknowledgedCommand(completion: @escaping (PodCommResult<PendingRetryResult>) -> ()) {
+        if let retryResult = unacknowledgedCommandRetryResult {
+            completion(.success(retryResult))
+        } else {
+            completion(.failure(.bleCommunicationError))
+        }
+    }
 
     public func retrievePDMId() -> String? {
         return "Mock PDM Identifier"
@@ -199,3 +206,18 @@ public class MockPodCommManager: PodCommManagerProtocol {
         }
     }
 }
+
+extension PendingRetryResult {
+    public static var wasProgrammed: PendingRetryResult {
+        let decoder = JSONDecoder()
+        let json = "{\"hasPendingCommandProgrammed\":true,\"podStatus\":{\"bolusPulsesRemaining\":1,\"podState\":13,\"lastSequenceNumber\":1,\"reservoirPulsesRemaining\":1020,\"activeAlerts\":0,\"pulsesDelivered\":20,\"programStatus\":\"Basal\",\"timeSinceActivationInMins\":1,\"receivedAt\":619563163.33112502,\"dataCorrupted\":false,\"isOcclusionAlertActive\":false}}"
+        return try! decoder.decode(PendingRetryResult.self, from: json.data(using: .utf8)!)
+    }
+
+    public static var wasNotProgrammed: PendingRetryResult {
+        let decoder = JSONDecoder()
+        let json = "{\"hasPendingCommandProgrammed\":false,\"podStatus\":{\"bolusPulsesRemaining\":1,\"podState\":13,\"lastSequenceNumber\":1,\"reservoirPulsesRemaining\":1020,\"activeAlerts\":0,\"pulsesDelivered\":20,\"programStatus\":\"Basal\",\"timeSinceActivationInMins\":1,\"receivedAt\":619563163.33112502,\"dataCorrupted\":false,\"isOcclusionAlertActive\":false}}"
+        return try! decoder.decode(PendingRetryResult.self, from: json.data(using: .utf8)!)
+    }
+}
+
