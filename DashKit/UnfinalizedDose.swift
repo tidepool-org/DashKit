@@ -8,6 +8,7 @@
 
 import Foundation
 import LoopKit
+import PodSDK
 
 public struct UnfinalizedDose: RawRepresentable, Equatable, CustomStringConvertible {
     public typealias RawValue = [String: Any]
@@ -284,3 +285,18 @@ extension UnfinalizedDose {
     }
 }
 
+extension ProgramType {
+    func unfinalizedDose(at programDate: Date, withCertainty certainty: UnfinalizedDose.ScheduledCertainty) -> UnfinalizedDose? {
+        switch self {
+        case .bolus(let bolusProgram):
+            return UnfinalizedDose(bolusAmount: Double(bolusProgram.immediateVolume) / Pod.podSDKInsulinMultiplier, startTime: programDate, scheduledCertainty: certainty)
+        case .tempBasal(let tempBasalProgram):
+            guard case .flatRate(let rate) = tempBasalProgram.value else {
+                return nil
+            }
+            return UnfinalizedDose(tempBasalRate: Double(rate) / Pod.podSDKInsulinMultiplier, startTime: programDate, duration: tempBasalProgram.duration, scheduledCertainty: certainty)
+        case .basalProgram:
+            return UnfinalizedDose(resumeStartTime: programDate, scheduledCertainty: certainty)
+        }
+    }
+}

@@ -442,15 +442,23 @@ class DashPumpManagerTests: XCTestCase {
         }
         
         waitForExpectations(timeout: 3)
-        
+
+        XCTAssertEqual(0, reportedPumpEvents.count) // Should not have stored any doses yet
+
         XCTAssertEqual(true, pumpManagerStatusUpdates.last!.deliveryIsUncertain)
         
-        // DashPumpManager should attempt to recover from uncertain state when bluetooth connection returns
+        // DashPumpManager should recover from uncertain state when bluetooth connection returns, and sdk returns PendingResult
+        
+        pumpEventStorageExpectation = expectation(description: "pumpmanager dose storage")
+        pumpEventStorageExpectation?.assertForOverFulfill = false
+
         mockPodCommManager.unacknowledgedCommandRetryResult = PendingRetryResult.wasProgrammed
         
         pumpManager.podCommManager(mockPodCommManager, connectionStateDidChange: ConnectionState.connected)
-        
-        
+
+        waitForExpectations(timeout: 3)
+
+        XCTAssertEqual(1, reportedPumpEvents.count)
     }
 }
 

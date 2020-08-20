@@ -375,8 +375,8 @@ public class DashPumpManager: PumpManager {
     }
     
     public func discardPod(completion: @escaping (PodCommResult<Bool>) -> ()) {
-        
         podCommManager.discardPod { (result) in
+            self.resolveAnyPendingCommandWithUncertainty()
             self.podDeactivated()
             self.finalizeAndStoreDoses(completion: { (_) in
                 completion(result)
@@ -711,7 +711,7 @@ public class DashPumpManager: PumpManager {
             return
         }
 
-        self.podCommManager.stopProgram(programType: .tempBasal(reminderBeep: false)) { (result) in
+        self.stopProgram(stopProgramType: .tempBasal(reminderBeep: false)) { (result) in
             self.log.debug("stopProgram result: %{public}@", String(describing: result))
             switch result {
             case .success(let status):
@@ -970,12 +970,132 @@ public class DashPumpManager: PumpManager {
         }
     }
     
-    private func pendingCommandSucceeded(pendingCommand: PendingCommand) {
-        
+    // Reconnected to the pod, and we know program was successful
+    private func pendingCommandSucceeded(pendingCommand: PendingCommand, podStatus: PodStatus) {
+        self.mutateState { (state) in
+            switch pendingCommand {
+            case .program(let program, let commandDate):
+                if let dose = program.unfinalizedDose(at: commandDate, withCertainty: .certain) {
+                    if dose.isFinished(at: dateGenerator()) {
+                        state.finishedDoses.append(dose)
+                    } else {
+                        switch dose.doseType {
+                        case .bolus:
+                            state.unfinalizedBolus = dose
+                        case .tempBasal:
+                            state.unfinalizedTempBasal = dose
+                        case .resume:
+                            state.finishedDoses.append(dose)
+                        case .suspend:
+                            break // start program is never a suspend
+                        }
+                    }
+                    state.updateFromPodStatus(status: podStatus)
+                }
+            case .stopProgram(let stopProgram, let commandDate):
+                var bolusCancel = false
+                var tempBasalCancel = false
+                var didSuspend = false
+                switch stopProgram {
+                case .bolus:
+                    bolusCancel = true
+                case .tempBasal:
+                    tempBasalCancel = true
+                case .stopAll:
+                    bolusCancel = true
+                    tempBasalCancel = true
+                    didSuspend = true
+                }
+                
+                if bolusCancel, let bolus = self.state.unfinalizedBolus, !bolus.isFinished(at: commandDate) {
+                    state.unfinalizedBolus?.cancel(at: commandDate, withRemaining: podStatus.bolusUnitsRemaining)
+                }
+                if tempBasalCancel, let tempBasal = self.state.unfinalizedTempBasal, !tempBasal.isFinished(at: commandDate) {
+                    state.unfinalizedTempBasal?.cancel(at: commandDate)
+                }
+                if didSuspend {
+                    state.finishedDoses.append(UnfinalizedDose(suspendStartTime: commandDate, scheduledCertainty: .certain))
+                }
+                state.updateFromPodStatus(status: podStatus)
+            }
+        }
+        self.finalizeAndStoreDoses()
     }
 
-    private func pendingCommandFailed(pendingCommand: PendingCommand) {
+    // Reconnected to the pod, and we know program was not received
+    private func pendingCommandFailed(pendingCommand: PendingCommand, podStatus: PodStatus) {
+        // Nothing to do besides update using the pod status, because we already responded to Loop as if the commands failed.
+        self.mutateState({ (state) in
+            state.updateFromPodStatus(status: podStatus)
+        })
+        self.finalizeAndStoreDoses()
+    }
+    
+    // Giving up on pod; we will assume commands failed/succeeded in the direction of positive net delivery
+    private func resolveAnyPendingCommandWithUncertainty() {
+        guard let pendingCommand = state.pendingCommand else {
+            return
+        }
         
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = state.timeZone
+        
+        self.mutateState { (state) in
+            switch pendingCommand {
+            case .program(let program, let commandDate):
+                let scheduledSegmentAtCommandTime = state.basalProgram.currentRate(using: calendar, at: commandDate)
+
+                if let dose = program.unfinalizedDose(at: commandDate, withCertainty: .uncertain) {
+                    switch dose.doseType {
+                    case .bolus:
+                        if dose.isFinished(at: dateGenerator()) {
+                            state.finishedDoses.append(dose)
+                        } else {
+                            state.unfinalizedBolus = dose
+                        }
+                    case .tempBasal:
+                        // Assume a high temp succeeded, but low temp failed
+                        let rate = dose.programmedRate ?? dose.rate
+                        if rate > scheduledSegmentAtCommandTime.basalRateUnitsPerHour {
+                            if dose.isFinished(at: dateGenerator()) {
+                                state.finishedDoses.append(dose)
+                            } else {
+                                state.unfinalizedTempBasal = dose
+                            }
+                        }
+                    case .resume:
+                        state.finishedDoses.append(dose)
+                    case .suspend:
+                        break // start program is never a suspend
+                    }
+                }
+            case .stopProgram(let stopProgram, let commandDate):
+                let scheduledSegmentAtCommandTime = state.basalProgram.currentRate(using: calendar, at: commandDate)
+                
+                // All stop programs result in reduced delivery, except for stopping a low temp, so we assume all stop
+                // commands failed, except for low temp
+                var tempBasalCancel = false
+
+                switch stopProgram {
+                case .tempBasal:
+                    tempBasalCancel = true
+                case .stopAll:
+                    tempBasalCancel = true
+                default:
+                    break
+                }
+                
+                if tempBasalCancel,
+                    let tempBasal = self.state.unfinalizedTempBasal,
+                    !tempBasal.isFinished(at: commandDate),
+                    (tempBasal.programmedRate ?? tempBasal.rate) < scheduledSegmentAtCommandTime.basalRateUnitsPerHour
+                {
+                    state.unfinalizedTempBasal?.cancel(at: commandDate)
+                }
+            }
+            state.pendingCommand = nil
+        }
+        self.finalizeAndStoreDoses()
     }
 
     private func attemptUnacknowledgedCommandRecovery() {
@@ -984,9 +1104,12 @@ public class DashPumpManager: PumpManager {
                 switch result {
                 case .success(let retryResult):
                     if retryResult.hasPendingCommandProgrammed {
-                        self.pendingCommandSucceeded(pendingCommand: pendingCommand)
+                        self.pendingCommandSucceeded(pendingCommand: pendingCommand, podStatus: retryResult.status)
                     } else {
-                        self.pendingCommandFailed(pendingCommand: pendingCommand)
+                        self.pendingCommandFailed(pendingCommand: pendingCommand, podStatus: retryResult.status)
+                    }
+                    self.mutateState { (state) in
+                        state.pendingCommand = nil
                     }
                 case .failure:
                     break
@@ -1256,6 +1379,10 @@ extension DashPumpManager: PodCommManagerDelegate {
     public func podCommManager(_ podCommManager: PodCommManagerProtocol, connectionStateDidChange connectionState: ConnectionState) {
         // TODO: log this as a connection event.
         logPodCommManagerDelegateMessage("connectionStateDidChange: \(String(describing: connectionState))")
+        
+        if connectionState == .connected && state.pendingCommand != nil {
+            attemptUnacknowledgedCommandRecovery()
+        }
         
         self.mutateState { (state) in
             state.connectionState = connectionState
