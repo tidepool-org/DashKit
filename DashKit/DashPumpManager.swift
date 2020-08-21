@@ -821,7 +821,11 @@ public class DashPumpManager: PumpManager {
                                 state.activeTransition = nil
                             })
                             self.finalizeAndStoreDoses()
-                            completion(.failure(.communication(DashPumpManagerError(error))))
+                            if self.state.pendingCommand != nil {
+                                completion(.failure(.uncertainDelivery))
+                            } else {
+                                completion(.failure(.communication(DashPumpManagerError(error))))
+                            }
                         case .success(let podStatus):
                             self.mutateState({ (state) in
                                 state.unfinalizedTempBasal = UnfinalizedDose(tempBasalRate: enactRate, startTime: startDate, duration: duration, scheduledCertainty: .certain)
@@ -1095,7 +1099,6 @@ public class DashPumpManager: PumpManager {
             }
             state.pendingCommand = nil
         }
-        self.finalizeAndStoreDoses()
     }
 
     private func attemptUnacknowledgedCommandRecovery() {
