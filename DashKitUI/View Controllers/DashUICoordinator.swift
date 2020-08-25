@@ -26,6 +26,7 @@ enum DashUIScreen {
     case checkInsertedCannula
     case setupComplete
     case pendingCommandRecovery
+    case uncertaintyRecovered
     
     func next() -> DashUIScreen? {
         switch self {
@@ -53,6 +54,8 @@ enum DashUIScreen {
             return nil
         case .pendingCommandRecovery:
             return .deactivate
+        case .uncertaintyRecovered:
+            return nil
         }
     }
 }
@@ -138,7 +141,8 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
                 let pumpManagerState = DashPumpManagerState(basalRateSchedule: basalRateSchedule, maximumTempBasalRate: maxBasalRateUnitsPerHour)
             {
                 #if targetEnvironment(simulator)
-                let pumpManager = DashPumpManager(state: pumpManagerState, podCommManager: MockPodCommManager())
+                let pumpManager = DashPumpManager(state: pumpManagerState, podCommManager: MockPodCommManager.shared)
+                MockPodCommManager.shared.dashPumpManager = pumpManager
                 #else
                 let pumpManager = DashPumpManager(state: pumpManagerState)
                 #endif
@@ -201,17 +205,32 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
             }
         case .pendingCommandRecovery:
             if let pumpManager = pumpManager, let pendingCommand = pumpManager.state.pendingCommand {
-                let appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as! String
 
-                let view = DeliveryUncertaintyRecoveryView(appName: appName, uncertaintyStartedAt: pendingCommand.commandDate) { [weak self] in
-                    self?.stepFinished()
+                let model = DeliveryUncertaintyRecoveryViewModel(appName: appName, uncertaintyStartedAt: pendingCommand.commandDate)
+                model.didRecover = { [weak self] in
+                    self?.navigateTo(.uncertaintyRecovered)
                 }
+                model.podDeactivationChosen = { [weak self] in
+                    self?.navigateTo(.deactivate)
+                }
+                pumpManager.addStatusObserver(model, queue: DispatchQueue.main)
+                
+                let view = DeliveryUncertaintyRecoveryView(model: model)
+                
                 let hostedView = hostingController(rootView: view)
-                hostedView.navigationItem.title = LocalizedString("Check Cannula", comment: "Title for check cannula screen")
+                hostedView.navigationItem.title = LocalizedString("Unable To Reach Pod", comment: "Title for pending command recovery screen")
                 return hostedView
             } else {
                 fatalError("Need pump manager for cannula insertion screen")
             }
+        case .uncertaintyRecovered:
+            var view = UncertaintyRecoveredView(appName: appName)
+            view.didFinish = { [weak self] in
+                self?.stepFinished()
+            }
+            let hostedView = hostingController(rootView: view)
+            hostedView.navigationItem.title = LocalizedString("Comms Recovered", comment: "Title for uncertainty recovered screen")
+            return hostedView
         }
     }
     
@@ -309,6 +328,8 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    let appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as! String
 }
 
 extension DashUICoordinator: DashUINavigator {

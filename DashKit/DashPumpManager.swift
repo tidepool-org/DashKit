@@ -1127,11 +1127,15 @@ public class DashPumpManager: PumpManager {
         let loggingShim: PodSDKLoggingShim
         let actualPodCommManager: PodCommManagerProtocol
 
+        #if targetEnvironment(simulator)
+        let mockPodCommManager = MockPodCommManager.shared
+        #endif
+
         if let podCommManager = podCommManager {
             actualPodCommManager = podCommManager
         } else {
             #if targetEnvironment(simulator)
-            actualPodCommManager = MockPodCommManager.shared
+            actualPodCommManager = mockPodCommManager
             #else
             actualPodCommManager = PodCommManager.shared
             #endif
@@ -1151,6 +1155,10 @@ public class DashPumpManager: PumpManager {
         actualPodCommManager.setLogger(logger: self)
 
         actualPodCommManager.setup(withLaunchingOptions: [:])
+        
+        #if targetEnvironment(simulator)
+        mockPodCommManager.dashPumpManager = self
+        #endif
     }
 
     public convenience required init?(rawState: PumpManager.RawStateValue) {

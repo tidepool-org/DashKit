@@ -11,21 +11,23 @@ import LoopKitUI
 
 struct DeliveryUncertaintyRecoveryView: View, HorizontalSizeClassOverride {
     @Environment(\.dismiss) private var dismiss
-
-    let appName: String
-    let uncertaintyStartedAt: Date
-    let recoverCommsTapped: () -> Void
     
+    let model: DeliveryUncertaintyRecoveryViewModel
+
+    init(model: DeliveryUncertaintyRecoveryViewModel) {
+        self.model = model
+    }
+
     var body: some View {
         GuidePage(content: {
-            Text("\(self.appName) has been unable to communicate with the pod on your body since \(self.uncertaintyDateLocalizedString).\n\nWithout communication with the pod, the app cannot continue to send commands for insulin delivery or display accurate, recent information about your active insulin or the insulin being delivered by the Pod.\n\nMonitor your glucose closely for the next 6 or more hours, as there may or may not be insulin actively working in your body that \(self.appName) cannot display.")
+            Text("\(self.model.appName) has been unable to communicate with the pod on your body since \(self.uncertaintyDateLocalizedString).\n\nWithout communication with the pod, the app cannot continue to send commands for insulin delivery or display accurate, recent information about your active insulin or the insulin being delivered by the Pod.\n\nMonitor your glucose closely for the next 6 or more hours, as there may or may not be insulin actively working in your body that \(self.model.appName) cannot display.")
                 .padding([.top, .bottom])
         }) {
             VStack {
                 Text("Attemping to restablish communication").padding(.top)
                 ProgressIndicatorView(state: .indeterminantProgress)
                 Button(action: {
-                    self.recoverCommsTapped()
+                    self.model.podDeactivationChosen?()
                 }) {
                     Text(LocalizedString("Deactivate Pod", comment: "Button title to deactive pod on uncertain program"))
                     .actionButtonStyle()
@@ -39,7 +41,7 @@ struct DeliveryUncertaintyRecoveryView: View, HorizontalSizeClassOverride {
     }
     
     private var uncertaintyDateLocalizedString: String {
-        DateFormatter.localizedString(from: uncertaintyStartedAt, dateStyle: .none, timeStyle: .short)
+        DateFormatter.localizedString(from: model.uncertaintyStartedAt, dateStyle: .none, timeStyle: .short)
     }
     
     private var backButton: some View {
@@ -51,8 +53,7 @@ struct DeliveryUncertaintyRecoveryView: View, HorizontalSizeClassOverride {
 
 struct DeliveryUncertaintyRecoveryView_Previews: PreviewProvider {
     static var previews: some View {
-        DeliveryUncertaintyRecoveryView(appName: "Test App", uncertaintyStartedAt: Date()) {
-            print("Recover Comms")
-        }
+        let model = DeliveryUncertaintyRecoveryViewModel(appName: "Test App", uncertaintyStartedAt: Date())
+        return DeliveryUncertaintyRecoveryView(model: model)
     }
 }

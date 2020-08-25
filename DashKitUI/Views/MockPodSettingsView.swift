@@ -47,6 +47,33 @@ struct MockPodSettingsView: View {
     
 
     var body: some View {
+
+        return Form {
+            Section {
+                sendProgramErrorPicker
+                unacknowledgedCommandRetryResultPicker
+            }
+        }
+        .navigationBarTitle("Mock Pod Settings")
+    }
+    
+    var unacknowledgedCommandRetryResultPicker: some View {
+        let unacknowledgedCommandRetryResultBinding = Binding<Bool>(get: {
+            if let result = self.mockPodCommManager.unacknowledgedCommandRetryResult {
+                return result.hasPendingCommandProgrammed
+            } else {
+                return false
+            }
+        }, set: {
+            self.mockPodCommManager.unacknowledgedCommandRetryResult = $0 ? PendingRetryResult.wasProgrammed : PendingRetryResult.wasNotProgrammed
+        })
+        
+        return Toggle(isOn: unacknowledgedCommandRetryResultBinding) {
+            Text("Unacknowledged Command Was Sent")
+        }
+    }
+    
+    var sendProgramErrorPicker: some View {
         let sendProgramErrorBinding = Binding<Int>(get: {
             let idx = PodCommError.simulatedErrors.firstIndex {
                 $0?.localizedDescription ?? "" == self.mockPodCommManager.deliveryProgramError?.localizedDescription ?? ""
@@ -55,18 +82,15 @@ struct MockPodSettingsView: View {
         }, set: {
             self.mockPodCommManager.deliveryProgramError = PodCommError.simulatedErrors[$0]
         })
-
-        return Form {
-            Section {
-                Picker(selection: sendProgramErrorBinding, label: Text("Delivery Program Error")) {
-                    ForEach(0 ..< PodCommError.simulatedErrors.count) {
-                        Text(self.podCommErrorFormatted(PodCommError.simulatedErrors[$0]))
-                    }
-                }
+        return Picker(selection: sendProgramErrorBinding, label: Text("Delivery Program Error")) {
+            ForEach(0 ..< PodCommError.simulatedErrors.count) {
+                Text(self.podCommErrorFormatted(PodCommError.simulatedErrors[$0]))
             }
         }
-        .navigationBarTitle("Mock Pod Settings")
+
+
     }
+
 }
 
 struct MockPodSettingsView_Previews: PreviewProvider {
