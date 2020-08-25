@@ -23,7 +23,7 @@ public class DashPumpManager: PumpManager {
     
     static let podAlarmNotificationIdentifier = "DASH:\(LoopNotificationCategory.pumpFault.rawValue)"
 
-    var podCommManager: PodCommManagerProtocol
+    public var podCommManager: PodCommManagerProtocol
 
     public let log = OSLog(category: "DashPumpManager")
     
@@ -358,6 +358,8 @@ public class DashPumpManager: PumpManager {
     }
     
     public func podDeactivated() {
+        self.resolveAnyPendingCommandWithUncertainty()
+        
         mutateState({ (state) in
             let now = self.dateGenerator()
             state.unfinalizedBolus?.cancel(at: now)
@@ -376,7 +378,6 @@ public class DashPumpManager: PumpManager {
     
     public func discardPod(completion: @escaping (PodCommResult<Bool>) -> ()) {
         podCommManager.discardPod { (result) in
-            self.resolveAnyPendingCommandWithUncertainty()
             self.podDeactivated()
             self.finalizeAndStoreDoses(completion: { (_) in
                 completion(result)
@@ -876,7 +877,7 @@ public class DashPumpManager: PumpManager {
             return
         }
 
-        podCommManager.stopProgram(programType: .stopAll(reminder: reminder)) { (result) in
+        stopProgram(stopProgramType: .stopAll(reminder: reminder)) { (result) in
             switch result {
             case .failure(let error):
                 self.mutateState({ (state) in
@@ -1130,7 +1131,7 @@ public class DashPumpManager: PumpManager {
             actualPodCommManager = podCommManager
         } else {
             #if targetEnvironment(simulator)
-            actualPodCommManager = MockPodCommManager()
+            actualPodCommManager = MockPodCommManager.shared
             #else
             actualPodCommManager = PodCommManager.shared
             #endif

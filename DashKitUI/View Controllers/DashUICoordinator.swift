@@ -25,6 +25,7 @@ enum DashUIScreen {
     case insertCannula
     case checkInsertedCannula
     case setupComplete
+    case pendingCommandRecovery
     
     func next() -> DashUIScreen? {
         switch self {
@@ -50,6 +51,8 @@ enum DashUIScreen {
             return .setupComplete
         case .setupComplete:
             return nil
+        case .pendingCommandRecovery:
+            return .deactivate
         }
     }
 }
@@ -196,6 +199,19 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
             } else {
                 fatalError("Need pump manager for cannula insertion screen")
             }
+        case .pendingCommandRecovery:
+            if let pumpManager = pumpManager, let pendingCommand = pumpManager.state.pendingCommand {
+                let appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as! String
+
+                let view = DeliveryUncertaintyRecoveryView(appName: appName, uncertaintyStartedAt: pendingCommand.commandDate) { [weak self] in
+                    self?.stepFinished()
+                }
+                let hostedView = hostingController(rootView: view)
+                hostedView.navigationItem.title = LocalizedString("Check Cannula", comment: "Title for check cannula screen")
+                return hostedView
+            } else {
+                fatalError("Need pump manager for cannula insertion screen")
+            }
         }
     }
     
@@ -234,7 +250,9 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
         if !registrationManager.isRegistered() {
             return .registration
         } else if let pumpManager = pumpManager {
-            if pumpManager.podCommState == .activating {
+            if pumpManager.state.pendingCommand != nil {
+                return .pendingCommandRecovery
+            } else if pumpManager.podCommState == .activating {
                 return .insertCannula
             } else {
                 return .settings

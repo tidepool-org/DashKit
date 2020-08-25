@@ -9,7 +9,12 @@
 import Foundation
 import PodSDK
 
+
+
 public class MockPodCommManager: PodCommManagerProtocol {
+    
+    // Create a shared MockPodCommManager for running on the simulator
+    public static let shared: MockPodCommManager = MockPodCommManager()
 
     public func updateBeepOptions(bolusReminder: BeepOption, tempBasalReminder: BeepOption, completion: @escaping (PodCommResult<PodStatus>) -> ()) {
         completion(.success(podStatus))
@@ -38,7 +43,7 @@ public class MockPodCommManager: PodCommManagerProtocol {
     
     public var podCommState: PodCommState = .noPod
 
-    var sendProgramFailureError: PodCommError?
+    public var deliveryProgramError: PodCommError?
 
     public var delegate: PodCommManagerDelegate?
 
@@ -97,12 +102,16 @@ public class MockPodCommManager: PodCommManagerProtocol {
     }
 
     public func discardPod(completion: @escaping (PodCommResult<Bool>) -> ()) {
+        deliveryProgramError = nil
+        unacknowledgedCommandRetryResult = nil
         completion(.success(true))
     }
 
     public func deactivatePod(completion: @escaping (PodCommResult<PartialPodStatus>) -> ()) {
-        self.podStatus = MockPodStatus(expirationDate: podStatus.expirationDate, podState: .deactivated, programStatus: [], activeAlerts: [], isOcclusionAlertActive: false, bolusUnitsRemaining: 0, totalUnitsDelivered: 0, reservoirUnitsRemaining: 0, timeElapsedSinceActivation: Date().timeIntervalSince(podStatus.activationTime), activationTime: podStatus.activationTime)
-        self.podCommState = .noPod
+        podStatus = MockPodStatus(expirationDate: podStatus.expirationDate, podState: .deactivated, programStatus: [], activeAlerts: [], isOcclusionAlertActive: false, bolusUnitsRemaining: 0, totalUnitsDelivered: 0, reservoirUnitsRemaining: 0, timeElapsedSinceActivation: Date().timeIntervalSince(podStatus.activationTime), activationTime: podStatus.activationTime)
+        podCommState = .noPod
+        deliveryProgramError = nil
+        unacknowledgedCommandRetryResult = nil
         completion(.success(podStatus))
     }
     
@@ -119,7 +128,7 @@ public class MockPodCommManager: PodCommManagerProtocol {
     }
 
     public func sendProgram(programType: ProgramType, beepOption: BeepOption?, completion: @escaping (PodCommResult<PodStatus>) -> ()) {
-        if let error = sendProgramFailureError {
+        if let error = deliveryProgramError {
             completion(.failure(error))
         } else {
             switch programType {
@@ -138,15 +147,19 @@ public class MockPodCommManager: PodCommManagerProtocol {
     }
 
     public func stopProgram(programType: StopProgramType, completion: @escaping (PodCommResult<PodStatus>) -> ()) {
-        switch programType {
-        case .bolus:
-            podStatus.programStatus.remove(.bolusRunning)
-        case .tempBasal:
-            podStatus.programStatus.remove(.tempBasalRunning)
-        case .stopAll:
-            podStatus.programStatus = []
+        if let error = deliveryProgramError {
+            completion(.failure(error))
+        } else {
+            switch programType {
+            case .bolus:
+                podStatus.programStatus.remove(.bolusRunning)
+            case .tempBasal:
+                podStatus.programStatus.remove(.tempBasalRunning)
+            case .stopAll:
+                podStatus.programStatus = []
+            }
+            completion(.success(podStatus))
         }
-        completion(.success(podStatus))
     }
 
     public func updateAlertSetting(alertSetting: PodAlertSetting, completion: @escaping (PodCommResult<PodStatus>) -> ()) {

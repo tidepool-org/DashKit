@@ -34,6 +34,15 @@ public enum PendingCommand: RawRepresentable, Equatable {
     private enum PendingCommandType: Int {
         case program, stopProgram
     }
+    
+    public var commandDate: Date {
+        switch self {
+        case .program(_, let date):
+            return date
+        case .stopProgram(_, let date):
+            return date
+        }
+    }
 
     public init?(rawValue: RawValue) {
         guard let rawPendingCommandType = rawValue["type"] as? PendingCommandType.RawValue else {

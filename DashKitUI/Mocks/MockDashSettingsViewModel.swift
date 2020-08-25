@@ -37,9 +37,8 @@ class MockDashSettingsViewModel: DashSettingsViewModelProtocol {
             }
         }
     }
-
+    
     @Published var alertIsPresented: Bool = false
-
 
     let dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()

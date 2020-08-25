@@ -95,6 +95,8 @@
 		C1941151228DBF2100E886DD /* ExpirationReminderDateTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1941150228DBF2100E886DD /* ExpirationReminderDateTableViewCell.swift */; };
 		C1941153228DBF8300E886DD /* NibLoadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1941152228DBF8300E886DD /* NibLoadable.swift */; };
 		C196751124EDD15A00118EC4 /* PendingCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C196751024EDD15A00118EC4 /* PendingCommand.swift */; };
+		C196751324F05E3500118EC4 /* DeliveryUncertaintyRecoveryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C196751224F05E3500118EC4 /* DeliveryUncertaintyRecoveryView.swift */; };
+		C196751524F1CD6300118EC4 /* MockPodSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C196751424F1CD6300118EC4 /* MockPodSettingsView.swift */; };
 		C19BB3F022E7C64A00EA5C2E /* DashKitPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19BB3EF22E7C64A00EA5C2E /* DashKitPlugin.swift */; };
 		C1A701B923EB7EC2002D1E45 /* PairPodView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A701B823EB7EC2002D1E45 /* PairPodView.swift */; };
 		C1A9194024325D3B008D216E /* DashKitUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A9193F24325D3B008D216E /* DashKitUITests.swift */; };
@@ -280,6 +282,8 @@
 		C1941150228DBF2100E886DD /* ExpirationReminderDateTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpirationReminderDateTableViewCell.swift; sourceTree = "<group>"; };
 		C1941152228DBF8300E886DD /* NibLoadable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NibLoadable.swift; sourceTree = "<group>"; };
 		C196751024EDD15A00118EC4 /* PendingCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingCommand.swift; sourceTree = "<group>"; };
+		C196751224F05E3500118EC4 /* DeliveryUncertaintyRecoveryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeliveryUncertaintyRecoveryView.swift; sourceTree = "<group>"; };
+		C196751424F1CD6300118EC4 /* MockPodSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPodSettingsView.swift; sourceTree = "<group>"; };
 		C19BB3E522E776AE00EA5C2E /* DashKitPlugin.loopplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DashKitPlugin.loopplugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		C19BB3E722E776AE00EA5C2E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C19BB3EF22E7C64A00EA5C2E /* DashKitPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DashKitPlugin.swift; sourceTree = "<group>"; };
@@ -459,6 +463,8 @@
 				C171758B2437AFF200199ABC /* CheckInsertedCannulaView.swift */,
 				C168F18524460A0A002447D5 /* PodDetailsView.swift */,
 				C14386B8244F59800070B0FF /* BasalStateView.swift */,
+				C196751224F05E3500118EC4 /* DeliveryUncertaintyRecoveryView.swift */,
+				C196751424F1CD6300118EC4 /* MockPodSettingsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -963,6 +969,7 @@
 				C194114E228DBEC000E886DD /* PodSetupCompleteViewController.swift in Sources */,
 				C10D1D77241169F50007ABF7 /* MockPodPairer.swift in Sources */,
 				C107D16D226A143A00D63775 /* UIViewController.swift in Sources */,
+				C196751324F05E3500118EC4 /* DeliveryUncertaintyRecoveryView.swift in Sources */,
 				C107D17C226A243A00D63775 /* UITableViewCell.swift in Sources */,
 				C1562F8724169C41006952D6 /* DeactivatePodView.swift in Sources */,
 				C1941153228DBF8300E886DD /* NibLoadable.swift in Sources */,
@@ -980,6 +987,7 @@
 				C107D17A226A241200D63775 /* IdentifiableClass.swift in Sources */,
 				C1DFF91F2417C88600EAC44E /* InsertCannulaViewModel.swift in Sources */,
 				C10D6121240D65300081FFFA /* PairPodViewModel.swift in Sources */,
+				C196751524F1CD6300118EC4 /* MockPodSettingsView.swift in Sources */,
 				C1ACF43F22A1F9A700F7DDB4 /* OSLog.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

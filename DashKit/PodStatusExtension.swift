@@ -160,7 +160,7 @@ extension PodCommError: LocalizedError {
             return LocalizedString("Operation timed out.", comment: "Error description for PodCommError.operationTimeout")
 
         case .notConnected:
-            return LocalizedString("There was a problem communicating with the Pod.", comment: "Error description for PodCommError.notConnected")
+            return LocalizedString("Phone is not connected to the Pod.", comment: "Error description for PodCommError.notConnected")
 
         case .messageSigningFailed:
             return LocalizedString("Message signing failed.", comment: "Error description for PodCommError.messageSigningFailed")
@@ -199,7 +199,7 @@ extension PodCommError: LocalizedError {
             return LocalizedString("No unacknowledged command to retry.", comment: "Error description for PodCommError.noUnacknowledgedCommandToRetry")
 
         case .bleCommunicationError:
-            return LocalizedString("There was a problem communicating with the Pod.", comment: "Error description for PodCommError.bleCommunicationError")
+            return LocalizedString("There was a bluetooth problem communicating with the Pod.", comment: "Error description for PodCommError.bleCommunicationError")
             
         case .bluetoothUnauthorized:
             return LocalizedString("Bluetooth not authorized.", comment: "Error description for PodCommError.bluetoothUnauthorized")
