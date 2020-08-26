@@ -8,9 +8,9 @@
 
 import SwiftUI
 import LoopKitUI
+import DashKit
 
 struct DeliveryUncertaintyRecoveryView: View, HorizontalSizeClassOverride {
-    @Environment(\.dismiss) private var dismiss
     
     let model: DeliveryUncertaintyRecoveryViewModel
 
@@ -46,7 +46,7 @@ struct DeliveryUncertaintyRecoveryView: View, HorizontalSizeClassOverride {
     
     private var backButton: some View {
         Button(LocalizedString("Back", comment: "Back button text on DeliveryUncertaintyRecoveryView"), action: {
-            self.dismiss()
+            self.model.onDismiss?()
         })
     }
 }

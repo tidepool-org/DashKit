@@ -639,6 +639,43 @@ class DashPumpManagerTests: XCTestCase {
         
         XCTAssertEqual(.suspend, suspend.type)
     }
+    
+    func testUnacknowledgedResumeResolvedAsReceived() {
+        let suspendCompletion = expectation(description: "suspend completed")
+        pumpManager.suspendDelivery { (result) in
+            suspendCompletion.fulfill()
+        }
+        waitForExpectations(timeout: 3)
+
+        XCTAssert(pumpManager.status.basalDeliveryState.isSuspended)
+
+        mockPodCommManager.deliveryProgramError = .unacknowledgedCommandPendingRetry
+        let resumeCompletion = expectation(description: "resume completed")
+        
+        pumpManager.resumeDelivery { (error) in
+            XCTAssertNotNil(error)
+            resumeCompletion.fulfill()
+        }
+        waitForExpectations(timeout: 3)
+
+        XCTAssertEqual(0, reportedPumpEvents.count) // Should not have stored any doses yet
+
+        pumpEventStorageExpectation = expectation(description: "pumpmanager dose storage")
+        pumpEventStorageExpectation?.assertForOverFulfill = false
+
+        mockPodCommManager.unacknowledgedCommandRetryResult = PendingRetryResult.wasProgrammed
+        
+        pumpManager.podCommManager(mockPodCommManager, connectionStateDidChange: ConnectionState.connected)
+
+        waitForExpectations(timeout: 3)
+        
+        XCTAssert(!pumpManager.status.basalDeliveryState.isSuspended)
+        
+        let resume = reportedPumpEvents.last!
+        
+        XCTAssertEqual(.resume, resume.type)
+    }
+
 
 }
 

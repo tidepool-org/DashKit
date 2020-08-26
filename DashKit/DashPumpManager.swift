@@ -97,6 +97,12 @@ public class DashPumpManager: PumpManager {
     }
     
     private func pumpStatusHighlight(for state: DashPumpManagerState) -> PumpManagerStatus.PumpStatusHighlight? {
+        if state.pendingCommand != nil {
+            return PumpManagerStatus.PumpStatusHighlight(localizedMessage: NSLocalizedString("Comms Issue", comment: "Status highlight that delivery is uncertain."),
+                                                         imageName: "exclamationmark.circle.fill",
+                                                         state: .critical)
+        }
+
         switch podCommManager.podCommState {
         case .activating:
             return PumpManagerStatus.PumpStatusHighlight(
@@ -479,7 +485,7 @@ public class DashPumpManager: PumpManager {
                     self.lockedState.mutate { (state) in
                         state.finishedDoses.removeAll { dosesToStore.contains($0) }
                     }
-                    self.log.error("Stored pod events: %@", String(describing: dosesToStore))
+                    self.log.default("Stored pod events: %@", String(describing: dosesToStore))
                     completion?(nil)
                 }
             })
@@ -983,16 +989,17 @@ public class DashPumpManager: PumpManager {
                 if let dose = program.unfinalizedDose(at: commandDate, withCertainty: .certain) {
                     if dose.isFinished(at: dateGenerator()) {
                         state.finishedDoses.append(dose)
+                        if case .resume = dose.doseType {
+                            state.suspendState = .resumed(commandDate)
+                        }
                     } else {
                         switch dose.doseType {
                         case .bolus:
                             state.unfinalizedBolus = dose
                         case .tempBasal:
                             state.unfinalizedTempBasal = dose
-                        case .resume:
-                            state.finishedDoses.append(dose)
-                        case .suspend:
-                            break // start program is never a suspend
+                        default:
+                            break
                         }
                     }
                     state.updateFromPodStatus(status: podStatus)
@@ -1012,14 +1019,15 @@ public class DashPumpManager: PumpManager {
                     didSuspend = true
                 }
                 
-                if bolusCancel, let bolus = self.state.unfinalizedBolus, !bolus.isFinished(at: commandDate) {
+                if bolusCancel, let bolus = state.unfinalizedBolus, !bolus.isFinished(at: commandDate) {
                     state.unfinalizedBolus?.cancel(at: commandDate, withRemaining: podStatus.bolusUnitsRemaining)
                 }
-                if tempBasalCancel, let tempBasal = self.state.unfinalizedTempBasal, !tempBasal.isFinished(at: commandDate) {
+                if tempBasalCancel, let tempBasal = state.unfinalizedTempBasal, !tempBasal.isFinished(at: commandDate) {
                     state.unfinalizedTempBasal?.cancel(at: commandDate)
                 }
                 if didSuspend {
                     state.finishedDoses.append(UnfinalizedDose(suspendStartTime: commandDate, scheduledCertainty: .certain))
+                    state.suspendState = .suspended(commandDate)
                 }
                 state.updateFromPodStatus(status: podStatus)
             }
@@ -1102,7 +1110,7 @@ public class DashPumpManager: PumpManager {
         }
     }
 
-    private func attemptUnacknowledgedCommandRecovery() {
+    public func attemptUnacknowledgedCommandRecovery() {
         if let pendingCommand = self.state.pendingCommand {
             podCommManager.queryAndClearUnacknowledgedCommand { (result) in
                 switch result {

@@ -197,6 +197,7 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
         rawValue["unfinalizedBolus"] = unfinalizedBolus?.rawValue
         rawValue["unfinalizedTempBasal"] = unfinalizedTempBasal?.rawValue
         rawValue["alarmCode"] = alarmCode?.rawValue
+        rawValue["pendingCommand"] = pendingCommand?.rawValue
         
         return rawValue
     }

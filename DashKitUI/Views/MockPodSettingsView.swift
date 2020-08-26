@@ -69,7 +69,7 @@ struct MockPodSettingsView: View {
         })
         
         return Toggle(isOn: unacknowledgedCommandRetryResultBinding) {
-            Text("Unacknowledged Command Was Sent")
+            Text("Unacknowledged Command Was Received By Pod")
         }
     }
     

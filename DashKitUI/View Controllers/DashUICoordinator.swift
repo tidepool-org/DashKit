@@ -213,7 +213,13 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
                 model.podDeactivationChosen = { [weak self] in
                     self?.navigateTo(.deactivate)
                 }
+                model.onDismiss = { [weak self] in
+                    if let self = self {
+                        self.completionDelegate?.completionNotifyingDidComplete(self)
+                    }
+                }
                 pumpManager.addStatusObserver(model, queue: DispatchQueue.main)
+                pumpManager.attemptUnacknowledgedCommandRecovery()
                 
                 let view = DeliveryUncertaintyRecoveryView(model: model)
                 

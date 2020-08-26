@@ -15,6 +15,7 @@ class DeliveryUncertaintyRecoveryViewModel: PumpManagerStatusObserver {
     let appName: String
     let uncertaintyStartedAt: Date
     
+    var onDismiss: (() -> Void)?
     var didRecover: (() -> Void)?
     var podDeactivationChosen: (() -> Void)?
 
