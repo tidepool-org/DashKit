@@ -20,11 +20,11 @@ struct DeliveryUncertaintyRecoveryView: View, HorizontalSizeClassOverride {
 
     var body: some View {
         GuidePage(content: {
-            Text("\(self.model.appName) has been unable to communicate with the pod on your body since \(self.uncertaintyDateLocalizedString).\n\nWithout communication with the pod, the app cannot continue to send commands for insulin delivery or display accurate, recent information about your active insulin or the insulin being delivered by the Pod.\n\nMonitor your glucose closely for the next 6 or more hours, as there may or may not be insulin actively working in your body that \(self.model.appName) cannot display.")
+            Text(String(format: LocalizedString("%1$@ has been unable to communicate with the pod on your body since %2$@.\n\nWithout communication with the pod, the app cannot continue to send commands for insulin delivery or display accurate, recent information about your active insulin or the insulin being delivered by the Pod.\n\nMonitor your glucose closely for the next 6 or more hours, as there may or may not be insulin actively working in your body that %2$@ cannot display.", comment: "Format string for main text of delivery uncertainty recovery page. (1: app name)(2: date of command)(3: app name)"), self.model.appName, self.uncertaintyDateLocalizedString, self.model.appName))
                 .padding([.top, .bottom])
         }) {
             VStack {
-                Text("Attemping to restablish communication").padding(.top)
+                Text(LocalizedString("Attemping to re-establish communication", comment: "Description string above progress indicator while attempting to re-establish communication from an unacknowledged command")).padding(.top)
                 ProgressIndicatorView(state: .indeterminantProgress)
                 Button(action: {
                     self.model.podDeactivationChosen?()
@@ -36,7 +36,7 @@ struct DeliveryUncertaintyRecoveryView: View, HorizontalSizeClassOverride {
             }
         }
         .environment(\.horizontalSizeClass, horizontalOverride)
-        .navigationBarTitle(Text("Unable to Reach Pod"), displayMode: .large)
+        .navigationBarTitle(Text(LocalizedString("Unable to Reach Pod", comment: "Title of delivery uncertainty recovery page")), displayMode: .large)
         .navigationBarItems(leading: backButton)
     }
     
