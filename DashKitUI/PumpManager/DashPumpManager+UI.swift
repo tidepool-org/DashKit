@@ -22,6 +22,10 @@ extension DashPumpManager: PumpManagerUI {
         return DashUICoordinator(pumpManager: self, insulinTintColor: insulinTintColor, guidanceColors: guidanceColors)
     }
 
+    public func deliveryUncertaintyRecoveryViewController(insulinTintColor: Color, guidanceColors: GuidanceColors) -> (UIViewController & CompletionNotifying) {
+        return DashUICoordinator(pumpManager: self, insulinTintColor: insulinTintColor, guidanceColors: guidanceColors)
+    }
+    
     public var smallImage: UIImage? {
         return UIImage(named: "Pod", in: Bundle(for: DashSettingsViewModel.self), compatibleWith: nil)!
     }

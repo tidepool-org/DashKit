@@ -55,7 +55,7 @@ class DashPumpManagerTests: XCTestCase {
     override func setUp() {
         super.setUp()
 
-        let basalScheduleItems = [RepeatingScheduleValue(startTime: 0, value: 5.0)]
+        let basalScheduleItems = [RepeatingScheduleValue(startTime: 0, value: 1.0)]
         let schedule = BasalRateSchedule(dailyItems: basalScheduleItems, timeZone: .current)!
         var state = DashPumpManagerState(basalRateSchedule: schedule, maximumTempBasalRate: 3.0, dateGenerator: dateGenerator)!
         state.podActivatedAt = Date().addingTimeInterval(.days(1))
@@ -97,7 +97,6 @@ class DashPumpManagerTests: XCTestCase {
         XCTAssertEqual(pumpManager.hasActivePod, true)
 
         let bolusCallbacks = expectation(description: "bolus callbacks")
-        bolusCallbacks.expectedFulfillmentCount = 2
 
         let startDate = Date()
 
@@ -113,10 +112,7 @@ class DashPumpManagerTests: XCTestCase {
         // Set a new reservoir value to make sure the result of the set program is used (5U)
         mockPodCommManager.podStatus.reservoirUnitsRemaining = 500
 
-        pumpManager.enactBolus(units: 1, at: startDate, willRequest: { (dose) in
-            bolusCallbacks.fulfill()
-            XCTAssertEqual(startDate, dose.startDate)
-        }) { (result) in
+        pumpManager.enactBolus(units: 1, at: startDate) { (result) in
             bolusCallbacks.fulfill()
             switch result {
             case .failure(let error):
@@ -156,7 +152,6 @@ class DashPumpManagerTests: XCTestCase {
         XCTAssertEqual(pumpManager.hasActivePod, true)
 
         let bolusCallbacks = expectation(description: "bolus callbacks")
-        bolusCallbacks.expectedFulfillmentCount = 2
 
         let startDate = Date()
 
@@ -166,16 +161,20 @@ class DashPumpManagerTests: XCTestCase {
         pumpManagerDelegateStateUpdateExpectation = expectation(description: "pumpmanager delegate state updates")
         pumpManagerDelegateStateUpdateExpectation?.expectedFulfillmentCount = 2
 
-        mockPodCommManager.sendProgramFailureError = .podNotAvailable
+        mockPodCommManager.deliveryProgramError = .podNotAvailable
 
-        pumpManager.enactBolus(units: 1, at: startDate, willRequest: { (dose) in
+        pumpManager.enactBolus(units: 1, at: startDate) { (result) in
             bolusCallbacks.fulfill()
-            XCTAssertEqual(startDate, dose.startDate)
-        }) { (result) in
-            bolusCallbacks.fulfill()
-            guard case .failure(DashPumpManagerError.podCommError(.podNotAvailable)) = result else {
-                XCTFail("Expected podNotAvailable error")
-                return
+            switch result {
+            case .success:
+                XCTFail("Enact bolus with no pod should return error")
+            case .failure(let error):
+                switch error {
+                case .communication:
+                    break
+                default:
+                    XCTFail("Expected communication error")
+                }
             }
         }
         waitForExpectations(timeout: 3)
@@ -277,7 +276,7 @@ class DashPumpManagerTests: XCTestCase {
         let callbackExpectation = expectation(description: "set basal scheduled callback")
         let items = [RepeatingScheduleValue(startTime: 0, value: 10.0), RepeatingScheduleValue(startTime: .hours(12), value: 15.0)]
         
-        mockPodCommManager.sendProgramFailureError = .podNotAvailable
+        mockPodCommManager.deliveryProgramError = .podNotAvailable
 
         pumpManager.setBasalSchedule(dailyItems: items) { (error) in
             callbackExpectation.fulfill()
@@ -328,13 +327,10 @@ class DashPumpManagerTests: XCTestCase {
     func testAlarmDuringBolusShouldUseRemainingInsulinField() {
         
         let bolusCallbacks = expectation(description: "bolus callbacks")
-        bolusCallbacks.expectedFulfillmentCount = 2
 
         pumpEventStorageExpectation = expectation(description: "pumpmanager stores bolus")
 
-        pumpManager.enactBolus(units: 5, at: simulatedDate, willRequest: { (dose) in
-            bolusCallbacks.fulfill()
-        }) { (result) in
+        pumpManager.enactBolus(units: 5, at: simulatedDate) { (result) in
             bolusCallbacks.fulfill()
         }
 
@@ -421,7 +417,266 @@ class DashPumpManagerTests: XCTestCase {
         let retractedAlert = alertsRetracted.first!
         
         XCTAssertEqual(issuedAlert.identifier, retractedAlert)
-    }    
+    }
+    
+    func testUnacknowledgedCommandOnBolusWasProgrammed() {
+        mockPodCommManager.deliveryProgramError = .unacknowledgedCommandPendingRetry
+        let bolusCompletion = expectation(description: "enactBolus completed")
+
+        pumpManagerStatusUpdateExpectation = expectation(description: "pumpmanager status updates")
+        pumpManagerStatusUpdateExpectation?.assertForOverFulfill = false
+
+        pumpManager.enactBolus(units: 1, at: Date()) { (result) in
+            switch result {
+            case .failure(let error):
+                switch error {
+                case .uncertainDelivery:
+                    break
+                default:
+                    XCTFail("Enact bolus should fail with uncertainDelivery error on unacknowledged command")
+                }
+            case .success:
+                XCTFail("Enact bolus should not succeed when send program fails with unacknowledged command")
+            }
+            bolusCompletion.fulfill()
+        }
+        
+        waitForExpectations(timeout: 3)
+
+        XCTAssertEqual(0, reportedPumpEvents.count) // Should not have stored any doses yet
+
+        XCTAssertEqual(true, pumpManagerStatusUpdates.last!.deliveryIsUncertain)
+        
+        // DashPumpManager should recover from uncertain state when bluetooth connection returns, and sdk returns PendingResult
+        
+        pumpEventStorageExpectation = expectation(description: "pumpmanager dose storage")
+        pumpEventStorageExpectation?.assertForOverFulfill = false
+
+        mockPodCommManager.unacknowledgedCommandRetryResult = PendingRetryResult.wasProgrammed
+        
+        pumpManager.podCommManager(mockPodCommManager, connectionStateDidChange: ConnectionState.connected)
+
+        waitForExpectations(timeout: 3)
+
+        XCTAssertEqual(1, reportedPumpEvents.count)
+    }
+    
+    func testUnacknowledgedBolusWasNotProgrammed() {
+        mockPodCommManager.deliveryProgramError = .unacknowledgedCommandPendingRetry
+        let bolusCompletion = expectation(description: "enactBolus completed")
+
+        pumpManager.enactBolus(units: 1, at: Date()) { (result) in
+            switch result {
+            case .failure(let error):
+                switch error {
+                case .uncertainDelivery:
+                    break
+                default:
+                    XCTFail("Enact bolus should fail with uncertainDelivery error on unacknowledged command")
+                }
+            case .success:
+                XCTFail("Enact bolus should not succeed when send program fails with unacknowledged command")
+            }
+            bolusCompletion.fulfill()
+        }
+        
+        waitForExpectations(timeout: 3)
+
+        XCTAssertEqual(0, reportedPumpEvents.count) // Should not have stored any doses yet
+
+        // DashPumpManager should recover from uncertain state when bluetooth connection returns, and sdk returns PendingResult
+        
+        pumpEventStorageExpectation = expectation(description: "pumpmanager dose storage")
+        pumpEventStorageExpectation?.assertForOverFulfill = false
+
+        mockPodCommManager.unacknowledgedCommandRetryResult = PendingRetryResult.wasNotProgrammed
+        
+        pumpManager.podCommManager(mockPodCommManager, connectionStateDidChange: ConnectionState.connected)
+
+        waitForExpectations(timeout: 3)
+
+        XCTAssertEqual(0, reportedPumpEvents.count)
+    }
+    
+    func testUnacknowledgedBolusResolvedWithUncertainty() {
+        mockPodCommManager.deliveryProgramError = .unacknowledgedCommandPendingRetry
+        let bolusCompletion = expectation(description: "enactBolus completed")
+        
+        pumpManager.enactBolus(units: 1, at: Date()) { (result) in
+            switch result {
+            case .failure(let error):
+                switch error {
+                case .uncertainDelivery:
+                    break
+                default:
+                    XCTFail("Enact bolus should fail with uncertainDelivery error on unacknowledged command")
+                }
+            case .success:
+                XCTFail("Enact bolus should not succeed when send program fails with unacknowledged command")
+            }
+            bolusCompletion.fulfill()
+        }
+        
+        waitForExpectations(timeout: 3)
+
+        XCTAssertEqual(0, reportedPumpEvents.count) // Should not have stored any doses yet
+
+        pumpEventStorageExpectation = expectation(description: "pumpmanager dose storage")
+        pumpEventStorageExpectation?.assertForOverFulfill = false
+
+        mockPodCommManager.unacknowledgedCommandRetryResult = nil
+        
+        timeTravel(.minutes(2))
+        
+        let discardCompletion = expectation(description: "discardPod completed")
+
+        pumpManager.discardPod { (_) in
+            discardCompletion.fulfill()
+        }
+
+        waitForExpectations(timeout: 3)
+
+        XCTAssertEqual(2, reportedPumpEvents.count) // The bolus and the discardPod suspend
+        
+        let bolus = reportedPumpEvents.first!
+        
+        XCTAssertEqual(.bolus, bolus.type)
+
+        XCTAssertEqual(1, bolus.dose?.deliveredUnits)
+    }
+
+    func testUnacknowledgedHighTempBasalResolvedWithUncertainty() {
+        mockPodCommManager.deliveryProgramError = .unacknowledgedCommandPendingRetry
+        let tempBasalCompletion = expectation(description: "enactTempBasal completed")
+        
+        // scheduled basal rate is 1U/hr (see setUp())
+        pumpManager.enactTempBasal(unitsPerHour: 3, for: .minutes(30)) { (result) in
+            switch result {
+            case .failure(let error):
+                switch error {
+                case .uncertainDelivery:
+                    break
+                default:
+                    XCTFail("Enact tempBasal should fail with uncertainDelivery error on unacknowledged command")
+                }
+            case .success:
+                XCTFail("Enact bolus should not succeed when send program fails with unacknowledged command")
+            }
+            tempBasalCompletion.fulfill()
+        }
+        
+        waitForExpectations(timeout: 3)
+
+        XCTAssertEqual(0, reportedPumpEvents.count) // Should not have stored any doses yet
+
+        pumpEventStorageExpectation = expectation(description: "pumpmanager dose storage")
+        pumpEventStorageExpectation?.assertForOverFulfill = false
+
+        mockPodCommManager.unacknowledgedCommandRetryResult = nil
+        
+        timeTravel(.minutes(2))
+        
+        let discardCompletion = expectation(description: "discardPod completed")
+
+        pumpManager.discardPod { (_) in
+            discardCompletion.fulfill()
+        }
+
+        waitForExpectations(timeout: 3)
+
+        XCTAssertEqual(2, reportedPumpEvents.count) // The high temp and the discardPod suspend
+        
+        let tempBasal = reportedPumpEvents.first!
+        
+        XCTAssertEqual(.tempBasal, tempBasal.type)
+
+        XCTAssertEqual(TimeInterval(minutes: 2), tempBasal.dose!.endDate.timeIntervalSince(tempBasal.dose!.startDate))
+    }
+    
+    func testUnacknowledgedLowTempBasalResolvedWithUncertainty() {
+        mockPodCommManager.deliveryProgramError = .unacknowledgedCommandPendingRetry
+        let tempBasalCompletion = expectation(description: "enactTempBasal completed")
+        
+        // scheduled basal rate is 1U/hr (see setUp())
+        pumpManager.enactTempBasal(unitsPerHour: 0.5, for: .minutes(30)) { (result) in
+            switch result {
+            case .failure(let error):
+                switch error {
+                case .uncertainDelivery:
+                    break
+                default:
+                    XCTFail("Enact tempBasal should fail with uncertainDelivery error on unacknowledged command")
+                }
+            case .success:
+                XCTFail("Enact bolus should not succeed when send program fails with unacknowledged command")
+            }
+            tempBasalCompletion.fulfill()
+        }
+        
+        waitForExpectations(timeout: 3)
+
+        XCTAssertEqual(0, reportedPumpEvents.count) // Should not have stored any doses yet
+
+        pumpEventStorageExpectation = expectation(description: "pumpmanager dose storage")
+        pumpEventStorageExpectation?.assertForOverFulfill = false
+
+        mockPodCommManager.unacknowledgedCommandRetryResult = nil
+        
+        timeTravel(.minutes(2))
+        
+        let discardCompletion = expectation(description: "discardPod completed")
+
+        pumpManager.discardPod { (_) in
+            discardCompletion.fulfill()
+        }
+
+        waitForExpectations(timeout: 3)
+
+        // Should not include the low temp, we assume it failed on uncertainty
+        XCTAssertEqual(1, reportedPumpEvents.count) // The discardPod suspend
+        
+        let suspend = reportedPumpEvents.first!
+        
+        XCTAssertEqual(.suspend, suspend.type)
+    }
+    
+    func testUnacknowledgedResumeResolvedAsReceived() {
+        let suspendCompletion = expectation(description: "suspend completed")
+        pumpManager.suspendDelivery { (result) in
+            suspendCompletion.fulfill()
+        }
+        waitForExpectations(timeout: 3)
+
+        XCTAssert(pumpManager.status.basalDeliveryState.isSuspended)
+
+        mockPodCommManager.deliveryProgramError = .unacknowledgedCommandPendingRetry
+        let resumeCompletion = expectation(description: "resume completed")
+        
+        pumpManager.resumeDelivery { (error) in
+            XCTAssertNotNil(error)
+            resumeCompletion.fulfill()
+        }
+        waitForExpectations(timeout: 3)
+
+        XCTAssertEqual(0, reportedPumpEvents.count) // Should not have stored any doses yet
+
+        pumpEventStorageExpectation = expectation(description: "pumpmanager dose storage")
+        pumpEventStorageExpectation?.assertForOverFulfill = false
+
+        mockPodCommManager.unacknowledgedCommandRetryResult = PendingRetryResult.wasProgrammed
+        
+        pumpManager.podCommManager(mockPodCommManager, connectionStateDidChange: ConnectionState.connected)
+
+        waitForExpectations(timeout: 3)
+        
+        XCTAssert(!pumpManager.status.basalDeliveryState.isSuspended)
+        
+        let resume = reportedPumpEvents.last!
+        
+        XCTAssertEqual(.resume, resume.type)
+    }
+
+
 }
 
 extension DashPumpManagerTests: PodStatusObserver {
@@ -472,7 +727,7 @@ extension DashPumpManagerTests: PumpManagerDelegate {
         completion(nil)
     }
 
-    func pumpManager(_ pumpManager: PumpManager, didReadReservoirValue units: Double, at date: Date, completion: @escaping (PumpManagerResult<(newValue: ReservoirValue, lastValue: ReservoirValue?, areStoredValuesContinuous: Bool)>) -> Void) {
+    func pumpManager(_ pumpManager: PumpManager, didReadReservoirValue units: Double, at date: Date, completion: @escaping (Result<(newValue: ReservoirValue, lastValue: ReservoirValue?, areStoredValuesContinuous: Bool), Error>) -> Void) {
     }
 
     func pumpManager(_ pumpManager: PumpManager, didAdjustPumpClockBy adjustment: TimeInterval) {

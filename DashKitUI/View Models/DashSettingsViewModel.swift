@@ -13,7 +13,6 @@ import HealthKit
 import PodSDK
 
 class DashSettingsViewModel: DashSettingsViewModelProtocol {
-    
     @Published var lifeState: PodLifeState
     
     @Published var activatedAt: Date?

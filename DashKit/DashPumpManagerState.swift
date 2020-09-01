@@ -50,6 +50,8 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
 
     public var suspendState: SuspendState
     
+    public var pendingCommand: PendingCommand?
+    
     public var isSuspended: Bool {
         if case .suspended = suspendState {
             return true
@@ -163,11 +165,16 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
             self.finishedDoses = []
         }
         
-    
         if let rawActiveAlerts = rawValue["activeAlerts"] as? PodAlerts.RawValue {
             self.activeAlerts = PodAlerts(rawValue: rawActiveAlerts)
         } else {
             self.activeAlerts = []
+        }
+        
+        if let rawPendingCommand = rawValue["pendingCommand"] as? PendingCommand.RawValue {
+            self.pendingCommand = PendingCommand(rawValue: rawPendingCommand)
+        } else {
+            self.pendingCommand = nil
         }
     }
 
@@ -190,7 +197,8 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
         rawValue["unfinalizedBolus"] = unfinalizedBolus?.rawValue
         rawValue["unfinalizedTempBasal"] = unfinalizedTempBasal?.rawValue
         rawValue["alarmCode"] = alarmCode?.rawValue
-
+        rawValue["pendingCommand"] = pendingCommand?.rawValue
+        
         return rawValue
     }
     
@@ -227,6 +235,8 @@ extension DashPumpManagerState: CustomDebugStringConvertible {
             "* unfinalizedTempBasal: \(String(describing: unfinalizedTempBasal))",
             "* reservoirLevel: \(String(describing: reservoirLevel))",
             "* lastStatusDate: \(String(describing: lastStatusDate))",
+            "* pendingCommand: \(String(describing: pendingCommand))",
+            "* connectionState: \(String(describing: connectionState))"
             ].joined(separator: "\n")
     }
 }
