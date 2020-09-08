@@ -1459,6 +1459,8 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 					"$(PROJECT_DIR)/dash-sdk-ios",
 					"$(PROJECT_DIR)/dash-sdk-ios/frameworks",
+					"$(PROJECT_DIR)/dash-sdk-ios/frameworks/PodSDK.xcframework/ios-arm64",
+					"$(PROJECT_DIR)/dash-sdk-ios/frameworks/PodSDK.xcframework/ios-x86_64-simulator",
 				);
 				INFOPLIST_FILE = DashKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -1495,6 +1497,8 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 					"$(PROJECT_DIR)/dash-sdk-ios",
 					"$(PROJECT_DIR)/dash-sdk-ios/frameworks",
+					"$(PROJECT_DIR)/dash-sdk-ios/frameworks/PodSDK.xcframework/ios-arm64",
+					"$(PROJECT_DIR)/dash-sdk-ios/frameworks/PodSDK.xcframework/ios-x86_64-simulator",
 				);
 				INFOPLIST_FILE = DashKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
