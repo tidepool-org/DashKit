@@ -1099,7 +1099,7 @@ public class DashPumpManager: PumpManager {
                 }
                 
                 if tempBasalCancel,
-                    let tempBasal = self.state.unfinalizedTempBasal,
+                    let tempBasal = state.unfinalizedTempBasal,
                     !tempBasal.isFinished(at: commandDate),
                     (tempBasal.programmedRate ?? tempBasal.rate) < scheduledSegmentAtCommandTime.basalRateUnitsPerHour
                 {
