@@ -454,7 +454,7 @@ public class DashPumpManager: PumpManager {
 
     private var isPumpDataStale: Bool {
         let pumpStatusAgeTolerance = TimeInterval(minutes: 6)
-        let pumpDataAge = -(state.lastStatusDate ?? .distantPast).timeIntervalSinceNow
+        let pumpDataAge = -(state.lastStatusDate ?? .distantPast).timeIntervalSince(dateGenerator())
         return pumpDataAge > pumpStatusAgeTolerance
     }
 
@@ -512,6 +512,7 @@ public class DashPumpManager: PumpManager {
                 case .failure(let error):
                     self.log.default("Not recommending Loop because pump data is stale: %@", String(describing: error))
                     self.pumpDelegate.notify({ (delegate) in
+                        completion?()
                         delegate?.pumpManager(self, didError: PumpManagerError.communication(error))
                     })
                 }

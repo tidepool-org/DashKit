@@ -196,7 +196,8 @@ class DashPumpManagerTests: XCTestCase {
 
         // Persistence updates
         pumpManagerDelegateStateUpdateExpectation = expectation(description: "pumpmanager delegate state updates")
-        pumpManagerDelegateStateUpdateExpectation?.expectedFulfillmentCount = 2
+        pumpManagerDelegateStateUpdateExpectation?.assertForOverFulfill = false
+//        pumpManagerDelegateStateUpdateExpectation?.expectedFulfillmentCount = 2
 
         // Set a new reservoir value to make sure the result of the set program is used (5U)
         mockPodCommManager.podStatus.reservoirUnitsRemaining = 500
@@ -223,6 +224,8 @@ class DashPumpManagerTests: XCTestCase {
         default:
             XCTFail("Expected reservoir value")
         }
+        
+        timeTravel(.minutes(10))
         
         pumpEventStorageExpectation = expectation(description: "pumpmanager dose storage")
         // Sometimes, when a test is run in CI, this expectation is over-fulfilled.
@@ -675,8 +678,33 @@ class DashPumpManagerTests: XCTestCase {
         
         XCTAssertEqual(.resume, resume.type)
     }
+    
+    func testFetchCurrentPumpDataStale() {
+        runTestFetchCurrentPumpData(withTimeTravel: .minutes(10))
+    }
+    
+    func testFetchCurrentPumpDataNotStale() {
+        runTestFetchCurrentPumpData(withTimeTravel: 0.0)
+    }
+    
+    private func runTestFetchCurrentPumpData(withTimeTravel delay: TimeInterval) {
+        timeTravel(0)
+        let statusExpectation = expectation(description: "status")
+        pumpManager.getPodStatus { _ in
+            statusExpectation.fulfill()
+        }
+        wait(for: [statusExpectation], timeout: 1.0)
 
+        timeTravel(delay)
+        
+        let fetchCurrentPumpDataCompletionCalledExpectation = expectation(description: "fetchCurrentPumpData calls completion")
+        self.pumpManager.fetchCurrentPumpData {
+            fetchCurrentPumpDataCompletionCalledExpectation.fulfill()
+        }
 
+        wait(for: [fetchCurrentPumpDataCompletionCalledExpectation], timeout: 1.0)
+    }
+    
 }
 
 extension DashPumpManagerTests: PodStatusObserver {
