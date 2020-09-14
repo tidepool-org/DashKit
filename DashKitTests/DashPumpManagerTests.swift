@@ -233,7 +233,7 @@ class DashPumpManagerTests: XCTestCase {
         pumpEventStorageExpectation?.assertForOverFulfill = false
         //pumpEventStorageExpectation?.expectedFulfillmentCount = 2
 
-        pumpManager.fetchCurrentPumpData()
+        pumpManager.fetchCurrentPumpData(completion: nil)
 
         waitForExpectations(timeout: 3)
 
