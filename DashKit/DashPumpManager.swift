@@ -492,9 +492,7 @@ public class DashPumpManager: PumpManager {
         }
     }
 
-    
-
-    public func assertCurrentPumpData() {
+    public func fetchCurrentPumpData(completion: (() -> Void)?) {
 
         guard hasActivePod, state.pendingCommand == nil else {
             return
@@ -508,6 +506,7 @@ public class DashPumpManager: PumpManager {
                     self.log.default("Recommending Loop")
                     self.finalizeAndStoreDoses()
                     self.pumpDelegate.notify({ (delegate) in
+                        completion?()
                         delegate?.pumpManagerRecommendsLoop(self)
                     })
                 case .failure(let error):
@@ -522,6 +521,7 @@ public class DashPumpManager: PumpManager {
 
         pumpDelegate.notify { (delegate) in
             self.log.default("Recommending Loop")
+            completion?()
             delegate?.pumpManagerRecommendsLoop(self)
         }
     }
