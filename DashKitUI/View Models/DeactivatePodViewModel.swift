@@ -147,13 +147,8 @@ enum DeactivationError : LocalizedError {
     
     var recoverySuggestion: String? {
         switch self {
-        case .podCommError(let error):
-            switch error {
-            case .bleCommunicationError, .notConnected:
-                    return String(format: LocalizedString("If this problem persists, tap Discard Pod. You can then activate a new Pod", comment: "Format string for ble communication error recovery suggestion during pairing. (1: device model name)"), UIDevice.current.model)
-            default:
-                return error.recoverySuggestion
-            }
+        case .podCommError:
+            return LocalizedString("If this problem persists, tap Discard Pod. You can then activate a new Pod", comment: "Format string for recovery suggestion during deactivate pod.")
         }
     }
     
