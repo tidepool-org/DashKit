@@ -233,7 +233,7 @@ class DashPumpManagerTests: XCTestCase {
         pumpEventStorageExpectation?.assertForOverFulfill = false
         //pumpEventStorageExpectation?.expectedFulfillmentCount = 2
 
-        pumpManager.fetchCurrentPumpData(completion: nil)
+        pumpManager.ensureCurrentPumpData(completion: nil)
 
         waitForExpectations(timeout: 3)
 
@@ -679,15 +679,15 @@ class DashPumpManagerTests: XCTestCase {
         XCTAssertEqual(.resume, resume.type)
     }
     
-    func testFetchCurrentPumpDataStale() {
-        runTestFetchCurrentPumpData(withTimeTravel: .minutes(10))
+    func testEnsureCurrentPumpDataStale() {
+        runTestEnsureCurrentPumpData(withTimeTravel: .minutes(10))
     }
     
-    func testFetchCurrentPumpDataNotStale() {
-        runTestFetchCurrentPumpData(withTimeTravel: 0.0)
+    func testEnsureCurrentPumpDataNotStale() {
+        runTestEnsureCurrentPumpData(withTimeTravel: 0.0)
     }
     
-    private func runTestFetchCurrentPumpData(withTimeTravel delay: TimeInterval) {
+    private func runTestEnsureCurrentPumpData(withTimeTravel delay: TimeInterval) {
         timeTravel(0)
         let statusExpectation = expectation(description: "status")
         pumpManager.getPodStatus { _ in
@@ -697,12 +697,12 @@ class DashPumpManagerTests: XCTestCase {
 
         timeTravel(delay)
         
-        let fetchCurrentPumpDataCompletionCalledExpectation = expectation(description: "fetchCurrentPumpData calls completion")
-        self.pumpManager.fetchCurrentPumpData {
-            fetchCurrentPumpDataCompletionCalledExpectation.fulfill()
+        let ensureCurrentPumpDataCompletionCalledExpectation = expectation(description: "ensureCurrentPumpData calls completion")
+        self.pumpManager.ensureCurrentPumpData {
+            ensureCurrentPumpDataCompletionCalledExpectation.fulfill()
         }
 
-        wait(for: [fetchCurrentPumpDataCompletionCalledExpectation], timeout: 1.0)
+        wait(for: [ensureCurrentPumpDataCompletionCalledExpectation], timeout: 1.0)
     }
     
 }

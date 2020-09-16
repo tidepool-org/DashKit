@@ -492,7 +492,7 @@ public class DashPumpManager: PumpManager {
         }
     }
 
-    public func fetchCurrentPumpData(completion: (() -> Void)?) {
+    public func ensureCurrentPumpData(completion: (() -> Void)?) {
 
         guard hasActivePod, state.pendingCommand == nil else {
             return
