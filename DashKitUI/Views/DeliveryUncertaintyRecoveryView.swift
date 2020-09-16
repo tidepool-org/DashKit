@@ -27,7 +27,7 @@ struct DeliveryUncertaintyRecoveryView: View, HorizontalSizeClassOverride {
                 Text(LocalizedString("Attemping to re-establish communication", comment: "Description string above progress indicator while attempting to re-establish communication from an unacknowledged command")).padding(.top)
                 ProgressIndicatorView(state: .indeterminantProgress)
                 Button(action: {
-                    self.model.podDeactivationChosen?()
+                    self.model.podDeactivationChosen()
                 }) {
                     Text(LocalizedString("Deactivate Pod", comment: "Button title to deactive pod on uncertain program"))
                     .actionButtonStyle()

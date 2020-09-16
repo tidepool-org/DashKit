@@ -210,7 +210,7 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
                 model.didRecover = { [weak self] in
                     self?.navigateTo(.uncertaintyRecovered)
                 }
-                model.podDeactivationChosen = { [weak self] in
+                model.onDeactivate = { [weak self] in
                     self?.navigateTo(.deactivate)
                 }
                 model.onDismiss = { [weak self] in
