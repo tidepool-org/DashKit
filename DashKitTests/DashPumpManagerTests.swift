@@ -196,7 +196,8 @@ class DashPumpManagerTests: XCTestCase {
 
         // Persistence updates
         pumpManagerDelegateStateUpdateExpectation = expectation(description: "pumpmanager delegate state updates")
-        pumpManagerDelegateStateUpdateExpectation?.expectedFulfillmentCount = 2
+        pumpManagerDelegateStateUpdateExpectation?.assertForOverFulfill = false
+//        pumpManagerDelegateStateUpdateExpectation?.expectedFulfillmentCount = 2
 
         // Set a new reservoir value to make sure the result of the set program is used (5U)
         mockPodCommManager.podStatus.reservoirUnitsRemaining = 500
@@ -224,13 +225,15 @@ class DashPumpManagerTests: XCTestCase {
             XCTFail("Expected reservoir value")
         }
         
+        timeTravel(.minutes(10))
+        
         pumpEventStorageExpectation = expectation(description: "pumpmanager dose storage")
         // Sometimes, when a test is run in CI, this expectation is over-fulfilled.
         // When this happens, the test crashes.  This hopefully would at least avoid that crash.
         pumpEventStorageExpectation?.assertForOverFulfill = false
         //pumpEventStorageExpectation?.expectedFulfillmentCount = 2
 
-        pumpManager.assertCurrentPumpData()
+        pumpManager.ensureCurrentPumpData(completion: nil)
 
         waitForExpectations(timeout: 3)
 
@@ -675,8 +678,33 @@ class DashPumpManagerTests: XCTestCase {
         
         XCTAssertEqual(.resume, resume.type)
     }
+    
+    func testEnsureCurrentPumpDataStale() {
+        runTestEnsureCurrentPumpData(withTimeTravel: .minutes(10))
+    }
+    
+    func testEnsureCurrentPumpDataNotStale() {
+        runTestEnsureCurrentPumpData(withTimeTravel: 0.0)
+    }
+    
+    private func runTestEnsureCurrentPumpData(withTimeTravel delay: TimeInterval) {
+        timeTravel(0)
+        let statusExpectation = expectation(description: "status")
+        pumpManager.getPodStatus { _ in
+            statusExpectation.fulfill()
+        }
+        wait(for: [statusExpectation], timeout: 1.0)
 
+        timeTravel(delay)
+        
+        let ensureCurrentPumpDataCompletionCalledExpectation = expectation(description: "ensureCurrentPumpData calls completion")
+        self.pumpManager.ensureCurrentPumpData {
+            ensureCurrentPumpDataCompletionCalledExpectation.fulfill()
+        }
 
+        wait(for: [ensureCurrentPumpDataCompletionCalledExpectation], timeout: 1.0)
+    }
+    
 }
 
 extension DashPumpManagerTests: PodStatusObserver {
