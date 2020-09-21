@@ -406,6 +406,15 @@ public class DashPumpManager: PumpManager {
     }
 
     public func setBasalSchedule(basalProgram: BasalProgram, timeZone: TimeZone, completion: @escaping (Error?) -> Void) {
+        guard !state.isSuspended else {
+            log.default("Storing basal schedule change locally during suspend")
+            self.mutateState { (state) in
+                state.basalProgram = basalProgram
+            }
+            completion(nil)
+            return
+        }
+        
         suspendDelivery { (error) in
             if let error = error {
                 completion(error)

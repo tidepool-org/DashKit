@@ -705,6 +705,38 @@ class DashPumpManagerTests: XCTestCase {
         wait(for: [ensureCurrentPumpDataCompletionCalledExpectation], timeout: 1.0)
     }
     
+    func testSyncBasalRateScheduleWhileSuspendedKeepsPodSuspended() {
+        let suspendCompletion = expectation(description: "suspend completed")
+        pumpManager.suspendDelivery { (error) in
+            XCTAssertNil(error)
+            suspendCompletion.fulfill()
+        }
+        waitForExpectations(timeout: 3)
+
+        XCTAssert(pumpManager.status.basalDeliveryState.isSuspended)
+        
+        let newBasalScheduleItems = [RepeatingScheduleValue(startTime: 0, value: 2.0)]
+
+        let setBasalScheduleCompletion = expectation(description: "setBasalSchedule completed")
+        pumpManager.syncBasalRateSchedule(items: newBasalScheduleItems) { (result) in
+            if case .failure(let error) = result {
+                XCTFail("syncBasalRateSchedule failed unexpectedly with error: \(error)")
+            }
+            setBasalScheduleCompletion.fulfill()
+        }
+        waitForExpectations(timeout: 3)
+        
+        XCTAssert(pumpManager.status.basalDeliveryState.isSuspended)
+        
+        let resumeCompletion = expectation(description: "resume completed")
+        pumpManager.resumeDelivery() { (error) in
+            XCTAssertNil(error)
+            resumeCompletion.fulfill()
+        }
+        waitForExpectations(timeout: 3)
+        
+        XCTAssertEqual(200, mockPodCommManager.lastBasalProgram?.basalSegments[0].basalRate)
+    }
 }
 
 extension DashPumpManagerTests: PodStatusObserver {
