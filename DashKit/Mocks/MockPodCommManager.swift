@@ -25,7 +25,11 @@ public class MockPodCommManager: PodCommManagerProtocol {
     var lastBasalProgram: BasalProgram?
     var lastTempBasal: TempBasal?
 
-    var podStatus: MockPodStatus
+    public var podStatus: MockPodStatus {
+        didSet {
+            dashPumpManager?.getPodStatus(completion: { _ in })
+        }
+    }
         
     public var silencedAlerts: [PodAlerts] = []
     
