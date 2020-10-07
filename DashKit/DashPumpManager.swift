@@ -197,10 +197,8 @@ public class DashPumpManager: PumpManager {
         }
         
         pumpDelegate.notify { (delegate) in
-            if oldValue != nil,
-                newValue.reservoirLevel != oldValue.reservoirLevel,
-                let reservoirLevel = newValue.reservoirLevel,
-                case .valid(let reservoirRemaining) = reservoirLevel
+            if newValue.reservoirLevel != oldValue.reservoirLevel,
+                case .valid(let reservoirRemaining) = newValue.reservoirLevel
             {
                 delegate?.pumpManager(self,
                                       didReadReservoirValue: Double(reservoirRemaining),
