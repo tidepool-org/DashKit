@@ -53,6 +53,10 @@ struct MockPodSettingsView: View {
                 sendProgramErrorPicker
                 unacknowledgedCommandRetryResultPicker
             }
+            
+            Section(header: Text("Reservoir Remaining").font(.headline).foregroundColor(Color.primary)) {
+                reservoirRemainingEntry
+            }
         }
         .navigationBarTitle("Mock Pod Settings")
     }
@@ -87,10 +91,28 @@ struct MockPodSettingsView: View {
                 Text(self.podCommErrorFormatted(PodCommError.simulatedErrors[$0]))
             }
         }
-
-
+    }
+    
+    var reservoirRemainingEntry: some View {
+        let reservoirRemaining = Binding(
+            get: { self.mockPodCommManager.podStatus.reservoirUnitsRemaining / Int(Pod.podSDKInsulinMultiplier) },
+            set: { self.mockPodCommManager.podStatus.reservoirUnitsRemaining = $0 * Int(Pod.podSDKInsulinMultiplier) }
+        )
+        
+        return MockPodReservoirRemainingEntryView(reservoirRemaining: reservoirRemaining)
     }
 
+}
+
+struct MockPodReservoirRemainingEntryView: View {
+    @Binding var reservoirRemaining: Int
+    
+    var body: some View {
+        TextField("Enter reservoir remaining value",
+                  value: $reservoirRemaining,
+                  formatter: NumberFormatter())
+            .keyboardType(.numberPad)
+    }
 }
 
 struct MockPodSettingsView_Previews: PreviewProvider {

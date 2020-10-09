@@ -197,6 +197,15 @@ public class DashPumpManager: PumpManager {
         }
         
         pumpDelegate.notify { (delegate) in
+            if newValue.reservoirLevel != oldValue.reservoirLevel,
+                case .valid(let reservoirRemaining) = newValue.reservoirLevel
+            {
+                delegate?.pumpManager(self,
+                                      didReadReservoirValue: Double(reservoirRemaining),
+                                      at: self.dateGenerator(),
+                                      completion: { _ in })
+            }
+            
             delegate?.pumpManagerDidUpdateState(self)
         }
         
@@ -1147,6 +1156,9 @@ public class DashPumpManager: PumpManager {
 
         #if targetEnvironment(simulator)
         let mockPodCommManager = MockPodCommManager.shared
+        if let reservoirUnitsRemaining = state.reservoirLevel?.rawValue {
+            mockPodCommManager.podStatus.reservoirUnitsRemaining = reservoirUnitsRemaining
+        }
         #endif
 
         if let podCommManager = podCommManager {
