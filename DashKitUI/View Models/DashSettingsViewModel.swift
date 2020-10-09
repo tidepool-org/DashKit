@@ -17,7 +17,7 @@ class DashSettingsViewModel: DashSettingsViewModelProtocol {
     
     @Published var activatedAt: Date?
     
-    @Published var basalDeliveryState: PumpManagerStatus.BasalDeliveryState
+    @Published var basalDeliveryState: PumpManagerStatus.BasalDeliveryState?
 
     @Published var basalDeliveryRate: BasalDeliveryRate?
 

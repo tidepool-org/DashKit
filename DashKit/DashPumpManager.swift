@@ -545,9 +545,9 @@ public class DashPumpManager: PumpManager {
         }
     }
 
-    private func basalDeliveryState(for state: DashPumpManagerState) -> PumpManagerStatus.BasalDeliveryState {
+    private func basalDeliveryState(for state: DashPumpManagerState) -> PumpManagerStatus.BasalDeliveryState? {
         if podCommManager.podCommState == .noPod {
-            return .suspended(state.lastStatusDate ?? .distantPast)
+            return nil
         }
         
         if let transition = state.activeTransition {

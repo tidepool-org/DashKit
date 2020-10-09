@@ -14,7 +14,7 @@ import DashKit
 class MockDashSettingsViewModel: DashSettingsViewModelProtocol {
     var activatedAt: Date?
 
-    var basalDeliveryState: PumpManagerStatus.BasalDeliveryState = .suspended(Date())
+    var basalDeliveryState: PumpManagerStatus.BasalDeliveryState? = .suspended(Date())
 
     var basalDeliveryRate: BasalDeliveryRate? = BasalDeliveryRate(absoluteRate: 1.1, netPercent: 1.1)
 

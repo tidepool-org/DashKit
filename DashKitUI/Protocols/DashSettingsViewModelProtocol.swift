@@ -31,7 +31,7 @@ protocol DashSettingsViewModelProtocol: ObservableObject, Identifiable {
 
     var activatedAt: Date? { get }
     
-    var basalDeliveryState: PumpManagerStatus.BasalDeliveryState { get }
+    var basalDeliveryState: PumpManagerStatus.BasalDeliveryState? { get }
     
     var basalDeliveryRate: BasalDeliveryRate? { get }
 
@@ -60,6 +60,8 @@ protocol DashSettingsViewModelProtocol: ObservableObject, Identifiable {
 
 extension DashSettingsViewModelProtocol {
     var podOk: Bool {
+        guard basalDeliveryState != nil else { return false }
+        
         switch lifeState {
         case .noPod, .podAlarm, .systemError, .podActivating, .podDeactivating:
             return false
