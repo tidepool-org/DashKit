@@ -98,6 +98,22 @@ public class MockPodCommManager: PodCommManagerProtocol {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2 + Pod.estimatedCannulaInsertionDuration) {
                 eventListener(.event(.step2Completed))
             }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2 + Pod.estimatedCannulaInsertionDuration) {
+                let activation = Date() - TimeInterval(hours: 35)
+                self.podStatus = MockPodStatus(
+                    expirationDate: activation + Pod.lifetime,
+                    podState: .alarm,
+                    programStatus: .basalRunning,
+                    activeAlerts: PodAlerts([]),
+                    isOcclusionAlertActive: false,
+                    bolusUnitsRemaining: 0,
+                    totalUnitsDelivered: 38,
+                    reservoirUnitsRemaining: 1023,
+                    timeElapsedSinceActivation: 2,
+                    activationTime: activation)
+                eventListener(.event(.podStatus(self.podStatus)))
+            }
         }
     }
 
