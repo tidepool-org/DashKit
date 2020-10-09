@@ -48,7 +48,7 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
     
     public var maximumTempBasalRate: Double
 
-    public var suspendState: SuspendState
+    public var suspendState: SuspendState?
     
     public var pendingCommand: PendingCommand?
     
@@ -110,23 +110,24 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
             let _ = rawValue["version"] as? Int,
             let rawBasalProgram = rawValue["basalProgram"] as? BasalProgram.RawValue,
             let basalProgram = BasalProgram(rawValue: rawBasalProgram),
-            let rawSuspendState = rawValue["suspendState"] as? SuspendState.RawValue,
-            let suspendState = SuspendState(rawValue: rawSuspendState),
             let maximumTempBasalRate = rawValue["maximumTempBasalRate"] as? Double
         else {
             return nil
         }
         
         self.dateGeneratorWrapper = DateGeneratorWrapper(dateGenerator: Date.init)
-
+        
         self.basalProgram = basalProgram
-        self.suspendState = suspendState
         
         self.maximumTempBasalRate = maximumTempBasalRate
 
         self.podActivatedAt = rawValue["podActivatedAt"] as? Date
         self.lastStatusDate = rawValue["lastStatusDate"] as? Date
         self.podTotalDelivery = rawValue["podTotalDelivery"] as? Double
+        
+        if let rawSuspendState = rawValue["suspendState"] as? SuspendState.RawValue {
+            self.suspendState = SuspendState(rawValue: rawSuspendState)
+        }
         
         if let rawAlarmCode = rawValue["alarmCode"] as? AlarmCode.RawValue {
             self.alarmCode = AlarmCode(rawValue: rawAlarmCode)
@@ -184,11 +185,11 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
             "timeZone": timeZone.secondsFromGMT(),
             "finishedDoses": finishedDoses.map( { $0.rawValue }),
             "basalProgram": basalProgram.rawValue,
-            "suspendState": suspendState.rawValue,
             "maximumTempBasalRate": maximumTempBasalRate,
             "activeAlerts": activeAlerts.rawValue
         ]
 
+        rawValue["suspendState"] = suspendState?.rawValue
         rawValue["lastStatusDate"] = lastStatusDate
         rawValue["reservoirLevel"] = reservoirLevel?.rawValue
         rawValue["podTotalDelivery"] = podTotalDelivery

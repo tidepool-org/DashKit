@@ -190,6 +190,8 @@ extension DashPumpManager {
             case .suspended:
                 absoluteRate = 0
                 netBasalPercent = -1
+            case .none:
+                return nil
             }
         }
         

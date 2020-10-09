@@ -56,6 +56,17 @@ public class MockPodCommManager: PodCommManagerProtocol {
     
     public var bleConnected: Bool = true
 
+    public func update(for state: DashPumpManagerState) {
+        guard state.suspendState != nil else {
+            setDeactivatedState()
+            return
+        }
+        
+        if let reservoirUnitsRemaining = state.reservoirLevel?.rawValue {
+            podStatus.reservoirUnitsRemaining = reservoirUnitsRemaining
+        }
+    }
+    
     public func startPodActivation(lowReservoirAlert: LowReservoirAlert?, podExpirationAlert: PodExpirationAlert?, eventListener: @escaping (ActivationStatus<ActivationStep1Event>) -> ()) {
 
         pairAttemptCount += 1
@@ -124,11 +135,24 @@ public class MockPodCommManager: PodCommManagerProtocol {
     }
 
     public func deactivatePod(completion: @escaping (PodCommResult<PartialPodStatus>) -> ()) {
-        podStatus = MockPodStatus(expirationDate: podStatus.expirationDate, podState: .deactivated, programStatus: [], activeAlerts: [], isOcclusionAlertActive: false, bolusUnitsRemaining: 0, totalUnitsDelivered: 0, reservoirUnitsRemaining: 0, timeElapsedSinceActivation: Date().timeIntervalSince(podStatus.activationTime), activationTime: podStatus.activationTime)
-        podCommState = .noPod
+        setDeactivatedState()
         deliveryProgramError = nil
         unacknowledgedCommandRetryResult = nil
         completion(.success(podStatus))
+    }
+    
+    private func setDeactivatedState() {
+        podStatus = MockPodStatus(expirationDate: podStatus.expirationDate,
+                                  podState: .deactivated,
+                                  programStatus: [],
+                                  activeAlerts: [],
+                                  isOcclusionAlertActive: false,
+                                  bolusUnitsRemaining: 0,
+                                  totalUnitsDelivered: 0,
+                                  reservoirUnitsRemaining: 0,
+                                  timeElapsedSinceActivation: Date().timeIntervalSince(podStatus.activationTime),
+                                  activationTime: podStatus.activationTime)
+        podCommState = .noPod
     }
     
     public func getPodStatus(userInitiated: Bool, completion: @escaping (PodCommResult<PodStatus>) -> ()) {
