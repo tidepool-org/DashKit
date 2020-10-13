@@ -591,7 +591,8 @@ public class DashPumpManager: PumpManager {
             }
         }
         if let bolus = state.unfinalizedBolus, !bolus.isFinished(at: dateGenerator()) {
-            return .inProgress(DoseEntry(bolus, at: 
+            return .inProgress(DoseEntry(bolus, at: dateGenerator()))
+        }
         return PumpManagerStatus.BolusState.none
     }
 
