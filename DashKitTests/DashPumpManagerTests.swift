@@ -320,11 +320,9 @@ class DashPumpManagerTests: XCTestCase {
         XCTAssertEqual(.suspend, finalSuspend.type)
 
         let lastPumpManagerStatus = pumpManagerStatusUpdates.last!
-        if case .suspended(let date) = lastPumpManagerStatus.basalDeliveryState {
-            XCTAssertEqual(dateGenerator(), date)
-        } else {
-            XCTFail("PumpManager should indicate suspended delivery after pod discarded")
-        }
+        
+        // PumpManager should indicate no delivery after pod is discarded
+        XCTAssertNil(lastPumpManagerStatus.basalDeliveryState)
     }
     
     func testAlarmDuringBolusShouldUseRemainingInsulinField() {
@@ -650,7 +648,7 @@ class DashPumpManagerTests: XCTestCase {
         }
         waitForExpectations(timeout: 3)
 
-        XCTAssert(pumpManager.status.basalDeliveryState.isSuspended)
+        XCTAssert(pumpManager.status.basalDeliveryState!.isSuspended)
 
         mockPodCommManager.deliveryProgramError = .unacknowledgedCommandPendingRetry
         let resumeCompletion = expectation(description: "resume completed")
@@ -672,7 +670,7 @@ class DashPumpManagerTests: XCTestCase {
 
         waitForExpectations(timeout: 3)
         
-        XCTAssert(!pumpManager.status.basalDeliveryState.isSuspended)
+        XCTAssert(!pumpManager.status.basalDeliveryState!.isSuspended)
         
         let resume = reportedPumpEvents.last!
         
@@ -713,7 +711,7 @@ class DashPumpManagerTests: XCTestCase {
         }
         waitForExpectations(timeout: 3)
 
-        XCTAssert(pumpManager.status.basalDeliveryState.isSuspended)
+        XCTAssert(pumpManager.status.basalDeliveryState!.isSuspended)
         
         let newBasalScheduleItems = [RepeatingScheduleValue(startTime: 0, value: 2.0)]
 
@@ -726,7 +724,7 @@ class DashPumpManagerTests: XCTestCase {
         }
         waitForExpectations(timeout: 3)
         
-        XCTAssert(pumpManager.status.basalDeliveryState.isSuspended)
+        XCTAssert(pumpManager.status.basalDeliveryState!.isSuspended)
         
         let resumeCompletion = expectation(description: "resume completed")
         pumpManager.resumeDelivery() { (error) in
