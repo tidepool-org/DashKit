@@ -62,9 +62,7 @@ public class MockPodCommManager: PodCommManagerProtocol {
             return
         }
         
-        if let reservoirUnitsRemaining = state.reservoirLevel?.rawValue {
-            podStatus.reservoirUnitsRemaining = reservoirUnitsRemaining
-        }
+        podStatus.reservoirUnitsRemaining = state.reservoirLevel?.rawValue ?? 0
     }
     
     public func startPodActivation(lowReservoirAlert: LowReservoirAlert?, podExpirationAlert: PodExpirationAlert?, eventListener: @escaping (ActivationStatus<ActivationStep1Event>) -> ()) {
