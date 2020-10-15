@@ -179,7 +179,7 @@ class DashPumpManagerTests: XCTestCase {
         }
         waitForExpectations(timeout: 3)
 
-        guard case .inactive = pumpManager.status.bolusState! else {
+        guard case .noBolus = pumpManager.status.bolusState else {
             XCTFail("Expected no bolus in progress")
             return
         }

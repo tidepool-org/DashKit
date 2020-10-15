@@ -575,9 +575,9 @@ public class DashPumpManager: PumpManager {
         }
     }
 
-    private func bolusState(for state: DashPumpManagerState) -> PumpManagerStatus.BolusState? {
+    private func bolusState(for state: DashPumpManagerState) -> PumpManagerStatus.BolusState {
         if podCommManager.podCommState == .noPod {
-            return nil
+            return .noBolus
         }
 
         if let transition = state.activeTransition {
@@ -593,7 +593,7 @@ public class DashPumpManager: PumpManager {
         if let bolus = state.unfinalizedBolus, !bolus.isFinished(at: dateGenerator()) {
             return .inProgress(DoseEntry(bolus, at: dateGenerator()))
         }
-        return .inactive
+        return .noBolus
     }
 
     public func createBolusProgressReporter(reportingOn dispatchQueue: DispatchQueue) -> DoseProgressReporter? {
