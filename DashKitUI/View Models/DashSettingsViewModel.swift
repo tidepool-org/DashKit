@@ -17,7 +17,7 @@ class DashSettingsViewModel: DashSettingsViewModelProtocol {
     
     @Published var activatedAt: Date?
     
-    @Published var basalDeliveryState: PumpManagerStatus.BasalDeliveryState
+    @Published var basalDeliveryState: PumpManagerStatus.BasalDeliveryState?
 
     @Published var basalDeliveryRate: BasalDeliveryRate?
 
@@ -190,6 +190,8 @@ extension DashPumpManager {
             case .suspended:
                 absoluteRate = 0
                 netBasalPercent = -1
+            case .none:
+                return nil
             }
         }
         

@@ -381,7 +381,7 @@ public class DashPumpManager: PumpManager {
             state.unfinalizedTempBasal?.cancel(at: now)
             state.finalizeDoses()
             state.finishedDoses.append(UnfinalizedDose(suspendStartTime: now, scheduledCertainty: .certain))
-            state.suspendState = .suspended(now)
+            state.suspendState = nil
             state.podActivatedAt = nil
             state.lastStatusDate = nil
             state.reservoirLevel = nil
@@ -545,11 +545,7 @@ public class DashPumpManager: PumpManager {
         }
     }
 
-    private func basalDeliveryState(for state: DashPumpManagerState) -> PumpManagerStatus.BasalDeliveryState {
-        if podCommManager.podCommState == .noPod {
-            return .suspended(state.lastStatusDate ?? .distantPast)
-        }
-        
+    private func basalDeliveryState(for state: DashPumpManagerState) -> PumpManagerStatus.BasalDeliveryState? {
         if let transition = state.activeTransition {
             switch transition {
             case .suspendingPump:
@@ -574,12 +570,14 @@ public class DashPumpManager: PumpManager {
             return .active(date)
         case .suspended(let date):
             return .suspended(date)
+        case .none:
+            return nil
         }
     }
 
     private func bolusState(for state: DashPumpManagerState) -> PumpManagerStatus.BolusState {
         if podCommManager.podCommState == .noPod {
-            return .none
+            return .noBolus
         }
 
         if let transition = state.activeTransition {
@@ -595,7 +593,7 @@ public class DashPumpManager: PumpManager {
         if let bolus = state.unfinalizedBolus, !bolus.isFinished(at: dateGenerator()) {
             return .inProgress(DoseEntry(bolus, at: dateGenerator()))
         }
-        return .none
+        return .noBolus
     }
 
     public func createBolusProgressReporter(reportingOn dispatchQueue: DispatchQueue) -> DoseProgressReporter? {
@@ -1156,9 +1154,7 @@ public class DashPumpManager: PumpManager {
 
         #if targetEnvironment(simulator)
         let mockPodCommManager = MockPodCommManager.shared
-        if let reservoirUnitsRemaining = state.reservoirLevel?.rawValue {
-            mockPodCommManager.podStatus.reservoirUnitsRemaining = reservoirUnitsRemaining
-        }
+        mockPodCommManager.update(for: state)
         #endif
 
         if let podCommManager = podCommManager {

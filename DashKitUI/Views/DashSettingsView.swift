@@ -95,8 +95,9 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
     }
     
     var deliveryStatus: some View {
+        // podOK is true at this point. Thus there will be a basalDeliveryState
         VStack(alignment: .leading, spacing: 0) {
-            Text(self.viewModel.basalDeliveryState.headerText)
+            Text(self.viewModel.basalDeliveryState!.headerText)
                 .foregroundColor(Color(UIColor.secondaryLabel))
             self.viewModel.basalDeliveryRate.map { (rate) in
                 HStack(alignment: .center) {
@@ -128,18 +129,19 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
     }
 
     var suspendResumeRow: some View {
+        // podOK is true at this point. Thus there will be a basalDeliveryState
         HStack {
             Button(action: {
                 self.suspendResumeTapped()
             }) {
-                Text(self.viewModel.basalDeliveryState.suspendResumeActionText)
-                    .foregroundColor(self.viewModel.basalDeliveryState.suspendResumeActionColor)
+                Text(self.viewModel.basalDeliveryState!.suspendResumeActionText)
+                    .foregroundColor(self.viewModel.basalDeliveryState!.suspendResumeActionColor)
             }
             .actionSheet(isPresented: $showSuspendOptions) {
                 suspendOptionsActionSheet
             }
             Spacer()
-            if self.viewModel.basalDeliveryState.transitioning {
+            if self.viewModel.basalDeliveryState!.transitioning {
                 ActivityIndicator(isAnimating: .constant(true), style: .medium)
             }
         }
