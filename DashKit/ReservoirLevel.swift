@@ -14,14 +14,16 @@ public enum ReservoirLevel: RawRepresentable, Equatable {
     public typealias RawValue = Int
 
     case valid(Double)
-    case aboveThreshold
+    case aboveThreshold // the threshold is 50 units remaining
 
     public func asPercentage() -> Double? {
         switch self {
         case .aboveThreshold:
+            // reservoir has more than 50 units remaining
             return nil
         case .valid(let value):
-            return min(1, max(0, value / Pod.reservoirCapacity))
+            // design requested that reservoir level start display at 50%. This means that 50 units remaining = 50%, 25 units = 25% and so on.
+            return min(1, max(0, value / 100))
         }
     }
 
