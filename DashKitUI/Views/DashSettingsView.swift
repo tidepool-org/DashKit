@@ -18,7 +18,6 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
     
     @State private var showSuspendOptions = false;
     
-    @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.guidanceColors) var guidanceColors
     @Environment(\.insulinTintColor) var insulinTintColor
     
@@ -283,8 +282,7 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
 
         }
         .alert(isPresented: $viewModel.alertIsPresented, content: { alert(for: viewModel.activeAlert!) })
-        .listStyle(GroupedListStyle())
-        .environment(\.horizontalSizeClass, self.horizontalSizeClass)
+        .insetGroupedListStyle()
         .navigationBarItems(trailing: doneButton)
         .navigationBarTitle("Omnipod", displayMode: .automatic)
         
