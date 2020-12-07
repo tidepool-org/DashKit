@@ -927,7 +927,7 @@
 				"$(BUILT_PRODUCTS_DIR)/RxSwift.framework/RxSwift",
 				"$(SRCROOT)/dash-sdk-ios/frameworks/INSSDK.framework/INSSDK",
 				"$(SRCROOT)/dash-sdk-ios/frameworks/PodSDK.xcframework/ios-arm64/PodSDK.framework/PodSDK",
-				"$(BUILT_PRODUCTS_DIR)/MkRingProgressView.framework/MkRingProgressView",
+				"$(BUILT_PRODUCTS_DIR)/MKRingProgressView.framework/MKRingProgressView",
 			);
 			name = "Copy Frameworks with Carthage";
 			outputFileListPaths = (
