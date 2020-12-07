@@ -60,9 +60,6 @@
 		C12C9C83229EDB7B00FF7632 /* InsulinStatusTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12C9C82229EDB7B00FF7632 /* InsulinStatusTableViewCell.swift */; };
 		C1344DE22304CE2B00973BE3 /* TimeInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D11422692BDE00D63775 /* TimeInterval.swift */; };
 		C134E91924645D5100DB95AF /* MockPodVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = C134E91824645D5100DB95AF /* MockPodVersion.swift */; };
-		C135D91A2319AA4200774F82 /* Kronos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C135D9192319AA4200774F82 /* Kronos.framework */; };
-		C135D91B2319AA5900774F82 /* Kronos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C135D9192319AA4200774F82 /* Kronos.framework */; };
-		C135D91C2319AA5A00774F82 /* Kronos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C135D9192319AA4200774F82 /* Kronos.framework */; };
 		C136AA5823117A2F008A320D /* OSLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ACF43E22A1F9A700F7DDB4 /* OSLog.swift */; };
 		C13DA2AE24F5C3530098BB29 /* UncertaintyRecoveredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C13DA2AD24F5C3530098BB29 /* UncertaintyRecoveredView.swift */; };
 		C14386B9244F59800070B0FF /* BasalStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14386B8244F59800070B0FF /* BasalStateView.swift */; };
@@ -100,6 +97,8 @@
 		C196751524F1CD6300118EC4 /* MockPodSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C196751424F1CD6300118EC4 /* MockPodSettingsView.swift */; };
 		C19BB3F022E7C64A00EA5C2E /* DashKitPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19BB3EF22E7C64A00EA5C2E /* DashKitPlugin.swift */; };
 		C1A701B923EB7EC2002D1E45 /* PairPodView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A701B823EB7EC2002D1E45 /* PairPodView.swift */; };
+		C1A7FDE5257ED3B70049D81D /* carthage.sh in Resources */ = {isa = PBXBuildFile; fileRef = C1A7FDE3257ED3B70049D81D /* carthage.sh */; };
+		C1A7FDE6257ED3B70049D81D /* copy-frameworks.sh in Resources */ = {isa = PBXBuildFile; fileRef = C1A7FDE4257ED3B70049D81D /* copy-frameworks.sh */; };
 		C1A8310624F5AEE400C3BD13 /* DeliveryUncertaintyRecoveryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A8310524F5AEE400C3BD13 /* DeliveryUncertaintyRecoveryViewModel.swift */; };
 		C1A9194024325D3B008D216E /* DashKitUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A9193F24325D3B008D216E /* DashKitUITests.swift */; };
 		C1A9194224325D3B008D216E /* DashKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C107D15322694B9C00D63775 /* DashKitUI.framework */; };
@@ -139,19 +138,11 @@
 		C1FE2E3E22EA0B5A0035DCA0 /* LoopKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E3922EA0B360035DCA0 /* LoopKit.framework */; };
 		C1FE2E3F22EA0B5D0035DCA0 /* LoopKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E3B22EA0B360035DCA0 /* LoopKitUI.framework */; };
 		C1FE2E5322EA0DB90035DCA0 /* MKRingProgressView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E5222EA0DB90035DCA0 /* MKRingProgressView.framework */; };
-		C1FE2E5522EA0DCB0035DCA0 /* SwiftGif.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E5422EA0DCB0035DCA0 /* SwiftGif.framework */; };
 		C1FE2E5822EA0DDC0035DCA0 /* INSSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E5622EA0DDB0035DCA0 /* INSSDK.framework */; };
 		C1FE2E5A22EA0DEA0035DCA0 /* INSSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E5622EA0DDB0035DCA0 /* INSSDK.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		C11615F5239589250039A072 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C1E753D0226928F700A0BC48 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = C11615F0239588DB0039A072;
-			remoteInfo = Cartfile;
-		};
 		C1A9194324325D3B008D216E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C1E753D0226928F700A0BC48 /* Project object */;
@@ -291,6 +282,8 @@
 		C19BB3E722E776AE00EA5C2E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C19BB3EF22E7C64A00EA5C2E /* DashKitPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DashKitPlugin.swift; sourceTree = "<group>"; };
 		C1A701B823EB7EC2002D1E45 /* PairPodView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairPodView.swift; sourceTree = "<group>"; };
+		C1A7FDE3257ED3B70049D81D /* carthage.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = carthage.sh; sourceTree = "<group>"; };
+		C1A7FDE4257ED3B70049D81D /* copy-frameworks.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "copy-frameworks.sh"; sourceTree = "<group>"; };
 		C1A8310524F5AEE400C3BD13 /* DeliveryUncertaintyRecoveryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeliveryUncertaintyRecoveryViewModel.swift; sourceTree = "<group>"; };
 		C1A9193D24325D3B008D216E /* DashKitUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DashKitUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1A9193F24325D3B008D216E /* DashKitUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashKitUITests.swift; sourceTree = "<group>"; };
@@ -343,7 +336,6 @@
 				C1D68E392284E0E000019CAE /* DashKit.framework in Frameworks */,
 				C1FE2E3E22EA0B5A0035DCA0 /* LoopKit.framework in Frameworks */,
 				C1FE2E3F22EA0B5D0035DCA0 /* LoopKitUI.framework in Frameworks */,
-				C135D91B2319AA5900774F82 /* Kronos.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -354,7 +346,6 @@
 				C1FE2E3A22EA0B360035DCA0 /* LoopKit.framework in Frameworks */,
 				C1FE2E5A22EA0DEA0035DCA0 /* INSSDK.framework in Frameworks */,
 				C1FE2E3C22EA0B360035DCA0 /* LoopKitUI.framework in Frameworks */,
-				C135D91C2319AA5A00774F82 /* Kronos.framework in Frameworks */,
 				C16DA83622E7C6F2008624C2 /* DashKit.framework in Frameworks */,
 				C16DA85822E93973008624C2 /* DashKitUI.framework in Frameworks */,
 			);
@@ -372,12 +363,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C135D91A2319AA4200774F82 /* Kronos.framework in Frameworks */,
 				C1FE2E5822EA0DDC0035DCA0 /* INSSDK.framework in Frameworks */,
 				C1FE2E5322EA0DB90035DCA0 /* MKRingProgressView.framework in Frameworks */,
 				C1FE2E3D22EA0B570035DCA0 /* LoopKit.framework in Frameworks */,
 				C11097CE238F14A4004F1A04 /* PodSDK.xcframework in Frameworks */,
-				C1FE2E5522EA0DCB0035DCA0 /* SwiftGif.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -597,6 +586,15 @@
 			path = DashKitPlugin;
 			sourceTree = "<group>";
 		};
+		C1A7FDE2257ED3B70049D81D /* Scripts */ = {
+			isa = PBXGroup;
+			children = (
+				C1A7FDE3257ED3B70049D81D /* carthage.sh */,
+				C1A7FDE4257ED3B70049D81D /* copy-frameworks.sh */,
+			);
+			path = Scripts;
+			sourceTree = "<group>";
+		};
 		C1A9193E24325D3B008D216E /* DashKitUITests */ = {
 			isa = PBXGroup;
 			children = (
@@ -613,6 +611,7 @@
 		C1E753CF226928F700A0BC48 = {
 			isa = PBXGroup;
 			children = (
+				C1A7FDE2257ED3B70049D81D /* Scripts */,
 				C107D11322692BC300D63775 /* Common */,
 				C1E753DB226928F700A0BC48 /* DashKit */,
 				C1E753E6226928F700A0BC48 /* DashKitTests */,
@@ -771,7 +770,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				C11615F6239589250039A072 /* PBXTargetDependency */,
 			);
 			name = DashKit;
 			productName = DashKit;
@@ -883,6 +881,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C1A7FDE6257ED3B70049D81D /* copy-frameworks.sh in Resources */,
+				C1A7FDE5257ED3B70049D81D /* carthage.sh in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -922,14 +922,12 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"$(TARGET_BUILD_DIR)/DashKit.framework",
-				"$(TARGET_BUILD_DIR)/DashKitUI.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/RxSwift.framework",
-				"$(SRCROOT)/dash-sdk-ios/frameworks/INSSDK.framework",
-				"$(SRCROOT)/dash-sdk-ios/frameworks/PodSDK.xcframework/ios-arm64/PodSDK.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/MKRingProgressView.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/SwiftGif.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/Kronos.framework",
+				"$(BUILT_PRODUCTS_DIR)/DashKit.framework/DashKit",
+				"$(BUILT_PRODUCTS_DIR)/DashKitUI.framework/DashKitUI",
+				"$(BUILT_PRODUCTS_DIR)/RxSwift.framework/RxSwift",
+				"$(SRCROOT)/dash-sdk-ios/frameworks/INSSDK.framework/INSSDK",
+				"$(SRCROOT)/dash-sdk-ios/frameworks/PodSDK.xcframework/ios-arm64/PodSDK.framework/PodSDK",
+				"$(BUILT_PRODUCTS_DIR)/MkRingProgressView.framework/MkRingProgressView",
 			);
 			name = "Copy Frameworks with Carthage";
 			outputFileListPaths = (
@@ -938,7 +936,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "carthage copy-frameworks\n";
+			shellScript = "\"${SRCROOT}/Scripts/copy-frameworks.sh\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1072,11 +1070,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		C11615F6239589250039A072 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = C11615F0239588DB0039A072 /* Cartfile */;
-			targetProxy = C11615F5239589250039A072 /* PBXContainerItemProxy */;
-		};
 		C1A9194424325D3B008D216E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = C107D15222694B9C00D63775 /* DashKitUI */;
