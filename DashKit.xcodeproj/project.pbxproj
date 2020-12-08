@@ -97,8 +97,6 @@
 		C196751524F1CD6300118EC4 /* MockPodSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C196751424F1CD6300118EC4 /* MockPodSettingsView.swift */; };
 		C19BB3F022E7C64A00EA5C2E /* DashKitPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19BB3EF22E7C64A00EA5C2E /* DashKitPlugin.swift */; };
 		C1A701B923EB7EC2002D1E45 /* PairPodView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A701B823EB7EC2002D1E45 /* PairPodView.swift */; };
-		C1A7FDE5257ED3B70049D81D /* carthage.sh in Resources */ = {isa = PBXBuildFile; fileRef = C1A7FDE3257ED3B70049D81D /* carthage.sh */; };
-		C1A7FDE6257ED3B70049D81D /* copy-frameworks.sh in Resources */ = {isa = PBXBuildFile; fileRef = C1A7FDE4257ED3B70049D81D /* copy-frameworks.sh */; };
 		C1A8310624F5AEE400C3BD13 /* DeliveryUncertaintyRecoveryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A8310524F5AEE400C3BD13 /* DeliveryUncertaintyRecoveryViewModel.swift */; };
 		C1A9194024325D3B008D216E /* DashKitUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A9193F24325D3B008D216E /* DashKitUITests.swift */; };
 		C1A9194224325D3B008D216E /* DashKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C107D15322694B9C00D63775 /* DashKitUI.framework */; };
@@ -881,8 +879,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C1A7FDE6257ED3B70049D81D /* copy-frameworks.sh in Resources */,
-				C1A7FDE5257ED3B70049D81D /* carthage.sh in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
