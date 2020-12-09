@@ -84,10 +84,8 @@
 		C16DA83622E7C6F2008624C2 /* DashKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; platformFilter = ios; };
 		C16DA85822E93973008624C2 /* DashKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C107D15322694B9C00D63775 /* DashKitUI.framework */; platformFilter = ios; };
 		C171758C2437AFF200199ABC /* CheckInsertedCannulaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C171758B2437AFF200199ABC /* CheckInsertedCannulaView.swift */; };
-		C176FE342435004F005258CD /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1D46D5E22C568F600978E59 /* RxSwift.framework */; };
 		C176FE3524350581005258CD /* INSSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E5622EA0DDB0035DCA0 /* INSSDK.framework */; };
 		C176FE3624350651005258CD /* INSSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C1FE2E5622EA0DDB0035DCA0 /* INSSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C176FE372435065B005258CD /* RxSwift.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C1D46D5E22C568F600978E59 /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C188E42624C61E98002701AB /* PodAlerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = C188E42524C61E98002701AB /* PodAlerts.swift */; };
 		C194114E228DBEC000E886DD /* PodSetupCompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C194114D228DBEC000E886DD /* PodSetupCompleteViewController.swift */; };
 		C1941151228DBF2100E886DD /* ExpirationReminderDateTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1941150228DBF2100E886DD /* ExpirationReminderDateTableViewCell.swift */; };
@@ -135,7 +133,6 @@
 		C1FE2E3D22EA0B570035DCA0 /* LoopKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E3922EA0B360035DCA0 /* LoopKit.framework */; };
 		C1FE2E3E22EA0B5A0035DCA0 /* LoopKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E3922EA0B360035DCA0 /* LoopKit.framework */; };
 		C1FE2E3F22EA0B5D0035DCA0 /* LoopKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E3B22EA0B360035DCA0 /* LoopKitUI.framework */; };
-		C1FE2E5322EA0DB90035DCA0 /* MKRingProgressView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E5222EA0DB90035DCA0 /* MKRingProgressView.framework */; };
 		C1FE2E5822EA0DDC0035DCA0 /* INSSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E5622EA0DDB0035DCA0 /* INSSDK.framework */; };
 		C1FE2E5A22EA0DEA0035DCA0 /* INSSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E5622EA0DDB0035DCA0 /* INSSDK.framework */; };
 /* End PBXBuildFile section */
@@ -195,7 +192,6 @@
 			dstSubfolderSpec = 10;
 			files = (
 				C1245D4E24B8D59B0065120F /* PodSDK.xcframework in CopyFiles */,
-				C176FE372435065B005258CD /* RxSwift.framework in CopyFiles */,
 				C176FE3624350651005258CD /* INSSDK.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -247,7 +243,6 @@
 		C12AA74A231870160025FD45 /* ConnectionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionState.swift; sourceTree = "<group>"; };
 		C12C9C82229EDB7B00FF7632 /* InsulinStatusTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsulinStatusTableViewCell.swift; sourceTree = "<group>"; };
 		C134E91824645D5100DB95AF /* MockPodVersion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPodVersion.swift; sourceTree = "<group>"; };
-		C135D9192319AA4200774F82 /* Kronos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Kronos.framework; path = Carthage/Build/iOS/Kronos.framework; sourceTree = "<group>"; };
 		C13DA2AD24F5C3530098BB29 /* UncertaintyRecoveredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UncertaintyRecoveredView.swift; sourceTree = "<group>"; };
 		C14386B8244F59800070B0FF /* BasalStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasalStateView.swift; sourceTree = "<group>"; };
 		C1467BD1246D7E9500B97F77 /* BasalProgramTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasalProgramTests.swift; sourceTree = "<group>"; };
@@ -301,8 +296,6 @@
 		C1C72D8A241568E700DB224B /* DashSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashSettingsView.swift; sourceTree = "<group>"; };
 		C1C799F324C7749B008E0A1A /* FrameworkLocalText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrameworkLocalText.swift; sourceTree = "<group>"; };
 		C1C799F524C7A3E4008E0A1A /* DashSettingsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashSettingsViewModelTests.swift; sourceTree = "<group>"; };
-		C1D46D5E22C568F600978E59 /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = Carthage/Build/iOS/RxSwift.framework; sourceTree = "<group>"; };
-		C1D46D5F22C568F600978E59 /* ObjectMapper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ObjectMapper.framework; path = Carthage/Build/iOS/ObjectMapper.framework; sourceTree = "<group>"; };
 		C1D46D6522C56C2300978E59 /* MockPodCommManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPodCommManager.swift; sourceTree = "<group>"; };
 		C1D68E2F2284849D00019CAE /* BasalSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasalSchedule.swift; sourceTree = "<group>"; };
 		C1DFF91E2417C88600EAC44E /* InsertCannulaViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsertCannulaViewModel.swift; sourceTree = "<group>"; };
@@ -321,8 +314,6 @@
 		C1FDF4AB235EC930008B0251 /* HUDAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = HUDAssets.xcassets; sourceTree = "<group>"; };
 		C1FE2E3922EA0B360035DCA0 /* LoopKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = LoopKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1FE2E3B22EA0B360035DCA0 /* LoopKitUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = LoopKitUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		C1FE2E5222EA0DB90035DCA0 /* MKRingProgressView.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MKRingProgressView.framework; path = Carthage/Build/iOS/MKRingProgressView.framework; sourceTree = "<group>"; };
-		C1FE2E5422EA0DCB0035DCA0 /* SwiftGif.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftGif.framework; path = Carthage/Build/iOS/SwiftGif.framework; sourceTree = "<group>"; };
 		C1FE2E5622EA0DDB0035DCA0 /* INSSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = INSSDK.framework; path = "dash-sdk-ios/frameworks/INSSDK.framework"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -362,7 +353,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C1FE2E5822EA0DDC0035DCA0 /* INSSDK.framework in Frameworks */,
-				C1FE2E5322EA0DB90035DCA0 /* MKRingProgressView.framework in Frameworks */,
 				C1FE2E3D22EA0B570035DCA0 /* LoopKit.framework in Frameworks */,
 				C11097CE238F14A4004F1A04 /* PodSDK.xcframework in Frameworks */,
 			);
@@ -372,7 +362,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C176FE342435004F005258CD /* RxSwift.framework in Frameworks */,
 				C1E753E3226928F700A0BC48 /* DashKit.framework in Frameworks */,
 				C176FE3524350581005258CD /* INSSDK.framework in Frameworks */,
 				C1245D4D24B8D5510065120F /* PodSDK.xcframework in Frameworks */,
@@ -386,14 +375,9 @@
 			isa = PBXGroup;
 			children = (
 				C11097CD238F14A4004F1A04 /* PodSDK.xcframework */,
-				C135D9192319AA4200774F82 /* Kronos.framework */,
 				C1FE2E5622EA0DDB0035DCA0 /* INSSDK.framework */,
-				C1FE2E5422EA0DCB0035DCA0 /* SwiftGif.framework */,
-				C1FE2E5222EA0DB90035DCA0 /* MKRingProgressView.framework */,
 				C1FE2E3922EA0B360035DCA0 /* LoopKit.framework */,
 				C1FE2E3B22EA0B360035DCA0 /* LoopKitUI.framework */,
-				C1D46D5F22C568F600978E59 /* ObjectMapper.framework */,
-				C1D46D5E22C568F600978E59 /* RxSwift.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
