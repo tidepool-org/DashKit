@@ -1240,7 +1240,6 @@ public class DashPumpManager: PumpManager {
                     "* bolusUnitsRemaining: \(status.bolusUnitsRemaining)",
                     "* delivered: \(status.delivered)",
                     "* expirationDate: \(status.expirationDate)",
-                    "* isOcclusionAlertActive: \(status.isOcclusionAlertActive)",
                     "* podState: \(status.podState)",
                     "* programStatus: \(status.programStatus)",
                     "* reservoir: \(status.reservoir)",

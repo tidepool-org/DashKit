@@ -320,9 +320,9 @@ extension PodState : CustomStringConvertible {
 
         case .engagingClutchDrive:
             return "Engaging Clutch Drive. \nPlease wait for 35 seconds. Activation is in Progress......"
-
-        case .clutchDriveEnaged:
-            return "Clutch drive is engaged"
+            
+        case .clutchDriveEngaged:
+            return "Clutch Drive Engaged"
 
         case .basalProgramRunning:
             return "Basal program is Running"

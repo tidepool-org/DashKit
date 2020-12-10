@@ -346,7 +346,7 @@ class DashPumpManagerTests: XCTestCase {
             alarmCode: AlarmCode.occlusion,
             alarmDescription: "Occlusion",
             podStatus: podStatus,
-            occlusionType: .stallDuringRuntime,
+            occlusionType: .occlusion,
             didErrorOccuredFetchingBolusInfo: false,
             wasBolusActiveWhenPodAlarmed: true,
             podStateWhenPodAlarmed: podStatus.podState,

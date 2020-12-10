@@ -18,8 +18,6 @@ public struct MockPodStatus: PodStatus {
 
     public var activeAlerts: PodAlerts
 
-    public var isOcclusionAlertActive: Bool
-
     public var bolusUnitsRemaining: Int
 
     public var totalUnitsDelivered: Int
@@ -41,7 +39,6 @@ public struct MockPodStatus: PodStatus {
             podState: .runningAboveMinVolume,
             programStatus: .basalRunning,
             activeAlerts: PodAlerts([]),
-            isOcclusionAlertActive: false,
             bolusUnitsRemaining: 0,
             totalUnitsDelivered: 38,
             reservoirUnitsRemaining: 1023,
