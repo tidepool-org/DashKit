@@ -61,7 +61,7 @@ public enum PodAlert: String {
         case .userPodExpiration:
             return LocalizedString("Pod Expiration Reminder", comment: "Alert content title for userPodExpiration pod alert")
         case .lowReservoir:
-            return LocalizedString("Low Reservoir Alert", comment: "Alert content title for lowReservoir pod alert")
+            return LocalizedString("Low Reservoir", comment: "Alert content title for lowReservoir pod alert")
         case .suspendInProgress:
             return LocalizedString("Suspend In Progress Reminder", comment: "Alert content title for suspendInProgress pod alert")
         case .suspendEnded:
@@ -82,7 +82,7 @@ public enum PodAlert: String {
         case .userPodExpiration:
             return LocalizedString("Pod Expiration Reminder", comment: "Alert content body for userPodExpiration pod alert")
         case .lowReservoir:
-            return LocalizedString("Low Reservoir Alert", comment: "Alert content body for lowReservoir pod alert")
+            return LocalizedString("10 U insulin or less remaining in Pod.\nChange Pod soon", comment: "Alert content body for lowReservoir pod alert")
         case .suspendInProgress:
             return LocalizedString("Suspend In Progress Reminder", comment: "Alert content body for suspendInProgress pod alert")
         case .suspendEnded:
