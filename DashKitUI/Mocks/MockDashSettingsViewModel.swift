@@ -12,6 +12,7 @@ import HealthKit
 import DashKit
 
 class MockDashSettingsViewModel: DashSettingsViewModelProtocol {
+    
     var activatedAt: Date?
 
     var basalDeliveryState: PumpManagerStatus.BasalDeliveryState? = .suspended(Date())
@@ -21,6 +22,8 @@ class MockDashSettingsViewModel: DashSettingsViewModelProtocol {
     var timeZone: TimeZone {
         return TimeZone.currentFixed
     }
+
+    var podCommManager: PodCommManagerProtocol = MockPodCommManager.shared
 
     var lifeState: PodLifeState = .noPod
     

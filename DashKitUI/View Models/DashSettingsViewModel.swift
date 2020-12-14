@@ -13,6 +13,7 @@ import HealthKit
 import PodSDK
 
 class DashSettingsViewModel: DashSettingsViewModelProtocol {
+    
     @Published var lifeState: PodLifeState
     
     @Published var activatedAt: Date?
@@ -35,6 +36,10 @@ class DashSettingsViewModel: DashSettingsViewModelProtocol {
                 activeAlert = nil
             }
         }
+    }
+    
+    var podCommManager: PodCommManagerProtocol {
+        return pumpManager.unwrappedPodCommManager
     }
 
     var timeZone: TimeZone {

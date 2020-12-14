@@ -91,6 +91,8 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
     
     private let guidanceColors: GuidanceColors
     
+    public var pumpManagerType: DashPumpManager.Type?
+    
     private func viewControllerForScreen(_ screen: DashUIScreen) -> UIViewController {
         switch screen {
         case .deactivate:
@@ -137,15 +139,11 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
         case .pairPod:
             if pumpManager == nil,
                 let basalRateSchedule = basalSchedule,
+                let pumpManagerType = pumpManagerType,
                 let maxBasalRateUnitsPerHour = maxBasalRateUnitsPerHour,
                 let pumpManagerState = DashPumpManagerState(basalRateSchedule: basalRateSchedule, maximumTempBasalRate: maxBasalRateUnitsPerHour)
             {
-                #if targetEnvironment(simulator)
-                let pumpManager = DashPumpManager(state: pumpManagerState, podCommManager: MockPodCommManager.shared)
-                MockPodCommManager.shared.dashPumpManager = pumpManager
-                #else
-                let pumpManager = DashPumpManager(state: pumpManagerState)
-                #endif
+                let pumpManager = pumpManagerType.init(state: pumpManagerState)
                 self.pumpManager = pumpManager
                 setupDelegate?.pumpManagerSetupViewController(self, didSetUpPumpManager: pumpManager)
             }

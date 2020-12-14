@@ -21,7 +21,7 @@ public enum ReservoirAlertState {
 
 internal class DashHUDProvider: NSObject, HUDProvider {
     var managerIdentifier: String {
-        return DashPumpManager.managerIdentifier
+        return pumpManager.managerIdentifier
     }
 
     private let pumpManager: DashPumpManager
