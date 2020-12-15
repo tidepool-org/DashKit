@@ -46,6 +46,8 @@ protocol DashSettingsViewModelProtocol: ObservableObject, Identifiable {
     var basalRateFormatter: NumberFormatter { get }
 
     var timeZone: TimeZone { get }
+    
+    var podCommManager: PodCommManagerProtocol { get }
 
     func suspendDelivery(duration: TimeInterval)
 
