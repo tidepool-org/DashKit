@@ -20,7 +20,6 @@ enum DashUIScreen {
     case deactivate
     case settings
     case registration
-    case settingsSetup
     case pairPod
     case insertCannula
     case checkInsertedCannula
@@ -35,11 +34,6 @@ enum DashUIScreen {
         case .settings:
             return nil
         case .registration:
-            // if initial settings not set
-            return .settingsSetup
-            // else
-            // return .pairPod
-        case .settingsSetup:
             // if no pod paired
             return .pairPod
             // else if cannula not inserted
@@ -129,13 +123,6 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
             let view = hostingController(rootView: RegisterView(viewModel: viewModel))
             view.navigationItem.title = LocalizedString("Register Device", comment: "Title for register device screen")
             return view
-        case .settingsSetup:
-            let settingsVC = PodSettingsSetupViewController.instantiateFromStoryboard()
-            settingsVC.completion = { [weak self] in
-                self?.stepFinished()
-            }
-            settingsVC.settingsProvider = self
-            return settingsVC
         case .pairPod:
             if pumpManager == nil,
                 let basalRateSchedule = basalSchedule,
@@ -280,8 +267,6 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
             } else {
                 return .settings
             }
-        } else if maxBasalRateUnitsPerHour == nil || maxBolusUnits == nil || basalSchedule == nil {
-            return .settingsSetup
         } else {
             return .pairPod
         }

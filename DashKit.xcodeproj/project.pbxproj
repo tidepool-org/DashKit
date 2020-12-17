@@ -31,7 +31,6 @@
 		C107D161226A0DCF00D63775 /* DashPumpManager+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D160226A0DCF00D63775 /* DashPumpManager+UI.swift */; };
 		C107D166226A0EED00D63775 /* DashPumpManager.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C107D165226A0EED00D63775 /* DashPumpManager.storyboard */; };
 		C107D16D226A143A00D63775 /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D16C226A143A00D63775 /* UIViewController.swift */; };
-		C107D171226A1AD100D63775 /* PodSettingsSetupViewControllers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D170226A1AD100D63775 /* PodSettingsSetupViewControllers.swift */; };
 		C107D175226A1C7800D63775 /* DashHUDProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D174226A1C7800D63775 /* DashHUDProvider.swift */; };
 		C107D176226A22BF00D63775 /* LocalizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D11622692D9D00D63775 /* LocalizedString.swift */; };
 		C107D17A226A241200D63775 /* IdentifiableClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D179226A241200D63775 /* IdentifiableClass.swift */; };
@@ -253,7 +252,6 @@
 		C107D160226A0DCF00D63775 /* DashPumpManager+UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DashPumpManager+UI.swift"; sourceTree = "<group>"; };
 		C107D165226A0EED00D63775 /* DashPumpManager.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = DashPumpManager.storyboard; sourceTree = "<group>"; };
 		C107D16C226A143A00D63775 /* UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
-		C107D170226A1AD100D63775 /* PodSettingsSetupViewControllers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodSettingsSetupViewControllers.swift; sourceTree = "<group>"; };
 		C107D174226A1C7800D63775 /* DashHUDProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashHUDProvider.swift; sourceTree = "<group>"; };
 		C107D179226A241200D63775 /* IdentifiableClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifiableClass.swift; sourceTree = "<group>"; };
 		C107D17B226A243A00D63775 /* UITableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITableViewCell.swift; sourceTree = "<group>"; };
@@ -549,7 +547,6 @@
 		C1201E3D23EE1ABE002DA84A /* Old ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				C107D170226A1AD100D63775 /* PodSettingsSetupViewControllers.swift */,
 				C194114D228DBEC000E886DD /* PodSetupCompleteViewController.swift */,
 			);
 			path = "Old ViewControllers";
@@ -1053,7 +1050,6 @@
 				C14C6F252419F95E00CF3408 /* LeadingImage.swift in Sources */,
 				C1ACF43D22A1D00500F7DDB4 /* PodExpirationTableViewCell.swift in Sources */,
 				C1201E3123EDF498002DA84A /* Image.swift in Sources */,
-				C107D171226A1AD100D63775 /* PodSettingsSetupViewControllers.swift in Sources */,
 				C1941151228DBF2100E886DD /* ExpirationReminderDateTableViewCell.swift in Sources */,
 				C1562F8924169C65006952D6 /* DeactivatePodViewModel.swift in Sources */,
 				C1C72D8B241568E700DB224B /* DashSettingsView.swift in Sources */,
