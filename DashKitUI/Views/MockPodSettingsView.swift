@@ -121,12 +121,10 @@ struct MockPodReservoirRemainingEntryView: View {
     @Binding var reservoirRemaining: String
 
     var body: some View {
-        HStack{
-            // TextField only updates continuously as the user types if the value is a String
-            TextField("Enter reservoir remaining value",
-                      text: $reservoirRemaining)
+        // TextField only updates continuously as the user types if the value is a String
+        TextField("Enter reservoir remaining value",
+                  text: $reservoirRemaining)
             .keyboardType(.decimalPad)
-        }
     }
 }
 
