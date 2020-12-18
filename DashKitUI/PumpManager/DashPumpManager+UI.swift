@@ -14,7 +14,7 @@ import SwiftUI
 
 extension DashPumpManager: PumpManagerUI {
 
-    static public func setupViewController(insulinTintColor: Color, guidanceColors: GuidanceColors) -> (UIViewController & PumpManagerSetupViewController & CompletionNotifying) {
+    static public func setupViewController(insulinTintColor: Color, guidanceColors: GuidanceColors) -> (UIViewController & PumpManagerSetupViewController & CompletionNotifying)? {
         let vc = DashUICoordinator(insulinTintColor: insulinTintColor, guidanceColors: guidanceColors)
         vc.pumpManagerType = self
         return vc
