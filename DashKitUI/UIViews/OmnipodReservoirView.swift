@@ -86,8 +86,10 @@ public final class OmnipodReservoirView: LevelHUDView, NibLoadable {
 
             switch reservoirLevel {
             case .aboveThreshold:
-                volumeLabel.isHidden = false
                 level = nil
+                volumeLabel.isHidden = true
+                volumeLabel.textColor = stateColors?.normal
+                tintColor = stateColors?.normal
                 if let units = numberFormatter.string(from: Pod.maximumReservoirReading) {
                     volumeLabel.text = String(format: LocalizedString("%@+ U", comment: "Format string for reservoir volume when above maximum reading. (1: The maximum reading)"), units)
                     accessibilityValue = String(format: LocalizedString("Greater than %1$@ units remaining at %2$@", comment: "Accessibility format string for (1: localized volume)(2: time)"), units, time)
