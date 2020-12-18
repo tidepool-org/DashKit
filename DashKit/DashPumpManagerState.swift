@@ -229,7 +229,7 @@ extension DashPumpManagerState: CustomDebugStringConvertible {
         return [
             "* podActivatedAt: \(String(describing: podActivatedAt))",
             "* timeZone: \(timeZone)",
-            "* suspendState: \(suspendState)",
+            "* suspendState: \(String(describing: suspendState))",
             "* basalProgram: \(basalProgram)",
             "* finishedDoses: \(finishedDoses)",
             "* unfinalizedBolus: \(String(describing: unfinalizedBolus))",

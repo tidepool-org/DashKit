@@ -32,10 +32,33 @@ extension PodCommError {
     }
 }
 
+enum SimulatedPodAlerts: String, CaseIterable {
+    case lowReservoirAlert
+    case suspendInProgress
+    case podExpireImminent
+    case podExpiring
+    
+    var podAlerts: PodAlerts {
+        switch self {
+        case .lowReservoirAlert:
+            return PodAlerts.lowReservoir
+        case .suspendInProgress:
+            return PodAlerts.suspendInProgress
+        case .podExpireImminent:
+            return PodAlerts.podExpireImminent
+        case .podExpiring:
+            return PodAlerts.podExpiring
+        }
+    }
+}
+
 struct MockPodSettingsView: View {
     let mockPodCommManager: MockPodCommManager
     
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    
+    @State private var showAlertActions: Bool = false
+    @State private var selectedAlert: SimulatedPodAlerts?
     
     func podCommErrorFormatted(_ error: PodCommError?) -> String {
         if let error = error {
@@ -56,6 +79,37 @@ struct MockPodSettingsView: View {
             
             Section(header: Text("Reservoir Remaining").font(.headline).foregroundColor(Color.primary)) {
                 reservoirRemainingEntry
+            }
+            
+            Section(header: Text("Alerts").font(.headline).foregroundColor(Color.primary)) {
+                ForEach(SimulatedPodAlerts.allCases, id: \.self) { item in
+                    Button(action: {
+                        if self.mockPodCommManager.podStatus.activeAlerts.contains(item.podAlerts) {
+                            self.mockPodCommManager.clearAlerts(item.podAlerts)
+                        } else {
+                            self.selectedAlert = item
+                            self.showAlertActions = true
+                        }
+                    }) {
+                        HStack {
+                            Text("\(item.rawValue)")
+                            Spacer()
+                            if self.mockPodCommManager.podStatus.activeAlerts.contains(item.podAlerts) {
+                                Image(systemName: "checkmark.rectangle")
+                            }
+                        }
+                    }
+                }
+            }
+            .actionSheet(isPresented: $showAlertActions) {
+                ActionSheet(
+                    title: Text("\(selectedAlert!.rawValue)"),
+                    buttons: [
+                        .cancel(),
+                        .default(Text("Issue Immediately")) { self.mockPodCommManager.issueAlerts(selectedAlert!.podAlerts) },
+                        .default(Text("Issue in 15s")) { DispatchQueue.main.asyncAfter(deadline: .now() + 15) { self.mockPodCommManager.issueAlerts(selectedAlert!.podAlerts) } },
+                    ]
+                )
             }
         }
         .navigationBarTitle("Mock Pod Settings")

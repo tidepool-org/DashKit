@@ -25,11 +25,7 @@ public class MockPodCommManager: PodCommManagerProtocol {
     var lastBasalProgram: BasalProgram?
     var lastTempBasal: TempBasal?
 
-    public var podStatus: MockPodStatus {
-        didSet {
-            dashPumpManager?.getPodStatus(completion: { _ in })
-        }
-    }
+    public var podStatus: MockPodStatus
         
     public var silencedAlerts: [PodAlerts] = []
     
@@ -124,6 +120,16 @@ public class MockPodCommManager: PodCommManagerProtocol {
                 eventListener(.event(.podStatus(self.podStatus)))
             }
         }
+    }
+    
+    public func issueAlerts(_ alerts: PodAlerts) {
+        self.podStatus.activeAlerts.insert(alerts)
+        self.dashPumpManager?.podCommManagerHasAlerts(self.podStatus.activeAlerts)
+    }
+    
+    public func clearAlerts(_ alerts: PodAlerts) {
+        self.podStatus.activeAlerts.remove(alerts)
+        self.dashPumpManager?.podCommManagerHasAlerts(self.podStatus.activeAlerts)
     }
 
     public func discardPod(completion: @escaping (PodCommResult<Bool>) -> ()) {
