@@ -1174,6 +1174,7 @@ open class DashPumpManager: PumpManager {
     }
     
     public convenience required init(state: DashPumpManagerState, dateGenerator: @escaping () -> Date = Date.init) {
+        PodCommManager.shared.setup(withLaunchingOptions: nil)
         self.init(state: state, podCommManager: PodCommManager.shared, dateGenerator: dateGenerator)
     }
 
@@ -1183,6 +1184,7 @@ open class DashPumpManager: PumpManager {
             return nil
         }
 
+        PodCommManager.shared.setup(withLaunchingOptions: nil)
         self.init(state: state, podCommManager: PodCommManager.shared)
     }
 
