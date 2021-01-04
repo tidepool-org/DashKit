@@ -17,17 +17,21 @@ public protocol PodStatusObserver: class {
     func didUpdatePodStatus()
 }
 
-public class DashPumpManager: PumpManager {
+open class DashPumpManager: PumpManager {
     
-    public static var managerIdentifier = "OmnipodDash"
-    
-    static let podAlarmNotificationIdentifier = "DASH:\(LoopNotificationCategory.pumpFault.rawValue)"
+    open var managerIdentifier: String {
+        return "OmnipodDash"
+    }
 
+    static let podAlarmNotificationIdentifier = "DASH:\(LoopNotificationCategory.pumpFault.rawValue)"
+    
     public var podCommManager: PodCommManagerProtocol
+    
+    public var unwrappedPodCommManager: PodCommManagerProtocol
 
     public let log = OSLog(category: "DashPumpManager")
     
-    public static let localizedTitle = LocalizedString("Omnipod DASH", comment: "Generic title of the omnipod DASH pump manager")
+    public let localizedTitle = LocalizedString("Omnipod DASH", comment: "Generic title of the omnipod DASH pump manager")
     
     public var lastReconciliation: Date? {
         return dateGenerator()
@@ -243,7 +247,7 @@ public class DashPumpManager: PumpManager {
         }
         
         return HKDevice(
-            name: type(of: self).managerIdentifier,
+            name: managerIdentifier,
             manufacturer: "Insulet",
             model: "DASH",
             hardwareVersion: hardwareVersion,
@@ -1146,29 +1150,15 @@ public class DashPumpManager: PumpManager {
             }
         }
     }
-
-    public init(state: DashPumpManagerState, podCommManager: PodCommManagerProtocol? = nil, dateGenerator: @escaping () -> Date = Date.init) {
-        
+    
+    public init(state: DashPumpManagerState, podCommManager: PodCommManagerProtocol, dateGenerator: @escaping () -> Date = Date.init) {
         let loggingShim: PodSDKLoggingShim
-        let actualPodCommManager: PodCommManagerProtocol
-
-        #if targetEnvironment(simulator)
-        let mockPodCommManager = MockPodCommManager.shared
-        mockPodCommManager.update(for: state)
-        #endif
-
-        if let podCommManager = podCommManager {
-            actualPodCommManager = podCommManager
-        } else {
-            #if targetEnvironment(simulator)
-            actualPodCommManager = mockPodCommManager
-            #else
-            actualPodCommManager = PodCommManager.shared
-            #endif
-        }
-        loggingShim = PodSDKLoggingShim(target: actualPodCommManager)
         
-        loggingShim.deviceIdentifier = actualPodCommManager.deviceIdentifier
+        unwrappedPodCommManager = podCommManager
+        
+        loggingShim = PodSDKLoggingShim(target: podCommManager)
+        
+        loggingShim.deviceIdentifier = podCommManager.deviceIdentifier
 
         self.lockedState = Locked(state)
         self.podCommManager = loggingShim
@@ -1178,13 +1168,13 @@ public class DashPumpManager: PumpManager {
 
         self.podCommManager.delegate = self
         
-        actualPodCommManager.setLogger(logger: self)
+        podCommManager.setLogger(logger: self)
 
-        actualPodCommManager.setup(withLaunchingOptions: [:])
-        
-        #if targetEnvironment(simulator)
-        mockPodCommManager.dashPumpManager = self
-        #endif
+        podCommManager.setup(withLaunchingOptions: [:])
+    }
+    
+    public convenience required init(state: DashPumpManagerState, dateGenerator: @escaping () -> Date = Date.init) {
+        self.init(state: state, podCommManager: PodCommManager.shared, dateGenerator: dateGenerator)
     }
 
     public convenience required init?(rawState: PumpManager.RawStateValue) {
@@ -1193,7 +1183,7 @@ public class DashPumpManager: PumpManager {
             return nil
         }
 
-        self.init(state: state)
+        self.init(state: state, podCommManager: PodCommManager.shared)
     }
 
     public var rawState: PumpManager.RawStateValue {

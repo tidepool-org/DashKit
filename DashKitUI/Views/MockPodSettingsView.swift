@@ -94,9 +94,22 @@ struct MockPodSettingsView: View {
     }
     
     var reservoirRemainingEntry: some View {
+        var numberFormatter: NumberFormatter {
+            let formatter = NumberFormatter()
+            formatter.numberStyle = .decimal
+            formatter.minimumFractionDigits = 2
+            return formatter
+        }
+
         let reservoirRemaining = Binding(
-            get: { self.mockPodCommManager.podStatus.reservoirUnitsRemaining / Int(Pod.podSDKInsulinMultiplier) },
-            set: { self.mockPodCommManager.podStatus.reservoirUnitsRemaining = $0 * Int(Pod.podSDKInsulinMultiplier) }
+            get: {
+                return numberFormatter.string(from: Double(self.mockPodCommManager.podStatus.reservoirUnitsRemaining) / Pod.podSDKInsulinMultiplier) ?? ""
+            },
+            set: {
+                if let reservoirRemaining = numberFormatter.number(from: $0) {
+                    self.mockPodCommManager.podStatus.reservoirUnitsRemaining = Int(reservoirRemaining.doubleValue * Pod.podSDKInsulinMultiplier)
+                }
+            }
         )
         
         return MockPodReservoirRemainingEntryView(reservoirRemaining: reservoirRemaining)
@@ -105,13 +118,13 @@ struct MockPodSettingsView: View {
 }
 
 struct MockPodReservoirRemainingEntryView: View {
-    @Binding var reservoirRemaining: Int
-    
+    @Binding var reservoirRemaining: String
+
     var body: some View {
+        // TextField only updates continuously as the user types if the value is a String
         TextField("Enter reservoir remaining value",
-                  value: $reservoirRemaining,
-                  formatter: NumberFormatter())
-            .keyboardType(.numberPad)
+                  text: $reservoirRemaining)
+            .keyboardType(.decimalPad)
     }
 }
 

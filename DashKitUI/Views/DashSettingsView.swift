@@ -151,12 +151,7 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
             self.viewModel.doneTapped()
         })
     }
-    
-    #if targetEnvironment(simulator)
-    var mockPodCommManager: MockPodCommManager? { return nil }
-    #endif
-
-    
+        
     var body: some View {
         List {
             VStack(alignment: .leading) {
@@ -186,12 +181,12 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
             if self.viewModel.podOk {
                 Section(header: FrameworkLocalText("Pod", comment: "Section header for pod section").font(.headline).foregroundColor(Color.primary)) {
                     suspendResumeRow
-                    #if targetEnvironment(simulator)
-                    NavigationLink(destination: MockPodSettingsView(mockPodCommManager: MockPodCommManager.shared)) {
-                        Text("Mock Pod Settings").foregroundColor(Color.primary)
+                    
+                    if let mockPodCommManager = viewModel.podCommManager as? MockPodCommManager {
+                        NavigationLink(destination: MockPodSettingsView(mockPodCommManager: mockPodCommManager)) {
+                            Text("Mock Pod Settings").foregroundColor(Color.primary)
+                        }
                     }
-                    #endif
-
                 }
 
                 Section() {

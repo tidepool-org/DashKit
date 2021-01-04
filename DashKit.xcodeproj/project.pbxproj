@@ -31,7 +31,6 @@
 		C107D161226A0DCF00D63775 /* DashPumpManager+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D160226A0DCF00D63775 /* DashPumpManager+UI.swift */; };
 		C107D166226A0EED00D63775 /* DashPumpManager.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C107D165226A0EED00D63775 /* DashPumpManager.storyboard */; };
 		C107D16D226A143A00D63775 /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D16C226A143A00D63775 /* UIViewController.swift */; };
-		C107D171226A1AD100D63775 /* PodSettingsSetupViewControllers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D170226A1AD100D63775 /* PodSettingsSetupViewControllers.swift */; };
 		C107D175226A1C7800D63775 /* DashHUDProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D174226A1C7800D63775 /* DashHUDProvider.swift */; };
 		C107D176226A22BF00D63775 /* LocalizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D11622692D9D00D63775 /* LocalizedString.swift */; };
 		C107D17A226A241200D63775 /* IdentifiableClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D179226A241200D63775 /* IdentifiableClass.swift */; };
@@ -39,6 +38,13 @@
 		C107D17D226A24CE00D63775 /* TimeZone.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D11A22692FC400D63775 /* TimeZone.swift */; };
 		C10C758122C4041F00CCC20F /* PodSDKProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10C758022C4041F00CCC20F /* PodSDKProtocol.swift */; };
 		C10C758322C404B700CCC20F /* PodCommManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10C758222C404B700CCC20F /* PodCommManager.swift */; };
+		C10CFCFA2584137200CD89D8 /* OSLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ACF43E22A1F9A700F7DDB4 /* OSLog.swift */; };
+		C10CFCFD2584137200CD89D8 /* LoopKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E3922EA0B360035DCA0 /* LoopKit.framework */; };
+		C10CFCFE2584137200CD89D8 /* INSSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E5622EA0DDB0035DCA0 /* INSSDK.framework */; };
+		C10CFCFF2584137200CD89D8 /* LoopKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E3B22EA0B360035DCA0 /* LoopKitUI.framework */; };
+		C10CFD002584137200CD89D8 /* DashKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; platformFilter = ios; };
+		C10CFD012584137200CD89D8 /* DashKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C107D15322694B9C00D63775 /* DashKitUI.framework */; platformFilter = ios; };
+		C10CFD152584144A00CD89D8 /* MockPodPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10CFD142584144A00CD89D8 /* MockPodPlugin.swift */; };
 		C10D1D77241169F50007ABF7 /* MockPodPairer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10D1D76241169F50007ABF7 /* MockPodPairer.swift */; };
 		C10D1D7824117E990007ABF7 /* PodPairer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10D1D74241168060007ABF7 /* PodPairer.swift */; };
 		C10D6121240D65300081FFFA /* PairPodViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10D6120240D65300081FFFA /* PairPodViewModel.swift */; };
@@ -46,6 +52,7 @@
 		C11097CE238F14A4004F1A04 /* PodSDK.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C11097CD238F14A4004F1A04 /* PodSDK.xcframework */; };
 		C115A5FB245B4069005ACEF7 /* MockPodAlarm.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A9194A2433917E008D216E /* MockPodAlarm.swift */; };
 		C115A5FC245B41B9005ACEF7 /* MockPodStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1562F8C2416A945006952D6 /* MockPodStatus.swift */; };
+		C11AA45C25841DFC00BDE12F /* MockPodPumpManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11AA45B25841DFC00BDE12F /* MockPodPumpManager.swift */; };
 		C11B2C2D2425846D00308035 /* MockNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11B2C2C2425846D00308035 /* MockNavigator.swift */; };
 		C1201E3123EDF498002DA84A /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1201E3023EDF498002DA84A /* Image.swift */; };
 		C1201E3F23EE1B03002DA84A /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1201E3E23EE1B03002DA84A /* RegisterView.swift */; };
@@ -138,6 +145,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		C10CFCF62584137200CD89D8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C1E753D0226928F700A0BC48 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C107D15222694B9C00D63775;
+			remoteInfo = DashKitUI;
+		};
+		C10CFCF82584137200CD89D8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C1E753D0226928F700A0BC48 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C1E753D8226928F700A0BC48;
+			remoteInfo = DashKit;
+		};
 		C1A9194324325D3B008D216E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C1E753D0226928F700A0BC48 /* Project object */;
@@ -176,6 +197,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		C10CFD032584137200CD89D8 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C12AD27122C169EE00DF43EF /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -221,17 +252,20 @@
 		C107D160226A0DCF00D63775 /* DashPumpManager+UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DashPumpManager+UI.swift"; sourceTree = "<group>"; };
 		C107D165226A0EED00D63775 /* DashPumpManager.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = DashPumpManager.storyboard; sourceTree = "<group>"; };
 		C107D16C226A143A00D63775 /* UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
-		C107D170226A1AD100D63775 /* PodSettingsSetupViewControllers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodSettingsSetupViewControllers.swift; sourceTree = "<group>"; };
 		C107D174226A1C7800D63775 /* DashHUDProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashHUDProvider.swift; sourceTree = "<group>"; };
 		C107D179226A241200D63775 /* IdentifiableClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifiableClass.swift; sourceTree = "<group>"; };
 		C107D17B226A243A00D63775 /* UITableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITableViewCell.swift; sourceTree = "<group>"; };
 		C10C758022C4041F00CCC20F /* PodSDKProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodSDKProtocol.swift; sourceTree = "<group>"; };
 		C10C758222C404B700CCC20F /* PodCommManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodCommManager.swift; sourceTree = "<group>"; };
+		C10CFD082584137200CD89D8 /* MockPodPlugin.loopplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MockPodPlugin.loopplugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		C10CFD142584144A00CD89D8 /* MockPodPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPodPlugin.swift; sourceTree = "<group>"; };
 		C10D1D74241168060007ABF7 /* PodPairer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodPairer.swift; sourceTree = "<group>"; };
 		C10D1D76241169F50007ABF7 /* MockPodPairer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPodPairer.swift; sourceTree = "<group>"; };
 		C10D6120240D65300081FFFA /* PairPodViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairPodViewModel.swift; sourceTree = "<group>"; };
 		C10EF92C24044B560091392C /* SettingsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsProvider.swift; sourceTree = "<group>"; };
 		C11097CD238F14A4004F1A04 /* PodSDK.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = PodSDK.xcframework; path = "dash-sdk-ios/frameworks/PodSDK.xcframework"; sourceTree = "<group>"; };
+		C11AA4512584167F00BDE12F /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C11AA45B25841DFC00BDE12F /* MockPodPumpManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPodPumpManager.swift; sourceTree = "<group>"; };
 		C11B2C2C2425846D00308035 /* MockNavigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNavigator.swift; sourceTree = "<group>"; };
 		C1201E3023EDF498002DA84A /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		C1201E3E23EE1B03002DA84A /* RegisterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
@@ -325,6 +359,18 @@
 				C1D68E392284E0E000019CAE /* DashKit.framework in Frameworks */,
 				C1FE2E3E22EA0B5A0035DCA0 /* LoopKit.framework in Frameworks */,
 				C1FE2E3F22EA0B5D0035DCA0 /* LoopKitUI.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C10CFCFC2584137200CD89D8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C10CFCFD2584137200CD89D8 /* LoopKit.framework in Frameworks */,
+				C10CFCFE2584137200CD89D8 /* INSSDK.framework in Frameworks */,
+				C10CFCFF2584137200CD89D8 /* LoopKitUI.framework in Frameworks */,
+				C10CFD002584137200CD89D8 /* DashKit.framework in Frameworks */,
+				C10CFD012584137200CD89D8 /* DashKitUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -469,6 +515,16 @@
 			path = PodSDKProtocol;
 			sourceTree = "<group>";
 		};
+		C10CFD0E2584139B00CD89D8 /* MockPodPlugin */ = {
+			isa = PBXGroup;
+			children = (
+				C11AA4512584167F00BDE12F /* Info.plist */,
+				C10CFD142584144A00CD89D8 /* MockPodPlugin.swift */,
+				C11AA45B25841DFC00BDE12F /* MockPodPumpManager.swift */,
+			);
+			path = MockPodPlugin;
+			sourceTree = "<group>";
+		};
 		C10EF92B24044B3B0091392C /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
@@ -491,7 +547,6 @@
 		C1201E3D23EE1ABE002DA84A /* Old ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				C107D170226A1AD100D63775 /* PodSettingsSetupViewControllers.swift */,
 				C194114D228DBEC000E886DD /* PodSetupCompleteViewController.swift */,
 			);
 			path = "Old ViewControllers";
@@ -600,6 +655,7 @@
 				C107D15422694B9C00D63775 /* DashKitUI */,
 				C1A9193E24325D3B008D216E /* DashKitUITests */,
 				C19BB3E622E776AE00EA5C2E /* DashKitPlugin */,
+				C10CFD0E2584139B00CD89D8 /* MockPodPlugin */,
 				C107D10C22692AE700D63775 /* Frameworks */,
 				C1E753DA226928F700A0BC48 /* Products */,
 			);
@@ -613,6 +669,7 @@
 				C107D15322694B9C00D63775 /* DashKitUI.framework */,
 				C19BB3E522E776AE00EA5C2E /* DashKitPlugin.loopplugin */,
 				C1A9193D24325D3B008D216E /* DashKitUITests.xctest */,
+				C10CFD082584137200CD89D8 /* MockPodPlugin.loopplugin */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -699,6 +756,27 @@
 			productName = DashKitUI;
 			productReference = C107D15322694B9C00D63775 /* DashKitUI.framework */;
 			productType = "com.apple.product-type.framework";
+		};
+		C10CFCF42584137200CD89D8 /* MockPodPlugin */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C10CFD052584137200CD89D8 /* Build configuration list for PBXNativeTarget "MockPodPlugin" */;
+			buildPhases = (
+				C10CFCF92584137200CD89D8 /* Sources */,
+				C10CFCFC2584137200CD89D8 /* Frameworks */,
+				C10CFD022584137200CD89D8 /* Resources */,
+				C10CFD032584137200CD89D8 /* Embed Frameworks */,
+				C10CFD042584137200CD89D8 /* Copy Frameworks with Carthage */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C10CFCF52584137200CD89D8 /* PBXTargetDependency */,
+				C10CFCF72584137200CD89D8 /* PBXTargetDependency */,
+			);
+			name = MockPodPlugin;
+			productName = DashKitPlugin;
+			productReference = C10CFD082584137200CD89D8 /* MockPodPlugin.loopplugin */;
+			productType = "com.apple.product-type.bundle";
 		};
 		C19BB3E422E776AE00EA5C2E /* DashKitPlugin */ = {
 			isa = PBXNativeTarget;
@@ -829,6 +907,7 @@
 				C1A9193C24325D3B008D216E /* DashKitUITests */,
 				C19BB3E422E776AE00EA5C2E /* DashKitPlugin */,
 				C11615F0239588DB0039A072 /* Cartfile */,
+				C10CFCF42584137200CD89D8 /* MockPodPlugin */,
 			);
 		};
 /* End PBXProject section */
@@ -842,6 +921,13 @@
 				C1ACF43322A03F0500F7DDB4 /* OmnipodReservoirView.xib in Resources */,
 				C1FDF4AC235EC930008B0251 /* HUDAssets.xcassets in Resources */,
 				C107D166226A0EED00D63775 /* DashPumpManager.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C10CFD022584137200CD89D8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -876,6 +962,30 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		C10CFD042584137200CD89D8 /* Copy Frameworks with Carthage */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/DashKit.framework/DashKit",
+				"$(BUILT_PRODUCTS_DIR)/DashKitUI.framework/DashKitUI",
+				"$(BUILT_PRODUCTS_DIR)/RxSwift.framework/RxSwift",
+				"$(SRCROOT)/dash-sdk-ios/frameworks/INSSDK.framework/INSSDK",
+				"$(SRCROOT)/dash-sdk-ios/frameworks/PodSDK.xcframework/ios-arm64/PodSDK.framework/PodSDK",
+				"$(BUILT_PRODUCTS_DIR)/MKRingProgressView.framework/MKRingProgressView",
+			);
+			name = "Copy Frameworks with Carthage";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Scripts/copy-frameworks.sh\"\n";
+		};
 		C11615F4239588F40039A072 /* Carthage Bootstrap */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -940,7 +1050,6 @@
 				C14C6F252419F95E00CF3408 /* LeadingImage.swift in Sources */,
 				C1ACF43D22A1D00500F7DDB4 /* PodExpirationTableViewCell.swift in Sources */,
 				C1201E3123EDF498002DA84A /* Image.swift in Sources */,
-				C107D171226A1AD100D63775 /* PodSettingsSetupViewControllers.swift in Sources */,
 				C1941151228DBF2100E886DD /* ExpirationReminderDateTableViewCell.swift in Sources */,
 				C1562F8924169C65006952D6 /* DeactivatePodViewModel.swift in Sources */,
 				C1C72D8B241568E700DB224B /* DashSettingsView.swift in Sources */,
@@ -975,6 +1084,16 @@
 				C10D6121240D65300081FFFA /* PairPodViewModel.swift in Sources */,
 				C196751524F1CD6300118EC4 /* MockPodSettingsView.swift in Sources */,
 				C1ACF43F22A1F9A700F7DDB4 /* OSLog.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C10CFCF92584137200CD89D8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C11AA45C25841DFC00BDE12F /* MockPodPumpManager.swift in Sources */,
+				C10CFD152584144A00CD89D8 /* MockPodPlugin.swift in Sources */,
+				C10CFCFA2584137200CD89D8 /* OSLog.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1050,6 +1169,18 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		C10CFCF52584137200CD89D8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			platformFilter = ios;
+			target = C107D15222694B9C00D63775 /* DashKitUI */;
+			targetProxy = C10CFCF62584137200CD89D8 /* PBXContainerItemProxy */;
+		};
+		C10CFCF72584137200CD89D8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			platformFilter = ios;
+			target = C1E753D8226928F700A0BC48 /* DashKit */;
+			targetProxy = C10CFCF82584137200CD89D8 /* PBXContainerItemProxy */;
+		};
 		C1A9194424325D3B008D216E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = C107D15222694B9C00D63775 /* DashKitUI */;
@@ -1152,6 +1283,75 @@
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		C10CFD062584137200CD89D8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_BITCODE = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)/dash-sdk-ios/frameworks",
+				);
+				INFOPLIST_FILE = MockPodPlugin/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = mh_dylib;
+				MARKETING_VERSION = "";
+				PRODUCT_BUNDLE_IDENTIFIER = org.tidepool.MockPodPlugin;
+				PRODUCT_MODULE_NAME = MockPodPlugin;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				WRAPPER_EXTENSION = loopplugin;
+			};
+			name = Debug;
+		};
+		C10CFD072584137200CD89D8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_BITCODE = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)/dash-sdk-ios/frameworks",
+				);
+				INFOPLIST_FILE = MockPodPlugin/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = mh_dylib;
+				MARKETING_VERSION = "";
+				PRODUCT_BUNDLE_IDENTIFIER = org.tidepool.MockPodPlugin;
+				PRODUCT_MODULE_NAME = MockPodPlugin;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				WRAPPER_EXTENSION = loopplugin;
 			};
 			name = Release;
 		};
@@ -1549,6 +1749,15 @@
 			buildConfigurations = (
 				C107D15D22694B9C00D63775 /* Debug */,
 				C107D15E22694B9C00D63775 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C10CFD052584137200CD89D8 /* Build configuration list for PBXNativeTarget "MockPodPlugin" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C10CFD062584137200CD89D8 /* Debug */,
+				C10CFD072584137200CD89D8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
