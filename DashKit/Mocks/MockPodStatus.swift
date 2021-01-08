@@ -76,7 +76,8 @@ public struct MockPodStatus: PodStatus, Equatable {
                 isOcclusionAlertActive: Bool,
                 bolusUnitsRemaining: Int,
                 initialInsulinAmount: Double,
-                insulinDelivered: Double = 0)
+                insulinDelivered: Double = 0,
+                basalProgram: BasalProgram? = nil)
     {
         self.activationDate = activationDate
         self.podState = podState
@@ -87,10 +88,14 @@ public struct MockPodStatus: PodStatus, Equatable {
         self.initialInsulinAmount = initialInsulinAmount
         self.insulinDelivered = 0
         self.lastDeliveryUpdate = Date()
+        self.basalProgram = basalProgram
     }
     
     public static var normal: MockPodStatus {
         let activation = Date().addingTimeInterval(.hours(-2))
+        let segments = [try! BasalSegment(startTime: 0, endTime: 24, basalRate: 1000),
+                        try! BasalSegment(startTime: 24, endTime: 48, basalRate: 1500)]
+        
         return MockPodStatus(
             activationDate: activation,
             podState: .runningAboveMinVolume,
@@ -99,7 +104,8 @@ public struct MockPodStatus: PodStatus, Equatable {
             isOcclusionAlertActive: false,
             bolusUnitsRemaining: 0,
             initialInsulinAmount: 11,
-            insulinDelivered: 100)
+            insulinDelivered: 100,
+            basalProgram: try! BasalProgram(basalSegments: segments))
     }
     
     mutating func updateDelivery() {
@@ -143,10 +149,12 @@ public struct MockPodStatus: PodStatus, Equatable {
 
         if let bolus = bolus, bolus.isFinished(at: now) {
             insulinDelivered += bolus.units
+            self.bolus = nil
         }
         
         if let tempBasal = tempBasal, tempBasal.isFinished(at: now) {
             insulinDelivered = tempBasal.units
+            self.tempBasal = nil
         }
 
         self.lastDeliveryUpdate = now
