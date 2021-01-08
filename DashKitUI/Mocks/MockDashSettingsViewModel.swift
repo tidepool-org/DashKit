@@ -23,7 +23,7 @@ class MockDashSettingsViewModel: DashSettingsViewModelProtocol {
         return TimeZone.currentFixed
     }
 
-    var podCommManager: PodCommManagerProtocol = MockPodCommManager.shared
+    var podCommManager: PodCommManagerProtocol = MockPodCommManager()
 
     var lifeState: PodLifeState = .noPod
     
@@ -88,15 +88,15 @@ class MockDashSettingsViewModel: DashSettingsViewModelProtocol {
         print("doneTapped()")
     }
 
-    static func noPod() -> MockDashSettingsViewModel {
-        return MockDashSettingsViewModel()
-    }
-    
-    static func livePod() -> MockDashSettingsViewModel {
-        let model = MockDashSettingsViewModel()
-        model.basalDeliveryState = .active(Date())
-        model.lifeState = .timeRemaining(.days(2.5))
-        return model
-    }
+//    static func noPod() -> MockDashSettingsViewModel {
+//        return MockDashSettingsViewModel()
+//    }
+//    
+//    static func livePod() -> MockDashSettingsViewModel {
+//        let model = MockDashSettingsViewModel()
+//        model.basalDeliveryState = .active(Date())
+//        model.lifeState = .timeRemaining(.days(2.5))
+//        return model
+//    }
 }
 

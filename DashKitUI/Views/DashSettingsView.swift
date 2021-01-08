@@ -183,7 +183,7 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
                     suspendResumeRow
                     
                     if let mockPodCommManager = viewModel.podCommManager as? MockPodCommManager {
-                        NavigationLink(destination: MockPodSettingsView(mockPodCommManager: mockPodCommManager)) {
+                        NavigationLink(destination: MockPodSettingsView(model: MockPodSettingsViewModel(mockPodCommManager: mockPodCommManager))) {
                             Text("Mock Pod Settings").foregroundColor(Color.primary)
                         }
                     }
@@ -353,7 +353,7 @@ struct DashSettingsSheetView: View {
             }.sheet(isPresented: $showingDetail) {
                 NavigationView {
                     ZStack {
-                        DashSettingsView(viewModel: MockDashSettingsViewModel.livePod(), navigator: MockNavigator())
+                        DashSettingsView(viewModel: previewModel(), navigator: MockNavigator())
                     }
                 }
             }
@@ -363,6 +363,13 @@ struct DashSettingsSheetView: View {
             Spacer()
         }
         .background(Color.green)
+    }
+    
+    func previewModel() -> MockDashSettingsViewModel {
+        let model = MockDashSettingsViewModel()
+        model.basalDeliveryState = .active(Date())
+        model.lifeState = .timeRemaining(.days(2.5))
+        return model
     }
 }
 

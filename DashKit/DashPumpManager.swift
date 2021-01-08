@@ -217,7 +217,12 @@ open class DashPumpManager: PumpManager {
 
         return returnValue
     }
-
+    
+    public func notifyDelegateOfStateUpdate() {
+        pumpDelegate.notify { (delegate) in
+            delegate?.pumpManagerDidUpdateState(self)
+        }
+    }
     
     private let lockedState: Locked<DashPumpManagerState>
 
@@ -1153,7 +1158,9 @@ open class DashPumpManager: PumpManager {
     
     public init(state: DashPumpManagerState, podCommManager: PodCommManagerProtocol, dateGenerator: @escaping () -> Date = Date.init) {
         let loggingShim: PodSDKLoggingShim
-        
+
+        PodCommManager.shared.setup(withLaunchingOptions: nil)
+
         unwrappedPodCommManager = podCommManager
         
         loggingShim = PodSDKLoggingShim(target: podCommManager)
@@ -1186,7 +1193,7 @@ open class DashPumpManager: PumpManager {
         self.init(state: state, podCommManager: PodCommManager.shared)
     }
 
-    public var rawState: PumpManager.RawStateValue {
+    open var rawState: PumpManager.RawStateValue {
         return state.rawValue
     }
     
@@ -1400,10 +1407,14 @@ extension DashPumpManager: PodCommManagerDelegate {
         logPodCommManagerDelegateMessage("hasSystemError: \(String(describing: error))")
     }
     
-    public func podCommManager(_ podCommManager: PodCommManager, podCommStateDidChange podCommState: PodCommState) {
+    public func podCommManager(_ podCommManager: PodCommManagerProtocol, podCommStateDidChange podCommState: PodCommState) {
         logPodCommManagerDelegateMessage("podCommStateDidChange: \(String(describing: podCommState))")
     }
     
+    public func podCommManager(_ podCommManager: PodCommManager, podCommStateDidChange podCommState: PodCommState) {
+        self.podCommManager(podCommManager as PodCommManagerProtocol, podCommStateDidChange: podCommState)
+    }
+
     public func podCommManager(_ podCommManager: PodCommManagerProtocol, connectionStateDidChange connectionState: ConnectionState) {
         // TODO: log this as a connection event.
         logPodCommManagerDelegateMessage("connectionStateDidChange: \(String(describing: connectionState))")
