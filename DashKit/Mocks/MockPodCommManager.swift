@@ -281,7 +281,7 @@ public class MockPodCommManager: PodCommManagerProtocol {
     public func sendProgram(programType: ProgramType, beepOption: BeepOption?, completion: @escaping (PodCommResult<PodStatus>) -> ()) {
         self.podStatus?.updateDelivery()
 
-        guard var _ = podStatus else {
+        guard var podStatus = podStatus else {
             completion(.failure(.podIsNotActive))
             return
         }
@@ -295,23 +295,24 @@ public class MockPodCommManager: PodCommManagerProtocol {
             switch programType {
             case .basalProgram(let program, let offset):
                 let now = dateGenerator()
-                self.podStatus!.basalProgram = program
-                self.podStatus!.basalProgramStartOffset = offset.map {Double($0)} ?? -Calendar.current.startOfDay(for: now).timeIntervalSinceNow
-                self.podStatus!.basalProgramStartDate = now
-                self.podStatus!.programStatus.insert(.basalRunning)
+                podStatus.basalProgram = program
+                podStatus.basalProgramStartOffset = offset.map {Double($0)} ?? -Calendar.current.startOfDay(for: now).timeIntervalSinceNow
+                podStatus.basalProgramStartDate = now
+                podStatus.programStatus.insert(.basalRunning)
             case .bolus(let bolus):
-                self.podStatus!.bolus = UnfinalizedDose(
+                podStatus.bolus = UnfinalizedDose(
                     bolusAmount: Double(bolus.immediateVolume) / Pod.podSDKInsulinMultiplier,
                     startTime: dateGenerator(),
                     scheduledCertainty: .certain)
-                self.podStatus!.programStatus.insert(.bolusRunning)
+                podStatus.programStatus.insert(.bolusRunning)
             case .tempBasal(let tempBasal):
                 if case .flatRate(let rate) = tempBasal.value {
-                    self.podStatus!.tempBasal = UnfinalizedDose(tempBasalRate: Double(rate) / Pod.podSDKInsulinMultiplier, startTime: dateGenerator(), duration: tempBasal.duration, scheduledCertainty: .certain)
-                    self.podStatus!.programStatus.insert(.tempBasalRunning)
+                    podStatus.tempBasal = UnfinalizedDose(tempBasalRate: Double(rate) / Pod.podSDKInsulinMultiplier, startTime: dateGenerator(), duration: tempBasal.duration, scheduledCertainty: .certain)
+                    podStatus.programStatus.insert(.tempBasalRunning)
                 }
             }
-            completion(.success(self.podStatus!))
+            self.podStatus = podStatus
+            completion(.success(podStatus))
         }
     }
 
@@ -354,13 +355,14 @@ public class MockPodCommManager: PodCommManagerProtocol {
     }
 
     public func silenceAlerts(alert: PodAlerts, completion: @escaping (PodCommResult<PodStatus>) -> ()) {
-        guard let podStatus = podStatus else {
+        guard var podStatus = podStatus else {
             completion(.failure(.podIsNotActive))
             return
         }
-        self.podStatus!.activeAlerts = podStatus.activeAlerts.subtracting(alert)
+        podStatus.activeAlerts = podStatus.activeAlerts.subtracting(alert)
         silencedAlerts.append(alert)
-        completion(.success(self.podStatus!))
+        self.podStatus = podStatus
+        completion(.success(podStatus))
     }
 
     public func retryUnacknowledgedCommand(completion: @escaping (PodCommResult<PodStatus>) -> ()) {

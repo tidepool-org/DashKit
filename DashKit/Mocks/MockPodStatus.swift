@@ -86,7 +86,7 @@ public struct MockPodStatus: PodStatus, Equatable {
         self.isOcclusionAlertActive = isOcclusionAlertActive
         self.bolusUnitsRemaining = bolusUnitsRemaining
         self.initialInsulinAmount = initialInsulinAmount
-        self.insulinDelivered = 0
+        self.insulinDelivered = insulinDelivered
         self.lastDeliveryUpdate = Date()
         self.basalProgram = basalProgram
     }

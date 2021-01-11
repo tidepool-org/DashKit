@@ -87,16 +87,5 @@ class MockDashSettingsViewModel: DashSettingsViewModelProtocol {
     func doneTapped() {
         print("doneTapped()")
     }
-
-//    static func noPod() -> MockDashSettingsViewModel {
-//        return MockDashSettingsViewModel()
-//    }
-//    
-//    static func livePod() -> MockDashSettingsViewModel {
-//        let model = MockDashSettingsViewModel()
-//        model.basalDeliveryState = .active(Date())
-//        model.lifeState = .timeRemaining(.days(2.5))
-//        return model
-//    }
 }
 
