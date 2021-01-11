@@ -57,11 +57,25 @@ class DashPumpManagerTests: XCTestCase {
 
         let basalScheduleItems = [RepeatingScheduleValue(startTime: 0, value: 1.0)]
         let schedule = BasalRateSchedule(dailyItems: basalScheduleItems, timeZone: .current)!
-        var state = DashPumpManagerState(basalRateSchedule: schedule, maximumTempBasalRate: 3.0, dateGenerator: dateGenerator)!
-        state.podActivatedAt = Date().addingTimeInterval(.days(1))
-
-        mockPodCommManager = MockPodCommManager()
         
+        
+        let activation = simulatedDate.addingTimeInterval(.hours(-2))
+        let podStatus = MockPodStatus(
+            activationDate: activation,
+            podState: .runningAboveMinVolume,
+            programStatus: .basalRunning,
+            activeAlerts: PodAlerts([]),
+            isOcclusionAlertActive: false,
+            bolusUnitsRemaining: 0,
+            initialInsulinAmount: 11,
+            insulinDelivered: 100,
+            basalProgram: BasalProgram(items: basalScheduleItems))
+
+        mockPodCommManager = MockPodCommManager(podStatus: podStatus, dateGenerator: dateGenerator)
+        mockPodCommManager.podCommState = .active
+                
+        var state = DashPumpManagerState(basalRateSchedule: schedule, maximumTempBasalRate: 3.0, dateGenerator: dateGenerator)!
+        state.podActivatedAt = activation
         pumpManager = DashPumpManager(state: state, podCommManager: mockPodCommManager, dateGenerator: dateGenerator)
         pumpManager.addPodStatusObserver(self, queue: DispatchQueue.main)
         pumpManager.pumpManagerDelegate = self
@@ -91,7 +105,6 @@ class DashPumpManagerTests: XCTestCase {
         waitForExpectations(timeout: 3)
     }
 
-
     func testSuccessfulBolus() {
 
         XCTAssertEqual(pumpManager.hasActivePod, true)
@@ -110,7 +123,8 @@ class DashPumpManagerTests: XCTestCase {
         pumpManagerDelegateStateUpdateExpectation?.expectedFulfillmentCount = 2
 
         // Set a new reservoir value to make sure the result of the set program is used (5U)
-        mockPodCommManager.podStatus.reservoirUnitsRemaining = 500
+        let delivered = mockPodCommManager.podStatus!.initialInsulinAmount - 5.0
+        mockPodCommManager.podStatus?.insulinDelivered = delivered
 
         pumpManager.enactBolus(units: 1, at: startDate) { (result) in
             bolusCallbacks.fulfill()
@@ -122,7 +136,7 @@ class DashPumpManagerTests: XCTestCase {
                 XCTAssertEqual(DoseType.bolus, dose.type)
                 XCTAssertEqual(DoseUnit.units, dose.unit)
                 XCTAssertEqual(1.0, dose.programmedUnits)
-                XCTAssertEqual(100, self.mockPodCommManager.lastBolusVolume)
+                XCTAssertEqual(1.0, self.mockPodCommManager.podStatus?.bolus?.units)
             }
         }
         waitForExpectations(timeout: 3)
@@ -184,6 +198,35 @@ class DashPumpManagerTests: XCTestCase {
             return
         }
     }
+    
+    func testBolusCancellation() {
+
+        let enactBolusCallbackExpectation = expectation(description: "enact bolus callbacks")
+
+        pumpManager.enactBolus(units: 1, at: dateGenerator()) { (result) in
+            enactBolusCallbackExpectation.fulfill()
+        }
+        waitForExpectations(timeout: 3)
+
+        let cancelBolusCallbackExpectation = expectation(description: "cancel bolus callbacks")
+        
+        timeTravel(.seconds(15))
+
+        pumpManager.cancelBolus { (result) in
+            switch result {
+            case .failure(let error):
+                XCTFail("cancelBolus failed with error: \(error)")
+            case .success(let dose):
+                XCTAssertEqual(DoseType.bolus, dose!.type)
+                XCTAssertEqual(DoseUnit.units, dose!.unit)
+                XCTAssertEqual(1.0, dose!.programmedUnits)
+                XCTAssertEqual(0.35, dose!.deliveredUnits)
+            }
+            cancelBolusCallbackExpectation.fulfill()
+        }
+        waitForExpectations(timeout: 3)
+        
+    }
 
     func testSuccessfulTempBasal() {
         XCTAssertEqual(pumpManager.hasActivePod, true)
@@ -200,7 +243,8 @@ class DashPumpManagerTests: XCTestCase {
 //        pumpManagerDelegateStateUpdateExpectation?.expectedFulfillmentCount = 2
 
         // Set a new reservoir value to make sure the result of the set program is used (5U)
-        mockPodCommManager.podStatus.reservoirUnitsRemaining = 500
+        let delivered = mockPodCommManager.podStatus!.initialInsulinAmount - 5.0
+        mockPodCommManager.podStatus?.insulinDelivered = delivered
 
         pumpManager.enactTempBasal(unitsPerHour: 1, for: .minutes(30)) { (result) in
             tempBasalCallbackExpectation.fulfill()
@@ -271,13 +315,13 @@ class DashPumpManagerTests: XCTestCase {
         
         let program = BasalProgram(items: items)
         
-        XCTAssertEqual(mockPodCommManager.lastBasalProgram, program)
+        XCTAssertEqual(mockPodCommManager.podStatus?.basalProgram, program)
         XCTAssertEqual(pumpManager.state.basalProgram, program)
     }
 
     func testFailedSetBasalSchedule() {
         let callbackExpectation = expectation(description: "set basal scheduled callback")
-        let items = [RepeatingScheduleValue(startTime: 0, value: 10.0), RepeatingScheduleValue(startTime: .hours(12), value: 15.0)]
+        let items = [RepeatingScheduleValue(startTime: 0, value: 1.0), RepeatingScheduleValue(startTime: .hours(12), value: 2.0)]
         
         mockPodCommManager.deliveryProgramError = .podNotAvailable
 
@@ -296,7 +340,7 @@ class DashPumpManagerTests: XCTestCase {
         
         let program = BasalProgram(items: items)
         
-        XCTAssertNotEqual(mockPodCommManager.lastBasalProgram, program)
+        XCTAssertNotEqual(mockPodCommManager.podStatus?.basalProgram, program)
         XCTAssertNotEqual(pumpManager.state.basalProgram, program)
     }
 
@@ -338,8 +382,8 @@ class DashPumpManagerTests: XCTestCase {
         waitForExpectations(timeout: 3)
         
         timeTravel(30)
-
-        var podStatus = mockPodCommManager.podStatus
+        
+        var podStatus = mockPodCommManager.podStatus!
         podStatus.bolusUnitsRemaining = 2 * Int(Pod.podSDKInsulinMultiplier)
         
         let alarm = MockPodAlarm(
@@ -351,7 +395,7 @@ class DashPumpManagerTests: XCTestCase {
             wasBolusActiveWhenPodAlarmed: true,
             podStateWhenPodAlarmed: podStatus.podState,
             alarmTime: simulatedDate.advanced(by: 29),
-            activationTime: podStatus.activationTime,
+            activationTime: podStatus.activationDate,
             referenceCode: "1234")
 
         pumpEventStorageExpectation = expectation(description: "pumpmanager stores interrupted bolus")
@@ -733,7 +777,7 @@ class DashPumpManagerTests: XCTestCase {
         }
         waitForExpectations(timeout: 3)
         
-        XCTAssertEqual(200, mockPodCommManager.lastBasalProgram?.basalSegments[0].basalRate)
+        XCTAssertEqual(200, mockPodCommManager.podStatus?.basalProgram?.basalSegments[0].basalRate)
     }
 }
 

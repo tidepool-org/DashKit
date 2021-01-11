@@ -8,10 +8,11 @@
 
 import Foundation
 
-fileprivate let aboveThresholdMagicNumber: Int = 5115
 
 public enum ReservoirLevel: RawRepresentable, Equatable {
     public typealias RawValue = Int
+    
+    public static let aboveThresholdMagicNumber: Int = 5115
 
     case valid(Double)
     case aboveThreshold
@@ -27,7 +28,7 @@ public enum ReservoirLevel: RawRepresentable, Equatable {
 
     public init(rawValue: RawValue) {
         switch rawValue {
-        case aboveThresholdMagicNumber:
+        case Self.aboveThresholdMagicNumber:
             self = .aboveThreshold
         default:
             self = .valid(Double(rawValue) / Pod.podSDKInsulinMultiplier)
@@ -39,7 +40,7 @@ public enum ReservoirLevel: RawRepresentable, Equatable {
         case .valid(let value):
             return Int(round(value * Pod.podSDKInsulinMultiplier))
         case .aboveThreshold:
-            return aboveThresholdMagicNumber
+            return Self.aboveThresholdMagicNumber
         }
     }
 }

@@ -8,37 +8,52 @@
 
 import Foundation
 import PodSDK
+import LoopKit
 
-
+public protocol MockPodCommManagerObserver: class {
+    func mockPodCommManagerDidUpdate()
+}
 
 public class MockPodCommManager: PodCommManagerProtocol {
     
-    // Create a shared MockPodCommManager for running on the simulator
-    public static let shared: MockPodCommManager = {
-        var mock = MockPodCommManager()
-        mock.simulateDisconnectionOnUnacknowledgedCommand = true
-        return mock
-    }()
-
-    // Record for test inspection
-    var lastBolusVolume: Int?
-    var lastBasalProgram: BasalProgram?
-    var lastTempBasal: TempBasal?
-
-    public var podStatus: MockPodStatus {
+    public let dateGenerator: () -> Date
+    
+    // Nil if no pod paired
+    public var podStatus: MockPodStatus? {
         didSet {
-            dashPumpManager?.getPodStatus(completion: { _ in })
+            notifyObservers()
         }
     }
         
     public var silencedAlerts: [PodAlerts] = []
     
-    public var podCommState: PodCommState = .noPod
+    public var podCommState: PodCommState = .noPod {
+        didSet {
+            self.dashPumpManager?.podCommManager(self, podCommStateDidChange: podCommState)
+            notifyObservers()
+        }
+    }
+    
+    private var observers = WeakSynchronizedSet<MockPodCommManagerObserver>()
+    
+    public func addObserver(_ observer: MockPodCommManagerObserver, queue: DispatchQueue) {
+        observers.insert(observer, queue: queue)
+    }
+
+    public func removeObserver(_ observer: MockPodCommManagerObserver) {
+        observers.removeElement(observer)
+    }
+    
+    public func notifyObservers() {
+        observers.forEach { (observer) in
+            observer.mockPodCommManagerDidUpdate()
+        }
+    }
 
     public var deliveryProgramError: PodCommError?
 
     public var delegate: PodCommManagerDelegate?
-    
+
     // We can't call PodCommManagerDelegate methods on DashPumpManager because we do not have a real PodCommManager.
     // We can use a direct reference to call the mirrored delegate methods, that expect PodCommManagerProtocol.
     public weak var dashPumpManager: DashPumpManager?
@@ -56,15 +71,6 @@ public class MockPodCommManager: PodCommManagerProtocol {
     
     public var bleConnected: Bool = true
 
-    public func update(for state: DashPumpManagerState) {
-        guard state.suspendState != nil else {
-            setDeactivatedState()
-            return
-        }
-        
-        podStatus.reservoirUnitsRemaining = state.reservoirLevel?.rawValue ?? 0
-    }
-    
     public func startPodActivation(lowReservoirAlert: LowReservoirAlert?, podExpirationAlert: PodExpirationAlert?, eventListener: @escaping (ActivationStatus<ActivationStep1Event>) -> ()) {
 
         pairAttemptCount += 1
@@ -74,16 +80,64 @@ public class MockPodCommManager: PodCommManagerProtocol {
                 eventListener(.error(self.initialPairError))
             }
         } else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                 eventListener(.event(.connecting))
+                self.dashPumpManager?.podCommManager(self, connectionStateDidChange: .tryConnecting)
             }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 7) {
+                self.dashPumpManager?.podCommManager(self, connectionStateDidChange: .connected)
                 self.podCommState = .activating
+                eventListener(.event(.retrievingPodVersion))
+            }
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
+                eventListener(.event(.settingPodUid))
+            }
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 11) {
+                eventListener(.event(.programmingLowReservoirAlert))
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 11.5) {
+                // Start out with 100U
+                self.podStatus = MockPodStatus(activationDate: self.dateGenerator(), podState: .uidSet, programStatus: ProgramStatus(rawValue: 0), activeAlerts: PodAlerts(rawValue: 128), isOcclusionAlertActive: false, bolusUnitsRemaining: 0, initialInsulinAmount: 100)
+                eventListener(.event(.podStatus(self.podStatus!)))
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 12) {
+                eventListener(.event(.programmingLumpOfCoal))
+            }
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 12.5) {
+                self.podStatus!.activeAlerts = PodAlerts(rawValue: 0)
+                eventListener(.event(.podStatus(self.podStatus!)))
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 12.8) {
                 eventListener(.event(.primingPod))
             }
-            // Priming is normally 35s, but we'll send the completion faster in the mock
-            DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
-                self.podCommState = .active
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 15) {
+                self.podStatus!.podState = .engagingClutchDrive
+                eventListener(.event(.podStatus(self.podStatus!)))
+            }
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 30) {
+                eventListener(.event(.checkingPodStatus))
+            }
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 30.5) {
+                self.podStatus!.podState = .clutchDriveEnaged
+                self.podStatus!.insulinDelivered = 1.40
+                eventListener(.event(.podStatus(self.podStatus!)))
+                eventListener(.event(.programmingPodExpireAlert))
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 31) {
+                eventListener(.event(.podStatus(self.podStatus!)))
+            }
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 32) {
                 eventListener(.event(.step1Completed))
             }
         }
@@ -95,34 +149,76 @@ public class MockPodCommManager: PodCommManagerProtocol {
     public func finishPodActivation(basalProgram: ProgramType, autoOffAlert: AutoOffAlert?, eventListener: @escaping (ActivationStatus<ActivationStep2Event>) -> ()) {
         insertCannulaAttemptCount += 1
         
+        guard case .basalProgram(let basalProgram, let secondsSinceMidnight) = basalProgram else {
+            eventListener(.error(.invalidProgram))
+            return
+        }
+        
         if insertCannulaAttemptCount == 1 {
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                 eventListener(.error(self.initialCannulaInsertionError))
             }
         } else {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                eventListener(.event(.programmingActiveBasal))
+                self.podStatus?.basalProgram = basalProgram
+                self.podStatus?.basalProgramStartOffset = secondsSinceMidnight.map {Double($0)} ?? -Calendar.current.startOfDay(for: self.dateGenerator()).timeIntervalSinceNow
+                self.podStatus?.basalProgramStartDate = self.dateGenerator()
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self.podStatus!.podState = .basalProgramRunning
+                self.podStatus!.activeAlerts = PodAlerts(rawValue: 128)
+                eventListener(.event(.podStatus(self.podStatus!)))
+            }
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                eventListener(.event(.cancelLumpOfCoalProgrammingAutoOff))
+                self.podStatus!.activeAlerts = PodAlerts(rawValue: 0)
+                eventListener(.event(.podStatus(self.podStatus!)))
+            }
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
                 eventListener(.event(.insertingCannula))
             }
 
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2 + Pod.estimatedCannulaInsertionDuration) {
-                eventListener(.event(.step2Completed))
+            DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                self.podStatus!.podState = .priming
+                self.podStatus!.bolusUnitsRemaining = 50
+                eventListener(.event(.podStatus(self.podStatus!)))
+            }
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 14) {
+                eventListener(.event(.checkingPodStatus))
+            }
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 15) {
+                self.podStatus!.podState = .runningAboveMinVolume
+                self.podStatus!.bolusUnitsRemaining = 0
+                self.podStatus!.insulinDelivered = 1.90
+                eventListener(.event(.podStatus(self.podStatus!)))
             }
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2 + Pod.estimatedCannulaInsertionDuration) {
-                let activation = Date() - TimeInterval(hours: 35)
-                self.podStatus = MockPodStatus(
-                    expirationDate: activation + Pod.lifetime,
-                    podState: .alarm,
-                    programStatus: .basalRunning,
-                    activeAlerts: PodAlerts([]),
-                    isOcclusionAlertActive: false,
-                    bolusUnitsRemaining: 0,
-                    totalUnitsDelivered: 38,
-                    reservoirUnitsRemaining: 1023,
-                    timeElapsedSinceActivation: 2,
-                    activationTime: activation)
-                eventListener(.event(.podStatus(self.podStatus)))
+            DispatchQueue.main.asyncAfter(deadline: .now() + 16) {
+                self.podCommState = .active
+                eventListener(.event(.step2Completed))
             }
+        }
+    }
+    
+    public func issueAlerts(_ alerts: PodAlerts) {
+        if var podStatus = podStatus {
+            podStatus.activeAlerts.insert(alerts)
+            self.podStatus = podStatus
+            self.dashPumpManager?.podCommManagerHasAlerts(podStatus.activeAlerts)
+        }
+    }
+    
+    public func clearAlerts(_ alerts: PodAlerts) {
+        if var podStatus = podStatus {
+            podStatus.activeAlerts.remove(alerts)
+            self.podStatus = podStatus
+            self.dashPumpManager?.podCommManagerHasAlerts(podStatus.activeAlerts)
         }
     }
 
@@ -133,6 +229,11 @@ public class MockPodCommManager: PodCommManagerProtocol {
     }
 
     public func deactivatePod(completion: @escaping (PodCommResult<PartialPodStatus>) -> ()) {
+        guard let podStatus = podStatus else {
+            completion(.failure(.podIsNotActive))
+            return
+        }
+        
         setDeactivatedState()
         deliveryProgramError = nil
         unacknowledgedCommandRetryResult = nil
@@ -140,20 +241,18 @@ public class MockPodCommManager: PodCommManagerProtocol {
     }
     
     private func setDeactivatedState() {
-        podStatus = MockPodStatus(expirationDate: podStatus.expirationDate,
-                                  podState: .deactivated,
-                                  programStatus: [],
-                                  activeAlerts: [],
-                                  isOcclusionAlertActive: false,
-                                  bolusUnitsRemaining: 0,
-                                  totalUnitsDelivered: 0,
-                                  reservoirUnitsRemaining: 0,
-                                  timeElapsedSinceActivation: Date().timeIntervalSince(podStatus.activationTime),
-                                  activationTime: podStatus.activationTime)
+        podStatus = nil
         podCommState = .noPod
     }
     
     public func getPodStatus(userInitiated: Bool, completion: @escaping (PodCommResult<PodStatus>) -> ()) {
+        self.podStatus?.updateDelivery()
+        
+        guard let podStatus = podStatus else {
+            completion(.failure(.podIsNotActive))
+            return
+        }
+
         completion(.success(podStatus))
     }
 
@@ -162,6 +261,11 @@ public class MockPodCommManager: PodCommManagerProtocol {
     }
 
     public func playTestBeeps(completion: @escaping (PodCommResult<PodStatus>) -> ()) {
+        guard let podStatus = podStatus else {
+            completion(.failure(.podIsNotActive))
+            return
+        }
+        
         completion(.success(podStatus))
     }
     
@@ -175,6 +279,13 @@ public class MockPodCommManager: PodCommManagerProtocol {
     }
 
     public func sendProgram(programType: ProgramType, beepOption: BeepOption?, completion: @escaping (PodCommResult<PodStatus>) -> ()) {
+        self.podStatus?.updateDelivery()
+
+        guard var podStatus = podStatus else {
+            completion(.failure(.podIsNotActive))
+            return
+        }
+        
         if let error = deliveryProgramError {
             if simulateDisconnectionOnUnacknowledgedCommand, case .unacknowledgedCommandPendingRetry = error {
                 disconnectFor(.minutes(1))
@@ -182,21 +293,35 @@ public class MockPodCommManager: PodCommManagerProtocol {
             completion(.failure(error))
         } else {
             switch programType {
-            case .basalProgram(let program, _):
-                lastBasalProgram = program
+            case .basalProgram(let program, let offset):
+                let now = dateGenerator()
+                podStatus.basalProgram = program
+                podStatus.basalProgramStartOffset = offset.map {Double($0)} ?? -Calendar.current.startOfDay(for: now).timeIntervalSinceNow
+                podStatus.basalProgramStartDate = now
                 podStatus.programStatus.insert(.basalRunning)
             case .bolus(let bolus):
-                lastBolusVolume = bolus.immediateVolume
+                podStatus.bolus = UnfinalizedDose(
+                    bolusAmount: Double(bolus.immediateVolume) / Pod.podSDKInsulinMultiplier,
+                    startTime: dateGenerator(),
+                    scheduledCertainty: .certain)
                 podStatus.programStatus.insert(.bolusRunning)
             case .tempBasal(let tempBasal):
-                lastTempBasal = tempBasal
-                podStatus.programStatus.insert(.tempBasalRunning)
+                if case .flatRate(let rate) = tempBasal.value {
+                    podStatus.tempBasal = UnfinalizedDose(tempBasalRate: Double(rate) / Pod.podSDKInsulinMultiplier, startTime: dateGenerator(), duration: tempBasal.duration, scheduledCertainty: .certain)
+                    podStatus.programStatus.insert(.tempBasalRunning)
+                }
             }
+            self.podStatus = podStatus
             completion(.success(podStatus))
         }
     }
 
     public func stopProgram(programType: StopProgramType, completion: @escaping (PodCommResult<PodStatus>) -> ()) {
+        guard var podStatus = podStatus else {
+            completion(.failure(.podIsNotActive))
+            return
+        }
+        
         if let error = deliveryProgramError {
             if simulateDisconnectionOnUnacknowledgedCommand, case .unacknowledgedCommandPendingRetry = error {
                 disconnectFor(.minutes(1))
@@ -205,26 +330,47 @@ public class MockPodCommManager: PodCommManagerProtocol {
         } else {
             switch programType {
             case .bolus:
+                podStatus.cancelBolus(at: dateGenerator())
                 podStatus.programStatus.remove(.bolusRunning)
             case .tempBasal:
+                podStatus.cancelTempBasal(at: dateGenerator())
                 podStatus.programStatus.remove(.tempBasalRunning)
             case .stopAll:
+                podStatus.cancelBolus(at: dateGenerator())
+                podStatus.cancelTempBasal(at: dateGenerator())
                 podStatus.programStatus = []
             }
+            self.podStatus = podStatus
             completion(.success(podStatus))
         }
     }
 
     public func updateAlertSetting(alertSetting: PodAlertSetting, completion: @escaping (PodCommResult<PodStatus>) -> ()) {
+        guard let podStatus = podStatus else {
+            completion(.failure(.podIsNotActive))
+            return
+        }
+
         completion(.success(podStatus))
     }
 
     public func silenceAlerts(alert: PodAlerts, completion: @escaping (PodCommResult<PodStatus>) -> ()) {
+        guard var podStatus = podStatus else {
+            completion(.failure(.podIsNotActive))
+            return
+        }
+        podStatus.activeAlerts = podStatus.activeAlerts.subtracting(alert)
         silencedAlerts.append(alert)
+        self.podStatus = podStatus
         completion(.success(podStatus))
     }
 
     public func retryUnacknowledgedCommand(completion: @escaping (PodCommResult<PodStatus>) -> ()) {
+        guard let podStatus = podStatus else {
+            completion(.failure(.podIsNotActive))
+            return
+        }
+        
         completion(.success(podStatus))
     }
 
@@ -242,6 +388,11 @@ public class MockPodCommManager: PodCommManagerProtocol {
     }
     
     public func updateBeepOptions(bolusReminder: BeepOption, tempBasalReminder: BeepOption, completion: @escaping (PodCommResult<PodStatus>) -> ()) {
+        guard let podStatus = podStatus else {
+            completion(.failure(.podIsNotActive))
+            return
+        }
+        
         completion(.success(podStatus))
     }
     
@@ -269,24 +420,12 @@ public class MockPodCommManager: PodCommManagerProtocol {
         return 0
     }
 
-    public init(podStatus: MockPodStatus? = nil) {
-        if let podStatus = podStatus {
-            self.podStatus = podStatus
-        } else {
-            let activation = Date() - TimeInterval(hours: 35)
-            self.podStatus = MockPodStatus(
-                expirationDate: activation + Pod.lifetime,
-                podState: .alarm,
-                programStatus: .basalRunning,
-                activeAlerts: PodAlerts([]),
-                isOcclusionAlertActive: false,
-                bolusUnitsRemaining: 0,
-                totalUnitsDelivered: 38,
-                reservoirUnitsRemaining: 1023,
-                timeElapsedSinceActivation: 2,
-                activationTime: activation)
-            self.podCommState = .active // .alarm(MockPodAlarm.occlusion)
+    public init(podStatus: MockPodStatus? = nil, dateGenerator: (() -> Date)? = nil) {
+        self.podStatus = podStatus
+        if podStatus != nil {
+            self.podCommState = .active
         }
+        self.dateGenerator = dateGenerator ?? { return Date() }
     }
 }
 

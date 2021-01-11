@@ -217,7 +217,12 @@ open class DashPumpManager: PumpManager {
 
         return returnValue
     }
-
+    
+    public func notifyDelegateOfStateUpdate() {
+        pumpDelegate.notify { (delegate) in
+            delegate?.pumpManagerDidUpdateState(self)
+        }
+    }
     
     private let lockedState: Locked<DashPumpManagerState>
 
@@ -713,8 +718,9 @@ open class DashPumpManager: PumpManager {
                     state.updateFromPodStatus(status: status)
                     state.activeTransition = nil
                 })
+                let canceledBolus = self.state.unfinalizedBolus?.doseEntry(at: self.dateGenerator())
                 self.finalizeAndStoreDoses()
-                completion(.success(self.state.unfinalizedBolus?.doseEntry(at: self.dateGenerator())))
+                completion(.success(canceledBolus))
             case .failure(let error):
                 self.mutateState({ (state) in
                     state.activeTransition = nil
@@ -1153,7 +1159,7 @@ open class DashPumpManager: PumpManager {
     
     public init(state: DashPumpManagerState, podCommManager: PodCommManagerProtocol, dateGenerator: @escaping () -> Date = Date.init) {
         let loggingShim: PodSDKLoggingShim
-        
+
         unwrappedPodCommManager = podCommManager
         
         loggingShim = PodSDKLoggingShim(target: podCommManager)
@@ -1174,6 +1180,7 @@ open class DashPumpManager: PumpManager {
     }
     
     public convenience required init(state: DashPumpManagerState, dateGenerator: @escaping () -> Date = Date.init) {
+        PodCommManager.shared.setup(withLaunchingOptions: nil)
         self.init(state: state, podCommManager: PodCommManager.shared, dateGenerator: dateGenerator)
     }
 
@@ -1183,10 +1190,11 @@ open class DashPumpManager: PumpManager {
             return nil
         }
 
+        PodCommManager.shared.setup(withLaunchingOptions: nil)
         self.init(state: state, podCommManager: PodCommManager.shared)
     }
 
-    public var rawState: PumpManager.RawStateValue {
+    open var rawState: PumpManager.RawStateValue {
         return state.rawValue
     }
     
@@ -1400,10 +1408,14 @@ extension DashPumpManager: PodCommManagerDelegate {
         logPodCommManagerDelegateMessage("hasSystemError: \(String(describing: error))")
     }
     
-    public func podCommManager(_ podCommManager: PodCommManager, podCommStateDidChange podCommState: PodCommState) {
+    public func podCommManager(_ podCommManager: PodCommManagerProtocol, podCommStateDidChange podCommState: PodCommState) {
         logPodCommManagerDelegateMessage("podCommStateDidChange: \(String(describing: podCommState))")
     }
     
+    public func podCommManager(_ podCommManager: PodCommManager, podCommStateDidChange podCommState: PodCommState) {
+        self.podCommManager(podCommManager as PodCommManagerProtocol, podCommStateDidChange: podCommState)
+    }
+
     public func podCommManager(_ podCommManager: PodCommManagerProtocol, connectionStateDidChange connectionState: ConnectionState) {
         // TODO: log this as a connection event.
         logPodCommManagerDelegateMessage("connectionStateDidChange: \(String(describing: connectionState))")
