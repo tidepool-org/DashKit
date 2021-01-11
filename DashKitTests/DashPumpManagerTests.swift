@@ -57,13 +57,10 @@ class DashPumpManagerTests: XCTestCase {
 
         let basalScheduleItems = [RepeatingScheduleValue(startTime: 0, value: 1.0)]
         let schedule = BasalRateSchedule(dailyItems: basalScheduleItems, timeZone: .current)!
-        var state = DashPumpManagerState(basalRateSchedule: schedule, maximumTempBasalRate: 3.0, dateGenerator: dateGenerator)!
-        state.podActivatedAt = Date().addingTimeInterval(.days(1))
-
-        mockPodCommManager = MockPodCommManager()
-        let activation = Date().addingTimeInterval(.hours(-2))
         
-        mockPodCommManager.podStatus = MockPodStatus(
+        
+        let activation = simulatedDate.addingTimeInterval(.hours(-2))
+        let podStatus = MockPodStatus(
             activationDate: activation,
             podState: .runningAboveMinVolume,
             programStatus: .basalRunning,
@@ -73,9 +70,12 @@ class DashPumpManagerTests: XCTestCase {
             initialInsulinAmount: 11,
             insulinDelivered: 100,
             basalProgram: BasalProgram(items: basalScheduleItems))
-        
+
+        mockPodCommManager = MockPodCommManager(podStatus: podStatus, dateGenerator: dateGenerator)
         mockPodCommManager.podCommState = .active
                 
+        var state = DashPumpManagerState(basalRateSchedule: schedule, maximumTempBasalRate: 3.0, dateGenerator: dateGenerator)!
+        state.podActivatedAt = activation
         pumpManager = DashPumpManager(state: state, podCommManager: mockPodCommManager, dateGenerator: dateGenerator)
         pumpManager.addPodStatusObserver(self, queue: DispatchQueue.main)
         pumpManager.pumpManagerDelegate = self
@@ -197,6 +197,35 @@ class DashPumpManagerTests: XCTestCase {
             XCTFail("Expected no bolus in progress")
             return
         }
+    }
+    
+    func testBolusCancellation() {
+
+        let enactBolusCallbackExpectation = expectation(description: "enact bolus callbacks")
+
+        pumpManager.enactBolus(units: 1, at: dateGenerator()) { (result) in
+            enactBolusCallbackExpectation.fulfill()
+        }
+        waitForExpectations(timeout: 3)
+
+        let cancelBolusCallbackExpectation = expectation(description: "cancel bolus callbacks")
+        
+        timeTravel(.seconds(15))
+
+        pumpManager.cancelBolus { (result) in
+            switch result {
+            case .failure(let error):
+                XCTFail("cancelBolus failed with error: \(error)")
+            case .success(let dose):
+                XCTAssertEqual(DoseType.bolus, dose!.type)
+                XCTAssertEqual(DoseUnit.units, dose!.unit)
+                XCTAssertEqual(1.0, dose!.programmedUnits)
+                XCTAssertEqual(0.35, dose!.deliveredUnits)
+            }
+            cancelBolusCallbackExpectation.fulfill()
+        }
+        waitForExpectations(timeout: 3)
+        
     }
 
     func testSuccessfulTempBasal() {

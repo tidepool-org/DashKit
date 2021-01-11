@@ -16,6 +16,8 @@ public protocol MockPodCommManagerObserver: class {
 
 public class MockPodCommManager: PodCommManagerProtocol {
     
+    public let dateGenerator: () -> Date
+    
     // Nil if no pod paired
     public var podStatus: MockPodStatus? {
         didSet {
@@ -98,7 +100,7 @@ public class MockPodCommManager: PodCommManagerProtocol {
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 11.5) {
                 // Start out with 100U
-                self.podStatus = MockPodStatus(activationDate: Date(), podState: .uidSet, programStatus: ProgramStatus(rawValue: 0), activeAlerts: PodAlerts(rawValue: 128), isOcclusionAlertActive: false, bolusUnitsRemaining: 0, initialInsulinAmount: 100)
+                self.podStatus = MockPodStatus(activationDate: self.dateGenerator(), podState: .uidSet, programStatus: ProgramStatus(rawValue: 0), activeAlerts: PodAlerts(rawValue: 128), isOcclusionAlertActive: false, bolusUnitsRemaining: 0, initialInsulinAmount: 100)
                 eventListener(.event(.podStatus(self.podStatus!)))
             }
             
@@ -160,8 +162,8 @@ public class MockPodCommManager: PodCommManagerProtocol {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                 eventListener(.event(.programmingActiveBasal))
                 self.podStatus?.basalProgram = basalProgram
-                self.podStatus?.basalProgramStartOffset = secondsSinceMidnight.map {Double($0)} ?? -Calendar.current.startOfDay(for: Date()).timeIntervalSinceNow
-                self.podStatus?.basalProgramStartDate = Date()
+                self.podStatus?.basalProgramStartOffset = secondsSinceMidnight.map {Double($0)} ?? -Calendar.current.startOfDay(for: self.dateGenerator()).timeIntervalSinceNow
+                self.podStatus?.basalProgramStartDate = self.dateGenerator()
             }
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
@@ -292,7 +294,7 @@ public class MockPodCommManager: PodCommManagerProtocol {
         } else {
             switch programType {
             case .basalProgram(let program, let offset):
-                let now = Date()
+                let now = dateGenerator()
                 self.podStatus!.basalProgram = program
                 self.podStatus!.basalProgramStartOffset = offset.map {Double($0)} ?? -Calendar.current.startOfDay(for: now).timeIntervalSinceNow
                 self.podStatus!.basalProgramStartDate = now
@@ -300,12 +302,12 @@ public class MockPodCommManager: PodCommManagerProtocol {
             case .bolus(let bolus):
                 self.podStatus!.bolus = UnfinalizedDose(
                     bolusAmount: Double(bolus.immediateVolume) / Pod.podSDKInsulinMultiplier,
-                    startTime: Date(),
+                    startTime: dateGenerator(),
                     scheduledCertainty: .certain)
                 self.podStatus!.programStatus.insert(.bolusRunning)
             case .tempBasal(let tempBasal):
                 if case .flatRate(let rate) = tempBasal.value {
-                    self.podStatus!.tempBasal = UnfinalizedDose(tempBasalRate: Double(rate) / Pod.podSDKInsulinMultiplier, startTime: Date(), duration: tempBasal.duration, scheduledCertainty: .certain)
+                    self.podStatus!.tempBasal = UnfinalizedDose(tempBasalRate: Double(rate) / Pod.podSDKInsulinMultiplier, startTime: dateGenerator(), duration: tempBasal.duration, scheduledCertainty: .certain)
                     self.podStatus!.programStatus.insert(.tempBasalRunning)
                 }
             }
@@ -327,14 +329,14 @@ public class MockPodCommManager: PodCommManagerProtocol {
         } else {
             switch programType {
             case .bolus:
-                self.podStatus?.cancelBolus()
+                podStatus.cancelBolus(at: dateGenerator())
                 podStatus.programStatus.remove(.bolusRunning)
             case .tempBasal:
-                self.podStatus?.cancelTempBasal()
+                podStatus.cancelTempBasal(at: dateGenerator())
                 podStatus.programStatus.remove(.tempBasalRunning)
             case .stopAll:
-                self.podStatus?.cancelBolus()
-                self.podStatus?.cancelTempBasal()
+                podStatus.cancelBolus(at: dateGenerator())
+                podStatus.cancelTempBasal(at: dateGenerator())
                 podStatus.programStatus = []
             }
             self.podStatus = podStatus
@@ -416,11 +418,12 @@ public class MockPodCommManager: PodCommManagerProtocol {
         return 0
     }
 
-    public init(podStatus: MockPodStatus? = nil) {
+    public init(podStatus: MockPodStatus? = nil, dateGenerator: (() -> Date)? = nil) {
         self.podStatus = podStatus
         if podStatus != nil {
             self.podCommState = .active
         }
+        self.dateGenerator = dateGenerator ?? { return Date() }
     }
 }
 

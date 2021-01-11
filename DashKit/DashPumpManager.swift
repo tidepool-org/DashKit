@@ -718,8 +718,9 @@ open class DashPumpManager: PumpManager {
                     state.updateFromPodStatus(status: status)
                     state.activeTransition = nil
                 })
+                let canceledBolus = self.state.unfinalizedBolus?.doseEntry(at: self.dateGenerator())
                 self.finalizeAndStoreDoses()
-                completion(.success(self.state.unfinalizedBolus?.doseEntry(at: self.dateGenerator())))
+                completion(.success(canceledBolus))
             case .failure(let error):
                 self.mutateState({ (state) in
                     state.activeTransition = nil
