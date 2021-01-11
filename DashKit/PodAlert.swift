@@ -61,7 +61,7 @@ public enum PodAlert: String {
         case .podExpiring:
             return LocalizedString("Pod Expired", comment: "Alert content title for podExpiring pod alert")
         case .podExpireImminent:
-            return LocalizedString("Pod Expiration Imminent", comment: "Alert content title for podExpireImminent pod alert")
+            return LocalizedString("Pod Expired", comment: "Alert content title for podExpireImminent pod alert")
         case .lowReservoir:
             return LocalizedString("Low Reservoir", comment: "Alert content title for lowReservoir pod alert")
         case .suspendInProgress:
@@ -80,9 +80,9 @@ public enum PodAlert: String {
         case .userPodExpiration:
             return LocalizedString("Pod Expiration Reminder", comment: "Alert content body for userPodExpiration pod alert")
         case .podExpiring:
-            return LocalizedString("Change pod now.\nPod has been active for 72 hours.", comment: "Alert content body for podExpiring pod alert")
+            return LocalizedString("Change Pod now.\nPod has been active for 72 hours.", comment: "Alert content body for podExpiring pod alert")
         case .podExpireImminent:
-            return LocalizedString("Pod Expiration Imminent", comment: "Alert content body for podExpireImminent pod alert")
+            return LocalizedString("Change Pod now.\nInsulin delivery will stop in 1 hour.", comment: "Alert content body for podExpireImminent pod alert")
         case .lowReservoir:
             return LocalizedString("10 U insulin or less remaining in Pod.\nChange Pod soon.", comment: "Alert content body for lowReservoir pod alert")
         case .suspendInProgress:
@@ -92,10 +92,16 @@ public enum PodAlert: String {
         }
     }
     
+    // Override background (UserNotification) content
+    
+    var backgroundContentTitle: String {
+        return contentTitle
+    }
+    
     var backgroundContentBody: String {
         switch self {
         case .suspendEnded:
-            return LocalizedString("Suspension time is up. Open the app and resume.", comment: "Alert notification body for suspendEnded pod alert")
+            return LocalizedString("Suspension time is up. Open the app and resume.", comment: "Alert notification body for suspendEnded pod alert user notification")
         default:
             return contentBody
         }
@@ -116,7 +122,7 @@ public enum PodAlert: String {
     }
     
     var backgroundContent: Alert.Content {
-        return Alert.Content(title: contentTitle, body: backgroundContentBody, acknowledgeActionButtonLabel: actionButtonLabel)
+        return Alert.Content(title: backgroundContentTitle, body: backgroundContentBody, acknowledgeActionButtonLabel: actionButtonLabel)
     }
 
     
