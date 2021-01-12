@@ -19,7 +19,7 @@ extension AlarmCode {
         case .occlusion:
             return LocalizedString("Occlusion Detected", comment: "The title for Occlusion alarm notification")
         case .other:
-            return LocalizedString("Call Customer Care", comment: "The title for AlarmCode.other notification")
+            return LocalizedString("Pod Error", comment: "The title for AlarmCode.other notification")
         case .podExpired:
             return LocalizedString("Pod Expired", comment: "The title for Pod Expired alarm notification")
         }
