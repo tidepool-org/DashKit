@@ -55,11 +55,59 @@ public struct MockPodStatus: PodStatus, Equatable {
         return !activeAlerts.isEmpty
     }
     
+    public var alarmDetail: PodAlarmDetail? {
+        guard let alarmCode = alarmCode,
+              let alarmDescription = alarmDescription,
+              let occlusionType = occlusionType,
+              let didErrorOccuredFetchingBolusInfo = didErrorOccuredFetchingBolusInfo,
+              let wasBolusActiveWhenPodAlarmed = wasBolusActiveWhenPodAlarmed,
+              let podStateWhenPodAlarmed = podStateWhenPodAlarmed,
+              let alarmDate = alarmDate,
+              let alarmReferenceCode = alarmReferenceCode else
+        {
+            return nil
+        }
+            
+        return MockPodAlarm(alarmCode: alarmCode, alarmDescription: alarmDescription, podStatus: self, occlusionType: occlusionType, didErrorOccuredFetchingBolusInfo: didErrorOccuredFetchingBolusInfo, wasBolusActiveWhenPodAlarmed: wasBolusActiveWhenPodAlarmed, podStateWhenPodAlarmed: podStateWhenPodAlarmed, alarmTime: alarmDate, activationTime: activationDate, referenceCode: alarmReferenceCode)
+    }
+    
+    public mutating func enterAlarmState(alarmCode: AlarmCode, alarmDescription: String, didErrorOccuredFetchingBolusInfo: Bool, alarmDate: Date, referenceCode: String) {
+        
+        self.alarmCode = alarmCode
+        self.alarmDescription = alarmDescription
+        self.didErrorOccuredFetchingBolusInfo = didErrorOccuredFetchingBolusInfo
+        self.alarmDate = alarmDate
+        self.alarmReferenceCode = referenceCode
+        
+        self.podStateWhenPodAlarmed = podState
+        podState = .alarm
+        programStatus = ProgramStatus(rawValue: 0)
+        if case .occlusion = alarmCode {
+            occlusionType = .stallDuringRuntime
+        } else {
+            occlusionType = OcclusionType.none
+        }
+        
+        self.wasBolusActiveWhenPodAlarmed = bolus != nil
+        bolus?.cancel(at: alarmDate)
+        tempBasal?.cancel(at: alarmDate)
+    }
+    
     private var lastDeliveryUpdate: Date
     
     public var basalProgram: BasalProgram?
     public var basalProgramStartDate: Date?
     public var basalProgramStartOffset: Double?
+    
+    // Data for AlarmDetail
+    public var alarmCode: AlarmCode?
+    public var alarmDescription: String?
+    public var occlusionType: OcclusionType?
+    public var didErrorOccuredFetchingBolusInfo: Bool?
+    public var wasBolusActiveWhenPodAlarmed: Bool?
+    public var podStateWhenPodAlarmed: PodState?
+    public var alarmDate: Date?
+    public var alarmReferenceCode: String?
     
     public var bolus: UnfinalizedDose? {
         didSet {
@@ -193,6 +241,8 @@ public struct MockPodStatus: PodStatus, Equatable {
 
 extension MockPodStatus: RawRepresentable {
     public typealias RawValue = [String: Any]
+    
+
 
     public init?(rawValue: RawValue) {
         guard
@@ -235,6 +285,43 @@ extension MockPodStatus: RawRepresentable {
             self.basalProgramStartOffset = basalProgramStartOffset
         }
 
+        if let rawAlarmCode = rawValue["alarmCode"] as? AlarmCode.RawValue,
+           let alarmCode = AlarmCode(rawValue: rawAlarmCode)
+        {
+            self.alarmCode = alarmCode
+        }
+            
+        if let alarmDescription = rawValue["alarmDescription"] as? String {
+            self.alarmDescription = alarmDescription
+        }
+        
+        if let rawOcclusionType = rawValue["occlusionType"] as? OcclusionType.RawValue,
+           let occlusionType = OcclusionType(rawValue: rawOcclusionType)
+        {
+            self.occlusionType = occlusionType
+        }
+        
+        if let didErrorOccuredFetchingBolusInfo = rawValue["didErrorOccuredFetchingBolusInfo"] as? Bool {
+            self.didErrorOccuredFetchingBolusInfo = didErrorOccuredFetchingBolusInfo
+        }
+        
+        if let wasBolusActiveWhenPodAlarmed = rawValue["wasBolusActiveWhenPodAlarmed"] as? Bool {
+            self.wasBolusActiveWhenPodAlarmed = wasBolusActiveWhenPodAlarmed
+        }
+
+        if let rawPodStateWhenPodAlarmed = rawValue["podStateWhenPodAlarmed"] as? PodState.RawValue,
+           let podStateWhenPodAlarmed = PodState(rawValue: rawPodStateWhenPodAlarmed)
+        {
+            self.podStateWhenPodAlarmed = podStateWhenPodAlarmed
+        }
+
+        if let alarmDate = rawValue["alarmDate"] as? Date {
+            self.alarmDate = alarmDate
+        }
+
+        if let alarmReferenceCode = rawValue["alarmReferenceCode"] as? String {
+            self.alarmReferenceCode = alarmReferenceCode
+        }
     }
     
     public var rawValue: RawValue {
@@ -262,6 +349,38 @@ extension MockPodStatus: RawRepresentable {
             rawValue["basalProgramStartOffset"] = basalProgramStartOffset
         }
         
+        if let alarmCode = alarmCode {
+            rawValue["alarmCode"] = alarmCode.rawValue
+        }
+        
+        if let alarmDescription = alarmDescription {
+            rawValue["alarmDescription"] = alarmDescription
+        }
+        
+        if let occlusionType = occlusionType {
+            rawValue["occlusionType"] = occlusionType.rawValue
+        }
+        
+        if let didErrorOccuredFetchingBolusInfo = didErrorOccuredFetchingBolusInfo {
+            rawValue["didErrorOccuredFetchingBolusInfo"] = didErrorOccuredFetchingBolusInfo
+        }
+
+        if let wasBolusActiveWhenPodAlarmed = wasBolusActiveWhenPodAlarmed {
+            rawValue["wasBolusActiveWhenPodAlarmed"] = wasBolusActiveWhenPodAlarmed
+        }
+
+        if let podStateWhenPodAlarmed = podStateWhenPodAlarmed {
+            rawValue["podStateWhenPodAlarmed"] = podStateWhenPodAlarmed.rawValue
+        }
+
+        if let alarmDate = alarmDate {
+            rawValue["alarmDate"] = alarmDate
+        }
+
+        if let alarmReferenceCode = alarmReferenceCode {
+            rawValue["alarmReferenceCode"] = alarmReferenceCode
+        }
+
         return rawValue
     }
 }

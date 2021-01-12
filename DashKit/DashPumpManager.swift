@@ -124,14 +124,25 @@ open class DashPumpManager: PumpManager {
                 imageName: "exclamationmark.circle.fill",
                 state: .warning)
         case .alarm(let detail):
-            if let detail = detail, detail.occlusionType != .none {
+            if let detail = detail {
+                var message: String
+                switch detail.alarmCode {
+                case .emptyReservoir:
+                    message = LocalizedString("No Insulin", comment: "Status highlight message for emptyReservoir alarm.")
+                case .podExpired:
+                    message = LocalizedString("Pod Expired", comment: "Status highlight message for podExpired alarm.")
+                case .occlusion:
+                    message = LocalizedString("Pod Occlusion", comment: "Status highlight message for occlusion alarm.")
+                default:
+                    message = LocalizedString("Pod Error", comment: "Status highlight message for other alarm.")
+                }
                 return PumpManagerStatus.PumpStatusHighlight(
-                    localizedMessage: NSLocalizedString("Occlusion", comment: "Status highlight that when pod is alarming with occlusion."),
+                    localizedMessage: message,
                     imageName: "exclamationmark.circle.fill",
                     state: .critical)
             } else {
                 return PumpManagerStatus.PumpStatusHighlight(
-                    localizedMessage: NSLocalizedString("Pod Alarm", comment: "Status highlight that when pod has non-occlusion alarm."),
+                    localizedMessage: NSLocalizedString("Pod Alarm", comment: "Status highlight for alarm without details."),
                     imageName: "exclamationmark.circle.fill",
                     state: .critical)
             }
@@ -555,6 +566,10 @@ open class DashPumpManager: PumpManager {
     }
 
     private func basalDeliveryState(for state: DashPumpManagerState) -> PumpManagerStatus.BasalDeliveryState? {
+        if state.alarmCode != nil {
+            return nil
+        }
+        
         if let transition = state.activeTransition {
             switch transition {
             case .suspendingPump:
