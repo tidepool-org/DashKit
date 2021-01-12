@@ -18,17 +18,29 @@ public class MockPodCommManager: PodCommManagerProtocol {
     
     public let dateGenerator: () -> Date
     
-    // Nil if no pod paired
+    
+    private let lockedPodStatus: Locked<MockPodStatus?>
+    
     public var podStatus: MockPodStatus? {
-        didSet {
+        get {
+            return lockedPodStatus.value
+        }
+        set {
+            lockedPodStatus.value = newValue
             notifyObservers()
         }
     }
         
     public var silencedAlerts: [PodAlerts] = []
-    
-    public var podCommState: PodCommState = .noPod {
-        didSet {
+
+    private let lockedPodCommState: Locked<PodCommState>
+
+    public var podCommState: PodCommState {
+        get {
+            return lockedPodCommState.value
+        }
+        set {
+            lockedPodCommState.value = newValue
             self.dashPumpManager?.podCommManager(self, podCommStateDidChange: podCommState)
             notifyObservers()
         }
@@ -221,6 +233,17 @@ public class MockPodCommManager: PodCommManagerProtocol {
             self.dashPumpManager?.podCommManagerHasAlerts(podStatus.activeAlerts)
         }
     }
+    
+    public func triggerAlarm(_ alarmCode: AlarmCode, alarmDate: Date = Date()) {
+        guard var podStatus = podStatus else {
+            return
+        }
+        podStatus.enterAlarmState(alarmCode: alarmCode, alarmDescription: String(describing: alarmCode), didErrorOccuredFetchingBolusInfo: false, alarmDate: alarmDate, referenceCode: "0000-mock-pod-0000")
+        self.podStatus = podStatus
+        let alarmDetail = podStatus.alarmDetail!
+        self.podCommState = .alarm(alarmDetail)
+        self.dashPumpManager?.podCommManager(self, didAlarm: alarmDetail)
+    }
 
     public func discardPod(completion: @escaping (PodCommResult<Bool>) -> ()) {
         deliveryProgramError = nil
@@ -234,10 +257,12 @@ public class MockPodCommManager: PodCommManagerProtocol {
             return
         }
         
-        setDeactivatedState()
-        deliveryProgramError = nil
-        unacknowledgedCommandRetryResult = nil
-        completion(.success(podStatus))
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            self.setDeactivatedState()
+            self.deliveryProgramError = nil
+            self.unacknowledgedCommandRetryResult = nil
+            completion(.success(podStatus))
+        }
     }
     
     private func setDeactivatedState() {
@@ -421,9 +446,15 @@ public class MockPodCommManager: PodCommManagerProtocol {
     }
 
     public init(podStatus: MockPodStatus? = nil, dateGenerator: (() -> Date)? = nil) {
-        self.podStatus = podStatus
-        if podStatus != nil {
-            self.podCommState = .active
+        self.lockedPodStatus = Locked(podStatus)
+        if let podStatus = podStatus {
+            if podStatus.podState == .alarm, let alarmDetail = podStatus.alarmDetail {
+                self.lockedPodCommState = Locked(.alarm(alarmDetail))
+            } else {
+                self.lockedPodCommState = Locked(.active)
+            }
+        } else {
+            self.lockedPodCommState = Locked(.noPod)
         }
         self.dateGenerator = dateGenerator ?? { return Date() }
     }

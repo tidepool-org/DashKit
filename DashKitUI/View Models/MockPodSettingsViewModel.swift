@@ -64,6 +64,10 @@ class MockPodSettingsViewModel: ObservableObject, Identifiable {
             activeAlerts = podStatus.activeAlerts
         }
     }
+    
+    func triggerAlarm(_ alarm: SimulatedPodAlarm) {
+        mockPodCommManager.triggerAlarm(alarm.alarmCode)
+    }
 }
 
 extension MockPodSettingsViewModel: MockPodCommManagerObserver {
@@ -115,3 +119,24 @@ enum SimulatedPodAlerts: String, CaseIterable {
         }
     }
 }
+
+enum SimulatedPodAlarm: String, CaseIterable {
+    case podExpired
+    case emptyReservoir
+    case occlusion
+    case other
+    
+    var alarmCode: AlarmCode {
+        switch self {
+        case .podExpired:
+            return .podExpired
+        case .emptyReservoir:
+            return .emptyReservoir
+        case .occlusion:
+            return .occlusion
+        case .other:
+            return .autoOff
+        }
+    }
+}
+

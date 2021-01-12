@@ -19,6 +19,9 @@ struct MockPodSettingsView: View {
     @State private var showAlertActions: Bool = false
     @State private var selectedAlert: SimulatedPodAlerts?
     
+    @State private var showAlarmActions: Bool = false
+    @State private var selectedAlarm: SimulatedPodAlarm?
+
     func podCommErrorFormatted(_ error: PodCommError?) -> String {
         if let error = error {
             return error.localizedDescription
@@ -70,8 +73,32 @@ struct MockPodSettingsView: View {
                             self.selectedAlert = nil
                         },
                         .default(Text("Issue in 15s")) { DispatchQueue.main.asyncAfter(deadline: .now() + 15) {
-                            print("Delayed issue of \(selectedAlert!.podAlerts) at \(Date())")
                             self.model.issueAlert(selectedAlert!.podAlerts)
+                        } },
+                    ]
+                )
+            }
+            Section(header: Text("Alarms").font(.headline).foregroundColor(Color.primary)) {
+                ForEach(SimulatedPodAlarm.allCases, id: \.self) { item in
+                    Button(action: {
+                        self.selectedAlarm = item
+                        self.showAlarmActions = true
+                    }) {
+                        Text("\(item.rawValue)")
+                    }
+                }
+            }
+            .actionSheet(isPresented: $showAlarmActions) {
+                ActionSheet(
+                    title: Text("\(selectedAlarm!.rawValue)"),
+                    buttons: [
+                        .cancel(),
+                        .default(Text("Issue Immediately")) {
+                            self.model.triggerAlarm(selectedAlarm!)
+                            self.selectedAlert = nil
+                        },
+                        .default(Text("Issue in 15s")) { DispatchQueue.main.asyncAfter(deadline: .now() + 15) {
+                            self.model.triggerAlarm(selectedAlarm!)
                         } },
                     ]
                 )
