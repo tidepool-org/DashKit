@@ -166,6 +166,16 @@ open class DashPumpManager: PumpManager {
             return nil
         }
     }
+    
+    private func pumpLifecycleProgress(for state: DashPumpManagerState) -> PumpManagerStatus.PumpLifecycleProgress? {
+        switch podCommManager.podCommState {
+        // TODO: Handle active lifecycle progress
+        case .alarm:
+            return PumpManagerStatus.PumpLifecycleProgress(percentComplete: 100, progressState: .critical)
+        default:
+            return nil
+        }
+    }
 
     
     private func status(for state: DashPumpManagerState) -> PumpManagerStatus {
@@ -176,6 +186,7 @@ open class DashPumpManager: PumpManager {
             basalDeliveryState: basalDeliveryState(for: state),
             bolusState: bolusState(for: state),
             pumpStatusHighlight: pumpStatusHighlight(for: state),
+            pumpLifecycleProgress: pumpLifecycleProgress(for: state),
             deliveryIsUncertain: state.pendingCommand != nil
         )
     }
