@@ -25,6 +25,8 @@ open class DashPumpManager: PumpManager {
 
     static let podAlarmNotificationIdentifier = "DASH:\(LoopNotificationCategory.pumpFault.rawValue)"
     
+    static let systemErrorNotificationIdentifier = "DASH:\(LoopNotificationCategory.systemError.rawValue)"
+    
     public var podCommManager: PodCommManagerProtocol
     
     public var unwrappedPodCommManager: PodCommManagerProtocol
@@ -107,7 +109,7 @@ open class DashPumpManager: PumpManager {
                                                          state: .critical)
         }
 
-        switch podCommManager.podCommState {
+        switch state.lastPodCommState {
         case .activating:
             return PumpManagerStatus.PumpStatusHighlight(
                 localizedMessage: NSLocalizedString("Pod Activating", comment: "Status highlight that when pod is activating."),
@@ -168,10 +170,14 @@ open class DashPumpManager: PumpManager {
     }
     
     private func pumpLifecycleProgress(for state: DashPumpManagerState) -> PumpManagerStatus.PumpLifecycleProgress? {
-        switch podCommManager.podCommState {
+        switch state.lastPodCommState {
         // TODO: Handle active lifecycle progress
-        case .alarm:
-            return PumpManagerStatus.PumpLifecycleProgress(percentComplete: 100, progressState: .critical)
+        case .alarm(let detail):
+            if let detail = detail, detail.alarmCode == .podExpired {
+                return PumpManagerStatus.PumpLifecycleProgress(percentComplete: 100, progressState: .critical)
+            } else {
+                return nil
+            }
         default:
             return nil
         }
@@ -1311,11 +1317,25 @@ extension DashPumpManager: PodCommManagerDelegate {
             delegate?.deviceManager(self, logEventForDeviceIdentifier: self.podCommManager.deviceIdentifier, type: .delegate, message: message, completion: nil)
         }
     }
-    
-    public func podCommManager(_ podCommManager: PodCommManager, hasSystemError error: SystemError) {
+
+    public func podCommManagerHasSystemError(error: SystemError) {
         logPodCommManagerDelegateMessage("hasSystemError: \(String(describing: error))")
+        
+        pumpDelegate.notify { delegate in
+            let content = Alert.Content(title: LocalizedString("Pod System Error", comment: "Alert title for Pod System Error"),
+                                        body: error.localizedDescription,
+                                        acknowledgeActionButtonLabel: LocalizedString("OK", comment: "Alert acknowledgment OK button"))
+            delegate?.issueAlert(Alert(identifier: Alert.Identifier(managerIdentifier: self.managerIdentifier,
+                                                                    alertIdentifier: DashPumpManager.systemErrorNotificationIdentifier),
+                                             foregroundContent: content, backgroundContent: content,
+                                             trigger: .immediate))
+        }
     }
-    
+
+    public func podCommManager(_ podCommManager: PodCommManager, hasSystemError error: SystemError) {
+        podCommManagerHasSystemError(error: error)
+    }
+        
     private func shouldIgnorePodAlert(_ alert: PodAlert) -> Bool {
         // Ignore podExpiring alert during activation.
         if case .podExpiring = alert, podCommManager.podCommState == .activating {
@@ -1430,11 +1450,10 @@ extension DashPumpManager: PodCommManagerDelegate {
         })
     }
     
-    public func podCommManager(_ podCommManager: PodCommManager, hasSystemError error: SystemErrorCode) {
-        logPodCommManagerDelegateMessage("hasSystemError: \(String(describing: error))")
-    }
-    
     public func podCommManager(_ podCommManager: PodCommManagerProtocol, podCommStateDidChange podCommState: PodCommState) {
+        self.mutateState { (state) in
+            state.lastPodCommState = podCommState
+        }
         logPodCommManagerDelegateMessage("podCommStateDidChange: \(String(describing: podCommState))")
     }
     

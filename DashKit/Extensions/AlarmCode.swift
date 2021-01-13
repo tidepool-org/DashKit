@@ -32,7 +32,7 @@ extension AlarmCode {
             // extracted to be provided as a dependency
             return LocalizedString("Remove Pod Now. Call Customer Care at 1 800-591-3455", comment: "The body of AlarmCode.other notification")
         default:
-            return LocalizedString("Insulin delivery stopped.\nChange Pod now.", comment: "The default notification body for AlarmCodes")
+            return LocalizedString("Insulin delivery stopped. Change Pod now.", comment: "The default notification body for AlarmCodes")
         }
     }
 }

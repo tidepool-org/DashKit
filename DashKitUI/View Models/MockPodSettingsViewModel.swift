@@ -68,6 +68,10 @@ class MockPodSettingsViewModel: ObservableObject, Identifiable {
     func triggerAlarm(_ alarm: SimulatedPodAlarm) {
         mockPodCommManager.triggerAlarm(alarm.alarmCode)
     }
+    
+    func triggerSystemError() {
+        mockPodCommManager.triggerSystemError()
+    }
 }
 
 extension MockPodSettingsViewModel: MockPodCommManagerObserver {

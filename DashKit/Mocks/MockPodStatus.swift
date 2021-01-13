@@ -42,6 +42,8 @@ public struct MockPodStatus: PodStatus, Equatable {
             }
         }
     }
+    
+    public var podCommState: PodCommState
 
     public var timeElapsedSinceActivation: TimeInterval {
         return Date().timeIntervalSince(activationDate)
@@ -125,7 +127,8 @@ public struct MockPodStatus: PodStatus, Equatable {
                 bolusUnitsRemaining: Int,
                 initialInsulinAmount: Double,
                 insulinDelivered: Double = 0,
-                basalProgram: BasalProgram? = nil)
+                basalProgram: BasalProgram? = nil,
+                podCommState: PodCommState = .active)
     {
         self.activationDate = activationDate
         self.podState = podState
@@ -137,6 +140,7 @@ public struct MockPodStatus: PodStatus, Equatable {
         self.insulinDelivered = insulinDelivered
         self.lastDeliveryUpdate = Date()
         self.basalProgram = basalProgram
+        self.podCommState = podCommState
     }
     
     public static var normal: MockPodStatus {
@@ -255,7 +259,9 @@ extension MockPodStatus: RawRepresentable {
             let bolusUnitsRemaining = rawValue["bolusUnitsRemaining"] as? Int,
             let insulinDelivered = rawValue["insulinDelivered"] as? Double,
             let initialInsulinAmount = rawValue["initialInsulinAmount"] as? Double,
-            let lastDeliveryUpdate = rawValue["lastDeliveryUpdate"] as? Date
+            let lastDeliveryUpdate = rawValue["lastDeliveryUpdate"] as? Date,
+            let rawPodCommState = rawValue["podCommState"] as? Data,
+            let podCommState = try? JSONDecoder().decode(PodCommState.self, from: rawPodCommState)
             else
         {
             return nil
@@ -270,6 +276,7 @@ extension MockPodStatus: RawRepresentable {
         self.insulinDelivered = insulinDelivered
         self.initialInsulinAmount = initialInsulinAmount
         self.lastDeliveryUpdate = lastDeliveryUpdate
+        self.podCommState = podCommState
         
         if let rawBasalProgram = rawValue["basalProgram"] as? BasalProgram.RawValue,
            let basalProgram = BasalProgram(rawValue: rawBasalProgram)
@@ -321,7 +328,7 @@ extension MockPodStatus: RawRepresentable {
 
         if let alarmReferenceCode = rawValue["alarmReferenceCode"] as? String {
             self.alarmReferenceCode = alarmReferenceCode
-        }
+        }        
     }
     
     public var rawValue: RawValue {
@@ -379,6 +386,10 @@ extension MockPodStatus: RawRepresentable {
 
         if let alarmReferenceCode = alarmReferenceCode {
             rawValue["alarmReferenceCode"] = alarmReferenceCode
+        }
+        
+        if let rawPodCommState = try? JSONEncoder().encode(podCommState) {
+            rawValue["podCommState"] = rawPodCommState
         }
 
         return rawValue

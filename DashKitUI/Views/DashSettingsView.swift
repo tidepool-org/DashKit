@@ -172,9 +172,11 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
                         reservoirStatus
                     }
                 }
-                self.viewModel.systemErrorDescription.map { (systemErrorDescription) in
+                
+                if let systemErrorDescription = viewModel.systemErrorDescription {
                     Text(systemErrorDescription)
-                        .foregroundColor(Color.secondary)
+                        .lineLimit(nil)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
             }.padding(.bottom, 8)
             
