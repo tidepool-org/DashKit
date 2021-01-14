@@ -32,7 +32,7 @@ class DashSettingsViewModelTests: XCTestCase {
     func testBasalDeliveryRateWithScheduledBasal() {
         let basalScheduleItems = [RepeatingScheduleValue(startTime: 0, value: 1.0)]
         let schedule = BasalRateSchedule(dailyItems: basalScheduleItems, timeZone: .current)!
-        let state = DashPumpManagerState(basalRateSchedule: schedule, maximumTempBasalRate: 3.0, dateGenerator: dateGenerator)!
+        let state = DashPumpManagerState(basalRateSchedule: schedule, maximumTempBasalRate: 3.0, lastPodCommState: .active, dateGenerator: dateGenerator)!
 
         let mockPodCommManager = MockPodCommManager()
         let pumpManager = DashPumpManager(state: state, podCommManager: mockPodCommManager, dateGenerator: dateGenerator)
@@ -50,7 +50,7 @@ class DashSettingsViewModelTests: XCTestCase {
     func testBasalDeliveryRateWithSuspendedBasal() {
         let basalScheduleItems = [RepeatingScheduleValue(startTime: 0, value: 1.0)]
         let schedule = BasalRateSchedule(dailyItems: basalScheduleItems, timeZone: .current)!
-        var state = DashPumpManagerState(basalRateSchedule: schedule, maximumTempBasalRate: 3.0, dateGenerator: dateGenerator)!
+        var state = DashPumpManagerState(basalRateSchedule: schedule, maximumTempBasalRate: 3.0, lastPodCommState: .active, dateGenerator: dateGenerator)!
         state.suspendState = .suspended(dateGenerator() - .hours(1))
 
         let mockPodCommManager = MockPodCommManager()
@@ -69,7 +69,7 @@ class DashSettingsViewModelTests: XCTestCase {
     func testBasalDeliveryRateWithHighTemp() {
         let basalScheduleItems = [RepeatingScheduleValue(startTime: 0, value: 1.0)]
         let schedule = BasalRateSchedule(dailyItems: basalScheduleItems, timeZone: .current)!
-        var state = DashPumpManagerState(basalRateSchedule: schedule, maximumTempBasalRate: 3.0, dateGenerator: dateGenerator)!
+        var state = DashPumpManagerState(basalRateSchedule: schedule, maximumTempBasalRate: 3.0, lastPodCommState: .active, dateGenerator: dateGenerator)!
         state.unfinalizedTempBasal = UnfinalizedDose(tempBasalRate: 2.0, startTime: dateGenerator() - .minutes(5), duration: .minutes(30), scheduledCertainty: .certain)
 
         let mockPodCommManager = MockPodCommManager()
@@ -88,7 +88,7 @@ class DashSettingsViewModelTests: XCTestCase {
     func testBasalDeliveryRateWithLowTemp() {
         let basalScheduleItems = [RepeatingScheduleValue(startTime: 0, value: 1.0)]
         let schedule = BasalRateSchedule(dailyItems: basalScheduleItems, timeZone: .current)!
-        var state = DashPumpManagerState(basalRateSchedule: schedule, maximumTempBasalRate: 3.0, dateGenerator: dateGenerator)!
+        var state = DashPumpManagerState(basalRateSchedule: schedule, maximumTempBasalRate: 3.0, lastPodCommState: .active, dateGenerator: dateGenerator)!
         state.unfinalizedTempBasal = UnfinalizedDose(tempBasalRate: 0.5, startTime: dateGenerator() - .minutes(5), duration: .minutes(30), scheduledCertainty: .certain)
 
         let mockPodCommManager = MockPodCommManager()

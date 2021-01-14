@@ -74,7 +74,7 @@ class DashPumpManagerTests: XCTestCase {
         mockPodCommManager = MockPodCommManager(podStatus: podStatus, dateGenerator: dateGenerator)
         mockPodCommManager.podCommState = .active
                 
-        var state = DashPumpManagerState(basalRateSchedule: schedule, maximumTempBasalRate: 3.0, dateGenerator: dateGenerator)!
+        var state = DashPumpManagerState(basalRateSchedule: schedule, maximumTempBasalRate: 3.0, lastPodCommState: .active, dateGenerator: dateGenerator)!
         state.podActivatedAt = activation
         pumpManager = DashPumpManager(state: state, podCommManager: mockPodCommManager, dateGenerator: dateGenerator)
         pumpManager.addPodStatusObserver(self, queue: DispatchQueue.main)
