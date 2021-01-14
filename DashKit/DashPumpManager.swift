@@ -25,7 +25,7 @@ open class DashPumpManager: PumpManager {
 
     static let podAlarmNotificationIdentifier = "DASH:\(LoopNotificationCategory.pumpFault.rawValue)"
     
-    static let systemErrorNotificationIdentifier = "DASH:\(LoopNotificationCategory.systemError.rawValue)"
+    static let systemErrorNotificationIdentifier = "DASH:system-error"
     
     public var podCommManager: PodCommManagerProtocol
     
