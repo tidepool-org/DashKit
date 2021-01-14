@@ -109,10 +109,7 @@ public enum PodAlert: String {
 
     
     var actionButtonLabel: String {
-        switch self {
-        default:
-            return LocalizedString("Ok", comment: "Action button default text for PodAlerts")
-        }
+        return LocalizedString("Ok", comment: "Action button default text for PodAlerts")
     }
     
     var foregroundContent: Alert.Content {
