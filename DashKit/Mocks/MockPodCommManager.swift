@@ -37,11 +37,7 @@ public class MockPodCommManager: PodCommManagerProtocol {
 
     public var podCommState: PodCommState {
         get {
-            if let podStatus = podStatus {
-                return podStatus.podCommState
-            } else {
-                return .noPod
-            }
+            return podStatus?.podCommState ?? .noPod
         }
         set {
             podStatus?.podCommState = newValue

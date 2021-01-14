@@ -200,10 +200,7 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
             "activeAlerts": activeAlerts.rawValue,
         ]
         
-        if let rawLastPodCommState = try? JSONEncoder().encode(lastPodCommState) {
-            rawValue["lastPodCommState"] = rawLastPodCommState
-        }
-
+        rawValue["lastPodCommState"] = try? JSONEncoder().encode(lastPodCommState)
         rawValue["suspendState"] = suspendState?.rawValue
         rawValue["lastStatusDate"] = lastStatusDate
         rawValue["reservoirLevel"] = reservoirLevel?.rawValue

@@ -344,53 +344,18 @@ extension MockPodStatus: RawRepresentable {
             "lastDeliveryUpdate": lastDeliveryUpdate
         ]
         
-        if let basalProgram = basalProgram {
-            rawValue["basalProgram"] = basalProgram.rawValue
-        }
-        
-        if let basalProgramStartDate = basalProgramStartDate {
-            rawValue["basalProgramStartDate"] = basalProgramStartDate
-        }
-        
-        if let basalProgramStartOffset = basalProgramStartOffset {
-            rawValue["basalProgramStartOffset"] = basalProgramStartOffset
-        }
-        
-        if let alarmCode = alarmCode {
-            rawValue["alarmCode"] = alarmCode.rawValue
-        }
-        
-        if let alarmDescription = alarmDescription {
-            rawValue["alarmDescription"] = alarmDescription
-        }
-        
-        if let occlusionType = occlusionType {
-            rawValue["occlusionType"] = occlusionType.rawValue
-        }
-        
-        if let didErrorOccuredFetchingBolusInfo = didErrorOccuredFetchingBolusInfo {
-            rawValue["didErrorOccuredFetchingBolusInfo"] = didErrorOccuredFetchingBolusInfo
-        }
-
-        if let wasBolusActiveWhenPodAlarmed = wasBolusActiveWhenPodAlarmed {
-            rawValue["wasBolusActiveWhenPodAlarmed"] = wasBolusActiveWhenPodAlarmed
-        }
-
-        if let podStateWhenPodAlarmed = podStateWhenPodAlarmed {
-            rawValue["podStateWhenPodAlarmed"] = podStateWhenPodAlarmed.rawValue
-        }
-
-        if let alarmDate = alarmDate {
-            rawValue["alarmDate"] = alarmDate
-        }
-
-        if let alarmReferenceCode = alarmReferenceCode {
-            rawValue["alarmReferenceCode"] = alarmReferenceCode
-        }
-        
-        if let rawPodCommState = try? JSONEncoder().encode(podCommState) {
-            rawValue["podCommState"] = rawPodCommState
-        }
+        rawValue["basalProgram"] = basalProgram?.rawValue
+        rawValue["basalProgramStartDate"] = basalProgramStartDate
+        rawValue["basalProgramStartOffset"] = basalProgramStartOffset
+        rawValue["alarmCode"] = alarmCode?.rawValue
+        rawValue["alarmDescription"] = alarmDescription
+        rawValue["occlusionType"] = occlusionType?.rawValue
+        rawValue["didErrorOccuredFetchingBolusInfo"] = didErrorOccuredFetchingBolusInfo
+        rawValue["wasBolusActiveWhenPodAlarmed"] = wasBolusActiveWhenPodAlarmed
+        rawValue["podStateWhenPodAlarmed"] = podStateWhenPodAlarmed?.rawValue
+        rawValue["alarmDate"] = alarmDate
+        rawValue["alarmReferenceCode"] = alarmReferenceCode
+        rawValue["podCommState"] = try? JSONEncoder().encode(podCommState)
 
         return rawValue
     }
