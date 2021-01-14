@@ -15,11 +15,11 @@ extension AlarmCode {
         case .autoOff:
             return LocalizedString("Auto Off Alarm", comment: "The title for Auto-Off alarm notification")
         case .emptyReservoir:
-            return LocalizedString("Empty Reservoir Alarm", comment: "The title for Empty Reservoir alarm notification")
+            return LocalizedString("Empty Reservoir", comment: "The title for Empty Reservoir alarm notification")
         case .occlusion:
             return LocalizedString("Occlusion Detected", comment: "The title for Occlusion alarm notification")
         case .other:
-            return LocalizedString("Call Customer Care", comment: "The title for AlarmCode.other notification")
+            return LocalizedString("Pod Error", comment: "The title for AlarmCode.other notification")
         case .podExpired:
             return LocalizedString("Pod Expired", comment: "The title for Pod Expired alarm notification")
         }
@@ -31,10 +31,8 @@ extension AlarmCode {
             // TODO: This string is up for review; also, if phone number is used in final string, it should be
             // extracted to be provided as a dependency
             return LocalizedString("Remove Pod Now. Call Customer Care at 1 800-591-3455", comment: "The body of AlarmCode.other notification")
-        case .podExpired:
-            return LocalizedString("Insulin delivery stopped.\nChange Pod now.", comment: "The notification body for podExpired AlarmCode")
         default:
-            return LocalizedString("Insulin delivery stopped.\nChange Pod now.", comment: "The notification body for unknown AlarmCode")
+            return LocalizedString("Insulin delivery stopped. Change Pod now.", comment: "The default notification body for AlarmCodes")
         }
     }
 }

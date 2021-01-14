@@ -80,11 +80,11 @@ public enum PodAlert: String {
         case .userPodExpiration:
             return LocalizedString("Pod Expiration Reminder", comment: "Alert content body for userPodExpiration pod alert")
         case .podExpiring:
-            return LocalizedString("Change Pod now.\nPod has been active for 72 hours.", comment: "Alert content body for podExpiring pod alert")
+            return LocalizedString("Change Pod now. Pod has been active for 72 hours.", comment: "Alert content body for podExpiring pod alert")
         case .podExpireImminent:
-            return LocalizedString("Change Pod now.\nInsulin delivery will stop in 1 hour.", comment: "Alert content body for podExpireImminent pod alert")
+            return LocalizedString("Change Pod now. Insulin delivery will stop in 1 hour.", comment: "Alert content body for podExpireImminent pod alert")
         case .lowReservoir:
-            return LocalizedString("10 U insulin or less remaining in Pod.\nChange Pod soon.", comment: "Alert content body for lowReservoir pod alert")
+            return LocalizedString("10 U insulin or less remaining in Pod. Change Pod soon.", comment: "Alert content body for lowReservoir pod alert")
         case .suspendInProgress:
             return LocalizedString("Suspend In Progress Reminder", comment: "Alert content body for suspendInProgress pod alert")
         case .suspendEnded:
@@ -109,12 +109,7 @@ public enum PodAlert: String {
 
     
     var actionButtonLabel: String {
-        switch self {
-        case .suspendEnded:
-            return LocalizedString("OK", comment: "Action button text to acknowledge pump resume")
-        default:
-            return LocalizedString("Acknowledge", comment: "Action button default text for PodAlerts")
-        }
+        return LocalizedString("Ok", comment: "Action button default text for PodAlerts")
     }
     
     var foregroundContent: Alert.Content {

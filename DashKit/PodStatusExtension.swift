@@ -104,11 +104,7 @@ public extension SystemErrorCode {
 
 public extension SystemError {
     var localizedDescription: String {
-        if self.referenceCode.count > 0 {
-            return String(format: LocalizedString("%1$@: %2$@", comment: "Format string for error description for PodCommError.systemError (1: system error code description) (2: support reference code)"), self.errorCode.localizedDescription, self.referenceCode)
-        } else {
-            return self.errorCode.localizedDescription
-        }
+        return String(format: LocalizedString("Remove Pod now.\nCall Insulet customer care: %1$@\nRef: %2$@", comment: "Format string for error description for PodCommError.systemError (1: support number) (2: support reference code)"), Pod.supportPhoneNumber, self.referenceCode)
     }
     
     var recoverySuggestion: String {

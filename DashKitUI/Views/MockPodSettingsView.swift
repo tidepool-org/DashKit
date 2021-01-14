@@ -21,6 +21,8 @@ struct MockPodSettingsView: View {
     
     @State private var showAlarmActions: Bool = false
     @State private var selectedAlarm: SimulatedPodAlarm?
+    
+    @State private var showSystemErrorActions: Bool = false
 
     func podCommErrorFormatted(_ error: PodCommError?) -> String {
         if let error = error {
@@ -100,6 +102,29 @@ struct MockPodSettingsView: View {
                         .default(Text("Issue in 15s")) { DispatchQueue.main.asyncAfter(deadline: .now() + 15) {
                             self.model.triggerAlarm(selectedAlarm!)
                         } },
+                    ]
+                )
+            }
+            Section(header: Text("System Errors").font(.headline).foregroundColor(Color.primary)) {
+                Button(action: {
+                    self.showSystemErrorActions = true
+                }) {
+                    Text("Trigger System Error")
+                }
+            }
+            .actionSheet(isPresented: $showSystemErrorActions) {
+                ActionSheet(
+                    title: Text("System Error"),
+                    buttons: [
+                        .cancel(),
+                        .default(Text("Issue Immediately")) {
+                            self.model.triggerSystemError()
+                        },
+                        .default(Text("Issue in 15s")) {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 15) {
+                                self.model.triggerSystemError()
+                            }
+                        },
                     ]
                 )
             }

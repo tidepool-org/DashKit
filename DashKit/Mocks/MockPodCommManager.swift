@@ -37,10 +37,10 @@ public class MockPodCommManager: PodCommManagerProtocol {
 
     public var podCommState: PodCommState {
         get {
-            return lockedPodCommState.value
+            return podStatus?.podCommState ?? .noPod
         }
         set {
-            lockedPodCommState.value = newValue
+            podStatus?.podCommState = newValue
             self.dashPumpManager?.podCommManager(self, podCommStateDidChange: podCommState)
             notifyObservers()
         }
@@ -243,6 +243,12 @@ public class MockPodCommManager: PodCommManagerProtocol {
         let alarmDetail = podStatus.alarmDetail!
         self.podCommState = .alarm(alarmDetail)
         self.dashPumpManager?.podCommManager(self, didAlarm: alarmDetail)
+    }
+    
+    public func triggerSystemError() {
+        let systemError = Self.systemError
+        self.podCommState = .systemError(systemError)
+        dashPumpManager?.podCommManagerHasSystemError(error: systemError)
     }
 
     public func discardPod(completion: @escaping (PodCommResult<Bool>) -> ()) {
@@ -457,6 +463,11 @@ public class MockPodCommManager: PodCommManagerProtocol {
             self.lockedPodCommState = Locked(.noPod)
         }
         self.dateGenerator = dateGenerator ?? { return Date() }
+    }
+    
+    public static var systemError: SystemError {
+        let json = "{\"error\":\"dataCorruption\",\"referenceCode\":\"01-mock-pod-003\"}"
+        return try! JSONDecoder().decode(SystemError.self, from: json.data(using: .utf8)!)
     }
 }
 

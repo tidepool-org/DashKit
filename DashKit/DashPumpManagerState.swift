@@ -41,6 +41,8 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
     
     public var alarmCode: AlarmCode?
     
+    public var lastPodCommState: PodCommState
+    
     public var unfinalizedBolus: UnfinalizedDose?
     public var unfinalizedTempBasal: UnfinalizedDose?
 
@@ -91,7 +93,7 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
         return dateGeneratorWrapper.dateGenerator()
     }
 
-    public init?(basalRateSchedule: BasalRateSchedule, maximumTempBasalRate: Double, dateGenerator: @escaping () -> Date = Date.init) {
+    public init?(basalRateSchedule: BasalRateSchedule, maximumTempBasalRate: Double, lastPodCommState: PodCommState, dateGenerator: @escaping () -> Date = Date.init) {
         self.timeZone = basalRateSchedule.timeZone
         guard let basalProgram = BasalProgram(items: basalRateSchedule.items) else {
             return nil
@@ -102,6 +104,7 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
         self.suspendState = .resumed(dateGenerator())
         self.maximumTempBasalRate = maximumTempBasalRate
         self.activeAlerts = []
+        self.lastPodCommState = lastPodCommState
     }
 
 
@@ -177,6 +180,14 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
         } else {
             self.pendingCommand = nil
         }
+        
+        if let rawLastPodCommState = rawValue["lastPodCommState"] as? Data,
+           let lastPodCommState = try? JSONDecoder().decode(PodCommState.self, from: rawLastPodCommState)
+        {
+            self.lastPodCommState = lastPodCommState
+        } else {
+            self.lastPodCommState = .noPod
+        }
     }
 
     public var rawValue: RawValue {
@@ -186,9 +197,10 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
             "finishedDoses": finishedDoses.map( { $0.rawValue }),
             "basalProgram": basalProgram.rawValue,
             "maximumTempBasalRate": maximumTempBasalRate,
-            "activeAlerts": activeAlerts.rawValue
+            "activeAlerts": activeAlerts.rawValue,
         ]
-
+        
+        rawValue["lastPodCommState"] = try? JSONEncoder().encode(lastPodCommState)
         rawValue["suspendState"] = suspendState?.rawValue
         rawValue["lastStatusDate"] = lastStatusDate
         rawValue["reservoirLevel"] = reservoirLevel?.rawValue

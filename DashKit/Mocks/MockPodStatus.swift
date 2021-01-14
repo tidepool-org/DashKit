@@ -42,6 +42,8 @@ public struct MockPodStatus: PodStatus, Equatable {
             }
         }
     }
+    
+    public var podCommState: PodCommState
 
     public var timeElapsedSinceActivation: TimeInterval {
         return Date().timeIntervalSince(activationDate)
@@ -125,7 +127,8 @@ public struct MockPodStatus: PodStatus, Equatable {
                 bolusUnitsRemaining: Int,
                 initialInsulinAmount: Double,
                 insulinDelivered: Double = 0,
-                basalProgram: BasalProgram? = nil)
+                basalProgram: BasalProgram? = nil,
+                podCommState: PodCommState = .active)
     {
         self.activationDate = activationDate
         self.podState = podState
@@ -137,6 +140,7 @@ public struct MockPodStatus: PodStatus, Equatable {
         self.insulinDelivered = insulinDelivered
         self.lastDeliveryUpdate = Date()
         self.basalProgram = basalProgram
+        self.podCommState = podCommState
     }
     
     public static var normal: MockPodStatus {
@@ -255,7 +259,9 @@ extension MockPodStatus: RawRepresentable {
             let bolusUnitsRemaining = rawValue["bolusUnitsRemaining"] as? Int,
             let insulinDelivered = rawValue["insulinDelivered"] as? Double,
             let initialInsulinAmount = rawValue["initialInsulinAmount"] as? Double,
-            let lastDeliveryUpdate = rawValue["lastDeliveryUpdate"] as? Date
+            let lastDeliveryUpdate = rawValue["lastDeliveryUpdate"] as? Date,
+            let rawPodCommState = rawValue["podCommState"] as? Data,
+            let podCommState = try? JSONDecoder().decode(PodCommState.self, from: rawPodCommState)
             else
         {
             return nil
@@ -270,6 +276,7 @@ extension MockPodStatus: RawRepresentable {
         self.insulinDelivered = insulinDelivered
         self.initialInsulinAmount = initialInsulinAmount
         self.lastDeliveryUpdate = lastDeliveryUpdate
+        self.podCommState = podCommState
         
         if let rawBasalProgram = rawValue["basalProgram"] as? BasalProgram.RawValue,
            let basalProgram = BasalProgram(rawValue: rawBasalProgram)
@@ -321,7 +328,7 @@ extension MockPodStatus: RawRepresentable {
 
         if let alarmReferenceCode = rawValue["alarmReferenceCode"] as? String {
             self.alarmReferenceCode = alarmReferenceCode
-        }
+        }        
     }
     
     public var rawValue: RawValue {
@@ -337,49 +344,18 @@ extension MockPodStatus: RawRepresentable {
             "lastDeliveryUpdate": lastDeliveryUpdate
         ]
         
-        if let basalProgram = basalProgram {
-            rawValue["basalProgram"] = basalProgram.rawValue
-        }
-        
-        if let basalProgramStartDate = basalProgramStartDate {
-            rawValue["basalProgramStartDate"] = basalProgramStartDate
-        }
-        
-        if let basalProgramStartOffset = basalProgramStartOffset {
-            rawValue["basalProgramStartOffset"] = basalProgramStartOffset
-        }
-        
-        if let alarmCode = alarmCode {
-            rawValue["alarmCode"] = alarmCode.rawValue
-        }
-        
-        if let alarmDescription = alarmDescription {
-            rawValue["alarmDescription"] = alarmDescription
-        }
-        
-        if let occlusionType = occlusionType {
-            rawValue["occlusionType"] = occlusionType.rawValue
-        }
-        
-        if let didErrorOccuredFetchingBolusInfo = didErrorOccuredFetchingBolusInfo {
-            rawValue["didErrorOccuredFetchingBolusInfo"] = didErrorOccuredFetchingBolusInfo
-        }
-
-        if let wasBolusActiveWhenPodAlarmed = wasBolusActiveWhenPodAlarmed {
-            rawValue["wasBolusActiveWhenPodAlarmed"] = wasBolusActiveWhenPodAlarmed
-        }
-
-        if let podStateWhenPodAlarmed = podStateWhenPodAlarmed {
-            rawValue["podStateWhenPodAlarmed"] = podStateWhenPodAlarmed.rawValue
-        }
-
-        if let alarmDate = alarmDate {
-            rawValue["alarmDate"] = alarmDate
-        }
-
-        if let alarmReferenceCode = alarmReferenceCode {
-            rawValue["alarmReferenceCode"] = alarmReferenceCode
-        }
+        rawValue["basalProgram"] = basalProgram?.rawValue
+        rawValue["basalProgramStartDate"] = basalProgramStartDate
+        rawValue["basalProgramStartOffset"] = basalProgramStartOffset
+        rawValue["alarmCode"] = alarmCode?.rawValue
+        rawValue["alarmDescription"] = alarmDescription
+        rawValue["occlusionType"] = occlusionType?.rawValue
+        rawValue["didErrorOccuredFetchingBolusInfo"] = didErrorOccuredFetchingBolusInfo
+        rawValue["wasBolusActiveWhenPodAlarmed"] = wasBolusActiveWhenPodAlarmed
+        rawValue["podStateWhenPodAlarmed"] = podStateWhenPodAlarmed?.rawValue
+        rawValue["alarmDate"] = alarmDate
+        rawValue["alarmReferenceCode"] = alarmReferenceCode
+        rawValue["podCommState"] = try? JSONEncoder().encode(podCommState)
 
         return rawValue
     }
