@@ -79,8 +79,6 @@
 		C15424312280C575006754B3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C15424302280C575006754B3 /* Assets.xcassets */; };
 		C15424332280C75E006754B3 /* PodStatusExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C15424322280C75D006754B3 /* PodStatusExtension.swift */; };
 		C1562F7F241581C7006952D6 /* DashSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1562F7E241581C7006952D6 /* DashSettingsViewModel.swift */; };
-		C1562F812415834D006952D6 /* MockDashSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1562F802415834D006952D6 /* MockDashSettingsViewModel.swift */; };
-		C1562F832415848D006952D6 /* DashSettingsViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1562F822415848D006952D6 /* DashSettingsViewModelProtocol.swift */; };
 		C1562F85241698C0006952D6 /* PodLifeState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1562F84241698C0006952D6 /* PodLifeState.swift */; };
 		C1562F8724169C41006952D6 /* DeactivatePodView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1562F8624169C41006952D6 /* DeactivatePodView.swift */; };
 		C1562F8924169C65006952D6 /* DeactivatePodViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1562F8824169C65006952D6 /* DeactivatePodViewModel.swift */; };
@@ -289,8 +287,6 @@
 		C15424302280C575006754B3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C15424322280C75D006754B3 /* PodStatusExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodStatusExtension.swift; sourceTree = "<group>"; };
 		C1562F7E241581C7006952D6 /* DashSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashSettingsViewModel.swift; sourceTree = "<group>"; };
-		C1562F802415834D006952D6 /* MockDashSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDashSettingsViewModel.swift; sourceTree = "<group>"; };
-		C1562F822415848D006952D6 /* DashSettingsViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashSettingsViewModelProtocol.swift; sourceTree = "<group>"; };
 		C1562F84241698C0006952D6 /* PodLifeState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodLifeState.swift; sourceTree = "<group>"; };
 		C1562F8624169C41006952D6 /* DeactivatePodView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeactivatePodView.swift; sourceTree = "<group>"; };
 		C1562F8824169C65006952D6 /* DeactivatePodViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeactivatePodViewModel.swift; sourceTree = "<group>"; };
@@ -533,7 +529,6 @@
 			isa = PBXGroup;
 			children = (
 				C10EF92C24044B560091392C /* SettingsProvider.swift */,
-				C1562F822415848D006952D6 /* DashSettingsViewModelProtocol.swift */,
 				C168F187244611E7002447D5 /* PodDetails .swift */,
 			);
 			path = Protocols;
@@ -576,7 +571,6 @@
 			children = (
 				C12A06A923F2EFED0052195C /* MockRegistrationManager.swift */,
 				C10D1D76241169F50007ABF7 /* MockPodPairer.swift */,
-				C1562F802415834D006952D6 /* MockDashSettingsViewModel.swift */,
 				C1562F8A2416A7C8006952D6 /* MockPodDeactivater.swift */,
 				C1DFF9242417CA5B00EAC44E /* MockCannulaInserter.swift */,
 				C11B2C2C2425846D00308035 /* MockNavigator.swift */,
@@ -1042,7 +1036,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C1562F85241698C0006952D6 /* PodLifeState.swift in Sources */,
-				C1562F812415834D006952D6 /* MockDashSettingsViewModel.swift in Sources */,
 				C1562F7F241581C7006952D6 /* DashSettingsViewModel.swift in Sources */,
 				C1A8310624F5AEE400C3BD13 /* DeliveryUncertaintyRecoveryViewModel.swift in Sources */,
 				C171758C2437AFF200199ABC /* CheckInsertedCannulaView.swift in Sources */,
@@ -1063,7 +1056,6 @@
 				C107D175226A1C7800D63775 /* DashHUDProvider.swift in Sources */,
 				C11B2C2D2425846D00308035 /* MockNavigator.swift in Sources */,
 				C1C799F424C7749B008E0A1A /* FrameworkLocalText.swift in Sources */,
-				C1562F832415848D006952D6 /* DashSettingsViewModelProtocol.swift in Sources */,
 				C1ACF43222A03F0500F7DDB4 /* OmnipodReservoirView.swift in Sources */,
 				C107D17D226A24CE00D63775 /* TimeZone.swift in Sources */,
 				C194114E228DBEC000E886DD /* PodSetupCompleteViewController.swift in Sources */,

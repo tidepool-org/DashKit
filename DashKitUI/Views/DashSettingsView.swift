@@ -7,12 +7,14 @@
 //
 
 import SwiftUI
+import LoopKit
 import LoopKitUI
 import DashKit
+import HealthKit
 
-struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol  {
+struct DashSettingsView: View  {
     
-    @ObservedObject var viewModel: Model
+    @ObservedObject var viewModel: DashSettingsViewModel
     
     @State private var showingDeleteConfirmation = false
     
@@ -46,7 +48,7 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
     
     func timeComponent(value: Int, units: String) -> some View {
         Group {
-            Text(String(value)).font(.system(size: 28)).fontWeight(.bold)
+            Text(String(value)).font(.system(size: 28)).fontWeight(.heavy)
             Text(units).foregroundColor(.secondary)
         }
     }
@@ -100,12 +102,10 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
                 .foregroundColor(Color(UIColor.secondaryLabel))
             self.viewModel.basalDeliveryRate.map { (rate) in
                 HStack(alignment: .center) {
-                    BasalStateSwiftUIView(netBasalPercent: rate.netPercent)
-                        .frame(width: 38, height: 20, alignment: .center)
                     HStack(alignment: .lastTextBaseline, spacing: 3) {
                         Text(self.viewModel.basalRateFormatter.string(from: rate.absoluteRate) ?? "")
                             .font(.system(size: 28))
-                            .fontWeight(.bold)
+                            .fontWeight(.heavy)
                             .fixedSize()
                         FrameworkLocalText("U/hr", comment: "Units for showing temp basal rate").foregroundColor(.secondary)
                     }
@@ -114,19 +114,51 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
         }
     }
     
+    func reservoir(filledPercent: CGFloat, fillColor: Color) -> some View {
+        ZStack(alignment: Alignment(horizontal: .center, vertical: .center)) {
+            GeometryReader { geometry in
+                let offset = geometry.size.height * 0.05
+                let fillHeight = geometry.size.height * 0.81
+                Rectangle()
+                    .fill(fillColor)
+                    .mask(
+                        Image(frameworkImage: "pod_reservoir_mask_swiftui")
+                            .resizable()
+                            .scaledToFit()
+                    )
+                    .mask(
+                        Rectangle().path(in: CGRect(x: 0, y: offset + fillHeight - fillHeight * filledPercent, width: geometry.size.width, height: fillHeight * filledPercent))
+                    )
+            }
+            Image(frameworkImage: "pod_reservoir_swiftui")
+                .resizable()
+                .scaledToFit()
+        }.frame(width: 23, height: 32)
+    }
+
+    
     var reservoirStatus: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .trailing, spacing: 0) {
             Text(LocalizedString("Insulin Remaining", comment: "Header for insulin remaining on pod settings screen"))
                 .foregroundColor(Color(UIColor.secondaryLabel))
             HStack {
-                Image(systemName: "x.circle.fill")
-                    .foregroundColor(Color(UIColor.secondaryLabel))
-                
-                FrameworkLocalText("No Pod", comment: "Text shown in insulin remaining space when no pod is paired").fontWeight(.bold)
+                if let reservoirLevel = viewModel.reservoirLevel {
+                    reservoir(filledPercent: CGFloat(reservoirLevel.percentage), fillColor: reservoirColor(for: reservoirLevel))
+                    Text(reservoirText(for: reservoirLevel))
+                        .font(.system(size: 28))
+                        .fontWeight(.heavy)
+                        .fixedSize()
+                } else {
+                    Image(systemName: "x.circle.fill")
+                        .foregroundColor(Color(UIColor.secondaryLabel))
+                    
+                    FrameworkLocalText("No Pod", comment: "Text shown in insulin remaining space when no pod is paired").fontWeight(.bold)
+                }
+                    
             }
         }
     }
-
+    
     var suspendResumeRow: some View {
         // podOK is true at this point. Thus there will be a basalDeliveryState
         HStack {
@@ -151,17 +183,33 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
             self.viewModel.doneTapped()
         })
     }
+    
+    var headerImage: some View {
+        VStack(alignment: .center) {
+            Image(frameworkImage: "Pod")
+                .resizable()
+                .aspectRatio(contentMode: ContentMode.fit)
+                .frame(height: 100)
+                .padding([.top,.horizontal])
+        }.frame(maxWidth: .infinity)
+    }
         
     var body: some View {
         List {
             VStack(alignment: .leading) {
-                VStack(alignment: .center) {
-                    Image(frameworkImage: "Pod")
-                        .resizable()
-                        .aspectRatio(contentMode: ContentMode.fit)
-                        .frame(height: 100)
-                        .padding([.top,.horizontal])
-                }.frame(maxWidth: .infinity)
+                
+                if let mockPodCommManager = viewModel.podCommManager as? MockPodCommManager {
+                    ZStack {
+                        headerImage
+                        NavigationLink(destination: MockPodSettingsView(model: MockPodSettingsViewModel(mockPodCommManager: mockPodCommManager))) {
+                            EmptyView()
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                    }
+                } else {
+                    headerImage
+                }
+
                 
                 lifecycleProgress
 
@@ -183,12 +231,6 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
             if self.viewModel.podOk {
                 Section(header: FrameworkLocalText("Pod", comment: "Section header for pod section").font(.headline).foregroundColor(Color.primary)) {
                     suspendResumeRow
-                    
-                    if let mockPodCommManager = viewModel.podCommManager as? MockPodCommManager {
-                        NavigationLink(destination: MockPodSettingsView(model: MockPodSettingsViewModel(mockPodCommManager: mockPodCommManager))) {
-                            Text("Mock Pod Settings").foregroundColor(Color.primary)
-                        }
-                    }
                 }
 
                 Section() {
@@ -281,7 +323,7 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
         .alert(isPresented: $viewModel.alertIsPresented, content: { alert(for: viewModel.activeAlert!) })
         .insetGroupedListStyle()
         .navigationBarItems(trailing: doneButton)
-        .navigationBarTitle("Omnipod", displayMode: .automatic)
+        .navigationBarTitle("Omnipod 5", displayMode: .automatic)
         
     }
     
@@ -333,6 +375,33 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
             )
         }
     }
+    
+    func reservoirText(for level: ReservoirLevel) -> String {
+        switch level {
+        case .aboveThreshold:
+            let quantity = HKQuantity(unit: .internationalUnit(), doubleValue: Pod.maximumReservoirReading)
+            let thresholdString = viewModel.reservoirVolumeFormatter.string(from: quantity, for: .internationalUnit(), includeUnit: false) ?? ""
+            let unitString = viewModel.reservoirVolumeFormatter.string(from: .internationalUnit(), forValue: Pod.maximumReservoirReading, avoidLineBreaking: true)
+            return String(format: LocalizedString("%1$@+ %2$@", comment: "Format string for reservoir level above max measurable threshold. (1: measurable reservoir threshold) (2: units)"),
+                          thresholdString, unitString)
+        case .valid(let value):
+            let quantity = HKQuantity(unit: .internationalUnit(), doubleValue: value)
+            return viewModel.reservoirVolumeFormatter.string(from: quantity, for: .internationalUnit()) ?? ""
+        }
+    }
+    
+    func reservoirColor(for level: ReservoirLevel) -> Color {
+        switch level {
+        case .aboveThreshold:
+            return insulinTintColor
+        case .valid(let value):
+            if value > 10 {
+                return insulinTintColor
+            } else {
+                return guidanceColors.warning
+            }
+        }
+    }
 }
 
 struct DashSettingsView_Previews: PreviewProvider {
@@ -367,11 +436,16 @@ struct DashSettingsSheetView: View {
         .background(Color.green)
     }
     
-    func previewModel() -> MockDashSettingsViewModel {
-        let model = MockDashSettingsViewModel()
+    func previewModel() -> DashSettingsViewModel {
+        let basalScheduleItems = [RepeatingScheduleValue(startTime: 0, value: 1.0)]
+        let schedule = BasalRateSchedule(dailyItems: basalScheduleItems, timeZone: .current)!
+        let state = DashPumpManagerState(basalRateSchedule: schedule, maximumTempBasalRate: 3.0, lastPodCommState: .active)!
+
+        let mockPodCommManager = MockPodCommManager()
+        let pumpManager = DashPumpManager(state: state, podCommManager: mockPodCommManager)
+        let model = DashSettingsViewModel(pumpManager: pumpManager)
         model.basalDeliveryState = .active(Date())
         model.lifeState = .timeRemaining(.days(2.5))
         return model
     }
 }
-
