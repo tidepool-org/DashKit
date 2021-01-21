@@ -33,7 +33,7 @@ open class DashPumpManager: PumpManager {
 
     public let log = OSLog(category: "DashPumpManager")
     
-    public let localizedTitle = LocalizedString("Omnipod DASH", comment: "Generic title of the omnipod DASH pump manager")
+    public let localizedTitle = LocalizedString("Omnipod 5", comment: "Generic title of the omnipod 5 pump manager")
     
     public var lastReconciliation: Date? {
         return dateGenerator()
@@ -154,7 +154,7 @@ open class DashPumpManager: PumpManager {
                 imageName: "exclamationmark.circle.fill",
                 state: .critical)
         case .active:
-            if let reservoirPercent = state.reservoirLevel?.asPercentage(), reservoirPercent == 0 {
+            if let reservoirPercent = state.reservoirLevel?.percentage, reservoirPercent == 0 {
                 return PumpManagerStatus.PumpStatusHighlight(
                     localizedMessage: NSLocalizedString("No Insulin", comment: "Status highlight that a pump is out of insulin."),
                     imageName: "exclamationmark.circle.fill",

@@ -12,7 +12,17 @@ import LoopKit
 import HealthKit
 import PodSDK
 
-class DashSettingsViewModel: DashSettingsViewModelProtocol {
+struct BasalDeliveryRate {
+    var absoluteRate: Double
+    var netPercent: Double
+}
+
+enum DashSettingsViewAlert {
+    case suspendError(DashPumpManagerError)
+    case resumeError(DashPumpManagerError)
+}
+
+class DashSettingsViewModel: ObservableObject {
     
     @Published var lifeState: PodLifeState
     
@@ -37,6 +47,8 @@ class DashSettingsViewModel: DashSettingsViewModelProtocol {
             }
         }
     }
+    
+    @Published var reservoirLevel: ReservoirLevel?
     
     var podCommManager: PodCommManagerProtocol {
         return pumpManager.unwrappedPodCommManager
@@ -76,6 +88,8 @@ class DashSettingsViewModel: DashSettingsViewModelProtocol {
         return numberFormatter
     }()
     
+    let reservoirVolumeFormatter = QuantityFormatter(for: .internationalUnit())
+    
     var didFinish: (() -> Void)?
     
     private let pumpManager: DashPumpManager
@@ -87,8 +101,8 @@ class DashSettingsViewModel: DashSettingsViewModelProtocol {
         activatedAt = pumpManager.podActivatedAt
         basalDeliveryState = pumpManager.status.basalDeliveryState
         basalDeliveryRate = self.pumpManager.basalDeliveryRate
-        
-        pumpManager.addStatusObserver(self, queue: DispatchQueue.main)
+        reservoirLevel = self.pumpManager.reservoirLevel
+        pumpManager.addPodStatusObserver(self, queue: DispatchQueue.main)
     }
     
     func changeTimeZoneTapped() {
@@ -132,11 +146,35 @@ class DashSettingsViewModel: DashSettingsViewModelProtocol {
     }
 }
 
-extension DashSettingsViewModel: PumpManagerStatusObserver {
-    func pumpManager(_ pumpManager: PumpManager, didUpdate status: PumpManagerStatus, oldStatus: PumpManagerStatus) {
+extension DashSettingsViewModel {
+    var podOk: Bool {
+        guard basalDeliveryState != nil else { return false }
+        
+        switch lifeState {
+        case .noPod, .podAlarm, .systemError, .podActivating, .podDeactivating:
+            return false
+        default:
+            return true
+        }
+    }
+    
+    var systemErrorDescription: String? {
+        switch lifeState {
+        case .systemError(let systemError):
+            return systemError.localizedDescription
+        default:
+            break
+        }
+        return nil
+    }
+}
+
+extension DashSettingsViewModel: PodStatusObserver {
+    func didUpdatePodStatus() {
         lifeState = self.pumpManager.lifeState
-        basalDeliveryState = status.basalDeliveryState
+        basalDeliveryState = self.pumpManager.status.basalDeliveryState
         basalDeliveryRate = self.pumpManager.basalDeliveryRate
+        reservoirLevel = self.pumpManager.reservoirLevel
     }
 }
 
