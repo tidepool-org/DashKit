@@ -129,6 +129,10 @@ struct MockPodSettingsView: View {
                 )
             }
         }
+        .onDisappear {
+            // Trigger refresh after user changes.
+            self.model.mockPodCommManager.dashPumpManager?.getPodStatus() { _ in }
+        }
         .navigationBarTitle("Mock Pod Settings")
     }
     

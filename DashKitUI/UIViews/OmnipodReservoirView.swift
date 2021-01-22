@@ -95,10 +95,10 @@ public final class OmnipodReservoirView: LevelHUDView, NibLoadable {
                     accessibilityValue = String(format: LocalizedString("Greater than %1$@ units remaining at %2$@", comment: "Accessibility format string for (1: localized volume)(2: time)"), units, time)
                 }
             case .valid(let value):
-                level = reservoirLevel.asPercentage()
+                level = reservoirLevel.percentage
                 // Image colors are controlled in LevelHUDView; this is for the volume label
                 switch level {
-                case .none:
+                case 1:
                     volumeLabel.isHidden = true
                     volumeLabel.textColor = stateColors?.unknown
                 case let x? where x > 0.25:

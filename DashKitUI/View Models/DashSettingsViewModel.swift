@@ -12,7 +12,17 @@ import LoopKit
 import HealthKit
 import PodSDK
 
-class DashSettingsViewModel: DashSettingsViewModelProtocol {
+struct BasalDeliveryRate {
+    var absoluteRate: Double
+    var netPercent: Double
+}
+
+enum DashSettingsViewAlert {
+    case suspendError(DashPumpManagerError)
+    case resumeError(DashPumpManagerError)
+}
+
+class DashSettingsViewModel: ObservableObject {
     
     @Published var lifeState: PodLifeState
     
@@ -38,6 +48,8 @@ class DashSettingsViewModel: DashSettingsViewModelProtocol {
         }
     }
     
+    @Published var reservoirLevel: ReservoirLevel?
+    
     var podCommManager: PodCommManagerProtocol {
         return pumpManager.unwrappedPodCommManager
     }
@@ -47,17 +59,20 @@ class DashSettingsViewModel: DashSettingsViewModelProtocol {
     }
     
     var podVersion: PodVersionProtocol? {
-        return self.pumpManager.podVersion
+        return pumpManager.podVersion
     }
     
     var sdkVersion: String {
-        return self.pumpManager.sdkVersion
+        return pumpManager.sdkVersion
     }
     
     var pdmIdentifier: String? {
-        return self.pumpManager.pdmIdentifier
+        return pumpManager.pdmIdentifier
     }
     
+    var viewTitle: String {
+        return pumpManager.localizedTitle
+    }
     
     let dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
@@ -76,6 +91,8 @@ class DashSettingsViewModel: DashSettingsViewModelProtocol {
         return numberFormatter
     }()
     
+    let reservoirVolumeFormatter = QuantityFormatter(for: .internationalUnit())
+    
     var didFinish: (() -> Void)?
     
     private let pumpManager: DashPumpManager
@@ -87,8 +104,8 @@ class DashSettingsViewModel: DashSettingsViewModelProtocol {
         activatedAt = pumpManager.podActivatedAt
         basalDeliveryState = pumpManager.status.basalDeliveryState
         basalDeliveryRate = self.pumpManager.basalDeliveryRate
-        
-        pumpManager.addStatusObserver(self, queue: DispatchQueue.main)
+        reservoirLevel = self.pumpManager.reservoirLevel
+        pumpManager.addPodStatusObserver(self, queue: DispatchQueue.main)
     }
     
     func changeTimeZoneTapped() {
@@ -130,13 +147,49 @@ class DashSettingsViewModel: DashSettingsViewModelProtocol {
             }
         }
     }
+    
+    var podOk: Bool {
+        guard basalDeliveryState != nil else { return false }
+        
+        switch lifeState {
+        case .noPod, .podAlarm, .systemError, .podActivating, .podDeactivating:
+            return false
+        default:
+            return true
+        }
+    }
+    
+    var systemErrorDescription: String? {
+        switch lifeState {
+        case .systemError(let systemError):
+            return systemError.localizedDescription
+        default:
+            break
+        }
+        return nil
+    }
+    
+    func reservoirText(for level: ReservoirLevel) -> String {
+        switch level {
+        case .aboveThreshold:
+            let quantity = HKQuantity(unit: .internationalUnit(), doubleValue: Pod.maximumReservoirReading)
+            let thresholdString = reservoirVolumeFormatter.string(from: quantity, for: .internationalUnit(), includeUnit: false) ?? ""
+            let unitString = reservoirVolumeFormatter.string(from: .internationalUnit(), forValue: Pod.maximumReservoirReading, avoidLineBreaking: true)
+            return String(format: LocalizedString("%1$@+ %2$@", comment: "Format string for reservoir level above max measurable threshold. (1: measurable reservoir threshold) (2: units)"),
+                          thresholdString, unitString)
+        case .valid(let value):
+            let quantity = HKQuantity(unit: .internationalUnit(), doubleValue: value)
+            return reservoirVolumeFormatter.string(from: quantity, for: .internationalUnit()) ?? ""
+        }
+    }
 }
 
-extension DashSettingsViewModel: PumpManagerStatusObserver {
-    func pumpManager(_ pumpManager: PumpManager, didUpdate status: PumpManagerStatus, oldStatus: PumpManagerStatus) {
+extension DashSettingsViewModel: PodStatusObserver {
+    func didUpdatePodStatus() {
         lifeState = self.pumpManager.lifeState
-        basalDeliveryState = status.basalDeliveryState
+        basalDeliveryState = self.pumpManager.status.basalDeliveryState
         basalDeliveryRate = self.pumpManager.basalDeliveryRate
+        reservoirLevel = self.pumpManager.reservoirLevel
     }
 }
 
