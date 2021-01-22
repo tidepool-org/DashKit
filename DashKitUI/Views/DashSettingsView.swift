@@ -54,7 +54,7 @@ struct DashSettingsView: View  {
     }
     
     var lifecycleProgress: some View {
-        VStack(spacing: 10) {
+        VStack(spacing: 2) {
             HStack(alignment: .lastTextBaseline, spacing: 3) {
                 Text(self.viewModel.lifeState.localizedLabelText)
                     .foregroundColor(self.viewModel.lifeState.labelColor(using: guidanceColors))
@@ -97,10 +97,10 @@ struct DashSettingsView: View  {
     
     var deliveryStatus: some View {
         // podOK is true at this point. Thus there will be a basalDeliveryState
-        VStack(alignment: .leading, spacing: 0) {
-            Text(self.viewModel.basalDeliveryState!.headerText)
+        VStack(alignment: .leading, spacing: 5) {
+            Text(LocalizedString("Insulin Delivery", comment: "Title of insulin delivery section"))
                 .foregroundColor(Color(UIColor.secondaryLabel))
-            self.viewModel.basalDeliveryRate.map { (rate) in
+            if let rate = self.viewModel.basalDeliveryRate {
                 HStack(alignment: .center) {
                     HStack(alignment: .lastTextBaseline, spacing: 3) {
                         Text(self.viewModel.basalRateFormatter.string(from: rate.absoluteRate) ?? "")
@@ -109,6 +109,16 @@ struct DashSettingsView: View  {
                             .fixedSize()
                         FrameworkLocalText("U/hr", comment: "Units for showing temp basal rate").foregroundColor(.secondary)
                     }
+                }
+            } else {
+                HStack(alignment: .center) {
+                    Image(systemName: "pause.circle.fill")
+                        .font(.system(size: 22))
+                        .foregroundColor(guidanceColors.warning)
+                    FrameworkLocalText("Insulin\nSuspended", comment: "Label for insulin suspended")
+                        .font(.system(size: 14))
+                        .fontWeight(.heavy)
+                        .fixedSize()
                 }
             }
         }
@@ -131,14 +141,16 @@ struct DashSettingsView: View  {
                     )
             }
             Image(frameworkImage: "pod_reservoir_swiftui")
+                .renderingMode(.template)
                 .resizable()
+                .foregroundColor(fillColor)
                 .scaledToFit()
         }.frame(width: 23, height: 32)
     }
 
     
     var reservoirStatus: some View {
-        VStack(alignment: .trailing, spacing: 0) {
+        VStack(alignment: .trailing, spacing: 5) {
             Text(LocalizedString("Insulin Remaining", comment: "Header for insulin remaining on pod settings screen"))
                 .foregroundColor(Color(UIColor.secondaryLabel))
             HStack {
@@ -159,21 +171,39 @@ struct DashSettingsView: View  {
         }
     }
     
+    func suspendResumeButtonColor(for basalDeliveryState: PumpManagerStatus.BasalDeliveryState) -> Color {
+        switch basalDeliveryState {
+        case .active, .tempBasal, .cancelingTempBasal, .initiatingTempBasal:
+            return .accentColor
+        case .suspending, .resuming:
+            return Color.secondary
+        case .suspended:
+            return guidanceColors.warning
+        }
+    }
+    
     var suspendResumeRow: some View {
         // podOK is true at this point. Thus there will be a basalDeliveryState
         HStack {
-            Button(action: {
-                self.suspendResumeTapped()
-            }) {
-                Text(self.viewModel.basalDeliveryState!.suspendResumeActionText)
-                    .foregroundColor(self.viewModel.basalDeliveryState!.suspendResumeActionColor)
-            }
-            .actionSheet(isPresented: $showSuspendOptions) {
-                suspendOptionsActionSheet
-            }
-            Spacer()
-            if self.viewModel.basalDeliveryState!.transitioning {
-                ActivityIndicator(isAnimating: .constant(true), style: .medium)
+            if let basalState = self.viewModel.basalDeliveryState {
+                Button(action: {
+                    self.suspendResumeTapped()
+                }) {
+                    HStack {
+                        Image(systemName: "pause.circle.fill")
+                            .font(.system(size: 22))
+                            .accentColor(suspendResumeButtonColor(for: basalState))
+                        Text(basalState.suspendResumeActionText)
+                            .foregroundColor(basalState.suspendResumeActionColor)
+                    }
+                }
+                .actionSheet(isPresented: $showSuspendOptions) {
+                    suspendOptionsActionSheet
+                }
+                Spacer()
+                if self.viewModel.basalDeliveryState!.transitioning {
+                    ActivityIndicator(isAnimating: .constant(true), style: .medium)
+                }
             }
         }
     }
@@ -210,7 +240,6 @@ struct DashSettingsView: View  {
                     headerImage
                 }
 
-                
                 lifecycleProgress
 
                 if self.viewModel.podOk {
@@ -229,51 +258,41 @@ struct DashSettingsView: View  {
             }.padding(.bottom, 8)
             
             if self.viewModel.podOk {
-                Section(header: FrameworkLocalText("Pod", comment: "Section header for pod section").font(.headline).foregroundColor(Color.primary)) {
+                Section(header: FrameworkLocalText("Activity", comment: "Section header for activity section").font(.headline).foregroundColor(Color.primary)) {
                     suspendResumeRow
-                }
-
-                Section() {
-                    
-                    self.viewModel.podVersion.map { (podVersion) in
-                        NavigationLink(destination: PodDetailsView(podVersion: podVersion)) {
-                            FrameworkLocalText("Pod Details", comment: "Text for pod details disclosure row").foregroundColor(Color.primary)
+                    if case .suspended(let suspendDate) = self.viewModel.basalDeliveryState {
+                        HStack {
+                            FrameworkLocalText("Suspended At", comment: "Label for suspended at time")
+                            Spacer()
+                            Text(self.viewModel.timeFormatter.string(from: suspendDate))
+                                .foregroundColor(Color.secondary)
                         }
                     }
-                        
-                    self.viewModel.activatedAt.map { (activatedAt) in
+                }
+
+                if let activatedAt = self.viewModel.activatedAt, let podVersion = self.viewModel.podVersion {
+                    Section() {
                         HStack {
                             FrameworkLocalText("Pod Insertion", comment: "Label for pod insertion row")
                             Spacer()
                             Text(self.viewModel.dateFormatter.string(from: activatedAt))
+                                .foregroundColor(Color.secondary)
                         }
-                    }
-
-                    self.viewModel.activatedAt.map { (activatedAt) in
+                        
                         HStack {
                             FrameworkLocalText("Pod Expiration", comment: "Label for pod expiration row")
                             Spacer()
                             Text(self.viewModel.dateFormatter.string(from: activatedAt + Pod.lifetime))
+                                .foregroundColor(Color.secondary)
                         }
-                    }
-                    
-                    
-                    HStack {
-                        if self.viewModel.timeZone != TimeZone.currentFixed {
-                            Button(action: {
-                                self.viewModel.changeTimeZoneTapped()
-                            }) {
-                                FrameworkLocalText("Change Time Zone", comment: "The title of the command to change pump time zone")
-                            }
-                        } else {
-                            FrameworkLocalText("Schedule Time Zone", comment: "Label for row showing pump time zone")
+                        
+                        NavigationLink(destination: PodDetailsView(podVersion: podVersion)) {
+                            FrameworkLocalText("Pod Details", comment: "Text for pod details disclosure row").foregroundColor(Color.primary)
                         }
-                        Spacer()
-                        Text(timeZoneString)
                     }
                 }
             }
-                        
+            
             Section() {
                 Button(action: {
                     self.navigator?.navigateTo(self.viewModel.lifeState.nextPodLifecycleAction)
@@ -281,6 +300,23 @@ struct DashSettingsView: View  {
                     Text(self.viewModel.lifeState.nextPodLifecycleActionDescription)
                         .foregroundColor(self.viewModel.lifeState.nextPodLifecycleActionColor)
                 }
+            }
+
+            Section(header: FrameworkLocalText("Configuration", comment: "Section header for configuration section").font(.headline).foregroundColor(Color.primary)) {
+                HStack {
+                    if self.viewModel.timeZone != TimeZone.currentFixed {
+                        Button(action: {
+                            self.viewModel.changeTimeZoneTapped()
+                        }) {
+                            FrameworkLocalText("Change Time Zone", comment: "The title of the command to change pump time zone")
+                        }
+                    } else {
+                        FrameworkLocalText("Schedule Time Zone", comment: "Label for row showing pump time zone")
+                    }
+                    Spacer()
+                    Text(timeZoneString)
+                }
+
             }
 
             Section() {
@@ -315,7 +351,7 @@ struct DashSettingsView: View  {
             Section(header: FrameworkLocalText("Support", comment: "Label for support disclosure row").font(.headline).foregroundColor(Color.primary)) {
                 NavigationLink(destination: EmptyView()) {
                     // Placeholder
-                    Text("Get Help with Insulet Omnipod").foregroundColor(Color.primary)
+                    Text("Get Help with Omnipod 5").foregroundColor(Color.primary)
                 }
             }
 

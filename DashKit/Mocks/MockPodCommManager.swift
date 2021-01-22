@@ -436,7 +436,7 @@ public class MockPodCommManager: PodCommManagerProtocol {
     }
 
     public func retrievePDMId() -> String? {
-        return "Mock PDM Identifier"
+        return "1234"
     }
     
     public var podVersionAbstracted: PodVersionProtocol? {
