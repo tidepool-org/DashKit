@@ -144,7 +144,7 @@ struct DashSettingsView: View  {
             HStack {
                 if let reservoirLevel = viewModel.reservoirLevel {
                     reservoir(filledPercent: CGFloat(reservoirLevel.percentage), fillColor: reservoirColor(for: reservoirLevel))
-                    Text(reservoirText(for: reservoirLevel))
+                    Text(viewModel.reservoirText(for: reservoirLevel))
                         .font(.system(size: 28))
                         .fontWeight(.heavy)
                         .fixedSize()
@@ -323,7 +323,7 @@ struct DashSettingsView: View  {
         .alert(isPresented: $viewModel.alertIsPresented, content: { alert(for: viewModel.activeAlert!) })
         .insetGroupedListStyle()
         .navigationBarItems(trailing: doneButton)
-        .navigationBarTitle("Omnipod 5", displayMode: .automatic)
+        .navigationBarTitle(self.viewModel.viewTitle)
         
     }
     
@@ -373,20 +373,6 @@ struct DashSettingsView: View  {
                 title: Text("Failed to Resume Insulin Delivery", comment: "Alert title for resume error"),
                 message: Text(error.localizedDescription)
             )
-        }
-    }
-    
-    func reservoirText(for level: ReservoirLevel) -> String {
-        switch level {
-        case .aboveThreshold:
-            let quantity = HKQuantity(unit: .internationalUnit(), doubleValue: Pod.maximumReservoirReading)
-            let thresholdString = viewModel.reservoirVolumeFormatter.string(from: quantity, for: .internationalUnit(), includeUnit: false) ?? ""
-            let unitString = viewModel.reservoirVolumeFormatter.string(from: .internationalUnit(), forValue: Pod.maximumReservoirReading, avoidLineBreaking: true)
-            return String(format: LocalizedString("%1$@+ %2$@", comment: "Format string for reservoir level above max measurable threshold. (1: measurable reservoir threshold) (2: units)"),
-                          thresholdString, unitString)
-        case .valid(let value):
-            let quantity = HKQuantity(unit: .internationalUnit(), doubleValue: value)
-            return viewModel.reservoirVolumeFormatter.string(from: quantity, for: .internationalUnit()) ?? ""
         }
     }
     

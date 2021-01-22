@@ -59,17 +59,20 @@ class DashSettingsViewModel: ObservableObject {
     }
     
     var podVersion: PodVersionProtocol? {
-        return self.pumpManager.podVersion
+        return pumpManager.podVersion
     }
     
     var sdkVersion: String {
-        return self.pumpManager.sdkVersion
+        return pumpManager.sdkVersion
     }
     
     var pdmIdentifier: String? {
-        return self.pumpManager.pdmIdentifier
+        return pumpManager.pdmIdentifier
     }
     
+    var viewTitle: String {
+        return pumpManager.localizedTitle
+    }
     
     let dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
@@ -144,9 +147,7 @@ class DashSettingsViewModel: ObservableObject {
             }
         }
     }
-}
-
-extension DashSettingsViewModel {
+    
     var podOk: Bool {
         guard basalDeliveryState != nil else { return false }
         
@@ -166,6 +167,20 @@ extension DashSettingsViewModel {
             break
         }
         return nil
+    }
+    
+    func reservoirText(for level: ReservoirLevel) -> String {
+        switch level {
+        case .aboveThreshold:
+            let quantity = HKQuantity(unit: .internationalUnit(), doubleValue: Pod.maximumReservoirReading)
+            let thresholdString = reservoirVolumeFormatter.string(from: quantity, for: .internationalUnit(), includeUnit: false) ?? ""
+            let unitString = reservoirVolumeFormatter.string(from: .internationalUnit(), forValue: Pod.maximumReservoirReading, avoidLineBreaking: true)
+            return String(format: LocalizedString("%1$@+ %2$@", comment: "Format string for reservoir level above max measurable threshold. (1: measurable reservoir threshold) (2: units)"),
+                          thresholdString, unitString)
+        case .valid(let value):
+            let quantity = HKQuantity(unit: .internationalUnit(), doubleValue: value)
+            return reservoirVolumeFormatter.string(from: quantity, for: .internationalUnit()) ?? ""
+        }
     }
 }
 
