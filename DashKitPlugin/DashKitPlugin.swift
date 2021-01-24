@@ -6,26 +6,20 @@
 //  Copyright © 2019 Tidepool. All rights reserved.
 //
 
-import Foundation
+import os.log
 import LoopKitUI
 import DashKit
 import DashKitUI
-import os.log
 
-class DashKitPlugin: NSObject, LoopUIPlugin {
-    
+class DashKitPlugin: NSObject, PumpManagerUIPlugin {
     private let log = OSLog(category: "DashKitPlugin")
 
     public var pumpManagerType: PumpManagerUI.Type? {
         return DashPumpManager.self
     }
 
-    public var cgmManagerType: CGMManagerUI.Type? {
-        return nil
-    }
-
     override init() {
         super.init()
-        log.default("DashKitPlugin Instantiated")
+        log.default("Instantiated")
     }
 }

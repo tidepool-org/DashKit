@@ -58,10 +58,13 @@ protocol DashUINavigator: class {
     func navigateTo(_ screen: DashUIScreen)
 }
 
-class DashUICoordinator: UINavigationController, PumpManagerSetupViewController, CompletionNotifying, SettingsProvider, UINavigationControllerDelegate {
-    
-    var setupDelegate: PumpManagerSetupViewControllerDelegate?
-    var completionDelegate: CompletionDelegate?
+class DashUICoordinator: UINavigationController, PumpManagerCreateNotifying, PumpManagerOnboardNotifying, CompletionNotifying, SettingsProvider, UINavigationControllerDelegate {
+
+    public weak var pumpManagerCreateDelegate: PumpManagerCreateDelegate?
+
+    public weak var pumpManagerOnboardDelegate: PumpManagerOnboardDelegate?
+
+    public weak var completionDelegate: CompletionDelegate?
     
     var pumpManager: DashPumpManager?
     
@@ -81,10 +84,8 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
     
     var screenStack = [DashUIScreen]()
     
-    private let insulinTintColor: Color
-    
-    private let guidanceColors: GuidanceColors
-    
+    private let colorPalette: LoopUIColorPalette
+
     public var pumpManagerType: DashPumpManager.Type?
     
     private func viewControllerForScreen(_ screen: DashUIScreen) -> UIViewController {
@@ -132,7 +133,7 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
             {
                 let pumpManager = pumpManagerType.init(state: pumpManagerState)
                 self.pumpManager = pumpManager
-                setupDelegate?.pumpManagerSetupViewController(self, didSetUpPumpManager: pumpManager)
+                pumpManagerCreateDelegate?.pumpManagerCreateNotifying(self, didCreatePumpManager: pumpManager)
             }
             
             guard let pumpManager = pumpManager else {
@@ -182,7 +183,13 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
             if let pumpManager = pumpManager {
                 let vc = PodSetupCompleteViewController.instantiateFromStoryboard(pumpManager, navigator: self)
                 vc.completion = { [weak self] in
-                    self?.stepFinished()
+                    if let self = self {
+                        let settings = PumpManagerSettings(maxBasalRateUnitsPerHour: self.maxBasalRateUnitsPerHour,
+                                                           maxBolusUnits: self.maxBolusUnits,
+                                                           basalSchedule: self.basalSchedule)
+                        self.pumpManagerOnboardDelegate?.pumpManagerOnboardNotifying(self, didOnboardPumpManager: pumpManager, withFinalSettings: settings)
+                        self.stepFinished()
+                    }
                 }
                 return vc
             } else {
@@ -226,7 +233,7 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
     }
     
     private func hostingController<Content: View>(rootView: Content) -> DismissibleHostingController {
-        return DismissibleHostingController(rootView: rootView, guidanceColors: guidanceColors, insulinTintColor: insulinTintColor)
+        return DismissibleHostingController(rootView: rootView, colorPalette: colorPalette)
     }
     
     private func stepFinished() {
@@ -241,7 +248,7 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
         completionDelegate?.completionNotifyingDidComplete(self)
     }
     
-    init(pumpManager: DashPumpManager? = nil, insulinTintColor: Color, guidanceColors: GuidanceColors) {
+    init(pumpManager: DashPumpManager? = nil, colorPalette: LoopUIColorPalette) {
         #if targetEnvironment(simulator)
         self.registrationManager = MockRegistrationManager(isRegistered: true)
         #else
@@ -249,9 +256,8 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
         #endif
                 
         self.pumpManager = pumpManager
-        self.insulinTintColor = insulinTintColor
-        self.guidanceColors = guidanceColors
-        
+        self.colorPalette = colorPalette
+
         super.init(navigationBarClass: UINavigationBar.self, toolbarClass: UIToolbar.self)
                 
     }

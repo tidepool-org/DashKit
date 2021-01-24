@@ -6,26 +6,20 @@
 //  Copyright © 2020 Tidepool. All rights reserved.
 //
 
-import Foundation
+import os.log
 import LoopKitUI
 import DashKit
 import DashKitUI
-import os.log
 
-class MockPodPlugin: NSObject, LoopUIPlugin {
-    
+class MockPodPlugin: NSObject, PumpManagerUIPlugin {
     private let log = OSLog(category: "MockPodPlugin")
 
     public var pumpManagerType: PumpManagerUI.Type? {
         return MockPodPumpManager.self
     }
 
-    public var cgmManagerType: CGMManagerUI.Type? {
-        return nil
-    }
-
     override init() {
         super.init()
-        log.default("MockPodPlugin Instantiated")
+        log.default("Instantiated")
     }
 }
