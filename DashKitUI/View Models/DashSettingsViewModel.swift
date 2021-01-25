@@ -82,6 +82,13 @@ class DashSettingsViewModel: ObservableObject {
         return dateFormatter
     }()
     
+    let timeFormatter: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeStyle = .short
+        dateFormatter.dateStyle = .none
+        return dateFormatter
+    }()
+
     let basalRateFormatter: NumberFormatter = {
         let unit = HKUnit.internationalUnit()
         let numberFormatter = NumberFormatter()
@@ -245,10 +252,7 @@ extension DashPumpManager {
             case .resumed:
                 absoluteRate = scheduledRate
                 netBasalPercent = 0
-            case .suspended:
-                absoluteRate = 0
-                netBasalPercent = -1
-            case .none:
+            case .suspended, .none:
                 return nil
             }
         }
@@ -278,7 +282,7 @@ extension PumpManagerStatus.BasalDeliveryState {
         case .suspending:
             return LocalizedString("Suspending insulin delivery...", comment: "Text for suspend resume button when insulin delivery is suspending")
         case .suspended:
-            return LocalizedString("Resume Insulin Delivery", comment: "Text for suspend resume button when insulin delivery is suspended")
+            return LocalizedString("Tap to Resume Insulin Delivery", comment: "Text for suspend resume button when insulin delivery is suspended")
         case .resuming:
             return LocalizedString("Resuming insulin delivery...", comment: "Text for suspend resume button when insulin delivery is resuming")
         }
