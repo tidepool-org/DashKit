@@ -56,18 +56,18 @@ public enum PodAlert: String {
             return LocalizedString("Auto Off Alert", comment: "Alert content title for autoOff pod alert")
         case .multiCommand:
             return LocalizedString("Multiple Command Alert", comment: "Alert content title for multiCommand pod alert")
-        case .podExpireImminent:
-            return LocalizedString("Pod Expiration Imminent", comment: "Alert content title for podExpireImminent pod alert")
         case .userPodExpiration:
             return LocalizedString("Pod Expiration Reminder", comment: "Alert content title for userPodExpiration pod alert")
+        case .podExpiring:
+            return LocalizedString("Pod Expired", comment: "Alert content title for podExpiring pod alert")
+        case .podExpireImminent:
+            return LocalizedString("Pod Expired", comment: "Alert content title for podExpireImminent pod alert")
         case .lowReservoir:
-            return LocalizedString("Low Reservoir Alert", comment: "Alert content title for lowReservoir pod alert")
+            return LocalizedString("Low Reservoir", comment: "Alert content title for lowReservoir pod alert")
         case .suspendInProgress:
             return LocalizedString("Suspend In Progress Reminder", comment: "Alert content title for suspendInProgress pod alert")
         case .suspendEnded:
             return LocalizedString("Resume Insulin", comment: "Alert content title for suspendEnded pod alert")
-        case .podExpiring:
-            return LocalizedString("Pod Expiring", comment: "Alert content title for podExpiring pod alert")
         }
     }
     
@@ -77,25 +77,31 @@ public enum PodAlert: String {
             return LocalizedString("Auto Off Alert", comment: "Alert content body for autoOff pod alert")
         case .multiCommand:
             return LocalizedString("Multiple Command Alert", comment: "Alert content body for multiCommand pod alert")
-        case .podExpireImminent:
-            return LocalizedString("Pod Expiration Imminent", comment: "Alert content body for podExpireImminent pod alert")
         case .userPodExpiration:
             return LocalizedString("Pod Expiration Reminder", comment: "Alert content body for userPodExpiration pod alert")
+        case .podExpiring:
+            return LocalizedString("Change Pod now. Pod has been active for 72 hours.", comment: "Alert content body for podExpiring pod alert")
+        case .podExpireImminent:
+            return LocalizedString("Change Pod now. Insulin delivery will stop in 1 hour.", comment: "Alert content body for podExpireImminent pod alert")
         case .lowReservoir:
-            return LocalizedString("Low Reservoir Alert", comment: "Alert content body for lowReservoir pod alert")
+            return LocalizedString("10 U insulin or less remaining in Pod. Change Pod soon.", comment: "Alert content body for lowReservoir pod alert")
         case .suspendInProgress:
             return LocalizedString("Suspend In Progress Reminder", comment: "Alert content body for suspendInProgress pod alert")
         case .suspendEnded:
             return LocalizedString("The insulin suspension period has ended.\n\nYou can resume delivery from the banner on the home screen or from your pump settings screen. You will be reminded again in 15 minutes.", comment: "Alert content body for suspendEnded pod alert")
-        case .podExpiring:
-            return LocalizedString("Pod Expiring", comment: "Alert content body for podExpiring pod alert")
         }
+    }
+    
+    // Override background (UserNotification) content
+    
+    var backgroundContentTitle: String {
+        return contentTitle
     }
     
     var backgroundContentBody: String {
         switch self {
         case .suspendEnded:
-            return LocalizedString("Suspension time is up. Open the app and resume.", comment: "Alert notification body for suspendEnded pod alert")
+            return LocalizedString("Suspension time is up. Open the app and resume.", comment: "Alert notification body for suspendEnded pod alert user notification")
         default:
             return contentBody
         }
@@ -103,12 +109,7 @@ public enum PodAlert: String {
 
     
     var actionButtonLabel: String {
-        switch self {
-        case .suspendEnded:
-            return LocalizedString("OK", comment: "Action button text to acknowledge pump resume")
-        default:
-            return LocalizedString("Acknowledge", comment: "Action button default text for PodAlerts")
-        }
+        return LocalizedString("Ok", comment: "Action button default text for PodAlerts")
     }
     
     var foregroundContent: Alert.Content {
@@ -116,7 +117,7 @@ public enum PodAlert: String {
     }
     
     var backgroundContent: Alert.Content {
-        return Alert.Content(title: contentTitle, body: backgroundContentBody, acknowledgeActionButtonLabel: actionButtonLabel)
+        return Alert.Content(title: backgroundContentTitle, body: backgroundContentBody, acknowledgeActionButtonLabel: actionButtonLabel)
     }
 
     

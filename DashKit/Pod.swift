@@ -49,4 +49,10 @@ public struct Pod {
     // Estimated time for cannula insertion; SDK will send back an event that actually marks the end,
     // but this lets us provide an estimate to the user
     public static let estimatedCannulaInsertionDuration = TimeInterval(10)
+    
+    // Default low reservoir alert limit in Units
+    public static let defaultLowReservoirLimit: Double = 10
+    
+    // Support phone number (TODO: get from SDK?)
+    public static let supportPhoneNumber: String = "1-800-591-3455"
 }

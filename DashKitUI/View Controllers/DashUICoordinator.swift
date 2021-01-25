@@ -128,7 +128,7 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
                 let basalRateSchedule = basalSchedule,
                 let pumpManagerType = pumpManagerType,
                 let maxBasalRateUnitsPerHour = maxBasalRateUnitsPerHour,
-                let pumpManagerState = DashPumpManagerState(basalRateSchedule: basalRateSchedule, maximumTempBasalRate: maxBasalRateUnitsPerHour)
+                let pumpManagerState = DashPumpManagerState(basalRateSchedule: basalRateSchedule, maximumTempBasalRate: maxBasalRateUnitsPerHour, lastPodCommState: .noPod)
             {
                 let pumpManager = pumpManagerType.init(state: pumpManagerState)
                 self.pumpManager = pumpManager

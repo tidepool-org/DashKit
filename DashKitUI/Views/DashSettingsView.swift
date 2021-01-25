@@ -7,12 +7,14 @@
 //
 
 import SwiftUI
+import LoopKit
 import LoopKitUI
 import DashKit
+import HealthKit
 
-struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol  {
+struct DashSettingsView: View  {
     
-    @ObservedObject var viewModel: Model
+    @ObservedObject var viewModel: DashSettingsViewModel
     
     @State private var showingDeleteConfirmation = false
     
@@ -46,13 +48,13 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
     
     func timeComponent(value: Int, units: String) -> some View {
         Group {
-            Text(String(value)).font(.system(size: 28)).fontWeight(.bold)
+            Text(String(value)).font(.system(size: 28)).fontWeight(.heavy)
             Text(units).foregroundColor(.secondary)
         }
     }
     
     var lifecycleProgress: some View {
-        VStack(spacing: 10) {
+        VStack(spacing: 2) {
             HStack(alignment: .lastTextBaseline, spacing: 3) {
                 Text(self.viewModel.lifeState.localizedLabelText)
                     .foregroundColor(self.viewModel.lifeState.labelColor(using: guidanceColors))
@@ -95,53 +97,113 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
     
     var deliveryStatus: some View {
         // podOK is true at this point. Thus there will be a basalDeliveryState
-        VStack(alignment: .leading, spacing: 0) {
-            Text(self.viewModel.basalDeliveryState!.headerText)
+        VStack(alignment: .leading, spacing: 5) {
+            Text(LocalizedString("Insulin Delivery", comment: "Title of insulin delivery section"))
                 .foregroundColor(Color(UIColor.secondaryLabel))
-            self.viewModel.basalDeliveryRate.map { (rate) in
+            if let rate = self.viewModel.basalDeliveryRate {
                 HStack(alignment: .center) {
-                    BasalStateSwiftUIView(netBasalPercent: rate.netPercent)
-                        .frame(width: 38, height: 20, alignment: .center)
                     HStack(alignment: .lastTextBaseline, spacing: 3) {
                         Text(self.viewModel.basalRateFormatter.string(from: rate.absoluteRate) ?? "")
                             .font(.system(size: 28))
-                            .fontWeight(.bold)
+                            .fontWeight(.heavy)
                             .fixedSize()
                         FrameworkLocalText("U/hr", comment: "Units for showing temp basal rate").foregroundColor(.secondary)
                     }
+                }
+            } else {
+                HStack(alignment: .center) {
+                    Image(systemName: "pause.circle.fill")
+                        .font(.system(size: 22))
+                        .foregroundColor(guidanceColors.warning)
+                    FrameworkLocalText("Insulin\nSuspended", comment: "Label for insulin suspended")
+                        .font(.system(size: 14))
+                        .fontWeight(.heavy)
+                        .fixedSize()
                 }
             }
         }
     }
     
+    func reservoir(filledPercent: CGFloat, fillColor: Color) -> some View {
+        ZStack(alignment: Alignment(horizontal: .center, vertical: .center)) {
+            GeometryReader { geometry in
+                let offset = geometry.size.height * 0.05
+                let fillHeight = geometry.size.height * 0.81
+                Rectangle()
+                    .fill(fillColor)
+                    .mask(
+                        Image(frameworkImage: "pod_reservoir_mask_swiftui")
+                            .resizable()
+                            .scaledToFit()
+                    )
+                    .mask(
+                        Rectangle().path(in: CGRect(x: 0, y: offset + fillHeight - fillHeight * filledPercent, width: geometry.size.width, height: fillHeight * filledPercent))
+                    )
+            }
+            Image(frameworkImage: "pod_reservoir_swiftui")
+                .renderingMode(.template)
+                .resizable()
+                .foregroundColor(fillColor)
+                .scaledToFit()
+        }.frame(width: 23, height: 32)
+    }
+
+    
     var reservoirStatus: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .trailing, spacing: 5) {
             Text(LocalizedString("Insulin Remaining", comment: "Header for insulin remaining on pod settings screen"))
                 .foregroundColor(Color(UIColor.secondaryLabel))
             HStack {
-                Image(systemName: "x.circle.fill")
-                    .foregroundColor(Color(UIColor.secondaryLabel))
-                
-                FrameworkLocalText("No Pod", comment: "Text shown in insulin remaining space when no pod is paired").fontWeight(.bold)
+                if let reservoirLevel = viewModel.reservoirLevel {
+                    reservoir(filledPercent: CGFloat(reservoirLevel.percentage), fillColor: reservoirColor(for: reservoirLevel))
+                    Text(viewModel.reservoirText(for: reservoirLevel))
+                        .font(.system(size: 28))
+                        .fontWeight(.heavy)
+                        .fixedSize()
+                } else {
+                    Image(systemName: "x.circle.fill")
+                        .foregroundColor(Color(UIColor.secondaryLabel))
+                    
+                    FrameworkLocalText("No Pod", comment: "Text shown in insulin remaining space when no pod is paired").fontWeight(.bold)
+                }
+                    
             }
         }
     }
-
+    
+    func suspendResumeButtonColor(for basalDeliveryState: PumpManagerStatus.BasalDeliveryState) -> Color {
+        switch basalDeliveryState {
+        case .active, .tempBasal, .cancelingTempBasal, .initiatingTempBasal:
+            return .accentColor
+        case .suspending, .resuming:
+            return Color.secondary
+        case .suspended:
+            return guidanceColors.warning
+        }
+    }
+    
     var suspendResumeRow: some View {
         // podOK is true at this point. Thus there will be a basalDeliveryState
         HStack {
-            Button(action: {
-                self.suspendResumeTapped()
-            }) {
-                Text(self.viewModel.basalDeliveryState!.suspendResumeActionText)
-                    .foregroundColor(self.viewModel.basalDeliveryState!.suspendResumeActionColor)
-            }
-            .actionSheet(isPresented: $showSuspendOptions) {
-                suspendOptionsActionSheet
-            }
-            Spacer()
-            if self.viewModel.basalDeliveryState!.transitioning {
-                ActivityIndicator(isAnimating: .constant(true), style: .medium)
+            if let basalState = self.viewModel.basalDeliveryState {
+                Button(action: {
+                    self.suspendResumeTapped()
+                }) {
+                    HStack {
+                        Image(systemName: "pause.circle.fill")
+                            .font(.system(size: 22))
+                            .accentColor(suspendResumeButtonColor(for: basalState))
+                        Text(basalState.suspendResumeActionText)
+                            .foregroundColor(basalState.suspendResumeActionColor)
+                    }
+                }
+                .actionSheet(isPresented: $showSuspendOptions) {
+                    suspendOptionsActionSheet
+                }
+                Spacer()
+                if self.viewModel.basalDeliveryState!.transitioning {
+                    ActivityIndicator(isAnimating: .constant(true), style: .medium)
+                }
             }
         }
     }
@@ -151,18 +213,33 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
             self.viewModel.doneTapped()
         })
     }
+    
+    var headerImage: some View {
+        VStack(alignment: .center) {
+            Image(frameworkImage: "Pod")
+                .resizable()
+                .aspectRatio(contentMode: ContentMode.fit)
+                .frame(height: 100)
+                .padding([.top,.horizontal])
+        }.frame(maxWidth: .infinity)
+    }
         
     var body: some View {
         List {
             VStack(alignment: .leading) {
-                VStack(alignment: .center) {
-                    Image(frameworkImage: "Pod")
-                        .resizable()
-                        .aspectRatio(contentMode: ContentMode.fit)
-                        .frame(height: 100)
-                        .padding([.top,.horizontal])
-                }.frame(maxWidth: .infinity)
                 
+                if let mockPodCommManager = viewModel.podCommManager as? MockPodCommManager {
+                    ZStack {
+                        headerImage
+                        NavigationLink(destination: MockPodSettingsView(model: MockPodSettingsViewModel(mockPodCommManager: mockPodCommManager))) {
+                            EmptyView()
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                    }
+                } else {
+                    headerImage
+                }
+
                 lifecycleProgress
 
                 if self.viewModel.podOk {
@@ -172,64 +249,50 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
                         reservoirStatus
                     }
                 }
-                self.viewModel.systemErrorDescription.map { (systemErrorDescription) in
+                
+                if let systemErrorDescription = viewModel.systemErrorDescription {
                     Text(systemErrorDescription)
-                        .foregroundColor(Color.secondary)
+                        .lineLimit(nil)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
             }.padding(.bottom, 8)
             
             if self.viewModel.podOk {
-                Section(header: FrameworkLocalText("Pod", comment: "Section header for pod section").font(.headline).foregroundColor(Color.primary)) {
+                Section(header: FrameworkLocalText("Activity", comment: "Section header for activity section").font(.headline).foregroundColor(Color.primary)) {
                     suspendResumeRow
-                    
-                    if let mockPodCommManager = viewModel.podCommManager as? MockPodCommManager {
-                        NavigationLink(destination: MockPodSettingsView(mockPodCommManager: mockPodCommManager)) {
-                            Text("Mock Pod Settings").foregroundColor(Color.primary)
+                    if case .suspended(let suspendDate) = self.viewModel.basalDeliveryState {
+                        HStack {
+                            FrameworkLocalText("Suspended At", comment: "Label for suspended at time")
+                            Spacer()
+                            Text(self.viewModel.timeFormatter.string(from: suspendDate))
+                                .foregroundColor(Color.secondary)
                         }
                     }
                 }
 
-                Section() {
-                    
-                    self.viewModel.podVersion.map { (podVersion) in
-                        NavigationLink(destination: PodDetailsView(podVersion: podVersion)) {
-                            FrameworkLocalText("Pod Details", comment: "Text for pod details disclosure row").foregroundColor(Color.primary)
-                        }
-                    }
-                        
-                    self.viewModel.activatedAt.map { (activatedAt) in
+                if let activatedAt = self.viewModel.activatedAt, let podVersion = self.viewModel.podVersion {
+                    Section() {
                         HStack {
                             FrameworkLocalText("Pod Insertion", comment: "Label for pod insertion row")
                             Spacer()
                             Text(self.viewModel.dateFormatter.string(from: activatedAt))
+                                .foregroundColor(Color.secondary)
                         }
-                    }
-
-                    self.viewModel.activatedAt.map { (activatedAt) in
+                        
                         HStack {
                             FrameworkLocalText("Pod Expiration", comment: "Label for pod expiration row")
                             Spacer()
                             Text(self.viewModel.dateFormatter.string(from: activatedAt + Pod.lifetime))
+                                .foregroundColor(Color.secondary)
                         }
-                    }
-                    
-                    
-                    HStack {
-                        if self.viewModel.timeZone != TimeZone.currentFixed {
-                            Button(action: {
-                                self.viewModel.changeTimeZoneTapped()
-                            }) {
-                                FrameworkLocalText("Change Time Zone", comment: "The title of the command to change pump time zone")
-                            }
-                        } else {
-                            FrameworkLocalText("Schedule Time Zone", comment: "Label for row showing pump time zone")
+                        
+                        NavigationLink(destination: PodDetailsView(podVersion: podVersion)) {
+                            FrameworkLocalText("Pod Details", comment: "Text for pod details disclosure row").foregroundColor(Color.primary)
                         }
-                        Spacer()
-                        Text(timeZoneString)
                     }
                 }
             }
-                        
+            
             Section() {
                 Button(action: {
                     self.navigator?.navigateTo(self.viewModel.lifeState.nextPodLifecycleAction)
@@ -237,6 +300,23 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
                     Text(self.viewModel.lifeState.nextPodLifecycleActionDescription)
                         .foregroundColor(self.viewModel.lifeState.nextPodLifecycleActionColor)
                 }
+            }
+
+            Section(header: FrameworkLocalText("Configuration", comment: "Section header for configuration section").font(.headline).foregroundColor(Color.primary)) {
+                HStack {
+                    if self.viewModel.timeZone != TimeZone.currentFixed {
+                        Button(action: {
+                            self.viewModel.changeTimeZoneTapped()
+                        }) {
+                            FrameworkLocalText("Change Time Zone", comment: "The title of the command to change pump time zone")
+                        }
+                    } else {
+                        FrameworkLocalText("Schedule Time Zone", comment: "Label for row showing pump time zone")
+                    }
+                    Spacer()
+                    Text(timeZoneString)
+                }
+
             }
 
             Section() {
@@ -271,7 +351,7 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
             Section(header: FrameworkLocalText("Support", comment: "Label for support disclosure row").font(.headline).foregroundColor(Color.primary)) {
                 NavigationLink(destination: EmptyView()) {
                     // Placeholder
-                    Text("Get Help with Insulet Omnipod").foregroundColor(Color.primary)
+                    Text("Get Help with Omnipod 5").foregroundColor(Color.primary)
                 }
             }
 
@@ -279,7 +359,7 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
         .alert(isPresented: $viewModel.alertIsPresented, content: { alert(for: viewModel.activeAlert!) })
         .insetGroupedListStyle()
         .navigationBarItems(trailing: doneButton)
-        .navigationBarTitle("Omnipod", displayMode: .automatic)
+        .navigationBarTitle(self.viewModel.viewTitle)
         
     }
     
@@ -331,6 +411,19 @@ struct DashSettingsView<Model>: View where Model: DashSettingsViewModelProtocol 
             )
         }
     }
+    
+    func reservoirColor(for level: ReservoirLevel) -> Color {
+        switch level {
+        case .aboveThreshold:
+            return insulinTintColor
+        case .valid(let value):
+            if value > 10 {
+                return insulinTintColor
+            } else {
+                return guidanceColors.warning
+            }
+        }
+    }
 }
 
 struct DashSettingsView_Previews: PreviewProvider {
@@ -353,7 +446,7 @@ struct DashSettingsSheetView: View {
             }.sheet(isPresented: $showingDetail) {
                 NavigationView {
                     ZStack {
-                        DashSettingsView(viewModel: MockDashSettingsViewModel.livePod(), navigator: MockNavigator())
+                        DashSettingsView(viewModel: previewModel(), navigator: MockNavigator())
                     }
                 }
             }
@@ -364,5 +457,17 @@ struct DashSettingsSheetView: View {
         }
         .background(Color.green)
     }
-}
+    
+    func previewModel() -> DashSettingsViewModel {
+        let basalScheduleItems = [RepeatingScheduleValue(startTime: 0, value: 1.0)]
+        let schedule = BasalRateSchedule(dailyItems: basalScheduleItems, timeZone: .current)!
+        let state = DashPumpManagerState(basalRateSchedule: schedule, maximumTempBasalRate: 3.0, lastPodCommState: .active)!
 
+        let mockPodCommManager = MockPodCommManager()
+        let pumpManager = DashPumpManager(state: state, podCommManager: mockPodCommManager)
+        let model = DashSettingsViewModel(pumpManager: pumpManager)
+        model.basalDeliveryState = .active(Date())
+        model.lifeState = .timeRemaining(.days(2.5))
+        return model
+    }
+}

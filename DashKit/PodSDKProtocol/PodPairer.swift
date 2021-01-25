@@ -20,8 +20,10 @@ public protocol PodPairer {
 extension DashPumpManager: PodPairer {
     public func pair(eventListener: @escaping (ActivationStatus<ActivationStep1Event>) -> ()) {
         startPodActivation(
-            lowReservoirAlert: try! LowReservoirAlert(reservoirVolumeBelow: 1000), // TODO: Configurable
-            podExpirationAlert: try! PodExpirationAlert(intervalBeforeExpiration: 4 * 60 * 60), // TODO: Configurable
+            // TODO: Configurable
+            lowReservoirAlert: try! LowReservoirAlert(reservoirVolumeBelow: Int(Pod.defaultLowReservoirLimit * Pod.podSDKInsulinMultiplier)),
+            // TODO: Configurable
+            podExpirationAlert: try! PodExpirationAlert(intervalBeforeExpiration: 4 * 60 * 60),
             eventListener: eventListener)
     }
 }

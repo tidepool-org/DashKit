@@ -7,36 +7,23 @@
 //
 
 import SwiftUI
-import DashKit
 import PodSDK
-
-extension PodCommError {
-    fileprivate static var simulatedErrors: [PodCommError?] {
-        return [
-            nil,
-            .unacknowledgedCommandPendingRetry,
-            .notConnected,
-            .failToConnect,
-            .activationError(.activationPhase1NotCompleted),
-            .bleCommunicationError,
-            .bluetoothOff,
-            .bluetoothUnauthorized,
-            .internalError(.incompatibleProductId),
-            .invalidAlertSetting,
-            .invalidProgram,
-            .invalidProgramStatus(nil),
-            .messageSigningFailed,
-            .nackReceived(.errorPodState),
-            .noUnacknowledgedCommandToRetry
-        ]
-    }
-}
+import DashKit
 
 struct MockPodSettingsView: View {
-    let mockPodCommManager: MockPodCommManager
     
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     
+    @ObservedObject var model: MockPodSettingsViewModel
+    
+    @State private var showAlertActions: Bool = false
+    @State private var selectedAlert: SimulatedPodAlerts?
+    
+    @State private var showAlarmActions: Bool = false
+    @State private var selectedAlarm: SimulatedPodAlarm?
+    
+    @State private var showSystemErrorActions: Bool = false
+
     func podCommErrorFormatted(_ error: PodCommError?) -> String {
         if let error = error {
             return error.localizedDescription
@@ -57,19 +44,107 @@ struct MockPodSettingsView: View {
             Section(header: Text("Reservoir Remaining").font(.headline).foregroundColor(Color.primary)) {
                 reservoirRemainingEntry
             }
+            
+            Section(header: Text("Alerts").font(.headline).foregroundColor(Color.primary)) {
+                ForEach(SimulatedPodAlerts.allCases, id: \.self) { item in
+                    Button(action: {
+                        if self.model.activeAlerts.contains(item.podAlerts) {
+                            self.model.clearAlert(item.podAlerts)
+                        } else {
+                            self.selectedAlert = item
+                            self.showAlertActions = true
+                        }
+                    }) {
+                        HStack {
+                            Text("\(item.rawValue)")
+                            Spacer()
+                            if self.model.activeAlerts.contains(item.podAlerts) {
+                                Image(systemName: "checkmark.rectangle")
+                            }
+                        }
+                    }
+                }
+            }
+            .actionSheet(isPresented: $showAlertActions) {
+                ActionSheet(
+                    title: Text("\(selectedAlert!.rawValue)"),
+                    buttons: [
+                        .cancel(),
+                        .default(Text("Issue Immediately")) {
+                            self.model.issueAlert(selectedAlert!.podAlerts)
+                            self.selectedAlert = nil
+                        },
+                        .default(Text("Issue in 15s")) { DispatchQueue.main.asyncAfter(deadline: .now() + 15) {
+                            self.model.issueAlert(selectedAlert!.podAlerts)
+                        } },
+                    ]
+                )
+            }
+            Section(header: Text("Alarms").font(.headline).foregroundColor(Color.primary)) {
+                ForEach(SimulatedPodAlarm.allCases, id: \.self) { item in
+                    Button(action: {
+                        self.selectedAlarm = item
+                        self.showAlarmActions = true
+                    }) {
+                        Text("\(item.rawValue)")
+                    }
+                }
+            }
+            .actionSheet(isPresented: $showAlarmActions) {
+                ActionSheet(
+                    title: Text("\(selectedAlarm!.rawValue)"),
+                    buttons: [
+                        .cancel(),
+                        .default(Text("Issue Immediately")) {
+                            self.model.triggerAlarm(selectedAlarm!)
+                            self.selectedAlert = nil
+                        },
+                        .default(Text("Issue in 15s")) { DispatchQueue.main.asyncAfter(deadline: .now() + 15) {
+                            self.model.triggerAlarm(selectedAlarm!)
+                        } },
+                    ]
+                )
+            }
+            Section(header: Text("System Errors").font(.headline).foregroundColor(Color.primary)) {
+                Button(action: {
+                    self.showSystemErrorActions = true
+                }) {
+                    Text("Trigger System Error")
+                }
+            }
+            .actionSheet(isPresented: $showSystemErrorActions) {
+                ActionSheet(
+                    title: Text("System Error"),
+                    buttons: [
+                        .cancel(),
+                        .default(Text("Issue Immediately")) {
+                            self.model.triggerSystemError()
+                        },
+                        .default(Text("Issue in 15s")) {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 15) {
+                                self.model.triggerSystemError()
+                            }
+                        },
+                    ]
+                )
+            }
+        }
+        .onDisappear {
+            // Trigger refresh after user changes.
+            self.model.mockPodCommManager.dashPumpManager?.getPodStatus() { _ in }
         }
         .navigationBarTitle("Mock Pod Settings")
     }
     
     var unacknowledgedCommandRetryResultPicker: some View {
         let unacknowledgedCommandRetryResultBinding = Binding<Bool>(get: {
-            if let result = self.mockPodCommManager.unacknowledgedCommandRetryResult {
+            if let result = self.model.mockPodCommManager.unacknowledgedCommandRetryResult {
                 return result.hasPendingCommandProgrammed
             } else {
                 return false
             }
         }, set: {
-            self.mockPodCommManager.unacknowledgedCommandRetryResult = $0 ? PendingRetryResult.wasProgrammed : PendingRetryResult.wasNotProgrammed
+            self.model.mockPodCommManager.unacknowledgedCommandRetryResult = $0 ? PendingRetryResult.wasProgrammed : PendingRetryResult.wasNotProgrammed
         })
         
         return Toggle(isOn: unacknowledgedCommandRetryResultBinding) {
@@ -80,11 +155,11 @@ struct MockPodSettingsView: View {
     var sendProgramErrorPicker: some View {
         let sendProgramErrorBinding = Binding<Int>(get: {
             let idx = PodCommError.simulatedErrors.firstIndex {
-                $0?.localizedDescription ?? "" == self.mockPodCommManager.deliveryProgramError?.localizedDescription ?? ""
+                $0?.localizedDescription ?? "" == self.model.mockPodCommManager.deliveryProgramError?.localizedDescription ?? ""
             }
             return idx ?? 0
         }, set: {
-            self.mockPodCommManager.deliveryProgramError = PodCommError.simulatedErrors[$0]
+            self.model.mockPodCommManager.deliveryProgramError = PodCommError.simulatedErrors[$0]
         })
         return Picker(selection: sendProgramErrorBinding, label: Text("Delivery Program Error")) {
             ForEach(0 ..< PodCommError.simulatedErrors.count) {
@@ -94,25 +169,7 @@ struct MockPodSettingsView: View {
     }
     
     var reservoirRemainingEntry: some View {
-        var numberFormatter: NumberFormatter {
-            let formatter = NumberFormatter()
-            formatter.numberStyle = .decimal
-            formatter.minimumFractionDigits = 2
-            return formatter
-        }
-
-        let reservoirRemaining = Binding(
-            get: {
-                return numberFormatter.string(from: Double(self.mockPodCommManager.podStatus.reservoirUnitsRemaining) / Pod.podSDKInsulinMultiplier) ?? ""
-            },
-            set: {
-                if let reservoirRemaining = numberFormatter.number(from: $0) {
-                    self.mockPodCommManager.podStatus.reservoirUnitsRemaining = Int(reservoirRemaining.doubleValue * Pod.podSDKInsulinMultiplier)
-                }
-            }
-        )
-        
-        return MockPodReservoirRemainingEntryView(reservoirRemaining: reservoirRemaining)
+        return MockPodReservoirRemainingEntryView(reservoirRemaining: $model.reservoirString)
     }
 
 }
@@ -130,6 +187,6 @@ struct MockPodReservoirRemainingEntryView: View {
 
 struct MockPodSettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        MockPodSettingsView(mockPodCommManager: MockPodCommManager())
+        MockPodSettingsView(model: MockPodSettingsViewModel(mockPodCommManager: MockPodCommManager()))
     }
 }
