@@ -58,12 +58,7 @@ class DashSettingsViewModelTests: XCTestCase {
         let viewModel = DashSettingsViewModel(pumpManager: pumpManager)
         
         
-        XCTAssertNotNil(viewModel.basalDeliveryRate)
-        
-        let basalDeliveryRate = viewModel.basalDeliveryRate!
-        
-        XCTAssertEqual(0, basalDeliveryRate.absoluteRate)
-        XCTAssertEqual(-1, basalDeliveryRate.netPercent)
+        XCTAssertNil(viewModel.basalDeliveryRate)
     }
 
     func testBasalDeliveryRateWithHighTemp() {
