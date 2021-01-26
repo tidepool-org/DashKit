@@ -83,7 +83,7 @@ public struct MockPodStatus: PodStatus, Equatable {
         podState = .alarm
         programStatus = ProgramStatus(rawValue: 0)
         if case .occlusion = alarmCode {
-            occlusionType = .stallDuringRuntime
+            occlusionType = .stallDuringRuntimeWire1TimingOut
         } else {
             occlusionType = OcclusionType.none
         }
@@ -121,7 +121,6 @@ public struct MockPodStatus: PodStatus, Equatable {
                 podState: PodState,
                 programStatus: ProgramStatus,
                 activeAlerts: PodAlerts,
-                isOcclusionAlertActive: Bool,
                 bolusUnitsRemaining: Int,
                 initialInsulinAmount: Double,
                 insulinDelivered: Double = 0,
@@ -132,7 +131,6 @@ public struct MockPodStatus: PodStatus, Equatable {
         self.podState = podState
         self.programStatus = programStatus
         self.activeAlerts = activeAlerts
-        self.isOcclusionAlertActive = isOcclusionAlertActive
         self.bolusUnitsRemaining = bolusUnitsRemaining
         self.initialInsulinAmount = initialInsulinAmount
         self.insulinDelivered = insulinDelivered
@@ -252,7 +250,6 @@ extension MockPodStatus: RawRepresentable {
             let podState = PodState(rawValue: rawPodState),
             let rawProgramStatus = rawValue["programStatus"] as? ProgramStatus.RawValue,
             let rawActiveAlerts = rawValue["activeAlerts"] as? PodAlerts.RawValue,
-            let isOcclusionAlertActive = rawValue["isOcclusionAlertActive"] as? Bool,
             let bolusUnitsRemaining = rawValue["bolusUnitsRemaining"] as? Int,
             let insulinDelivered = rawValue["insulinDelivered"] as? Double,
             let initialInsulinAmount = rawValue["initialInsulinAmount"] as? Double,
@@ -268,7 +265,6 @@ extension MockPodStatus: RawRepresentable {
         self.podState = podState
         self.programStatus = ProgramStatus(rawValue: rawProgramStatus)
         self.activeAlerts = PodAlerts(rawValue: rawActiveAlerts)
-        self.isOcclusionAlertActive = isOcclusionAlertActive
         self.bolusUnitsRemaining = bolusUnitsRemaining
         self.insulinDelivered = insulinDelivered
         self.initialInsulinAmount = initialInsulinAmount
@@ -334,7 +330,6 @@ extension MockPodStatus: RawRepresentable {
             "podState": podState.rawValue,
             "programStatus": programStatus.rawValue,
             "activeAlerts": activeAlerts.rawValue,
-            "isOcclusionAlertActive": isOcclusionAlertActive,
             "bolusUnitsRemaining": bolusUnitsRemaining,
             "insulinDelivered": insulinDelivered,
             "initialInsulinAmount": initialInsulinAmount,

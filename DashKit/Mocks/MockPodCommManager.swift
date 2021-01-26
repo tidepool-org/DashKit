@@ -112,7 +112,7 @@ public class MockPodCommManager: PodCommManagerProtocol {
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 11.5) {
                 // Start out with 100U
-                self.podStatus = MockPodStatus(activationDate: self.dateGenerator(), podState: .uidSet, programStatus: ProgramStatus(rawValue: 0), activeAlerts: PodAlerts(rawValue: 128), isOcclusionAlertActive: false, bolusUnitsRemaining: 0, initialInsulinAmount: 100)
+                self.podStatus = MockPodStatus(activationDate: self.dateGenerator(), podState: .uidSet, programStatus: ProgramStatus(rawValue: 0), activeAlerts: PodAlerts(rawValue: 128), bolusUnitsRemaining: 0, initialInsulinAmount: 100)
                 eventListener(.event(.podStatus(self.podStatus!)))
             }
             
@@ -139,7 +139,7 @@ public class MockPodCommManager: PodCommManagerProtocol {
             }
 
             DispatchQueue.main.asyncAfter(deadline: .now() + 30.5) {
-                self.podStatus!.podState = .clutchDriveEnaged
+                self.podStatus!.podState = .clutchDriveEngaged
                 self.podStatus!.insulinDelivered = 1.40
                 eventListener(.event(.podStatus(self.podStatus!)))
                 eventListener(.event(.programmingPodExpireAlert))
