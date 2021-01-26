@@ -245,6 +245,7 @@ class DashUICoordinator: UINavigationController, PumpManagerSetupViewController,
         #if targetEnvironment(simulator)
         self.registrationManager = MockRegistrationManager(isRegistered: true)
         #else
+        PodCommManager.shared.setup(withLaunchingOptions: nil)
         self.registrationManager = RegistrationManager.shared
         #endif
                 
