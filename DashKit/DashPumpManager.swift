@@ -352,8 +352,14 @@ open class DashPumpManager: PumpManager {
     }
 
     public var isPeriodicStatusCheckConfigured: Bool = false
+    public var mustProvideBLEHeartbeat: Bool = false
 
     public func getPodStatus(completion: @escaping (PodCommResult<PodStatus>) -> ()) {
+        guard podCommManager.podCommState == .active else {
+            completion(.failure(.podIsNotActive))
+            return
+        }
+        
         podCommManager.getPodStatus(userInitiated: false) { (response) in
             switch response {
             case .failure(let error):
@@ -452,10 +458,11 @@ open class DashPumpManager: PumpManager {
     }
 
     public func setBasalSchedule(basalProgram: BasalProgram, timeZone: TimeZone, completion: @escaping (Error?) -> Void) {
-        guard !state.isSuspended else {
-            log.default("Storing basal schedule change locally during suspend")
+        guard !state.isSuspended && podCommManager.podCommState != .noPod else {
+            log.default("Storing basal schedule change locally.")
             self.mutateState { (state) in
                 state.basalProgram = basalProgram
+                state.timeZone = timeZone
             }
             completion(nil)
             return
@@ -802,6 +809,11 @@ open class DashPumpManager: PumpManager {
 
     public func enactTempBasal(unitsPerHour: Double, for duration: TimeInterval, completion: @escaping (PumpManagerResult<DoseEntry>) -> Void) {
         
+        guard podCommManager.podCommState == .active else {
+            completion(.failure(.deviceState(PodCommError.podIsNotActive)))
+            return
+        }
+        
         // Round to nearest supported volume
         let enactRate = roundToSupportedBasalRate(unitsPerHour: unitsPerHour)
         let program: ProgramType?
@@ -906,20 +918,28 @@ open class DashPumpManager: PumpManager {
             }
         }
     }
+    
+    private func configurePeriodicStatusCheck() {
+        self.log.debug("podCommManager periodic status: configuring")
+        podCommManager.configPeriodicStatusCheck(interval: .minutes(1)) { (result) in
+            switch result {
+            case .failure(let error):
+                self.log.error("podCommManager periodic status check error: %{public}@", String(describing: error))
+            case .success(let status):
+                self.isPeriodicStatusCheckConfigured = true
+                self.log.debug("podCommManager periodic status check configured", String(describing: status))
+            }
+        }
+    }
 
     public func setMustProvideBLEHeartbeat(_ mustProvideBLEHeartbeat: Bool) {
         if mustProvideBLEHeartbeat && !isPeriodicStatusCheckConfigured {
-            self.log.debug("podCommManager periodic status: configuring")
-            podCommManager.configPeriodicStatusCheck(interval: .minutes(1)) { (result) in
-                switch result {
-                case .failure(let error):
-                    self.log.error("podCommManager periodic status check error: %{public}@", String(describing: error))
-                case .success(let status):
-                    self.isPeriodicStatusCheckConfigured = true
-                    self.log.debug("podCommManager periodic status check configured", String(describing: status))
-                }
-            }
+            configurePeriodicStatusCheck()
         }
+        if !mustProvideBLEHeartbeat && self.mustProvideBLEHeartbeat {
+            podCommManager.disablePeriodicStatusCheck { (_) in }
+        }
+        self.mustProvideBLEHeartbeat = mustProvideBLEHeartbeat
     }
 
     public func suspendDelivery(completion: @escaping (Error?) -> Void) {
@@ -1207,8 +1227,6 @@ open class DashPumpManager: PumpManager {
         self.podCommManager.delegate = self
         
         podCommManager.setLogger(logger: self)
-
-        podCommManager.setup(withLaunchingOptions: [:])
     }
     
     public convenience required init(state: DashPumpManagerState, dateGenerator: @escaping () -> Date = Date.init) {
@@ -1464,8 +1482,13 @@ extension DashPumpManager: PodCommManagerDelegate {
         // TODO: log this as a connection event.
         logPodCommManagerDelegateMessage("connectionStateDidChange: \(String(describing: connectionState))")
         
-        if connectionState == .connected && state.pendingCommand != nil {
-            attemptUnacknowledgedCommandRecovery()
+        if connectionState == .connected {
+            if state.pendingCommand != nil {
+                attemptUnacknowledgedCommandRecovery()
+            }
+            if !isPeriodicStatusCheckConfigured {
+                configurePeriodicStatusCheck()
+            }
         }
         
         self.mutateState { (state) in
