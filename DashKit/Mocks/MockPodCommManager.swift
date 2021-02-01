@@ -317,33 +317,41 @@ public class MockPodCommManager: PodCommManagerProtocol {
             return
         }
         
+        // SDK returns .invalidProgram if bolus attempt is made during suspension.
+        if case .bolus = programType, podStatus.programStatus.isSuspended {
+            completion(.failure(.invalidProgram))
+            return
+        }
+        
         if let error = deliveryProgramError {
             if simulateDisconnectionOnUnacknowledgedCommand, case .unacknowledgedCommandPendingRetry = error {
                 disconnectFor(.minutes(1))
             }
             completion(.failure(error))
         } else {
-            switch programType {
-            case .basalProgram(let program, let offset):
-                let now = dateGenerator()
-                podStatus.basalProgram = program
-                podStatus.basalProgramStartOffset = offset.map {Double($0)} ?? -Calendar.current.startOfDay(for: now).timeIntervalSinceNow
-                podStatus.basalProgramStartDate = now
-                podStatus.programStatus.insert(.basalRunning)
-            case .bolus(let bolus):
-                podStatus.bolus = UnfinalizedDose(
-                    bolusAmount: Double(bolus.immediateVolume) / Pod.podSDKInsulinMultiplier,
-                    startTime: dateGenerator(),
-                    scheduledCertainty: .certain)
-                podStatus.programStatus.insert(.bolusRunning)
-            case .tempBasal(let tempBasal):
-                if case .flatRate(let rate) = tempBasal.value {
-                    podStatus.tempBasal = UnfinalizedDose(tempBasalRate: Double(rate) / Pod.podSDKInsulinMultiplier, startTime: dateGenerator(), duration: tempBasal.duration, scheduledCertainty: .certain)
-                    podStatus.programStatus.insert(.tempBasalRunning)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                switch programType {
+                case .basalProgram(let program, let offset):
+                    let now = self.dateGenerator()
+                    podStatus.basalProgram = program
+                    podStatus.basalProgramStartOffset = offset.map {Double($0)} ?? -Calendar.current.startOfDay(for: now).timeIntervalSinceNow
+                    podStatus.basalProgramStartDate = now
+                    podStatus.programStatus.insert(.basalRunning)
+                case .bolus(let bolus):
+                    podStatus.bolus = UnfinalizedDose(
+                        bolusAmount: Double(bolus.immediateVolume) / Pod.podSDKInsulinMultiplier,
+                        startTime: self.dateGenerator(),
+                        scheduledCertainty: .certain)
+                    podStatus.programStatus.insert(.bolusRunning)
+                case .tempBasal(let tempBasal):
+                    if case .flatRate(let rate) = tempBasal.value {
+                        podStatus.tempBasal = UnfinalizedDose(tempBasalRate: Double(rate) / Pod.podSDKInsulinMultiplier, startTime: self.dateGenerator(), duration: tempBasal.duration, scheduledCertainty: .certain)
+                        podStatus.programStatus.insert(.tempBasalRunning)
+                    }
                 }
+                self.podStatus = podStatus
+                completion(.success(podStatus))
             }
-            self.podStatus = podStatus
-            completion(.success(podStatus))
         }
     }
 
@@ -359,20 +367,22 @@ public class MockPodCommManager: PodCommManagerProtocol {
             }
             completion(.failure(error))
         } else {
-            switch programType {
-            case .bolus:
-                podStatus.cancelBolus(at: dateGenerator())
-                podStatus.programStatus.remove(.bolusRunning)
-            case .tempBasal:
-                podStatus.cancelTempBasal(at: dateGenerator())
-                podStatus.programStatus.remove(.tempBasalRunning)
-            case .stopAll:
-                podStatus.cancelBolus(at: dateGenerator())
-                podStatus.cancelTempBasal(at: dateGenerator())
-                podStatus.programStatus = []
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                switch programType {
+                case .bolus:
+                    podStatus.cancelBolus(at: self.dateGenerator())
+                    podStatus.programStatus.remove(.bolusRunning)
+                case .tempBasal:
+                    podStatus.cancelTempBasal(at: self.dateGenerator())
+                    podStatus.programStatus.remove(.tempBasalRunning)
+                case .stopAll:
+                    podStatus.cancelBolus(at: self.dateGenerator())
+                    podStatus.cancelTempBasal(at: self.dateGenerator())
+                    podStatus.programStatus = []
+                }
+                self.podStatus = podStatus
+                completion(.success(podStatus))
             }
-            self.podStatus = podStatus
-            completion(.success(podStatus))
         }
     }
 
