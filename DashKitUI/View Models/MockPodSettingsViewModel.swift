@@ -13,14 +13,11 @@ import PodSDK
 class MockPodSettingsViewModel: ObservableObject, Identifiable {
     public var mockPodCommManager: MockPodCommManager
     @Published var activeAlerts: PodAlerts
+    var updatedReservoir: NSNumber?
     
     var reservoirString: String {
         didSet {
-            if let podStatus = mockPodCommManager.podStatus {
-                if let value = numberFormatter.number(from: reservoirString) {
-                    mockPodCommManager.podStatus?.insulinDelivered = podStatus.initialInsulinAmount - Double(truncating: value)
-                }
-            }
+            updatedReservoir = numberFormatter.number(from: reservoirString)
         }
     }
 
@@ -71,6 +68,15 @@ class MockPodSettingsViewModel: ObservableObject, Identifiable {
     
     func triggerSystemError() {
         mockPodCommManager.triggerSystemError()
+    }
+    
+    func applyPendingUpdates() {
+        if let podStatus = mockPodCommManager.podStatus {
+            if let value = numberFormatter.number(from: reservoirString) {
+                mockPodCommManager.podStatus?.insulinDelivered = podStatus.initialInsulinAmount - Double(truncating: value)
+            }
+        }
+        mockPodCommManager.dashPumpManager?.getPodStatus() { _ in }
     }
 }
 

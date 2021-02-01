@@ -44,22 +44,19 @@ public final class OmnipodReservoirView: LevelHUDView, NibLoadable {
     override public func tintColorDidChange() {
         super.tintColorDidChange()
         
+        alertLabel?.backgroundColor = tintColor
         volumeLabel.textColor = tintColor
+        levelMaskView.tintColor = tintColor
     }
 
     
-    private func updateColor() {
+    override public func updateColor() {
         switch reservoirAlertState {
         case .lowReservoir, .empty:
-            alertLabel?.backgroundColor = stateColors?.warning
+            tintColor = stateColors?.warning
         case .ok:
-            alertLabel?.backgroundColor = stateColors?.normal
+            tintColor = stateColors?.normal
         }
-    }
-
-    override public func stateColorsDidUpdate() {
-        super.stateColorsDidUpdate()
-        updateColor()
     }
 
     private lazy var timeFormatter: DateFormatter = {
@@ -88,29 +85,13 @@ public final class OmnipodReservoirView: LevelHUDView, NibLoadable {
             case .aboveThreshold:
                 level = nil
                 volumeLabel.isHidden = true
-                volumeLabel.textColor = stateColors?.normal
-                tintColor = stateColors?.normal
                 if let units = numberFormatter.string(from: Pod.maximumReservoirReading) {
                     volumeLabel.text = String(format: LocalizedString("%@+ U", comment: "Format string for reservoir volume when above maximum reading. (1: The maximum reading)"), units)
                     accessibilityValue = String(format: LocalizedString("Greater than %1$@ units remaining at %2$@", comment: "Accessibility format string for (1: localized volume)(2: time)"), units, time)
                 }
             case .valid(let value):
                 level = reservoirLevel.percentage
-                // Image colors are controlled in LevelHUDView; this is for the volume label
-                switch level {
-                case 1:
-                    volumeLabel.isHidden = true
-                    volumeLabel.textColor = stateColors?.unknown
-                case let x? where x > 0.25:
-                    volumeLabel.isHidden = true
-                    volumeLabel.textColor = stateColors?.normal
-                case let x? where x > 0.10:
-                    volumeLabel.isHidden = false
-                    volumeLabel.textColor = stateColors?.warning
-                default:
-                    volumeLabel.isHidden = false
-                    volumeLabel.textColor = stateColors?.error
-                }
+                volumeLabel.isHidden = false
 
                 if let units = numberFormatter.string(from: value) {
                     volumeLabel.text = String(format: LocalizedString("%@U", comment: "Format string for reservoir volume. (1: The localized volume)"), units)
@@ -131,13 +112,11 @@ public final class OmnipodReservoirView: LevelHUDView, NibLoadable {
             alertLabel?.text = "!"
         }
 
-        updateColor()
-
         UIView.animate(withDuration: 0.25, animations: {
             self.alertLabel?.alpha = alertLabelAlpha
         })
     }
-
+    
     public func update(level: ReservoirLevel?, at date: Date, reservoirAlertState: ReservoirAlertState) {
         self.reservoirLevel = level
         self.lastUpdateDate = date

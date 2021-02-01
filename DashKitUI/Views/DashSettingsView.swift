@@ -417,7 +417,7 @@ struct DashSettingsView: View  {
         case .aboveThreshold:
             return insulinTintColor
         case .valid(let value):
-            if value > 10 {
+            if value > Pod.defaultLowReservoirLimit {
                 return insulinTintColor
             } else {
                 return guidanceColors.warning

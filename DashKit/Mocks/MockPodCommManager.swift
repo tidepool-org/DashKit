@@ -26,8 +26,22 @@ public class MockPodCommManager: PodCommManagerProtocol {
             return lockedPodStatus.value
         }
         set {
-            lockedPodStatus.value = newValue
+            var oldStatus: MockPodStatus?
+            lockedPodStatus.mutate { (status) in
+                oldStatus = status
+                status = newValue
+            }
             notifyObservers()
+            
+            if let oldStatus = oldStatus, let newStatus = newValue {
+                if oldStatus.lowReservoirAlertConditionActive != newStatus.lowReservoirAlertConditionActive {
+                    if newStatus.lowReservoirAlertConditionActive {
+                        issueAlerts(.lowReservoir)
+                    } else {
+                        clearAlerts(.lowReservoir)
+                    }
+                }
+            }
         }
     }
         
@@ -113,6 +127,7 @@ public class MockPodCommManager: PodCommManagerProtocol {
             DispatchQueue.main.asyncAfter(deadline: .now() + 11.5) {
                 // Start out with 100U
                 self.podStatus = MockPodStatus(activationDate: self.dateGenerator(), podState: .uidSet, programStatus: ProgramStatus(rawValue: 0), activeAlerts: PodAlerts(rawValue: 128), bolusUnitsRemaining: 0, initialInsulinAmount: 100)
+                self.podStatus?.lowReservoirAlert = lowReservoirAlert
                 eventListener(.event(.podStatus(self.podStatus!)))
             }
             
