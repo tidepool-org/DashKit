@@ -192,7 +192,7 @@ struct DashSettingsView: View  {
                     HStack {
                         Image(systemName: "pause.circle.fill")
                             .font(.system(size: 22))
-                            .accentColor(suspendResumeButtonColor(for: basalState))
+                            .foregroundColor(suspendResumeButtonColor(for: basalState))
                         Text(basalState.suspendResumeActionText)
                             .foregroundColor(basalState.suspendResumeActionColor)
                     }
