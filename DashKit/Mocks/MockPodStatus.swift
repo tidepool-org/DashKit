@@ -22,6 +22,8 @@ public struct MockPodStatus: PodStatus, Equatable {
     public var bolusUnitsRemaining: Int
 
     public var insulinDelivered: Double
+    
+    public var lowReservoirAlert: LowReservoirAlert?
 
     public var totalUnitsDelivered: Int {
         return Int(insulinDelivered / Pod.podSDKInsulinMultiplier)
@@ -235,6 +237,13 @@ public struct MockPodStatus: PodStatus, Equatable {
         self.insulinDelivered += tempBasal.units
         self.tempBasal = nil
     }
+    
+    var lowReservoirAlertConditionActive: Bool {
+        if let lowReservoirAlert = lowReservoirAlert {
+            return Int((initialInsulinAmount - insulinDelivered) * Pod.podSDKInsulinMultiplier.rawValue) <= lowReservoirAlert.reservoirVolumeBelow
+        }
+        return false
+    }
 
 }
 
@@ -321,7 +330,13 @@ extension MockPodStatus: RawRepresentable {
 
         if let alarmReferenceCode = rawValue["alarmReferenceCode"] as? String {
             self.alarmReferenceCode = alarmReferenceCode
-        }        
+        }
+        
+        if let lowReservoirAlertRaw = rawValue["lowReservoirAlert"] as? LowReservoirAlert.RawValue, let lowReservoirAlert = LowReservoirAlert(rawValue: lowReservoirAlertRaw)
+        {
+            self.lowReservoirAlert = lowReservoirAlert
+        }
+
     }
     
     public var rawValue: RawValue {
@@ -348,7 +363,27 @@ extension MockPodStatus: RawRepresentable {
         rawValue["alarmDate"] = alarmDate
         rawValue["alarmReferenceCode"] = alarmReferenceCode
         rawValue["podCommState"] = try? JSONEncoder().encode(podCommState)
+        rawValue["lowReservoirAlert"] = lowReservoirAlert?.rawValue
 
+        return rawValue
+    }
+}
+
+extension LowReservoirAlert: RawRepresentable {
+    public typealias RawValue = [String: Any]
+
+    public init?(rawValue: RawValue) {
+        guard let reservoirVolumeBelow = rawValue["reservoirVolumeBelow"] as? Int else {
+            return nil
+        }
+        
+        try? self.init(reservoirVolumeBelow: reservoirVolumeBelow)
+    }
+    
+    public var rawValue: RawValue {
+        let rawValue: RawValue = [
+            "reservoirVolumeBelow": reservoirVolumeBelow,
+        ]
         return rawValue
     }
 }

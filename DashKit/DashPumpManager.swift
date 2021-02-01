@@ -335,14 +335,6 @@ open class DashPumpManager: PumpManager {
         return HKQuantity(unit: .internationalUnit(), doubleValue: delivery)
     }
 
-    public var reservoirWarningLevel: Double {
-        return 10 // TODO: Make configurable
-    }
-
-    public var isReservoirLow: Bool {
-        return false  // TODO
-    }
-
     public var lastStatusDate: Date? {
         return state.lastStatusDate
     }
