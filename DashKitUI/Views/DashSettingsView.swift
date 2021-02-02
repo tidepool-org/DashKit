@@ -19,7 +19,9 @@ struct DashSettingsView: View  {
     @State private var showingDeleteConfirmation = false
     
     @State private var showSuspendOptions = false;
-    
+
+    @State private var confidenceRemindersEnabled = false;
+
     @Environment(\.guidanceColors) var guidanceColors
     @Environment(\.insulinTintColor) var insulinTintColor
     
@@ -280,14 +282,14 @@ struct DashSettingsView: View  {
                         }
                         
                         HStack {
-                            FrameworkLocalText("Pod Expiration", comment: "Label for pod expiration row")
+                            FrameworkLocalText("Pod Expires", comment: "Label for pod expiration row")
                             Spacer()
                             Text(self.viewModel.dateFormatter.string(from: activatedAt + Pod.lifetime))
                                 .foregroundColor(Color.secondary)
                         }
                         
                         NavigationLink(destination: PodDetailsView(podVersion: podVersion)) {
-                            FrameworkLocalText("Pod Details", comment: "Text for pod details disclosure row").foregroundColor(Color.primary)
+                            FrameworkLocalText("Device Details", comment: "Text for device details disclosure row").foregroundColor(Color.primary)
                         }
                     }
                 }
@@ -302,7 +304,12 @@ struct DashSettingsView: View  {
                 }
             }
 
-            Section(header: FrameworkLocalText("Configuration", comment: "Section header for configuration section").font(.headline).foregroundColor(Color.primary)) {
+            Section(header: FrameworkLocalText("Configuration", comment: "Section header for configuration section").font(.headline).foregroundColor(Color.primary))
+            {
+                NavigationLink(destination: Text("Not Implemented Yet")) {
+                    FrameworkLocalText("Notification Settings", comment: "Text for pod details disclosure row").foregroundColor(Color.primary)
+                }
+
                 HStack {
                     if self.viewModel.timeZone != TimeZone.currentFixed {
                         Button(action: {
@@ -311,12 +318,15 @@ struct DashSettingsView: View  {
                             FrameworkLocalText("Change Time Zone", comment: "The title of the command to change pump time zone")
                         }
                     } else {
-                        FrameworkLocalText("Schedule Time Zone", comment: "Label for row showing pump time zone")
+                        FrameworkLocalText("Time Zone", comment: "Label for row showing pump time zone")
                     }
                     Spacer()
                     Text(timeZoneString)
                 }
-
+                
+                Toggle(isOn: $confidenceRemindersEnabled) {
+                    Text("Confidence Reminders")
+                }
             }
 
             Section() {
@@ -349,7 +359,7 @@ struct DashSettingsView: View  {
             }
 
             Section(header: FrameworkLocalText("Support", comment: "Label for support disclosure row").font(.headline).foregroundColor(Color.primary)) {
-                NavigationLink(destination: EmptyView()) {
+                NavigationLink(destination: Text("Not Implemented Yet")) {
                     // Placeholder
                     Text("Get Help with Omnipod 5").foregroundColor(Color.primary)
                 }

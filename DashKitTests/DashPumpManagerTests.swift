@@ -71,6 +71,7 @@ class DashPumpManagerTests: XCTestCase {
             basalProgram: BasalProgram(items: basalScheduleItems))
 
         mockPodCommManager = MockPodCommManager(podStatus: podStatus, dateGenerator: dateGenerator)
+        mockPodCommManager.simulatedCommsDelay = TimeInterval(0)
         mockPodCommManager.podCommState = .active
                 
         var state = DashPumpManagerState(basalRateSchedule: schedule, maximumTempBasalRate: 3.0, lastPodCommState: .active, dateGenerator: dateGenerator)!
