@@ -18,6 +18,7 @@ public class MockPodCommManager: PodCommManagerProtocol {
     
     public let dateGenerator: () -> Date
     
+    public var simulatedCommsDelay = TimeInterval(2)
     
     private let lockedPodStatus: Locked<MockPodStatus?>
     
@@ -344,7 +345,7 @@ public class MockPodCommManager: PodCommManagerProtocol {
             }
             completion(.failure(error))
         } else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + simulatedCommsDelay) {
                 switch programType {
                 case .basalProgram(let program, let offset):
                     let now = self.dateGenerator()
@@ -382,7 +383,7 @@ public class MockPodCommManager: PodCommManagerProtocol {
             }
             completion(.failure(error))
         } else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + simulatedCommsDelay) {
                 switch programType {
                 case .bolus:
                     podStatus.cancelBolus(at: self.dateGenerator())
