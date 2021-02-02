@@ -14,7 +14,7 @@ import SwiftUI
 
 extension DashPumpManager: PumpManagerUI {
 
-    public static func setupViewController(initialSettings settings: PumpManagerSettings, colorPalette: LoopUIColorPalette) -> UIResult<UIViewController & PumpManagerCreateNotifying & PumpManagerOnboardNotifying & CompletionNotifying, PumpManagerUI, Error> {
+    public static func setupViewController(initialSettings settings: PumpManagerSetupSettings, colorPalette: LoopUIColorPalette) -> SetupUIResult<UIViewController & PumpManagerCreateNotifying & PumpManagerOnboardNotifying & CompletionNotifying, PumpManagerUI> {
         let vc = DashUICoordinator(colorPalette: colorPalette)
         vc.pumpManagerType = self
         return .userInteractionRequired(vc)

@@ -133,7 +133,7 @@ class DashUICoordinator: UINavigationController, PumpManagerCreateNotifying, Pum
             {
                 let pumpManager = pumpManagerType.init(state: pumpManagerState)
                 self.pumpManager = pumpManager
-                pumpManagerCreateDelegate?.pumpManagerCreateNotifying(self, didCreatePumpManager: pumpManager)
+                pumpManagerCreateDelegate?.pumpManagerCreateNotifying(didCreatePumpManager: pumpManager)
             }
             
             guard let pumpManager = pumpManager else {
@@ -184,10 +184,10 @@ class DashUICoordinator: UINavigationController, PumpManagerCreateNotifying, Pum
                 let vc = PodSetupCompleteViewController.instantiateFromStoryboard(pumpManager, navigator: self)
                 vc.completion = { [weak self] in
                     if let self = self {
-                        let settings = PumpManagerSettings(maxBasalRateUnitsPerHour: self.maxBasalRateUnitsPerHour,
+                        let settings = PumpManagerSetupSettings(maxBasalRateUnitsPerHour: self.maxBasalRateUnitsPerHour,
                                                            maxBolusUnits: self.maxBolusUnits,
                                                            basalSchedule: self.basalSchedule)
-                        self.pumpManagerOnboardDelegate?.pumpManagerOnboardNotifying(self, didOnboardPumpManager: pumpManager, withFinalSettings: settings)
+                        self.pumpManagerOnboardDelegate?.pumpManagerOnboardNotifying(didOnboardPumpManager: pumpManager, withFinalSettings: settings)
                         self.stepFinished()
                     }
                 }
