@@ -289,7 +289,7 @@ struct DashSettingsView: View  {
                         }
                         
                         NavigationLink(destination: PodDetailsView(podVersion: podVersion)) {
-                            FrameworkLocalText("Pod Details", comment: "Text for pod details disclosure row").foregroundColor(Color.primary)
+                            FrameworkLocalText("Device Details", comment: "Text for device details disclosure row").foregroundColor(Color.primary)
                         }
                     }
                 }
