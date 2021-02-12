@@ -65,13 +65,13 @@ class DashPumpManagerTests: XCTestCase {
             podState: .runningAboveMinVolume,
             programStatus: .basalRunning,
             activeAlerts: PodAlerts([]),
-            isOcclusionAlertActive: false,
             bolusUnitsRemaining: 0,
             initialInsulinAmount: 11,
             insulinDelivered: 100,
             basalProgram: BasalProgram(items: basalScheduleItems))
 
         mockPodCommManager = MockPodCommManager(podStatus: podStatus, dateGenerator: dateGenerator)
+        mockPodCommManager.simulatedCommsDelay = TimeInterval(0)
         mockPodCommManager.podCommState = .active
                 
         var state = DashPumpManagerState(basalRateSchedule: schedule, maximumTempBasalRate: 3.0, lastPodCommState: .active, dateGenerator: dateGenerator)!
@@ -390,7 +390,7 @@ class DashPumpManagerTests: XCTestCase {
             alarmCode: AlarmCode.occlusion,
             alarmDescription: "Occlusion",
             podStatus: podStatus,
-            occlusionType: .stallDuringRuntime,
+            occlusionType: .stallDuringStartupWire1TimingOut,
             didErrorOccuredFetchingBolusInfo: false,
             wasBolusActiveWhenPodAlarmed: true,
             podStateWhenPodAlarmed: podStatus.podState,

@@ -18,6 +18,7 @@ public class MockPodCommManager: PodCommManagerProtocol {
     
     public let dateGenerator: () -> Date
     
+    public var simulatedCommsDelay = TimeInterval(2)
     
     private let lockedPodStatus: Locked<MockPodStatus?>
     
@@ -26,8 +27,22 @@ public class MockPodCommManager: PodCommManagerProtocol {
             return lockedPodStatus.value
         }
         set {
-            lockedPodStatus.value = newValue
+            var oldStatus: MockPodStatus?
+            lockedPodStatus.mutate { (status) in
+                oldStatus = status
+                status = newValue
+            }
             notifyObservers()
+            
+            if let oldStatus = oldStatus, let newStatus = newValue {
+                if oldStatus.lowReservoirAlertConditionActive != newStatus.lowReservoirAlertConditionActive {
+                    if newStatus.lowReservoirAlertConditionActive {
+                        issueAlerts(.lowReservoir)
+                    } else {
+                        clearAlerts(.lowReservoir)
+                    }
+                }
+            }
         }
     }
         
@@ -112,7 +127,8 @@ public class MockPodCommManager: PodCommManagerProtocol {
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 11.5) {
                 // Start out with 100U
-                self.podStatus = MockPodStatus(activationDate: self.dateGenerator(), podState: .uidSet, programStatus: ProgramStatus(rawValue: 0), activeAlerts: PodAlerts(rawValue: 128), isOcclusionAlertActive: false, bolusUnitsRemaining: 0, initialInsulinAmount: 100)
+                self.podStatus = MockPodStatus(activationDate: self.dateGenerator(), podState: .uidSet, programStatus: ProgramStatus(rawValue: 0), activeAlerts: PodAlerts(rawValue: 128), bolusUnitsRemaining: 0, initialInsulinAmount: 100)
+                self.podStatus?.lowReservoirAlert = lowReservoirAlert
                 eventListener(.event(.podStatus(self.podStatus!)))
             }
             
@@ -139,7 +155,7 @@ public class MockPodCommManager: PodCommManagerProtocol {
             }
 
             DispatchQueue.main.asyncAfter(deadline: .now() + 30.5) {
-                self.podStatus!.podState = .clutchDriveEnaged
+                self.podStatus!.podState = .clutchDriveEngaged
                 self.podStatus!.insulinDelivered = 1.40
                 eventListener(.event(.podStatus(self.podStatus!)))
                 eventListener(.event(.programmingPodExpireAlert))
@@ -317,33 +333,41 @@ public class MockPodCommManager: PodCommManagerProtocol {
             return
         }
         
+        // SDK returns .invalidProgram if bolus attempt is made during suspension.
+        if case .bolus = programType, podStatus.programStatus.isSuspended {
+            completion(.failure(.invalidProgram))
+            return
+        }
+        
         if let error = deliveryProgramError {
             if simulateDisconnectionOnUnacknowledgedCommand, case .unacknowledgedCommandPendingRetry = error {
                 disconnectFor(.minutes(1))
             }
             completion(.failure(error))
         } else {
-            switch programType {
-            case .basalProgram(let program, let offset):
-                let now = dateGenerator()
-                podStatus.basalProgram = program
-                podStatus.basalProgramStartOffset = offset.map {Double($0)} ?? -Calendar.current.startOfDay(for: now).timeIntervalSinceNow
-                podStatus.basalProgramStartDate = now
-                podStatus.programStatus.insert(.basalRunning)
-            case .bolus(let bolus):
-                podStatus.bolus = UnfinalizedDose(
-                    bolusAmount: Double(bolus.immediateVolume) / Pod.podSDKInsulinMultiplier,
-                    startTime: dateGenerator(),
-                    scheduledCertainty: .certain)
-                podStatus.programStatus.insert(.bolusRunning)
-            case .tempBasal(let tempBasal):
-                if case .flatRate(let rate) = tempBasal.value {
-                    podStatus.tempBasal = UnfinalizedDose(tempBasalRate: Double(rate) / Pod.podSDKInsulinMultiplier, startTime: dateGenerator(), duration: tempBasal.duration, scheduledCertainty: .certain)
-                    podStatus.programStatus.insert(.tempBasalRunning)
+            DispatchQueue.main.asyncAfter(deadline: .now() + simulatedCommsDelay) {
+                switch programType {
+                case .basalProgram(let program, let offset):
+                    let now = self.dateGenerator()
+                    podStatus.basalProgram = program
+                    podStatus.basalProgramStartOffset = offset.map {Double($0)} ?? -Calendar.current.startOfDay(for: now).timeIntervalSinceNow
+                    podStatus.basalProgramStartDate = now
+                    podStatus.programStatus.insert(.basalRunning)
+                case .bolus(let bolus):
+                    podStatus.bolus = UnfinalizedDose(
+                        bolusAmount: Double(bolus.immediateVolume) / Pod.podSDKInsulinMultiplier,
+                        startTime: self.dateGenerator(),
+                        scheduledCertainty: .certain)
+                    podStatus.programStatus.insert(.bolusRunning)
+                case .tempBasal(let tempBasal):
+                    if case .flatRate(let rate) = tempBasal.value {
+                        podStatus.tempBasal = UnfinalizedDose(tempBasalRate: Double(rate) / Pod.podSDKInsulinMultiplier, startTime: self.dateGenerator(), duration: tempBasal.duration, scheduledCertainty: .certain)
+                        podStatus.programStatus.insert(.tempBasalRunning)
+                    }
                 }
+                self.podStatus = podStatus
+                completion(.success(podStatus))
             }
-            self.podStatus = podStatus
-            completion(.success(podStatus))
         }
     }
 
@@ -359,20 +383,22 @@ public class MockPodCommManager: PodCommManagerProtocol {
             }
             completion(.failure(error))
         } else {
-            switch programType {
-            case .bolus:
-                podStatus.cancelBolus(at: dateGenerator())
-                podStatus.programStatus.remove(.bolusRunning)
-            case .tempBasal:
-                podStatus.cancelTempBasal(at: dateGenerator())
-                podStatus.programStatus.remove(.tempBasalRunning)
-            case .stopAll:
-                podStatus.cancelBolus(at: dateGenerator())
-                podStatus.cancelTempBasal(at: dateGenerator())
-                podStatus.programStatus = []
+            DispatchQueue.main.asyncAfter(deadline: .now() + simulatedCommsDelay) {
+                switch programType {
+                case .bolus:
+                    podStatus.cancelBolus(at: self.dateGenerator())
+                    podStatus.programStatus.remove(.bolusRunning)
+                case .tempBasal:
+                    podStatus.cancelTempBasal(at: self.dateGenerator())
+                    podStatus.programStatus.remove(.tempBasalRunning)
+                case .stopAll:
+                    podStatus.cancelBolus(at: self.dateGenerator())
+                    podStatus.cancelTempBasal(at: self.dateGenerator())
+                    podStatus.programStatus = []
+                }
+                self.podStatus = podStatus
+                completion(.success(podStatus))
             }
-            self.podStatus = podStatus
-            completion(.success(podStatus))
         }
     }
 
@@ -473,15 +499,11 @@ public class MockPodCommManager: PodCommManagerProtocol {
 
 extension PendingRetryResult {
     public static var wasProgrammed: PendingRetryResult {
-        let decoder = JSONDecoder()
-        let json = "{\"hasPendingCommandProgrammed\":true,\"podStatus\":{\"bolusPulsesRemaining\":1,\"podState\":13,\"lastSequenceNumber\":1,\"reservoirPulsesRemaining\":1020,\"activeAlerts\":0,\"pulsesDelivered\":20,\"programStatus\":\"Basal\",\"timeSinceActivationInMins\":1,\"receivedAt\":\(Date().timeIntervalSinceReferenceDate),\"dataCorrupted\":false,\"isOcclusionAlertActive\":false}}"
-        return try! decoder.decode(PendingRetryResult.self, from: json.data(using: .utf8)!)
+        return PendingRetryResult(status: MockPodStatus.normal, hasPendingCommandProgrammed: true)
     }
 
     public static var wasNotProgrammed: PendingRetryResult {
-        let decoder = JSONDecoder()
-        let json = "{\"hasPendingCommandProgrammed\":false,\"podStatus\":{\"bolusPulsesRemaining\":1,\"podState\":13,\"lastSequenceNumber\":1,\"reservoirPulsesRemaining\":1020,\"activeAlerts\":0,\"pulsesDelivered\":20,\"programStatus\":\"Basal\",\"timeSinceActivationInMins\":1,\"receivedAt\":\(Date().timeIntervalSinceReferenceDate),\"dataCorrupted\":false,\"isOcclusionAlertActive\":false}}"
-        return try! decoder.decode(PendingRetryResult.self, from: json.data(using: .utf8)!)
+        return PendingRetryResult(status: MockPodStatus.normal, hasPendingCommandProgrammed: false)
     }
 }
 

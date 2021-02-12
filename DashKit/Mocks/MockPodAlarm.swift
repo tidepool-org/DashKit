@@ -59,7 +59,7 @@ public struct MockPodAlarm: PodAlarmDetail {
             alarmCode: .occlusion,
             alarmDescription: "Occlusion",
             podStatus: MockPodStatus.normal,
-            occlusionType: .stallDuringRuntime,
+            occlusionType: .stallDuringStartupWire1TimingOut,
             didErrorOccuredFetchingBolusInfo: false,
             wasBolusActiveWhenPodAlarmed: false,
             podStateWhenPodAlarmed: .runningAboveMinVolume,

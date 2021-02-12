@@ -24,7 +24,7 @@ class MockRegistrationManager: PDMRegistrator {
     
     func startRegistration(phoneNumber: String, completion: @escaping (RegistrationStatus) -> ()) {
         // not used
-        completion(.error)
+        completion(.invalidConfiguration)
     }
     
     func startRegistration(completion: @escaping (RegistrationStatus) -> ()) {

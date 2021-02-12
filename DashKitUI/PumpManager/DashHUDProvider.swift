@@ -99,7 +99,24 @@ internal class DashHUDProvider: NSObject, HUDProvider {
             return
         }
 
-        let reservoirAlertState: ReservoirAlertState = pumpManager.isReservoirLow ? .lowReservoir : .ok
+        let reservoirAlertState: ReservoirAlertState
+        
+        if let reservoirLevel = pumpManager.reservoirLevel {
+            switch reservoirLevel {
+            case .aboveThreshold:
+                reservoirAlertState = .ok
+            case .valid(let amount):
+                if amount > Pod.defaultLowReservoirLimit {
+                    reservoirAlertState = .ok
+                } else if amount <= 0 {
+                    reservoirAlertState = .empty
+                } else {
+                    reservoirAlertState = .lowReservoir
+                }
+            }
+        } else {
+            reservoirAlertState = .ok
+        }
 
         reservoirView.update(level: pumpManager.reservoirLevel, at: lastStatusDate, reservoirAlertState: reservoirAlertState)
     }
