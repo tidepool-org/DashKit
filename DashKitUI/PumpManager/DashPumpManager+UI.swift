@@ -14,26 +14,26 @@ import SwiftUI
 
 extension DashPumpManager: PumpManagerUI {
 
-    static public func setupViewController(insulinTintColor: Color, guidanceColors: GuidanceColors) -> (UIViewController & PumpManagerSetupViewController & CompletionNotifying)? {
-        let vc = DashUICoordinator(insulinTintColor: insulinTintColor, guidanceColors: guidanceColors)
+    public static func setupViewController(initialSettings settings: PumpManagerSetupSettings, colorPalette: LoopUIColorPalette) -> SetupUIResult<UIViewController & PumpManagerCreateNotifying & PumpManagerOnboardNotifying & CompletionNotifying, PumpManagerUI> {
+        let vc = DashUICoordinator(colorPalette: colorPalette)
         vc.pumpManagerType = self
-        return vc
+        return .userInteractionRequired(vc)
     }
 
-    public func settingsViewController(insulinTintColor: Color, guidanceColors: GuidanceColors) -> (UIViewController & CompletionNotifying) {
-        return DashUICoordinator(pumpManager: self, insulinTintColor: insulinTintColor, guidanceColors: guidanceColors)
+    public func settingsViewController(colorPalette: LoopUIColorPalette) -> (UIViewController & PumpManagerOnboardNotifying & CompletionNotifying) {
+        return DashUICoordinator(pumpManager: self, colorPalette: colorPalette)
     }
 
-    public func deliveryUncertaintyRecoveryViewController(insulinTintColor: Color, guidanceColors: GuidanceColors) -> (UIViewController & CompletionNotifying) {
-        return DashUICoordinator(pumpManager: self, insulinTintColor: insulinTintColor, guidanceColors: guidanceColors)
+    public func deliveryUncertaintyRecoveryViewController(colorPalette: LoopUIColorPalette) -> (UIViewController & CompletionNotifying) {
+        return DashUICoordinator(pumpManager: self, colorPalette: colorPalette)
     }
     
     public var smallImage: UIImage? {
         return UIImage(named: "Pod", in: Bundle(for: DashSettingsViewModel.self), compatibleWith: nil)!
     }
 
-    public func hudProvider(insulinTintColor: Color, guidanceColors: GuidanceColors) -> HUDProvider? {
-        return DashHUDProvider(pumpManager: self, insulinTintColor: insulinTintColor, guidanceColors: guidanceColors)
+    public func hudProvider(colorPalette: LoopUIColorPalette) -> HUDProvider? {
+        return DashHUDProvider(pumpManager: self, colorPalette: colorPalette)
     }
 
     public static func createHUDView(rawValue: HUDProvider.HUDViewRawState) -> LevelHUDView? {

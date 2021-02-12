@@ -35,6 +35,8 @@ open class DashPumpManager: PumpManager {
     
     public let localizedTitle = LocalizedString("Omnipod 5", comment: "Generic title of the omnipod 5 pump manager")
     
+    public let isOnboarded = true // TODO: Update DashPumpManager to set isOnboarded to true when actually ready for use (otherwise false).
+
     public var lastReconciliation: Date? {
         return dateGenerator()
     }
