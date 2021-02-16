@@ -306,7 +306,8 @@ struct DashSettingsView: View  {
 
             Section(header: FrameworkLocalText("Configuration", comment: "Section header for configuration section").font(.headline).foregroundColor(Color.primary))
             {
-                NavigationLink(destination: Text("Not Implemented Yet")) {
+                NavigationLink(destination: NotificationSettingsView(dateFormatter: self.viewModel.dateFormatter, expirationReminderDefault: self.$viewModel.expirationReminderDefault, scheduledReminderDate: self.$viewModel.expirationReminderDate, lowReservoirAlertValue: self.$viewModel.lowReservoirAlertValue))
+                {
                     FrameworkLocalText("Notification Settings", comment: "Text for pod details disclosure row").foregroundColor(Color.primary)
                 }
 

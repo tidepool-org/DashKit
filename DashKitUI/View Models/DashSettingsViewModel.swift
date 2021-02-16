@@ -27,6 +27,15 @@ class DashSettingsViewModel: ObservableObject {
     @Published var lifeState: PodLifeState
     
     @Published var activatedAt: Date?
+
+    // Expiration reminder date for current pod
+    @Published var expirationReminderDate: Date?
+
+    // Hours before expiration
+    @Published var expirationReminderDefault: Int
+    
+    // Units to alert at
+    @Published var lowReservoirAlertValue: Int
     
     @Published var basalDeliveryState: PumpManagerStatus.BasalDeliveryState?
 
@@ -112,6 +121,9 @@ class DashSettingsViewModel: ObservableObject {
         basalDeliveryState = pumpManager.status.basalDeliveryState
         basalDeliveryRate = self.pumpManager.basalDeliveryRate
         reservoirLevel = self.pumpManager.reservoirLevel
+        expirationReminderDate = self.pumpManager.state.expirationReminderDate
+        expirationReminderDefault = 2
+        lowReservoirAlertValue = 10
         pumpManager.addPodStatusObserver(self, queue: DispatchQueue.main)
     }
     

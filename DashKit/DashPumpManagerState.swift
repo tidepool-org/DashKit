@@ -39,6 +39,10 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
 
     public var lastStatusDate: Date?
     
+    public var expirationReminderDate: Date?
+    
+    public var defaultExpirationReminderOffset = Pod.defaultExpirationReminderOffset
+    
     public var alarmCode: AlarmCode?
     
     public var lastPodCommState: PodCommState
@@ -188,6 +192,10 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
         } else {
             self.lastPodCommState = .noPod
         }
+        
+        self.expirationReminderDate = rawValue["expirationReminderDate"] as? Date
+        
+        self.defaultExpirationReminderOffset = rawValue["defaultExpirationReminderOffset"] as? TimeInterval ?? Pod.defaultExpirationReminderOffset
     }
 
     public var rawValue: RawValue {
@@ -211,6 +219,8 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
         rawValue["unfinalizedTempBasal"] = unfinalizedTempBasal?.rawValue
         rawValue["alarmCode"] = alarmCode?.rawValue
         rawValue["pendingCommand"] = pendingCommand?.rawValue
+        rawValue["expirationReminderDate"] =  expirationReminderDate
+        rawValue["defaultExpirationReminderOffset"] = defaultExpirationReminderOffset
         
         return rawValue
     }

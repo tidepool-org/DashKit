@@ -53,6 +53,9 @@ public struct Pod {
     // Default low reservoir alert limit in Units
     public static let defaultLowReservoirLimit: Double = 10
     
+    // Default expiration reminder offset
+    public static let defaultExpirationReminderOffset = TimeInterval(hours: 4)
+    
     // Support phone number (TODO: get from SDK?)
     public static let supportPhoneNumber: String = "1-800-591-3455"
 }
