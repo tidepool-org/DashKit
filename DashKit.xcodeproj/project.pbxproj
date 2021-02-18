@@ -64,6 +64,7 @@
 		C12C9C83229EDB7B00FF7632 /* InsulinStatusTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12C9C82229EDB7B00FF7632 /* InsulinStatusTableViewCell.swift */; };
 		C1344DE22304CE2B00973BE3 /* TimeInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D11422692BDE00D63775 /* TimeInterval.swift */; };
 		C134E91924645D5100DB95AF /* MockPodVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = C134E91824645D5100DB95AF /* MockPodVersion.swift */; };
+		C135D58825DDC0A8009573A3 /* ScheduledExpirationReminderEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C135D58725DDC0A8009573A3 /* ScheduledExpirationReminderEditView.swift */; };
 		C136AA5823117A2F008A320D /* OSLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ACF43E22A1F9A700F7DDB4 /* OSLog.swift */; };
 		C13DA2AE24F5C3530098BB29 /* UncertaintyRecoveredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C13DA2AD24F5C3530098BB29 /* UncertaintyRecoveredView.swift */; };
 		C14386B9244F59800070B0FF /* BasalStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14386B8244F59800070B0FF /* BasalStateView.swift */; };
@@ -274,6 +275,7 @@
 		C12AA74A231870160025FD45 /* ConnectionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionState.swift; sourceTree = "<group>"; };
 		C12C9C82229EDB7B00FF7632 /* InsulinStatusTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsulinStatusTableViewCell.swift; sourceTree = "<group>"; };
 		C134E91824645D5100DB95AF /* MockPodVersion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPodVersion.swift; sourceTree = "<group>"; };
+		C135D58725DDC0A8009573A3 /* ScheduledExpirationReminderEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduledExpirationReminderEditView.swift; sourceTree = "<group>"; };
 		C13DA2AD24F5C3530098BB29 /* UncertaintyRecoveredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UncertaintyRecoveredView.swift; sourceTree = "<group>"; };
 		C14386B8244F59800070B0FF /* BasalStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasalStateView.swift; sourceTree = "<group>"; };
 		C1467BD1246D7E9500B97F77 /* BasalProgramTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasalProgramTests.swift; sourceTree = "<group>"; };
@@ -484,6 +486,7 @@
 				C196751424F1CD6300118EC4 /* MockPodSettingsView.swift */,
 				C13DA2AD24F5C3530098BB29 /* UncertaintyRecoveredView.swift */,
 				C155759725CB552D008ADD91 /* NotificationSettingsView.swift */,
+				C135D58725DDC0A8009573A3 /* ScheduledExpirationReminderEditView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1070,6 +1073,7 @@
 				C168F18A244616E1002447D5 /* MockPodDetails.swift in Sources */,
 				C1201E3F23EE1B03002DA84A /* RegisterView.swift in Sources */,
 				C1ED19D623F9C63E00D55049 /* InsertCannulaView.swift in Sources */,
+				C135D58825DDC0A8009573A3 /* ScheduledExpirationReminderEditView.swift in Sources */,
 				C168F18624460A0A002447D5 /* PodDetailsView.swift in Sources */,
 				C1ACF43722A04B4800F7DDB4 /* NumberFormatter.swift in Sources */,
 				C12A06AA23F2EFED0052195C /* MockRegistrationManager.swift in Sources */,

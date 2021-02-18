@@ -154,13 +154,13 @@ struct MockPodSettingsView: View {
     var sendProgramErrorPicker: some View {
         let sendProgramErrorBinding = Binding<Int>(get: {
             let idx = PodCommError.simulatedErrors.firstIndex {
-                $0?.localizedDescription ?? "" == self.model.mockPodCommManager.deliveryProgramError?.localizedDescription ?? ""
+                $0?.localizedDescription ?? "" == self.model.mockPodCommManager.nextCommsError?.localizedDescription ?? ""
             }
             return idx ?? 0
         }, set: {
-            self.model.mockPodCommManager.deliveryProgramError = PodCommError.simulatedErrors[$0]
+            self.model.mockPodCommManager.nextCommsError = PodCommError.simulatedErrors[$0]
         })
-        return Picker(selection: sendProgramErrorBinding, label: Text("Delivery Program Error")) {
+        return Picker(selection: sendProgramErrorBinding, label: Text("Next Comms Error")) {
             ForEach(0 ..< PodCommError.simulatedErrors.count) {
                 Text(self.podCommErrorFormatted(PodCommError.simulatedErrors[$0]))
             }

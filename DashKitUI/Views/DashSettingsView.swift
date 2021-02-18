@@ -306,7 +306,14 @@ struct DashSettingsView: View  {
 
             Section(header: FrameworkLocalText("Configuration", comment: "Section header for configuration section").font(.headline).foregroundColor(Color.primary))
             {
-                NavigationLink(destination: NotificationSettingsView(dateFormatter: self.viewModel.dateFormatter, expirationReminderDefault: self.$viewModel.expirationReminderDefault, scheduledReminderDate: self.$viewModel.expirationReminderDate, lowReservoirAlertValue: self.$viewModel.lowReservoirAlertValue))
+                NavigationLink(destination:
+                    NotificationSettingsView(
+                        dateFormatter: self.viewModel.dateFormatter,
+                        expirationReminderDefault: self.$viewModel.expirationReminderDefault,
+                        scheduledReminderDate: self.viewModel.expirationReminderDate,
+                        allowedReminderDateRange: self.viewModel.allowedExpirationReminderDateRange,
+                        lowReservoirAlertValue: self.$viewModel.lowReservoirAlertValue,
+                        onSaveScheduledExpirationReminder: self.viewModel.saveScheduledExpirationReminder))
                 {
                     FrameworkLocalText("Notification Settings", comment: "Text for pod details disclosure row").foregroundColor(Color.primary)
                 }

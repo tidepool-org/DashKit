@@ -175,7 +175,7 @@ class DashPumpManagerTests: XCTestCase {
         pumpManagerDelegateStateUpdateExpectation = expectation(description: "pumpmanager delegate state updates")
         pumpManagerDelegateStateUpdateExpectation?.expectedFulfillmentCount = 2
 
-        mockPodCommManager.deliveryProgramError = .podNotAvailable
+        mockPodCommManager.nextCommsError = .podNotAvailable
 
         pumpManager.enactBolus(units: 1, at: startDate) { (result) in
             bolusCallbacks.fulfill()
@@ -323,7 +323,7 @@ class DashPumpManagerTests: XCTestCase {
         let callbackExpectation = expectation(description: "set basal scheduled callback")
         let items = [RepeatingScheduleValue(startTime: 0, value: 1.0), RepeatingScheduleValue(startTime: .hours(12), value: 2.0)]
         
-        mockPodCommManager.deliveryProgramError = .podNotAvailable
+        mockPodCommManager.nextCommsError = .podNotAvailable
 
         pumpManager.setBasalSchedule(dailyItems: items) { (error) in
             callbackExpectation.fulfill()
@@ -465,7 +465,7 @@ class DashPumpManagerTests: XCTestCase {
     }
     
     func testUnacknowledgedCommandOnBolusWasProgrammed() {
-        mockPodCommManager.deliveryProgramError = .unacknowledgedCommandPendingRetry
+        mockPodCommManager.nextCommsError = .unacknowledgedCommandPendingRetry
         let bolusCompletion = expectation(description: "enactBolus completed")
 
         pumpManagerStatusUpdateExpectation = expectation(description: "pumpmanager status updates")
@@ -507,7 +507,7 @@ class DashPumpManagerTests: XCTestCase {
     }
     
     func testUnacknowledgedBolusWasNotProgrammed() {
-        mockPodCommManager.deliveryProgramError = .unacknowledgedCommandPendingRetry
+        mockPodCommManager.nextCommsError = .unacknowledgedCommandPendingRetry
         let bolusCompletion = expectation(description: "enactBolus completed")
 
         pumpManager.enactBolus(units: 1, at: Date()) { (result) in
@@ -544,7 +544,7 @@ class DashPumpManagerTests: XCTestCase {
     }
     
     func testUnacknowledgedBolusResolvedWithUncertainty() {
-        mockPodCommManager.deliveryProgramError = .unacknowledgedCommandPendingRetry
+        mockPodCommManager.nextCommsError = .unacknowledgedCommandPendingRetry
         let bolusCompletion = expectation(description: "enactBolus completed")
         
         pumpManager.enactBolus(units: 1, at: Date()) { (result) in
@@ -591,7 +591,7 @@ class DashPumpManagerTests: XCTestCase {
     }
 
     func testUnacknowledgedHighTempBasalResolvedWithUncertainty() {
-        mockPodCommManager.deliveryProgramError = .unacknowledgedCommandPendingRetry
+        mockPodCommManager.nextCommsError = .unacknowledgedCommandPendingRetry
         let tempBasalCompletion = expectation(description: "enactTempBasal completed")
         
         // scheduled basal rate is 1U/hr (see setUp())
@@ -639,7 +639,7 @@ class DashPumpManagerTests: XCTestCase {
     }
     
     func testUnacknowledgedLowTempBasalResolvedWithUncertainty() {
-        mockPodCommManager.deliveryProgramError = .unacknowledgedCommandPendingRetry
+        mockPodCommManager.nextCommsError = .unacknowledgedCommandPendingRetry
         let tempBasalCompletion = expectation(description: "enactTempBasal completed")
         
         // scheduled basal rate is 1U/hr (see setUp())
@@ -694,7 +694,7 @@ class DashPumpManagerTests: XCTestCase {
 
         XCTAssert(pumpManager.status.basalDeliveryState!.isSuspended)
 
-        mockPodCommManager.deliveryProgramError = .unacknowledgedCommandPendingRetry
+        mockPodCommManager.nextCommsError = .unacknowledgedCommandPendingRetry
         let resumeCompletion = expectation(description: "resume completed")
         
         pumpManager.resumeDelivery { (error) in

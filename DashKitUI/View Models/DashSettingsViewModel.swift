@@ -32,7 +32,11 @@ class DashSettingsViewModel: ObservableObject {
     @Published var expirationReminderDate: Date?
 
     // Hours before expiration
-    @Published var expirationReminderDefault: Int
+    @Published var expirationReminderDefault: Int {
+        didSet {
+            self.pumpManager.defaultExpirationReminderOffset = .hours(Double(expirationReminderDefault))
+        }
+    }
     
     // Units to alert at
     @Published var lowReservoirAlertValue: Int
@@ -109,6 +113,16 @@ class DashSettingsViewModel: ObservableObject {
     
     let reservoirVolumeFormatter = QuantityFormatter(for: .internationalUnit())
     
+    var allowedExpirationReminderDateRange: ClosedRange<Date> {
+        if let expiration = pumpManager.podExpiresAt {
+            let earliest = expiration.addingTimeInterval(.hours(-24))
+            let latest = expiration.addingTimeInterval(.hours(-1))
+            return earliest...latest
+        } else {
+            return Calendar.current.date(byAdding: .day, value: -2, to: Date())!...Date()
+        }
+    }
+    
     var didFinish: (() -> Void)?
     
     private let pumpManager: DashPumpManager
@@ -122,7 +136,7 @@ class DashSettingsViewModel: ObservableObject {
         basalDeliveryRate = self.pumpManager.basalDeliveryRate
         reservoirLevel = self.pumpManager.reservoirLevel
         expirationReminderDate = self.pumpManager.state.expirationReminderDate
-        expirationReminderDefault = 2
+        expirationReminderDefault = Int(self.pumpManager.defaultExpirationReminderOffset.hours)
         lowReservoirAlertValue = 10
         pumpManager.addPodStatusObserver(self, queue: DispatchQueue.main)
     }
@@ -163,6 +177,18 @@ class DashSettingsViewModel: ObservableObject {
         pumpManager.resumeInsulinDelivery { (error) in
             if let error = error {
                 self.activeAlert = .resumeError(error)
+            }
+        }
+    }
+    
+    func saveScheduledExpirationReminder(_ selectedDate: Date, _ completion: @escaping (Error?) -> Void) {
+        if let activatedAt = activatedAt {
+            let intervalBeforeExpiration = activatedAt.addingTimeInterval(Pod.lifetime).timeIntervalSince(selectedDate)
+            pumpManager.updateExpirationReminder(intervalBeforeExpiration) { (error) in
+                if error == nil {
+                    self.expirationReminderDate = selectedDate
+                }
+                completion(error)
             }
         }
     }

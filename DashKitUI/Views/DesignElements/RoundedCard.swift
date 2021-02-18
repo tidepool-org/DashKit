@@ -36,6 +36,38 @@ struct RoundedCardFooter: View {
     }
 }
 
+public struct RoundedCardValueRow: View {
+    var label: String
+    var value: String
+    var highlightValue: Bool
+    var disclosure: Bool
+
+    public init(label: String, value: String, highlightValue: Bool = false, disclosure: Bool = false) {
+        self.label = label
+        self.value = value
+        self.highlightValue = highlightValue
+        self.disclosure = disclosure
+    }
+    
+    public var body: some View {
+        HStack {
+            Text(label)
+                .fixedSize(horizontal: false, vertical: true)
+                .foregroundColor(.primary)
+            Spacer()
+            Text(value)
+                .fixedSize(horizontal: true, vertical: true)
+                .foregroundColor(highlightValue ? .accentColor : .secondary)
+            if disclosure {
+                Image(systemName: "chevron.right")
+                    .imageScale(.small)
+                    .font(.headline)
+                    .foregroundColor(.secondary)
+                    .opacity(0.5)
+            }
+        }
+    }
+}
 
 struct RoundedCard<Content: View>: View {
     var content: () -> Content
@@ -72,13 +104,20 @@ struct RoundedCard<Content: View>: View {
 
 struct RoundedCardScrollView<Content: View>: View {
     var content: () -> Content
+    var title: String?
     
-    init(@ViewBuilder content: @escaping () -> Content) {
+    init(title: String? = nil, @ViewBuilder content: @escaping () -> Content) {
+        self.title = title
         self.content = content
     }
     
     var body: some View {
         ScrollView {
+            if let title = title {
+                Text(title)
+                    .font(Font.largeTitle.weight(.bold))
+                    .padding(.top)
+            }
             VStack(alignment: .leading, content: content)
                 .padding()
         }
