@@ -51,7 +51,7 @@ public struct Pod {
     public static let estimatedCannulaInsertionDuration = TimeInterval(10)
     
     // Default low reservoir alert limit in Units
-    public static let defaultLowReservoirLimit: Double = 10
+    public static let defaultLowReservoirReminder: Double = 10
     
     // Default expiration reminder offset
     public static let defaultExpirationReminderOffset = TimeInterval(hours: 4)

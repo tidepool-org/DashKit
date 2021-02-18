@@ -114,9 +114,13 @@ struct RoundedCardScrollView<Content: View>: View {
     var body: some View {
         ScrollView {
             if let title = title {
-                Text(title)
-                    .font(Font.largeTitle.weight(.bold))
-                    .padding(.top)
+                HStack {
+                    Text(title)
+                        .font(Font.largeTitle.weight(.bold))
+                        .padding(.top)
+                    Spacer()
+                }
+                .padding([.leading, .trailing])
             }
             VStack(alignment: .leading, content: content)
                 .padding()

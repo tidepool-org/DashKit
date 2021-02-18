@@ -7,24 +7,29 @@
 //
 
 import SwiftUI
+import LoopKit
 import LoopKitUI
+import HealthKit
 
 struct NotificationSettingsView: View {
     
     var dateFormatter: DateFormatter
     
     @Binding var expirationReminderDefault: Int
+    
     @State private var showingHourPicker: Bool = false
     
     var scheduledReminderDate: Date?
-    @State private var showingDatePicker: Bool = false
     
     var allowedReminderDateRange: ClosedRange<Date>
     
-    @Binding var lowReservoirAlertValue: Int
-    @State private var showingLowReservoirAlertPicker: Bool = false
+    var lowReservoirReminderValue: Int
     
     var onSaveScheduledExpirationReminder: ((_ selectedDate: Date, _ completion: @escaping (_ error: Error?) -> Void) -> Void)?
+    
+    var onSaveLowReservoirReminder: ((_ selectedValue: Int, _ completion: @escaping (_ error: Error?) -> Void) -> Void)?
+    
+    var insulinQuantityFormatter = QuantityFormatter(for: .internationalUnit())
 
     var body: some View {
         RoundedCardScrollView {
@@ -40,7 +45,7 @@ struct NotificationSettingsView: View {
             }
 
             RoundedCard(footer: "The App notifies you when the amount of insulin in the Pod reaches this level.") {
-                lowReservoirValuePicker
+                lowReservoirValueRow
             }
 
             RoundedCardTitle("Critical Alerts")
@@ -91,31 +96,29 @@ struct NotificationSettingsView: View {
             )
         }
     }
-    
-    var lowReservoirValuePicker: some View {
-        VStack {
-            HStack {
-                Text("Low Reservoir Reminder")
-                Spacer()
-                Button("\(lowReservoirAlertValue) U") {
-                    withAnimation {
-                        showingLowReservoirAlertPicker.toggle()
-                    }
-                }
-            }
-            if showingLowReservoirAlertPicker {
-                Picker("", selection: $lowReservoirAlertValue) {
-                    ForEach(1..<50, id: \.self) { value in
-                        Text("\(value) U")
-                    }
-                }.pickerStyle(WheelPickerStyle())
-            }
+
+    @State private var lowReservoirReminderEditViewIsShown: Bool = false
+
+    var lowReservoirValueRow: some View {
+        NavigationLink(
+            destination: LowReservoirReminderEditView(
+                lowReservoirReminderValue: lowReservoirReminderValue,
+                insulinQuantityFormatter: insulinQuantityFormatter,
+                onSave: onSaveLowReservoirReminder,
+                onFinish: { lowReservoirReminderEditViewIsShown = false }),
+            isActive: $lowReservoirReminderEditViewIsShown)
+        {
+            RoundedCardValueRow(
+                label: LocalizedString("Low Reservoir Reminder", comment: "Label for low reservoir reminder row"),
+                value: insulinQuantityFormatter.string(from: HKQuantity(unit: .internationalUnit(), doubleValue: Double(lowReservoirReminderValue)), for: .internationalUnit()) ?? "",
+                highlightValue: false,
+                disclosure: true)
         }
     }
 }
 
 struct NotificationSettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        NotificationSettingsView(dateFormatter: DateFormatter(), expirationReminderDefault: .constant(2), scheduledReminderDate: Date(), allowedReminderDateRange: Calendar.current.date(byAdding: .day, value: -2, to: Date())!...Date(), lowReservoirAlertValue: .constant(10))
+        NotificationSettingsView(dateFormatter: DateFormatter(), expirationReminderDefault: .constant(2), scheduledReminderDate: Date(), allowedReminderDateRange: Calendar.current.date(byAdding: .day, value: -2, to: Date())!...Date(), lowReservoirReminderValue: 20)
     }
 }

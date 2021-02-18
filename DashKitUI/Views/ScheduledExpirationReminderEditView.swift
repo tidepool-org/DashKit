@@ -37,7 +37,7 @@ struct ScheduledExpirationReminderEditView: View {
     
     var content: some View {
         VStack {
-            RoundedCardScrollView(title: "Scheduled Reminder") {
+            RoundedCardScrollView(title: LocalizedString("Scheduled Reminder", comment: "Title for scheduled expiration reminder edit page")) {
                 RoundedCard {
                     RoundedCardValueRow(
                         label: LocalizedString("Scheduled Reminder", comment: "Label for scheduled expiration reminder row"),

@@ -192,6 +192,15 @@ class DashSettingsViewModel: ObservableObject {
             }
         }
     }
+
+    func saveLowReservoirReminder(_ selectedValue: Int, _ completion: @escaping (Error?) -> Void) {
+        pumpManager.updateLowReservoirReminder(selectedValue) { (error) in
+            if error == nil {
+                self.lowReservoirAlertValue = selectedValue
+            }
+            completion(error)
+        }
+    }
     
     var podOk: Bool {
         guard basalDeliveryState != nil else { return false }

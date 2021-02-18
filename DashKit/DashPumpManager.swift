@@ -608,6 +608,25 @@ open class DashPumpManager: PumpManager {
             }
         }
     }
+    
+    public func updateLowReservoirReminder(_ value: Int, completion: @escaping (Error?) -> Void) {
+        guard let newAlert = try? LowReservoirAlert(reservoirVolumeBelow: Int(Double(value) * Pod.podSDKInsulinMultiplier)) else {
+            completion(PodCommError.invalidAlertSetting)
+            return
+        }
+        podCommManager.updateAlertSetting(alertSetting: newAlert) { (result) in
+            switch result {
+            case .failure(let error):
+                completion(error)
+            case .success(let status):
+                self.mutateState({ (state) in
+                    state.lowReservoirReminderValue = Double(value)
+                    state.updateFromPodStatus(status: status)
+                })
+                completion(nil)
+            }
+        }
+    }
 
     private func basalDeliveryState(for state: DashPumpManagerState) -> PumpManagerStatus.BasalDeliveryState? {
         if state.alarmCode != nil {

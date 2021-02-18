@@ -42,7 +42,9 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
     public var expirationReminderDate: Date?
     
     public var defaultExpirationReminderOffset = Pod.defaultExpirationReminderOffset
-    
+
+    public var lowReservoirReminderValue: Double
+
     public var alarmCode: AlarmCode?
     
     public var lastPodCommState: PodCommState
@@ -109,6 +111,7 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
         self.maximumTempBasalRate = maximumTempBasalRate
         self.activeAlerts = []
         self.lastPodCommState = lastPodCommState
+        self.lowReservoirReminderValue = Pod.defaultLowReservoirReminder
     }
 
 
@@ -196,6 +199,8 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
         self.expirationReminderDate = rawValue["expirationReminderDate"] as? Date
         
         self.defaultExpirationReminderOffset = rawValue["defaultExpirationReminderOffset"] as? TimeInterval ?? Pod.defaultExpirationReminderOffset
+        
+        self.lowReservoirReminderValue = rawValue["lowReservoirReminderValue"] as? Double ?? Pod.defaultLowReservoirReminder
     }
 
     public var rawValue: RawValue {
@@ -206,6 +211,7 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
             "basalProgram": basalProgram.rawValue,
             "maximumTempBasalRate": maximumTempBasalRate,
             "activeAlerts": activeAlerts.rawValue,
+            "lowReservoirReminderValue": lowReservoirReminderValue
         ]
         
         rawValue["lastPodCommState"] = try? JSONEncoder().encode(lastPodCommState)
@@ -259,7 +265,9 @@ extension DashPumpManagerState: CustomDebugStringConvertible {
             "* reservoirLevel: \(String(describing: reservoirLevel))",
             "* lastStatusDate: \(String(describing: lastStatusDate))",
             "* pendingCommand: \(String(describing: pendingCommand))",
-            "* connectionState: \(String(describing: connectionState))"
+            "* connectionState: \(String(describing: connectionState))",
+            "* lowReservoirReminderValue: \(lowReservoirReminderValue)",
+            "* expirationReminderDate: \(String(describing: expirationReminderDate))",
             ].joined(separator: "\n")
     }
 }

@@ -129,6 +129,7 @@
 		C1DFF9212417C96E00EAC44E /* PodDeactivater.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1DFF9202417C96D00EAC44E /* PodDeactivater.swift */; };
 		C1DFF9232417C98700EAC44E /* CannulaInserter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1DFF9222417C98700EAC44E /* CannulaInserter.swift */; };
 		C1DFF9252417CA5B00EAC44E /* MockCannulaInserter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1DFF9242417CA5B00EAC44E /* MockCannulaInserter.swift */; };
+		C1E2561E25DEF855005F609E /* LowReservoirReminderEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E2561D25DEF855005F609E /* LowReservoirReminderEditView.swift */; };
 		C1E753E3226928F700A0BC48 /* DashKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; };
 		C1E753E8226928F700A0BC48 /* DashPumpManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E753E7226928F700A0BC48 /* DashPumpManagerTests.swift */; };
 		C1E753EA226928F700A0BC48 /* DashKit.h in Headers */ = {isa = PBXBuildFile; fileRef = C1E753DC226928F700A0BC48 /* DashKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -337,6 +338,7 @@
 		C1DFF9202417C96D00EAC44E /* PodDeactivater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodDeactivater.swift; sourceTree = "<group>"; };
 		C1DFF9222417C98700EAC44E /* CannulaInserter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CannulaInserter.swift; sourceTree = "<group>"; };
 		C1DFF9242417CA5B00EAC44E /* MockCannulaInserter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCannulaInserter.swift; sourceTree = "<group>"; };
+		C1E2561D25DEF855005F609E /* LowReservoirReminderEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LowReservoirReminderEditView.swift; sourceTree = "<group>"; };
 		C1E753D9226928F700A0BC48 /* DashKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DashKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1E753DC226928F700A0BC48 /* DashKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DashKit.h; sourceTree = "<group>"; };
 		C1E753DD226928F700A0BC48 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -487,6 +489,7 @@
 				C13DA2AD24F5C3530098BB29 /* UncertaintyRecoveredView.swift */,
 				C155759725CB552D008ADD91 /* NotificationSettingsView.swift */,
 				C135D58725DDC0A8009573A3 /* ScheduledExpirationReminderEditView.swift */,
+				C1E2561D25DEF855005F609E /* LowReservoirReminderEditView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1051,6 +1054,7 @@
 				C1ACF43D22A1D00500F7DDB4 /* PodExpirationTableViewCell.swift in Sources */,
 				C1201E3123EDF498002DA84A /* Image.swift in Sources */,
 				C1941151228DBF2100E886DD /* ExpirationReminderDateTableViewCell.swift in Sources */,
+				C1E2561E25DEF855005F609E /* LowReservoirReminderEditView.swift in Sources */,
 				C1562F8924169C65006952D6 /* DeactivatePodViewModel.swift in Sources */,
 				C1C72D8B241568E700DB224B /* DashSettingsView.swift in Sources */,
 				C12C9C83229EDB7B00FF7632 /* InsulinStatusTableViewCell.swift in Sources */,
