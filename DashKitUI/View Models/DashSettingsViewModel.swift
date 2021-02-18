@@ -137,7 +137,7 @@ class DashSettingsViewModel: ObservableObject {
         reservoirLevel = self.pumpManager.reservoirLevel
         expirationReminderDate = self.pumpManager.state.expirationReminderDate
         expirationReminderDefault = Int(self.pumpManager.defaultExpirationReminderOffset.hours)
-        lowReservoirAlertValue = 10
+        lowReservoirAlertValue = Int(self.pumpManager.state.lowReservoirReminderValue)
         pumpManager.addPodStatusObserver(self, queue: DispatchQueue.main)
     }
     
