@@ -23,9 +23,14 @@ extension DashPumpManager: PodPairer {
             eventListener(.error(.invalidAlertSetting))
             return
         }
+        
+        guard let lowReservoirAlert = try? LowReservoirAlert(reservoirVolumeBelow: Int(Double(state.lowReservoirReminderValue) * Pod.podSDKInsulinMultiplier)) else {
+            eventListener(.error(.invalidAlertSetting))
+            return
+        }
+        
         startPodActivation(
-            // TODO: Configurable
-            lowReservoirAlert: try! LowReservoirAlert(reservoirVolumeBelow: Int(Pod.defaultLowReservoirReminder * Pod.podSDKInsulinMultiplier)),
+            lowReservoirAlert: lowReservoirAlert,
             podExpirationAlert: podExpirationAlert,
             eventListener: eventListener)
     }

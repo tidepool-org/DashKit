@@ -614,6 +614,15 @@ open class DashPumpManager: PumpManager {
             completion(PodCommError.invalidAlertSetting)
             return
         }
+        
+        if podCommManager.podCommState == .noPod {
+            self.mutateState({ (state) in
+                state.lowReservoirReminderValue = Double(value)
+            })
+            completion(nil)
+            return
+        }
+        
         podCommManager.updateAlertSetting(alertSetting: newAlert) { (result) in
             switch result {
             case .failure(let error):
