@@ -63,6 +63,8 @@ class DashSettingsViewModel: ObservableObject {
     
     @Published var reservoirLevel: ReservoirLevel?
     
+    @Published var reservoirLevelHighlightState: ReservoirLevelHighlightState?
+    
     var podCommManager: PodCommManagerProtocol {
         return pumpManager.unwrappedPodCommManager
     }
@@ -135,6 +137,7 @@ class DashSettingsViewModel: ObservableObject {
         basalDeliveryState = pumpManager.status.basalDeliveryState
         basalDeliveryRate = self.pumpManager.basalDeliveryRate
         reservoirLevel = self.pumpManager.reservoirLevel
+        reservoirLevelHighlightState = self.pumpManager.reservoirLevelHighlightState
         expirationReminderDate = self.pumpManager.state.expirationReminderDate
         expirationReminderDefault = Int(self.pumpManager.defaultExpirationReminderOffset.hours)
         lowReservoirAlertValue = Int(self.pumpManager.state.lowReservoirReminderValue)
@@ -244,6 +247,7 @@ extension DashSettingsViewModel: PodStatusObserver {
         basalDeliveryState = self.pumpManager.status.basalDeliveryState
         basalDeliveryRate = self.pumpManager.basalDeliveryRate
         reservoirLevel = self.pumpManager.reservoirLevel
+        reservoirLevelHighlightState = self.pumpManager.reservoirLevelHighlightState
     }
 }
 

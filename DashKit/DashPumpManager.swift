@@ -171,6 +171,25 @@ open class DashPumpManager: PumpManager {
         }
     }
     
+    public var reservoirLevelHighlightState: ReservoirLevelHighlightState? {
+        guard let reservoirLevel = reservoirLevel else {
+            return nil
+        }
+        
+        switch reservoirLevel {
+        case .aboveThreshold:
+            return .normal
+        case .valid(let value):
+            if value > state.lowReservoirReminderValue {
+                return .normal
+            } else if value > 0 {
+                return .warning
+            } else {
+                return .critical
+            }
+        }
+    }
+    
     private func pumpLifecycleProgress(for state: DashPumpManagerState) -> PumpManagerStatus.PumpLifecycleProgress? {
         switch state.lastPodCommState {
         // TODO: Handle active lifecycle progress
