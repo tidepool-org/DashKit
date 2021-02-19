@@ -306,7 +306,16 @@ struct DashSettingsView: View  {
 
             Section(header: FrameworkLocalText("Configuration", comment: "Section header for configuration section").font(.headline).foregroundColor(Color.primary))
             {
-                NavigationLink(destination: Text("Not Implemented Yet")) {
+                NavigationLink(destination:
+                    NotificationSettingsView(
+                        dateFormatter: self.viewModel.dateFormatter,
+                        expirationReminderDefault: self.$viewModel.expirationReminderDefault,
+                        scheduledReminderDate: self.viewModel.expirationReminderDate,
+                        allowedReminderDateRange: self.viewModel.allowedExpirationReminderDateRange,
+                        lowReservoirReminderValue: self.viewModel.lowReservoirAlertValue,
+                        onSaveScheduledExpirationReminder: self.viewModel.saveScheduledExpirationReminder,
+                        onSaveLowReservoirReminder: self.viewModel.saveLowReservoirReminder))
+                {
                     FrameworkLocalText("Notification Settings", comment: "Text for pod details disclosure row").foregroundColor(Color.primary)
                 }
 
@@ -427,7 +436,7 @@ struct DashSettingsView: View  {
         case .aboveThreshold:
             return insulinTintColor
         case .valid(let value):
-            if value > Pod.defaultLowReservoirLimit {
+            if value > Pod.defaultLowReservoirReminder {
                 return insulinTintColor
             } else {
                 return guidanceColors.warning

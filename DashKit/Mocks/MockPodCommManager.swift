@@ -56,7 +56,7 @@ public class MockPodCommManager: PodCommManagerProtocol {
         }
         set {
             podStatus?.podCommState = newValue
-            self.dashPumpManager?.podCommManager(self, podCommStateDidChange: podCommState)
+            self.dashPumpManager?.podCommManager(self, podCommStateDidChange: newValue)
             notifyObservers()
         }
     }
@@ -77,7 +77,7 @@ public class MockPodCommManager: PodCommManagerProtocol {
         }
     }
 
-    public var deliveryProgramError: PodCommError?
+    public var nextCommsError: PodCommError?
 
     public var delegate: PodCommManagerDelegate?
 
@@ -113,6 +113,8 @@ public class MockPodCommManager: PodCommManagerProtocol {
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 7) {
                 self.dashPumpManager?.podCommManager(self, connectionStateDidChange: .connected)
+                // Start out with 100U
+                self.podStatus = MockPodStatus(activationDate: self.dateGenerator(), podState: .uninitialized, programStatus: ProgramStatus(rawValue: 0), activeAlerts: PodAlerts(rawValue: 128), bolusUnitsRemaining: 0, initialInsulinAmount: 100)
                 self.podCommState = .activating
                 eventListener(.event(.retrievingPodVersion))
             }
@@ -126,8 +128,7 @@ public class MockPodCommManager: PodCommManagerProtocol {
             }
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 11.5) {
-                // Start out with 100U
-                self.podStatus = MockPodStatus(activationDate: self.dateGenerator(), podState: .uidSet, programStatus: ProgramStatus(rawValue: 0), activeAlerts: PodAlerts(rawValue: 128), bolusUnitsRemaining: 0, initialInsulinAmount: 100)
+                self.podStatus?.podState = .uidSet
                 self.podStatus?.lowReservoirAlert = lowReservoirAlert
                 eventListener(.event(.podStatus(self.podStatus!)))
             }
@@ -268,7 +269,7 @@ public class MockPodCommManager: PodCommManagerProtocol {
     }
 
     public func discardPod(completion: @escaping (PodCommResult<Bool>) -> ()) {
-        deliveryProgramError = nil
+        nextCommsError = nil
         unacknowledgedCommandRetryResult = nil
         completion(.success(true))
     }
@@ -281,7 +282,7 @@ public class MockPodCommManager: PodCommManagerProtocol {
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
             self.setDeactivatedState()
-            self.deliveryProgramError = nil
+            self.nextCommsError = nil
             self.unacknowledgedCommandRetryResult = nil
             completion(.success(podStatus))
         }
@@ -339,10 +340,8 @@ public class MockPodCommManager: PodCommManagerProtocol {
             return
         }
         
-        if let error = deliveryProgramError {
-            if simulateDisconnectionOnUnacknowledgedCommand, case .unacknowledgedCommandPendingRetry = error {
-                disconnectFor(.minutes(1))
-            }
+        if let error = nextCommsError {
+            errorTriggered()
             completion(.failure(error))
         } else {
             DispatchQueue.main.asyncAfter(deadline: .now() + simulatedCommsDelay) {
@@ -377,10 +376,8 @@ public class MockPodCommManager: PodCommManagerProtocol {
             return
         }
         
-        if let error = deliveryProgramError {
-            if simulateDisconnectionOnUnacknowledgedCommand, case .unacknowledgedCommandPendingRetry = error {
-                disconnectFor(.minutes(1))
-            }
+        if let error = nextCommsError {
+            errorTriggered()
             completion(.failure(error))
         } else {
             DispatchQueue.main.asyncAfter(deadline: .now() + simulatedCommsDelay) {
@@ -407,8 +404,23 @@ public class MockPodCommManager: PodCommManagerProtocol {
             completion(.failure(.podIsNotActive))
             return
         }
-
-        completion(.success(podStatus))
+        if let error = nextCommsError {
+            errorTriggered()
+            completion(.failure(error))
+        } else {
+            DispatchQueue.main.asyncAfter(deadline: .now() + simulatedCommsDelay) {
+                completion(.success(podStatus))
+            }
+        }
+    }
+    
+    private func errorTriggered() {
+        if let error = nextCommsError {
+            if simulateDisconnectionOnUnacknowledgedCommand, case .unacknowledgedCommandPendingRetry = error {
+                disconnectFor(.minutes(1))
+            }
+            nextCommsError = nil
+        }
     }
 
     public func silenceAlerts(alert: PodAlerts, completion: @escaping (PodCommResult<PodStatus>) -> ()) {

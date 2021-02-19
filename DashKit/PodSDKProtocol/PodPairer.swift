@@ -19,11 +19,19 @@ public protocol PodPairer {
 
 extension DashPumpManager: PodPairer {
     public func pair(eventListener: @escaping (ActivationStatus<ActivationStep1Event>) -> ()) {
+        guard let podExpirationAlert = try? PodExpirationAlert(intervalBeforeExpiration: state.defaultExpirationReminderOffset) else {
+            eventListener(.error(.invalidAlertSetting))
+            return
+        }
+        
+        guard let lowReservoirAlert = try? LowReservoirAlert(reservoirVolumeBelow: Int(Double(state.lowReservoirReminderValue) * Pod.podSDKInsulinMultiplier)) else {
+            eventListener(.error(.invalidAlertSetting))
+            return
+        }
+        
         startPodActivation(
-            // TODO: Configurable
-            lowReservoirAlert: try! LowReservoirAlert(reservoirVolumeBelow: Int(Pod.defaultLowReservoirLimit * Pod.podSDKInsulinMultiplier)),
-            // TODO: Configurable
-            podExpirationAlert: try! PodExpirationAlert(intervalBeforeExpiration: 4 * 60 * 60),
+            lowReservoirAlert: lowReservoirAlert,
+            podExpirationAlert: podExpirationAlert,
             eventListener: eventListener)
     }
 }

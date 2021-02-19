@@ -106,7 +106,7 @@ internal class DashHUDProvider: NSObject, HUDProvider {
             case .aboveThreshold:
                 reservoirAlertState = .ok
             case .valid(let amount):
-                if amount > Pod.defaultLowReservoirLimit {
+                if amount > Pod.defaultLowReservoirReminder {
                     reservoirAlertState = .ok
                 } else if amount <= 0 {
                     reservoirAlertState = .empty

@@ -376,6 +376,13 @@ open class DashPumpManager: PumpManager {
                     state.updateFromPodStatus(status: status)
                 })
             }
+            if case .event(let event) = activationStatus, case .step1Completed = event {
+                if let activationDate = self.state.podActivatedAt {
+                    self.mutateState { (state) in
+                        state.expirationReminderDate = activationDate + Pod.lifetime - podExpirationAlert.intervalBeforeExpiration
+                    }
+                }
+            }
             eventListener(activationStatus)
         }
     }
@@ -580,6 +587,53 @@ open class DashPumpManager: PumpManager {
             self.log.default("Recommending Loop")
             completion?()
             delegate?.pumpManagerRecommendsLoop(self)
+        }
+    }
+    
+    public func updateExpirationReminder(_ intervalBeforeExpiration: TimeInterval, completion: @escaping (Error?) -> Void) {
+        guard let newAlert = try? PodExpirationAlert(intervalBeforeExpiration: intervalBeforeExpiration) else {
+            completion(PodCommError.invalidAlertSetting)
+            return
+        }
+        podCommManager.updateAlertSetting(alertSetting: newAlert) { (result) in
+            switch result {
+            case .failure(let error):
+                completion(error)
+            case .success(let status):
+                self.mutateState({ (state) in
+                    state.expirationReminderDate = state.podActivatedAt?.addingTimeInterval(Pod.lifetime - intervalBeforeExpiration)
+                    state.updateFromPodStatus(status: status)
+                })
+                completion(nil)
+            }
+        }
+    }
+    
+    public func updateLowReservoirReminder(_ value: Int, completion: @escaping (Error?) -> Void) {
+        guard let newAlert = try? LowReservoirAlert(reservoirVolumeBelow: Int(Double(value) * Pod.podSDKInsulinMultiplier)) else {
+            completion(PodCommError.invalidAlertSetting)
+            return
+        }
+        
+        if podCommManager.podCommState == .noPod {
+            self.mutateState({ (state) in
+                state.lowReservoirReminderValue = Double(value)
+            })
+            completion(nil)
+            return
+        }
+        
+        podCommManager.updateAlertSetting(alertSetting: newAlert) { (result) in
+            switch result {
+            case .failure(let error):
+                completion(error)
+            case .success(let status):
+                self.mutateState({ (state) in
+                    state.lowReservoirReminderValue = Double(value)
+                    state.updateFromPodStatus(status: status)
+                })
+                completion(nil)
+            }
         }
     }
 
@@ -1300,6 +1354,17 @@ open class DashPumpManager: PumpManager {
             "",
         ])
         return lines.joined(separator: "\n")
+    }
+    
+    public var defaultExpirationReminderOffset: TimeInterval {
+        set {
+            mutateState { (state) in
+                state.defaultExpirationReminderOffset = newValue
+            }
+        }
+        get {
+            state.defaultExpirationReminderOffset
+        }
     }
 }
 
