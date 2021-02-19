@@ -36,24 +36,20 @@ struct ErrorView: View {
     }
 
     var body: some View {
-        HStack(alignment: .top) {
-            ZStack {
+        VStack(alignment: .leading, spacing: 15) {
+            HStack {
                 Image(systemName: "exclamationmark.triangle.fill")
                     .foregroundColor(self.errorClass.symbolColor(using: guidanceColors))
-                Text(" ") // Vertical alignment hack
-            }
-            .accessibilityElement(children: .ignore)
-            .accessibility(label: FrameworkLocalText("Error", comment: "Accessibility label indicating an error occurred"))
-
-            VStack(alignment: .leading, spacing: 10) {
                 Text(self.error.errorDescription ?? "")
                     .bold()
                     .accessibility(identifier: "label_error_description")
-                Text(self.error.recoverySuggestion ?? "")
-                    .accessibility(identifier: "label_recovery_suggestion")
             }
-            .fixedSize(horizontal: false, vertical: true)
-            Spacer()
+            .accessibilityElement(children: .ignore)
+            .accessibility(label: FrameworkLocalText("Error", comment: "Accessibility label indicating an error occurred"))
+            
+            Text(self.error.recoverySuggestion ?? "")
+                .accessibility(identifier: "label_recovery_suggestion")
+                .fixedSize(horizontal: false, vertical: true)
         }
         .accessibilityElement(children: .combine)
     }

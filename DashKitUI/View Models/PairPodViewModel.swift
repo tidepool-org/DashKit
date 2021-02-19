@@ -243,7 +243,7 @@ enum DashPairingError : LocalizedError {
         case .podCommError(let error):
             switch error {
                 case .podNotAvailable:
-                    return String(format: LocalizedString("Move to a new area, place your %1$@ and Pod close to each other, and tap “Try Pairing Again”", comment: "Format string for podNotAvailable recovery suggestion during pairing. (1: device model name)"), UIDevice.current.model)
+                    return LocalizedString("Please make sure the pod is filled with insulin and is close to your device and try again.", comment: "recovery suggestion for podNotAvailable during pairing.")
             default:
                 return error.recoverySuggestion
             }
