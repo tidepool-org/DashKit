@@ -28,7 +28,7 @@ struct PodDetailsView: View {
             row(LocalizedString("Sequence Number", comment: "description label for sequence number pod details row"), value: String(describing: podVersion.sequenceNumber))
             row(LocalizedString("Firmware Version", comment: "description label for firmware version pod details row"), value: podVersion.firmwareVersion)
         }
-        .navigationBarTitle("Device Details", displayMode: .automatic)
+        .navigationBarTitle(Text(LocalizedString("Device Details", comment: "title for device details page")), displayMode: .automatic)
     }
 }
 

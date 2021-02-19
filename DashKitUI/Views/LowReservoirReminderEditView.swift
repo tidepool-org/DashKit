@@ -117,7 +117,7 @@ struct LowReservoirReminderEditView: View {
     
     private func alert(error: Error?) -> SwiftUI.Alert {
         return SwiftUI.Alert(
-            title: Text("Failed to Update Expiration Reminder", comment: "Alert title for error when updating low reservoir reminder"),
+            title: Text(LocalizedString("Failed to Update Low Reservoir Reminder", comment: "Alert title for error when updating low reservoir reminder")),
             message: Text(error?.localizedDescription ?? "No Error")
         )
     }
