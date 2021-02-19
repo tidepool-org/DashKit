@@ -145,7 +145,7 @@ enum SimulatedPodAlarm: String, CaseIterable {
         case .occlusion:
             return .occlusion
         case .other:
-            return .autoOff
+            return .other
         }
     }
 }
