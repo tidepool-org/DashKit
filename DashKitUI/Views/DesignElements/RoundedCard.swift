@@ -1,6 +1,6 @@
 //
 //  RoundedCard.swift
-//  SectionedUIPlaygroundApp
+//  DashKitUI
 //
 //  Created by Pete Schwamb on 2/9/21.
 //
@@ -31,7 +31,7 @@ struct RoundedCardFooter: View {
     var body: some View {
         Text(text)
             .font(.caption)
-            .fixedSize(horizontal: false, vertical: /*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/)
+            .fixedSize(horizontal: false, vertical: true)
             .foregroundColor(.secondary)
     }
 }

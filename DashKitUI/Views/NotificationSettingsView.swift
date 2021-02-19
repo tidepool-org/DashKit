@@ -13,6 +13,8 @@ import HealthKit
 
 struct NotificationSettingsView: View {
     
+    static let expirationReminderHoursAllowed = 1..<30
+    
     var dateFormatter: DateFormatter
     
     @Binding var expirationReminderDefault: Int
@@ -34,8 +36,8 @@ struct NotificationSettingsView: View {
     var body: some View {
         RoundedCardScrollView {
             RoundedCard(
-                title: "Omnipod Reminders",
-                footer: "The App notifies you in advance of Pod expiration.  Set the number of hours advance notice you would like to have."
+                title: LocalizedString("Omnipod Reminders", comment: "Title for omnipod reminders section"),
+                footer: LocalizedString("The App notifies you in advance of Pod expiration.  Set the number of hours advance notice you would like to have.", comment: "Footer text for omnipod reminders section")
             ) {
                 expirationReminderRow
                 if let scheduledReminderDate = scheduledReminderDate  {
@@ -44,13 +46,13 @@ struct NotificationSettingsView: View {
                 }
             }
 
-            RoundedCard(footer: "The App notifies you when the amount of insulin in the Pod reaches this level.") {
+            RoundedCard(footer: LocalizedString("The App notifies you when the amount of insulin in the Pod reaches this level.", comment: "Footer text for low reservoir value row")) {
                 lowReservoirValueRow
             }
 
-            RoundedCardTitle("Critical Alerts")
+            RoundedCardTitle(LocalizedString("Critical Alerts", comment: "Title for critical alerts description"))
                 .padding(.bottom, 1)
-            RoundedCardFooter("The reminders above will not sound if your device is in Silent or Do Not Disturb mode.\n\nThere are other critical Pod alerts and alarms that will sound even if you device is set to Silent or Do Not Disturb mode.")
+            RoundedCardFooter(LocalizedString("The reminders above will not sound if your device is in Silent or Do Not Disturb mode.\n\nThere are other critical Pod alerts and alarms that will sound even if you device is set to Silent or Do Not Disturb mode.", comment: "Description text for critical alerts"))
         }
         .navigationBarTitle(LocalizedString("Notification Settings", comment: "navigation title for notification settings"))
     }
@@ -58,7 +60,7 @@ struct NotificationSettingsView: View {
     var expirationReminderRow: some View {
         VStack {
             HStack {
-                Text("Expiration Reminder Default")
+                Text(LocalizedString("Expiration Reminder Default", comment: "Label text for expiration reminder default row"))
                 Spacer()
                 Button("\(expirationReminderDefault) h") {
                     withAnimation {
@@ -67,8 +69,8 @@ struct NotificationSettingsView: View {
                 }
             }
             if showingHourPicker {
-                Picker("Expiration Reminder Default", selection: $expirationReminderDefault) {
-                    ForEach(1..<30, id: \.self) { value in
+                Picker("", selection: $expirationReminderDefault) {
+                    ForEach(Self.expirationReminderHoursAllowed, id: \.self) { value in
                         Text("\(value) h")
                     }
                 }.pickerStyle(WheelPickerStyle())

@@ -12,6 +12,9 @@ import HealthKit
 
 struct LowReservoirReminderEditView: View {
     
+    // Allowed Low Reservoir reminder values
+    static let lowReservoirReminderAllowedRange = 10..<50
+    
     var onSave: ((_ selectedValue: Int, _ completion: @escaping (_ error: Error?) -> Void) -> Void)?
     var onFinish: (() -> Void)?
     var insulinQuantityFormatter: QuantityFormatter
@@ -46,7 +49,7 @@ struct LowReservoirReminderEditView: View {
                         highlightValue: true
                     )
                     Picker("", selection: $selectedValue) {
-                        ForEach(10..<50, id: \.self) { value in
+                        ForEach(Self.lowReservoirReminderAllowedRange, id: \.self) { value in
                             Text(formatValue(value))
                         }
                     }.pickerStyle(WheelPickerStyle())

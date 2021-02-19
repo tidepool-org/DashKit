@@ -106,7 +106,7 @@ struct ScheduledExpirationReminderEditView: View {
     
     private func alert(error: Error?) -> SwiftUI.Alert {
         return SwiftUI.Alert(
-            title: Text("Failed to Update Expiration Reminder", comment: "Alert title for error when updating expiration reminder"),
+            title: Text(LocalizedString("Failed to Update Expiration Reminder", comment: "Alert title for error when updating expiration reminder")),
             message: Text(error?.localizedDescription ?? "No Error")
         )
     }
