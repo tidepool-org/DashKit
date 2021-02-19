@@ -379,7 +379,7 @@ open class DashPumpManager: PumpManager {
             if case .event(let event) = activationStatus, case .step1Completed = event {
                 if let activationDate = self.state.podActivatedAt {
                     self.mutateState { (state) in
-                        state.expirationReminderDate = activationDate + .days(3) - podExpirationAlert.intervalBeforeExpiration
+                        state.expirationReminderDate = activationDate + Pod.lifetime - podExpirationAlert.intervalBeforeExpiration
                     }
                 }
             }

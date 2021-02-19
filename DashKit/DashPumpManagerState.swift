@@ -234,7 +234,7 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
     mutating func updateFromPodStatus(status: PodStatus) {
         lastStatusDate = dateGenerator()
         reservoirLevel = ReservoirLevel(rawValue: status.reservoirUnitsRemaining)
-        podActivatedAt = status.expirationDate - .days(3)
+        podActivatedAt = status.expirationDate - Pod.lifetime
         podTotalDelivery = status.delivered
     }
     
