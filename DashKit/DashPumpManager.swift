@@ -1050,8 +1050,8 @@ open class DashPumpManager: PumpManager {
 
     fileprivate func clearSuspendReminder() {
         self.pumpDelegate.notify { (delegate) in
-            delegate?.retractAlert(identifier: Alert.Identifier(managerIdentifier: self.managerIdentifier, alertIdentifier: PodAlert.suspendEnded.alertIdentifier))
-            delegate?.retractAlert(identifier: Alert.Identifier(managerIdentifier: self.managerIdentifier, alertIdentifier: PodAlert.suspendEnded.repeatingAlertIdentifier))
+            delegate?.retractAlert(identifier: Alert.Identifier(managerIdentifier: self.managerIdentifier, alertIdentifier: PodAlerts.suspendEnded.alertIdentifier))
+            delegate?.retractAlert(identifier: Alert.Identifier(managerIdentifier: self.managerIdentifier, alertIdentifier: PodAlerts.suspendEnded.repeatingAlertIdentifier))
         }
     }
 
@@ -1412,12 +1412,35 @@ extension DashPumpManager: PodCommManagerDelegate {
         podCommManagerHasSystemError(error: error)
     }
         
-    private func shouldIgnorePodAlert(_ alert: PodAlert) -> Bool {
+    private func shouldIgnorePodAlert(_ alert: PodAlerts) -> Bool {
         // Ignore podExpiring alert during activation.
-        if case .podExpiring = alert, podCommManager.podCommState == .activating {
+        if alert == .podExpiring, podCommManager.podCommState == .activating {
             return true
         }
         return alert.isIgnored
+    }
+    
+    private func podAlertFromSDKAlert(_ sdkAlert: PodAlerts) -> PodAlert? {
+        switch sdkAlert {
+        case .autoOff:
+            return .autoOff
+        case .multiCommand:
+            return .multiCommand
+        case .podExpireImminent:
+            return .podExpireImminent
+        case .userPodExpiration:
+            return .userPodExpiration
+        case .lowReservoir:
+            return .lowReservoir(lowReservoirReminderValue: self.state.lowReservoirReminderValue)
+        case .suspendInProgress:
+            return .suspendInProgress
+        case .suspendEnded:
+            return .suspendEnded
+        case .podExpiring:
+            return .podExpiring
+        default:
+            return nil
+        }
     }
 
     // Add additional optional signature for this method for testing, as PodCommManager cannot be instantiate on the simulator
@@ -1427,9 +1450,9 @@ extension DashPumpManager: PodCommManagerDelegate {
         let newAlerts = alerts.subtracting(self.state.activeAlerts)
         
         if !newAlerts.isEmpty {
-            for alert in newAlerts.allPodAlerts {
-                if !shouldIgnorePodAlert(alert) {
-                    let identifier = Alert.Identifier(managerIdentifier: self.managerIdentifier, alertIdentifier: alert.alertIdentifier)
+            for sdkAlert in newAlerts.allPodAlerts {
+                if !shouldIgnorePodAlert(sdkAlert), let alert = podAlertFromSDKAlert(sdkAlert) {
+                    let identifier = Alert.Identifier(managerIdentifier: self.managerIdentifier, alertIdentifier: sdkAlert.alertIdentifier)
                     let loopAlert = Alert(identifier: identifier, foregroundContent: alert.foregroundContent, backgroundContent: alert.backgroundContent, trigger: .immediate)
                     pumpDelegate.notify { (delegate) in
                         delegate?.issueAlert(loopAlert)
@@ -1437,7 +1460,7 @@ extension DashPumpManager: PodCommManagerDelegate {
                     
                     if let repeatInterval = alert.repeatInterval {
                         // Schedule an additional repeating 15 minute reminder for suspend period ended.
-                        let repeatingIdentifier = Alert.Identifier(managerIdentifier: self.managerIdentifier, alertIdentifier: alert.repeatingAlertIdentifier)
+                        let repeatingIdentifier = Alert.Identifier(managerIdentifier: self.managerIdentifier, alertIdentifier: sdkAlert.repeatingAlertIdentifier)
                         let loopAlert = Alert(identifier: repeatingIdentifier, foregroundContent: alert.foregroundContent, backgroundContent: alert.backgroundContent, trigger: .repeating(repeatInterval: repeatInterval))
                         pumpDelegate.notify { (delegate) in
                             delegate?.issueAlert(loopAlert)
@@ -1449,14 +1472,14 @@ extension DashPumpManager: PodCommManagerDelegate {
         
         let clearedAlerts = self.state.activeAlerts.subtracting(alerts)
         if !clearedAlerts.isEmpty {
-            for alert in clearedAlerts.allPodAlerts {
-                if !alert.isIgnored {
+            for sdkAlert in clearedAlerts.allPodAlerts {
+                if !sdkAlert.isIgnored, let alert = podAlertFromSDKAlert(sdkAlert) {
                     pumpDelegate.notify { (delegate) in
-                        let identifier = Alert.Identifier(managerIdentifier: self.managerIdentifier, alertIdentifier: alert.alertIdentifier)
+                        let identifier = Alert.Identifier(managerIdentifier: self.managerIdentifier, alertIdentifier: sdkAlert.alertIdentifier)
                         delegate?.retractAlert(identifier: identifier)
                     }
                     if alert.isRepeating {
-                        let repeatingIdentifier = Alert.Identifier(managerIdentifier: self.managerIdentifier, alertIdentifier: alert.repeatingAlertIdentifier)
+                        let repeatingIdentifier = Alert.Identifier(managerIdentifier: self.managerIdentifier, alertIdentifier: sdkAlert.repeatingAlertIdentifier)
                         pumpDelegate.notify { (delegate) in
                             delegate?.retractAlert(identifier: repeatingIdentifier)
                         }
@@ -1572,12 +1595,12 @@ extension DashPumpManager: PodSDKLoggingShimDelegate {
 // MARK: - AlertResponder implementation
 extension DashPumpManager {
     public func acknowledgeAlert(alertIdentifier: Alert.AlertIdentifier) {
-        guard let podAlert = PodAlert(rawValue: alertIdentifier) else {
+        guard let podAlert = PodAlerts(identifier: alertIdentifier) else {
             return
         }
         
-        if state.activeAlerts.contains(podAlert.podAlerts) {
-            podCommManager.silenceAlerts(alert: podAlert.podAlerts) { (result) in
+        if state.activeAlerts.contains(podAlert) {
+            podCommManager.silenceAlerts(alert: podAlert) { (result) in
                 switch result {
                 case .success(let status):
                     self.mutateState { (state) in
