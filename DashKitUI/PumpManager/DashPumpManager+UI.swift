@@ -16,6 +16,9 @@ extension DashPumpManager: PumpManagerUI {
 
     public static func setupViewController(initialSettings settings: PumpManagerSetupSettings, colorPalette: LoopUIColorPalette) -> SetupUIResult<UIViewController & PumpManagerCreateNotifying & PumpManagerOnboardNotifying & CompletionNotifying, PumpManagerUI> {
         let vc = DashUICoordinator(colorPalette: colorPalette)
+        vc.basalSchedule = settings.basalSchedule
+        vc.maxBolusUnits = settings.maxBolusUnits
+        vc.maxBasalRateUnitsPerHour = settings.maxBasalRateUnitsPerHour
         vc.pumpManagerType = self
         return .userInteractionRequired(vc)
     }
