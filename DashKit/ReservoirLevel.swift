@@ -9,6 +9,7 @@
 import Foundation
 
 
+
 public enum ReservoirLevel: RawRepresentable, Equatable {
     public typealias RawValue = Int
     

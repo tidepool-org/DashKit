@@ -97,10 +97,18 @@ struct DashSettingsView: View  {
         showingDeleteConfirmation = false
     }
     
+    var deliverySectionTitle: String {
+        if let rate = self.viewModel.basalDeliveryRate, rate.netPercent == 0 {
+            return LocalizedString("Scheduled Basal", comment: "Title of insulin delivery section")
+        } else {
+            return LocalizedString("Insulin Delivery", comment: "Title of insulin delivery section")
+        }
+    }
+    
     var deliveryStatus: some View {
         // podOK is true at this point. Thus there will be a basalDeliveryState
         VStack(alignment: .leading, spacing: 5) {
-            Text(LocalizedString("Insulin Delivery", comment: "Title of insulin delivery section"))
+            Text(deliverySectionTitle)
                 .foregroundColor(Color(UIColor.secondaryLabel))
             if let rate = self.viewModel.basalDeliveryRate {
                 HStack(alignment: .center) {
@@ -156,8 +164,8 @@ struct DashSettingsView: View  {
             Text(LocalizedString("Insulin Remaining", comment: "Header for insulin remaining on pod settings screen"))
                 .foregroundColor(Color(UIColor.secondaryLabel))
             HStack {
-                if let reservoirLevel = viewModel.reservoirLevel {
-                    reservoir(filledPercent: CGFloat(reservoirLevel.percentage), fillColor: reservoirColor(for: reservoirLevel))
+                if let reservoirLevel = viewModel.reservoirLevel, let reservoirLevelHighlightState = viewModel.reservoirLevelHighlightState {
+                    reservoir(filledPercent: CGFloat(reservoirLevel.percentage), fillColor: reservoirColor(for: reservoirLevelHighlightState))
                     Text(viewModel.reservoirText(for: reservoirLevel))
                         .font(.system(size: 28))
                         .fontWeight(.heavy)
@@ -431,16 +439,14 @@ struct DashSettingsView: View  {
         }
     }
     
-    func reservoirColor(for level: ReservoirLevel) -> Color {
-        switch level {
-        case .aboveThreshold:
+    func reservoirColor(for reservoirLevelHighlightState: ReservoirLevelHighlightState) -> Color {
+        switch reservoirLevelHighlightState {
+        case .normal:
             return insulinTintColor
-        case .valid(let value):
-            if value > Pod.defaultLowReservoirReminder {
-                return insulinTintColor
-            } else {
-                return guidanceColors.warning
-            }
+        case .warning:
+            return guidanceColors.warning
+        case .critical:
+            return guidanceColors.critical
         }
     }
 }

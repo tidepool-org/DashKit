@@ -88,6 +88,7 @@
 		C16DA83622E7C6F2008624C2 /* DashKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; platformFilter = ios; };
 		C16DA85822E93973008624C2 /* DashKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C107D15322694B9C00D63775 /* DashKitUI.framework */; platformFilter = ios; };
 		C171758C2437AFF200199ABC /* CheckInsertedCannulaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C171758B2437AFF200199ABC /* CheckInsertedCannulaView.swift */; };
+		C17A5B5825E03DC000721416 /* ReservoirLevelHighlightState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17A5B5725E03DC000721416 /* ReservoirLevelHighlightState.swift */; };
 		C188E42624C61E98002701AB /* PodAlerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = C188E42524C61E98002701AB /* PodAlerts.swift */; };
 		C194114E228DBEC000E886DD /* PodSetupCompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C194114D228DBEC000E886DD /* PodSetupCompleteViewController.swift */; };
 		C1941151228DBF2100E886DD /* ExpirationReminderDateTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1941150228DBF2100E886DD /* ExpirationReminderDateTableViewCell.swift */; };
@@ -297,6 +298,7 @@
 		C168F187244611E7002447D5 /* PodDetails .swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PodDetails .swift"; sourceTree = "<group>"; };
 		C168F189244616E1002447D5 /* MockPodDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPodDetails.swift; sourceTree = "<group>"; };
 		C171758B2437AFF200199ABC /* CheckInsertedCannulaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInsertedCannulaView.swift; sourceTree = "<group>"; };
+		C17A5B5725E03DC000721416 /* ReservoirLevelHighlightState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReservoirLevelHighlightState.swift; sourceTree = "<group>"; };
 		C188E42524C61E98002701AB /* PodAlerts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodAlerts.swift; sourceTree = "<group>"; };
 		C194114D228DBEC000E886DD /* PodSetupCompleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodSetupCompleteViewController.swift; sourceTree = "<group>"; };
 		C1941150228DBF2100E886DD /* ExpirationReminderDateTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpirationReminderDateTableViewCell.swift; sourceTree = "<group>"; };
@@ -652,6 +654,7 @@
 		C1E753CF226928F700A0BC48 = {
 			isa = PBXGroup;
 			children = (
+				C17A5B5725E03DC000721416 /* ReservoirLevelHighlightState.swift */,
 				C1A7FDE2257ED3B70049D81D /* Scripts */,
 				C107D11322692BC300D63775 /* Common */,
 				C1E753DB226928F700A0BC48 /* DashKit */,
@@ -1140,6 +1143,7 @@
 				C1F8403623D7A0B200673141 /* PodSDKLoggingShim.swift in Sources */,
 				C1ACF44222A1FC1F00F7DDB4 /* PodDoseProgressTimerEstimator.swift in Sources */,
 				C115A5FC245B41B9005ACEF7 /* MockPodStatus.swift in Sources */,
+				C17A5B5825E03DC000721416 /* ReservoirLevelHighlightState.swift in Sources */,
 				C15424332280C75E006754B3 /* PodStatusExtension.swift in Sources */,
 				C1ACF44022A1F9B400F7DDB4 /* OSLog.swift in Sources */,
 				C1245D4C24B78FFA0065120F /* PodAlert.swift in Sources */,
