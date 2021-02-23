@@ -27,6 +27,22 @@ class DashSettingsViewModel: ObservableObject {
     @Published var lifeState: PodLifeState
     
     @Published var activatedAt: Date?
+    
+    var activatedAtString: String {
+        if let activatedAt = activatedAt {
+            return dateFormatter.string(from: activatedAt)
+        } else {
+            return "-"
+        }
+    }
+    
+    var expiresAtString: String {
+        if let activatedAt = activatedAt {
+            return dateFormatter.string(from: activatedAt + Pod.lifetime)
+        } else {
+            return "-"
+        }
+    }
 
     // Expiration reminder date for current pod
     @Published var expirationReminderDate: Date?

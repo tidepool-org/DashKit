@@ -57,10 +57,10 @@ public extension ActivationErrorCode {
             return LocalizedString("More than one Pod discovered.", comment: "Description for ActivationErrorCode.moreThanOnePodAvailable")
 
         case .podIsLumpOfCoal1Hour:
-            return LocalizedString("Pod was not activated within 1 hour of initial pairing.", comment: "Description for ActivationErrorCode.podIsLumpOfCoal1Hour")
+            return LocalizedString("Pod activation took too long.", comment: "Description for ActivationErrorCode.podIsLumpOfCoal1Hour")
 
         case .podIsLumpOfCoal2Hours:
-            return LocalizedString("Pod was not activated within 2 hours of filling reservoir.", comment: "Description for ActivationErrorCode.podIsLumpOfCoal2Hours")
+            return LocalizedString("Pod activation took too long.", comment: "Description for ActivationErrorCode.podIsLumpOfCoal2Hours")
 
         case .podActivationFailed:
             return LocalizedString("Pod activation failed.", comment: "Description for ActivationErrorCode.podActivationFailed")
@@ -78,9 +78,9 @@ public extension ActivationErrorCode {
         case .moreThanOnePodAvailable:
             return LocalizedString("Please move your Pod to a new location and try again.", comment: "Recovery suggestion when multiple pods detected.")
         case .podIsLumpOfCoal1Hour:
-            return LocalizedString("The Pod was not activated within one hour after filling the reservoir and cannot be used.", comment: "Recovery suggestion when pod is lump of coal 1 hour")
+            return LocalizedString("The Pod was not activated within one hour after pairing and cannot be used.", comment: "Recovery suggestion when pod is lump of coal 1 hour")
         case .podIsLumpOfCoal2Hours:
-            return LocalizedString("Pod activation was not finished within two hours after filling the reservoir and cannot be used.", comment: "Recovery suggestion when pod is lump of coal 2 hours")
+            return LocalizedString("The Pod was not activated within two hours after filling the reservoir and cannot be used.", comment: "Recovery suggestion when pod is lump of coal 2 hours")
         default:
             return nil
         }

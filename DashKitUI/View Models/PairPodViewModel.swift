@@ -79,7 +79,7 @@ class PairPodViewModel: ObservableObject, Identifiable {
                 return LocalizedString("Pair Pod", comment: "Pod pairing action button text while ready to pair")
             case .error(let error, _):
                 if !error.recoverable {
-                    return LocalizedString("Discard Pod", comment: "Pod pairing action button text while showing unrecoverable error")
+                    return LocalizedString("Deactivate Pod", comment: "Pod pairing action button text while showing unrecoverable error")
                 } else {
                     return LocalizedString("Try Pairing Again", comment: "Pod pairing action button text while showing recoverable error")
                 }
@@ -268,18 +268,17 @@ enum DashPairingError : LocalizedError {
 extension PodCommError {
     var recoverable: Bool {
         switch self {
-        case .internalError, .podIsInAlarm:
+        case .podIsInAlarm:
             return false
         case .activationError(let activationErrorCode):
             switch activationErrorCode {
-            case .podIsLumpOfCoal1Hour, .podIsLumpOfCoal2Hours: // TODO: Add not compatible error, when availalble.
+            case .podIsLumpOfCoal1Hour, .podIsLumpOfCoal2Hours:
                 return false
             default:
-                break
+                return true
             }
         default:
-            break
+            return true
         }
-        return true
     }
 }
