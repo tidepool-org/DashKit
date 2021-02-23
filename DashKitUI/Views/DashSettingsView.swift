@@ -128,6 +128,7 @@ struct DashSettingsView: View  {
                         .foregroundColor(guidanceColors.critical)
                     FrameworkLocalText("No\nDelivery", comment: "Text shown in insulin remaining space when no pod is paired")
                         .fontWeight(.bold)
+                        .fixedSize()
                 }
             }
         }
