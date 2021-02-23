@@ -32,7 +32,7 @@ class DashSettingsViewModel: ObservableObject {
         if let activatedAt = activatedAt {
             return dateFormatter.string(from: activatedAt)
         } else {
-            return "-"
+            return "—"
         }
     }
     
@@ -40,7 +40,7 @@ class DashSettingsViewModel: ObservableObject {
         if let activatedAt = activatedAt {
             return dateFormatter.string(from: activatedAt + Pod.lifetime)
         } else {
-            return "-"
+            return "—"
         }
     }
 

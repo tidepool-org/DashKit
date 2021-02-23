@@ -295,6 +295,13 @@ struct DashSettingsView: View  {
                     NavigationLink(destination: PodDetailsView(podVersion: podVersion)) {
                         FrameworkLocalText("Device Details", comment: "Text for device details disclosure row").foregroundColor(Color.primary)
                     }
+                } else {
+                    HStack {
+                        FrameworkLocalText("Device Details", comment: "Text for device details disclosure row")
+                        Spacer()
+                        Text("—")
+                            .foregroundColor(Color.secondary)
+                    }
                 }
             }
             
