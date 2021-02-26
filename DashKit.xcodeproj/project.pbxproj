@@ -67,6 +67,7 @@
 		C135D58825DDC0A8009573A3 /* ScheduledExpirationReminderEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C135D58725DDC0A8009573A3 /* ScheduledExpirationReminderEditView.swift */; };
 		C136AA5823117A2F008A320D /* OSLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ACF43E22A1F9A700F7DDB4 /* OSLog.swift */; };
 		C13DA2AE24F5C3530098BB29 /* UncertaintyRecoveredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C13DA2AD24F5C3530098BB29 /* UncertaintyRecoveredView.swift */; };
+		C142DF1F25E57AEE00D15EEA /* AttachPodView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C142DF1E25E57AEE00D15EEA /* AttachPodView.swift */; };
 		C14386B9244F59800070B0FF /* BasalStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14386B8244F59800070B0FF /* BasalStateView.swift */; };
 		C1467BD2246D7E9500B97F77 /* BasalProgramTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1467BD1246D7E9500B97F77 /* BasalProgramTests.swift */; };
 		C14C6F252419F95E00CF3408 /* LeadingImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14C6F242419F95E00CF3408 /* LeadingImage.swift */; };
@@ -279,6 +280,7 @@
 		C134E91824645D5100DB95AF /* MockPodVersion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPodVersion.swift; sourceTree = "<group>"; };
 		C135D58725DDC0A8009573A3 /* ScheduledExpirationReminderEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduledExpirationReminderEditView.swift; sourceTree = "<group>"; };
 		C13DA2AD24F5C3530098BB29 /* UncertaintyRecoveredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UncertaintyRecoveredView.swift; sourceTree = "<group>"; };
+		C142DF1E25E57AEE00D15EEA /* AttachPodView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachPodView.swift; sourceTree = "<group>"; };
 		C14386B8244F59800070B0FF /* BasalStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasalStateView.swift; sourceTree = "<group>"; };
 		C1467BD1246D7E9500B97F77 /* BasalProgramTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasalProgramTests.swift; sourceTree = "<group>"; };
 		C14C6F242419F95E00CF3408 /* LeadingImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeadingImage.swift; sourceTree = "<group>"; };
@@ -330,7 +332,7 @@
 		C1ACF44322A200B100F7DDB4 /* UnfinalizedDose.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnfinalizedDose.swift; sourceTree = "<group>"; };
 		C1BBA83D25BA065000AD4CDE /* INSSDK.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = INSSDK.xcframework; path = "dash-sdk-ios/frameworks/INSSDK.xcframework"; sourceTree = "<group>"; };
 		C1BC259B2314604800E80E3F /* DashPumpManagerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashPumpManagerError.swift; sourceTree = "<group>"; };
-		C1C72D8A241568E700DB224B /* DashSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashSettingsView.swift; sourceTree = "<group>"; };
+		C1C72D8A241568E700DB224B /* DashSettingsView.swift */ = {isa = PBXFileReference; indentWidth = 3; lastKnownFileType = sourcecode.swift; path = DashSettingsView.swift; sourceTree = "<group>"; };
 		C1C799F324C7749B008E0A1A /* FrameworkLocalText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrameworkLocalText.swift; sourceTree = "<group>"; };
 		C1C799F524C7A3E4008E0A1A /* DashSettingsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashSettingsViewModelTests.swift; sourceTree = "<group>"; };
 		C1D46D6522C56C2300978E59 /* MockPodCommManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPodCommManager.swift; sourceTree = "<group>"; };
@@ -492,6 +494,7 @@
 				C155759725CB552D008ADD91 /* NotificationSettingsView.swift */,
 				C135D58725DDC0A8009573A3 /* ScheduledExpirationReminderEditView.swift */,
 				C1E2561D25DEF855005F609E /* LowReservoirReminderEditView.swift */,
+				C142DF1E25E57AEE00D15EEA /* AttachPodView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1071,6 +1074,7 @@
 				C155759825CB552D008ADD91 /* NotificationSettingsView.swift in Sources */,
 				C107D16D226A143A00D63775 /* UIViewController.swift in Sources */,
 				C196751324F05E3500118EC4 /* DeliveryUncertaintyRecoveryView.swift in Sources */,
+				C142DF1F25E57AEE00D15EEA /* AttachPodView.swift in Sources */,
 				C107D17C226A243A00D63775 /* UITableViewCell.swift in Sources */,
 				C1562F8724169C41006952D6 /* DeactivatePodView.swift in Sources */,
 				C1941153228DBF8300E886DD /* NibLoadable.swift in Sources */,

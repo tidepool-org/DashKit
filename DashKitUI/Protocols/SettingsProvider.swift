@@ -8,9 +8,3 @@
 
 import Foundation
 import LoopKit
-
-protocol SettingsProvider: class {
-    var maxBolusUnits: Double? { get set }
-    var basalSchedule: BasalRateSchedule? { get set }
-    var maxBasalRateUnitsPerHour: Double? { get set }
-}

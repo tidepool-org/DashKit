@@ -114,12 +114,12 @@ open class DashPumpManager: PumpManager {
         switch state.lastPodCommState {
         case .activating:
             return PumpManagerStatus.PumpStatusHighlight(
-                localizedMessage: NSLocalizedString("Pod Activating", comment: "Status highlight that when pod is activating."),
+                localizedMessage: NSLocalizedString("Finish Pairing", comment: "Status highlight that when pod is activating."),
                 imageName: "exclamationmark.circle.fill",
                 state: .warning)
         case .deactivating:
             return PumpManagerStatus.PumpStatusHighlight(
-                localizedMessage: NSLocalizedString("Pod Deactivating", comment: "Status highlight that when pod is deactivating."),
+                localizedMessage: NSLocalizedString("Finish Deactivation", comment: "Status highlight that when pod is deactivating."),
                 imageName: "exclamationmark.circle.fill",
                 state: .warning)
         case .noPod:
@@ -450,6 +450,7 @@ open class DashPumpManager: PumpManager {
             state.reservoirLevel = nil
             state.podTotalDelivery = nil
             state.alarmCode = nil
+            state.podAttachmentConfirmed = false
         })
         clearSuspendReminder()
     }
@@ -1383,6 +1384,17 @@ open class DashPumpManager: PumpManager {
         }
         get {
             state.defaultExpirationReminderOffset
+        }
+    }
+    
+    public var podAttachmentConfirmed: Bool {
+        set {
+            mutateState { (state) in
+                state.podAttachmentConfirmed = newValue
+            }
+        }
+        get {
+            state.podAttachmentConfirmed
         }
     }
 }
