@@ -48,6 +48,7 @@ struct InsertCannulaView: View {
                                 .padding(.horizontal)
                             if self.viewModel.state.isFinished {
                                 FrameworkLocalText("Inserted", comment: "Label text indicating cannula inserted")
+                                    .bold()
                                     .padding(.top)
                             }
                         }

@@ -47,7 +47,6 @@
 		C10D1D77241169F50007ABF7 /* MockPodPairer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10D1D76241169F50007ABF7 /* MockPodPairer.swift */; };
 		C10D1D7824117E990007ABF7 /* PodPairer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10D1D74241168060007ABF7 /* PodPairer.swift */; };
 		C10D6121240D65300081FFFA /* PairPodViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10D6120240D65300081FFFA /* PairPodViewModel.swift */; };
-		C10EF92E24044C000091392C /* SettingsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10EF92C24044B560091392C /* SettingsProvider.swift */; };
 		C115A5FB245B4069005ACEF7 /* MockPodAlarm.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A9194A2433917E008D216E /* MockPodAlarm.swift */; };
 		C115A5FC245B41B9005ACEF7 /* MockPodStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1562F8C2416A945006952D6 /* MockPodStatus.swift */; };
 		C118C71D25A7D7550029C451 /* MockPodSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C118C71C25A7D7550029C451 /* MockPodSettingsViewModel.swift */; };
@@ -262,7 +261,6 @@
 		C10D1D74241168060007ABF7 /* PodPairer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodPairer.swift; sourceTree = "<group>"; };
 		C10D1D76241169F50007ABF7 /* MockPodPairer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPodPairer.swift; sourceTree = "<group>"; };
 		C10D6120240D65300081FFFA /* PairPodViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairPodViewModel.swift; sourceTree = "<group>"; };
-		C10EF92C24044B560091392C /* SettingsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsProvider.swift; sourceTree = "<group>"; };
 		C11097CD238F14A4004F1A04 /* PodSDK.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = PodSDK.xcframework; path = "dash-sdk-ios/frameworks/PodSDK.xcframework"; sourceTree = "<group>"; };
 		C118C71C25A7D7550029C451 /* MockPodSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPodSettingsViewModel.swift; sourceTree = "<group>"; };
 		C11AA4512584167F00BDE12F /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -536,7 +534,6 @@
 		C10EF92B24044B3B0091392C /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
-				C10EF92C24044B560091392C /* SettingsProvider.swift */,
 				C168F187244611E7002447D5 /* PodDetails .swift */,
 			);
 			path = Protocols;
@@ -1090,7 +1087,6 @@
 				C12A06AA23F2EFED0052195C /* MockRegistrationManager.swift in Sources */,
 				C107D176226A22BF00D63775 /* LocalizedString.swift in Sources */,
 				C1A701B923EB7EC2002D1E45 /* PairPodView.swift in Sources */,
-				C10EF92E24044C000091392C /* SettingsProvider.swift in Sources */,
 				C13DA2AE24F5C3530098BB29 /* UncertaintyRecoveredView.swift in Sources */,
 				C107D17A226A241200D63775 /* IdentifiableClass.swift in Sources */,
 				C1A3DB3925D6FE320053AA44 /* RoundedCard.swift in Sources */,

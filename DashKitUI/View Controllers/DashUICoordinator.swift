@@ -194,8 +194,8 @@ class DashUICoordinator: UINavigationController, PumpManagerCreateNotifying, Pum
                 vc.completion = { [weak self] in
                     if let self = self, let initialSettings = self.initialSettings {
                         self.pumpManagerOnboardDelegate?.pumpManagerOnboardNotifying(didOnboardPumpManager: pumpManager, withFinalSettings: initialSettings)
-                        self.stepFinished()
                     }
+                    self?.stepFinished()
                 }
                 return vc
             } else {

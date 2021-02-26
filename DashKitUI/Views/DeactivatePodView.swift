@@ -39,6 +39,7 @@ struct DeactivatePodView: View {
                                 .padding(.horizontal)
                             if viewModel.state.isFinished {
                                 FrameworkLocalText("Deactivated", comment: "Label text showing pod is deactivated")
+                                    .bold()
                                     .padding(.top)
                             }
                         }

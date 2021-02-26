@@ -45,6 +45,7 @@ struct PairPodView: View {
                                 .padding(.horizontal)
                             if self.viewModel.state.isFinished {
                                 FrameworkLocalText("Paired", comment: "Label text indicating pairing finished.")
+                                    .bold()
                                     .padding(.top)
                             }
                         }

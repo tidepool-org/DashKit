@@ -182,20 +182,16 @@ public class MockPodCommManager: PodCommManagerProtocol {
         }
     }
     
-    private var insertCannulaAttemptCount = 0
-    var initialCannulaInsertionError: PodCommError = .bleCommunicationError
-    
     public func finishPodActivation(basalProgram: ProgramType, autoOffAlert: AutoOffAlert?, eventListener: @escaping (ActivationStatus<ActivationStep2Event>) -> ()) {
-        insertCannulaAttemptCount += 1
-        
+
         guard case .basalProgram(let basalProgram, let secondsSinceMidnight) = basalProgram else {
             eventListener(.error(.invalidProgram))
             return
         }
         
-        if insertCannulaAttemptCount == 1 {
+        if let error = nextCommsError {
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                eventListener(.error(self.initialCannulaInsertionError))
+                eventListener(.error(error))
             }
         } else {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
