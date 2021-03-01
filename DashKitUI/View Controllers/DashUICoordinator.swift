@@ -153,13 +153,15 @@ class DashUICoordinator: UINavigationController, PumpManagerCreateNotifying, Pum
             guard let pumpManager = pumpManager else {
                 fatalError("Need pump manager for confirm attachment screen")
             }
-            let view = AttachPodView {
-                pumpManager.podAttachmentConfirmed = true
-                self.stepFinished()
-            } didRequestDeactivation: {
-                self.navigateTo(.deactivate)
-            }
-
+            let view = AttachPodView(
+                didConfirmAttachment: {
+                    pumpManager.podAttachmentConfirmed = true
+                    self.stepFinished()
+                },
+                didRequestDeactivation: {
+                    self.navigateTo(.deactivate)
+                })
+            
             let vc = hostingController(rootView: view)
             vc.navigationItem.title = LocalizedString("Attach Pod", comment: "Title for Attach Pod screen")
             return vc
@@ -192,10 +194,13 @@ class DashUICoordinator: UINavigationController, PumpManagerCreateNotifying, Pum
             if let pumpManager = pumpManager {
                 let vc = PodSetupCompleteViewController.instantiateFromStoryboard(pumpManager, navigator: self)
                 vc.completion = { [weak self] in
-                    if let self = self, let initialSettings = self.initialSettings {
+                    guard let self = self else {
+                        return
+                    }
+                    if let initialSettings = self.initialSettings {
                         self.pumpManagerOnboardDelegate?.pumpManagerOnboardNotifying(didOnboardPumpManager: pumpManager, withFinalSettings: initialSettings)
                     }
-                    self?.stepFinished()
+                    self.stepFinished()
                 }
                 return vc
             } else {
