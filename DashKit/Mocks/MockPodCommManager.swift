@@ -89,9 +89,6 @@ public class MockPodCommManager: PodCommManagerProtocol {
 
     public func setup(withLaunchingOptions launchOptions: [AnyHashable : Any]?) { }
 
-    var pairAttemptCount = 0
-    var initialPairError: PodCommError = .podNotAvailable
-    
     public var unacknowledgedCommandRetryResult: PendingRetryResult?
     
     public var simulateDisconnectionOnUnacknowledgedCommand: Bool = false
@@ -99,93 +96,102 @@ public class MockPodCommManager: PodCommManagerProtocol {
     public var bleConnected: Bool = true
 
     public func startPodActivation(lowReservoirAlert: LowReservoirAlert?, podExpirationAlert: PodExpirationAlert?, eventListener: @escaping (ActivationStatus<ActivationStep1Event>) -> ()) {
-
-        pairAttemptCount += 1
         
-        if pairAttemptCount == 1 {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                eventListener(.error(self.initialPairError))
+        var incompatiblePod = false
+        
+        if let commsError = nextCommsError {
+            nextCommsError = nil
+            if case .internalError(let code) = commsError, code == .incompatibleProductId {
+                incompatiblePod = true
+            } else {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    eventListener(.error(commsError))
+                }
+                return
             }
-        } else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                eventListener(.event(.connecting))
-                self.dashPumpManager?.podCommManager(self, connectionStateDidChange: .tryConnecting)
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            eventListener(.event(.connecting))
+            self.dashPumpManager?.podCommManager(self, connectionStateDidChange: .tryConnecting)
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 7) {
+            self.dashPumpManager?.podCommManager(self, connectionStateDidChange: .connected)
+            // Start out with 100U
+            self.podStatus = MockPodStatus(activationDate: self.dateGenerator(), podState: .uninitialized, programStatus: ProgramStatus(rawValue: 0), activeAlerts: PodAlerts(rawValue: 128), bolusUnitsRemaining: 0, initialInsulinAmount: 100)
+            self.podCommState = .activating
+            eventListener(.event(.retrievingPodVersion))
+            if incompatiblePod {
+                eventListener(.error(.internalError(.incompatibleProductId)))
             }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 7) {
-                self.dashPumpManager?.podCommManager(self, connectionStateDidChange: .connected)
-                // Start out with 100U
-                self.podStatus = MockPodStatus(activationDate: self.dateGenerator(), podState: .uninitialized, programStatus: ProgramStatus(rawValue: 0), activeAlerts: PodAlerts(rawValue: 128), bolusUnitsRemaining: 0, initialInsulinAmount: 100)
-                self.podCommState = .activating
-                eventListener(.event(.retrievingPodVersion))
-            }
+        }
+        
+        if incompatiblePod {
+            return
+        }
 
-            DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
-                eventListener(.event(.settingPodUid))
-            }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
+            eventListener(.event(.settingPodUid))
+        }
 
-            DispatchQueue.main.asyncAfter(deadline: .now() + 11) {
-                eventListener(.event(.programmingLowReservoirAlert))
-            }
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 11.5) {
-                self.podStatus?.podState = .uidSet
-                self.podStatus?.lowReservoirAlert = lowReservoirAlert
-                eventListener(.event(.podStatus(self.podStatus!)))
-            }
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 12) {
-                eventListener(.event(.programmingLumpOfCoal))
-            }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 11) {
+            eventListener(.event(.programmingLowReservoirAlert))
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 11.5) {
+            self.podStatus?.podState = .uidSet
+            self.podStatus?.lowReservoirAlert = lowReservoirAlert
+            eventListener(.event(.podStatus(self.podStatus!)))
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 12) {
+            eventListener(.event(.programmingLumpOfCoal))
+        }
 
-            DispatchQueue.main.asyncAfter(deadline: .now() + 12.5) {
-                self.podStatus!.activeAlerts = PodAlerts(rawValue: 0)
-                eventListener(.event(.podStatus(self.podStatus!)))
-            }
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 12.8) {
-                eventListener(.event(.primingPod))
-            }
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 15) {
-                self.podStatus!.podState = .engagingClutchDrive
-                eventListener(.event(.podStatus(self.podStatus!)))
-            }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 12.5) {
+            self.podStatus!.activeAlerts = PodAlerts(rawValue: 0)
+            eventListener(.event(.podStatus(self.podStatus!)))
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 12.8) {
+            eventListener(.event(.primingPod))
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 15) {
+            self.podStatus!.podState = .engagingClutchDrive
+            eventListener(.event(.podStatus(self.podStatus!)))
+        }
 
-            DispatchQueue.main.asyncAfter(deadline: .now() + 30) {
-                eventListener(.event(.checkingPodStatus))
-            }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 30) {
+            eventListener(.event(.checkingPodStatus))
+        }
 
-            DispatchQueue.main.asyncAfter(deadline: .now() + 30.5) {
-                self.podStatus!.podState = .clutchDriveEngaged
-                self.podStatus!.insulinDelivered = 1.40
-                eventListener(.event(.podStatus(self.podStatus!)))
-                eventListener(.event(.programmingPodExpireAlert))
-            }
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 31) {
-                eventListener(.event(.podStatus(self.podStatus!)))
-            }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 30.5) {
+            self.podStatus!.podState = .clutchDriveEngaged
+            self.podStatus!.insulinDelivered = 1.40
+            eventListener(.event(.podStatus(self.podStatus!)))
+            eventListener(.event(.programmingPodExpireAlert))
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 31) {
+            eventListener(.event(.podStatus(self.podStatus!)))
+        }
 
-            DispatchQueue.main.asyncAfter(deadline: .now() + 32) {
-                eventListener(.event(.step1Completed))
-            }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 32) {
+            eventListener(.event(.step1Completed))
         }
     }
     
-    private var insertCannulaAttemptCount = 0
-    var initialCannulaInsertionError: PodCommError = .bleCommunicationError
-    
     public func finishPodActivation(basalProgram: ProgramType, autoOffAlert: AutoOffAlert?, eventListener: @escaping (ActivationStatus<ActivationStep2Event>) -> ()) {
-        insertCannulaAttemptCount += 1
-        
+
         guard case .basalProgram(let basalProgram, let secondsSinceMidnight) = basalProgram else {
             eventListener(.error(.invalidProgram))
             return
         }
         
-        if insertCannulaAttemptCount == 1 {
+        if let error = nextCommsError {
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                eventListener(.error(self.initialCannulaInsertionError))
+                eventListener(.error(error))
             }
         } else {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {

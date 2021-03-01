@@ -43,18 +43,14 @@ class PairPodViewModel: ObservableObject, Identifiable {
         case error(DashPairingError, PodCommState)
         case finished
         
-        var instructionsColor: UIColor {
+        var instructionsDisabled: Bool {
             switch self {
             case .ready:
-                return UIColor.label
+                return false
             case .error(let error, _):
-                if error.recoverable {
-                    return UIColor.label
-                } else {
-                    return UIColor.secondaryLabel
-                }
+                return !error.recoverable
             default:
-                return UIColor.secondaryLabel
+                return true
             }
         }
         
@@ -167,10 +163,16 @@ class PairPodViewModel: ObservableObject, Identifiable {
 
     @Published var state: PairPodViewModelState = .ready
     
+    var podIsActivated: Bool {
+        return podPairer.podCommState != .noPod
+    }
+    
     var didFinish: (() -> Void)?
     
-    var didCancel: (() -> Void)?
+    var didRequestDeactivation: (() -> Void)?
     
+    var didCancelSetup: (() -> Void)?
+
     weak var navigator: DashUINavigator?
     
     var podPairer: PodPairer
@@ -221,17 +223,7 @@ class PairPodViewModel: ObservableObject, Identifiable {
         default:
             pair()
         }
-    }
-    
-    public func cancelButtonTapped() {
-        if case .discard = state.navBarButtonAction {
-            podPairer.discardPod { [weak self] (result) in
-                self?.state = .ready
-            }
-        } else {
-            didCancel?()
-        }
-    }
+    }    
 }
 
 // Pairing recovery suggestions
@@ -277,6 +269,8 @@ extension PodCommError {
             default:
                 return true
             }
+        case .internalError(.incompatibleProductId):
+            return false
         default:
             return true
         }

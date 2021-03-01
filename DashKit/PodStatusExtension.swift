@@ -43,7 +43,7 @@ public extension InternalErrorCode {
     var recoverySuggestion: String? {
         switch self {
         case .incompatibleProductId:
-            return LocalizedString("This Pod is not compatible with Tidepool Loop, and activation is not possible. Please discard the Pod.", comment: "Recovery suggestion for InternalErrorCode.incompatibleProductId")
+            return LocalizedString("This Pod is not compatible with Tidepool Loop, and activation is not possible.\n\nPlease discard the Pod.", comment: "Recovery suggestion for InternalErrorCode.incompatibleProductId")
         default:
             return LocalizedString("Please retry. If this problem persists, tap Discard Pod. You can then activate a new pod.", comment: "Recovery suggestion for InternalErrorCode.invalidCommand")
         }

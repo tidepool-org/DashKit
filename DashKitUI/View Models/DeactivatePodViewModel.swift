@@ -13,6 +13,16 @@ import LoopKitUI
 
 class DeactivatePodViewModel: ObservableObject, Identifiable {
     
+    public var podAttachedToBody: Bool
+    
+    var instructionText: String {
+        if podAttachedToBody {
+            return LocalizedString("Please deactivate the pod. When deactivation is complete, remove pod from body.", comment: "Instructions for deactivate pod when pod is on body")
+        } else {
+            return LocalizedString("Please deactivate the pod. When deactivation is complete, you may pair a new pod.", comment: "Instructions for deactivate pod when pod not on body")
+        }
+    }
+    
     enum DeactivatePodViewModelState {
         case active
         case deactivating
@@ -108,8 +118,9 @@ class DeactivatePodViewModel: ObservableObject, Identifiable {
     
     var podDeactivator: PodDeactivater
 
-    init(podDeactivator: PodDeactivater) {
+    init(podDeactivator: PodDeactivater, podAttachedToBody: Bool) {
         self.podDeactivator = podDeactivator
+        self.podAttachedToBody = podAttachedToBody
     }
     
     public func continueButtonTapped() {

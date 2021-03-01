@@ -22,6 +22,7 @@ enum DashUIScreen {
     case registration
     case pairPod
     case insertCannula
+    case confirmAttachment
     case checkInsertedCannula
     case setupComplete
     case pendingCommandRecovery
@@ -39,6 +40,8 @@ enum DashUIScreen {
             // else if cannula not inserted
             // return .insertCannula
         case .pairPod:
+            return .confirmAttachment
+        case .confirmAttachment:
             return .insertCannula
         case .insertCannula:
             return .checkInsertedCannula
@@ -58,8 +61,8 @@ protocol DashUINavigator: class {
     func navigateTo(_ screen: DashUIScreen)
 }
 
-class DashUICoordinator: UINavigationController, PumpManagerCreateNotifying, PumpManagerOnboardNotifying, CompletionNotifying, SettingsProvider, UINavigationControllerDelegate {
-
+class DashUICoordinator: UINavigationController, PumpManagerCreateNotifying, PumpManagerOnboardNotifying, CompletionNotifying, UINavigationControllerDelegate {
+    
     public weak var pumpManagerCreateDelegate: PumpManagerCreateDelegate?
 
     public weak var pumpManagerOnboardDelegate: PumpManagerOnboardDelegate?
@@ -68,12 +71,6 @@ class DashUICoordinator: UINavigationController, PumpManagerCreateNotifying, Pum
     
     var pumpManager: DashPumpManager?
     
-    public var maxBasalRateUnitsPerHour: Double?
-
-    public var maxBolusUnits: Double?
-
-    public var basalSchedule: BasalRateSchedule?
-
     private var disposables = Set<AnyCancellable>()
     
     private var registrationManager: PDMRegistrator
@@ -86,7 +83,9 @@ class DashUICoordinator: UINavigationController, PumpManagerCreateNotifying, Pum
     
     private let colorPalette: LoopUIColorPalette
 
-    public var pumpManagerType: DashPumpManager.Type?
+    private var pumpManagerType: DashPumpManager.Type?
+    
+    private var initialSettings: PumpManagerSetupSettings?
     
     private func viewControllerForScreen(_ screen: DashUIScreen) -> UIViewController {
         switch screen {
@@ -94,7 +93,7 @@ class DashUICoordinator: UINavigationController, PumpManagerCreateNotifying, Pum
             guard let pumpManager = pumpManager else {
                 fatalError("Need pump manager for pod deactivate screen")
             }
-            let viewModel = DeactivatePodViewModel(podDeactivator: pumpManager)
+            let viewModel = DeactivatePodViewModel(podDeactivator: pumpManager, podAttachedToBody: pumpManager.podAttachmentConfirmed)
 
             viewModel.didFinish = { [weak self] in
                 self?.stepFinished()
@@ -126,10 +125,11 @@ class DashUICoordinator: UINavigationController, PumpManagerCreateNotifying, Pum
             return view
         case .pairPod:
             if pumpManager == nil,
-                let basalRateSchedule = basalSchedule,
-                let pumpManagerType = pumpManagerType,
-                let maxBasalRateUnitsPerHour = maxBasalRateUnitsPerHour,
-                let pumpManagerState = DashPumpManagerState(basalRateSchedule: basalRateSchedule, maximumTempBasalRate: maxBasalRateUnitsPerHour, lastPodCommState: .noPod)
+               let initialSettings = initialSettings,
+               let basalRateSchedule = initialSettings.basalSchedule,
+               let maxBasalRateUnitsPerHour = initialSettings.maxBasalRateUnitsPerHour,
+               let pumpManagerType = pumpManagerType,
+               let pumpManagerState = DashPumpManagerState(basalRateSchedule: basalRateSchedule, maximumTempBasalRate: maxBasalRateUnitsPerHour, lastPodCommState: .noPod)
             {
                 let pumpManager = pumpManagerType.init(state: pumpManagerState)
                 self.pumpManager = pumpManager
@@ -142,27 +142,38 @@ class DashUICoordinator: UINavigationController, PumpManagerCreateNotifying, Pum
 
             let viewModel = PairPodViewModel(podPairer: pumpManager, navigator: self)
 
-            viewModel.didFinish = { [weak self] in
-                self?.stepFinished()
-            }
-            viewModel.didCancel = { [weak self] in
-                self?.setupCanceled()
-            }
+            viewModel.didFinish = stepFinished
+            viewModel.didCancelSetup = setupCanceled
+            viewModel.didRequestDeactivation = { self.navigateTo(.deactivate) }
+            
             let view = hostingController(rootView: PairPodView(viewModel: viewModel))
             view.navigationItem.title = LocalizedString("Pod Pairing", comment: "Title for pod pairing screen")
             return view
+        case .confirmAttachment:
+            guard let pumpManager = pumpManager else {
+                fatalError("Need pump manager for confirm attachment screen")
+            }
+            let view = AttachPodView(
+                didConfirmAttachment: {
+                    pumpManager.podAttachmentConfirmed = true
+                    self.stepFinished()
+                },
+                didRequestDeactivation: {
+                    self.navigateTo(.deactivate)
+                })
+            
+            let vc = hostingController(rootView: view)
+            vc.navigationItem.title = LocalizedString("Attach Pod", comment: "Title for Attach Pod screen")
+            return vc
+
         case .insertCannula:
             guard let pumpManager = pumpManager else {
                 fatalError("Need pump manager for cannula insertion screen")
             }
-            let viewModel = InsertCannulaViewModel(cannulaInserter: pumpManager, navigator: self)
+            let viewModel = InsertCannulaViewModel(cannulaInserter: pumpManager)
             
-            viewModel.didFinish = { [weak self] in
-                self?.stepFinished()
-            }
-            viewModel.didCancel = { [weak self] in
-                self?.setupCanceled()
-            }
+            viewModel.didFinish = stepFinished
+            viewModel.didRequestDeactivation = { self.navigateTo(.deactivate) }
 
             let view = hostingController(rootView: InsertCannulaView(viewModel: viewModel))
             view.navigationItem.title = LocalizedString("Insert Cannula", comment: "Title for insert cannula screen")
@@ -183,13 +194,13 @@ class DashUICoordinator: UINavigationController, PumpManagerCreateNotifying, Pum
             if let pumpManager = pumpManager {
                 let vc = PodSetupCompleteViewController.instantiateFromStoryboard(pumpManager, navigator: self)
                 vc.completion = { [weak self] in
-                    if let self = self {
-                        let settings = PumpManagerSetupSettings(maxBasalRateUnitsPerHour: self.maxBasalRateUnitsPerHour,
-                                                           maxBolusUnits: self.maxBolusUnits,
-                                                           basalSchedule: self.basalSchedule)
-                        self.pumpManagerOnboardDelegate?.pumpManagerOnboardNotifying(didOnboardPumpManager: pumpManager, withFinalSettings: settings)
-                        self.stepFinished()
+                    guard let self = self else {
+                        return
                     }
+                    if let initialSettings = self.initialSettings {
+                        self.pumpManagerOnboardDelegate?.pumpManagerOnboardNotifying(didOnboardPumpManager: pumpManager, withFinalSettings: initialSettings)
+                    }
+                    self.stepFinished()
                 }
                 return vc
             } else {
@@ -248,7 +259,8 @@ class DashUICoordinator: UINavigationController, PumpManagerCreateNotifying, Pum
         completionDelegate?.completionNotifyingDidComplete(self)
     }
     
-    init(pumpManager: DashPumpManager? = nil, colorPalette: LoopUIColorPalette) {
+    init(pumpManager: DashPumpManager? = nil, colorPalette: LoopUIColorPalette, pumpManagerType: DashPumpManager.Type? = nil, initialSettings: PumpManagerSetupSettings? = nil)
+    {
         #if targetEnvironment(simulator)
         self.registrationManager = MockRegistrationManager(isRegistered: true)
         #else
@@ -260,9 +272,12 @@ class DashUICoordinator: UINavigationController, PumpManagerCreateNotifying, Pum
                 
         self.pumpManager = pumpManager
         self.colorPalette = colorPalette
+        
+        self.pumpManagerType = pumpManagerType
 
+        self.initialSettings = initialSettings
+        
         super.init(navigationBarClass: UINavigationBar.self, toolbarClass: UIToolbar.self)
-                
     }
     
     private func determineInitialStep() -> DashUIScreen {
@@ -272,7 +287,11 @@ class DashUICoordinator: UINavigationController, PumpManagerCreateNotifying, Pum
             if pumpManager.state.pendingCommand != nil {
                 return .pendingCommandRecovery
             } else if pumpManager.podCommState == .activating {
-                return .insertCannula
+                if pumpManager.podAttachmentConfirmed {
+                    return .insertCannula
+                } else {
+                    return .confirmAttachment
+                }
             } else {
                 return .settings
             }
@@ -282,9 +301,14 @@ class DashUICoordinator: UINavigationController, PumpManagerCreateNotifying, Pum
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        screenStack = [determineInitialStep()]
-        let viewController = viewControllerForScreen(currentScreen)
-        setViewControllers([viewController], animated: false)
+        super.viewWillAppear(animated)
+
+        if screenStack.isEmpty {
+            screenStack = [determineInitialStep()]
+            let viewController = viewControllerForScreen(currentScreen)
+            viewController.isModalInPresentation = false
+            setViewControllers([viewController], animated: false)
+        }
     }
     
     var customTraitCollection: UITraitCollection {
@@ -334,6 +358,7 @@ extension DashUICoordinator: DashUINavigator {
     func navigateTo(_ screen: DashUIScreen) {
         screenStack.append(screen)
         let viewController = viewControllerForScreen(screen)
+        viewController.isModalInPresentation = false
         self.pushViewController(viewController, animated: true)
     }
 }
