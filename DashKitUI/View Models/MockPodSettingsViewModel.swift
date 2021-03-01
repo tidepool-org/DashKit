@@ -13,6 +13,12 @@ import PodSDK
 class MockPodSettingsViewModel: ObservableObject, Identifiable {
     public var mockPodCommManager: MockPodCommManager
     @Published var activeAlerts: PodAlerts
+    
+    @Published var nextCommsError: PodCommError? {
+        didSet {
+            mockPodCommManager.nextCommsError = nextCommsError
+        }
+    }
     var updatedReservoir: NSNumber?
     
     var reservoirString: String {
@@ -42,6 +48,8 @@ class MockPodSettingsViewModel: ObservableObject, Identifiable {
         }
         
         reservoirString = numberFormatter.string(from: reservoirAmount) ?? ""
+        
+        nextCommsError = mockPodCommManager.nextCommsError
         
         mockPodCommManager.addObserver(self, queue: DispatchQueue.main)
     }
@@ -95,6 +103,7 @@ extension PodCommError {
             .unacknowledgedCommandPendingRetry,
             .notConnected,
             .failToConnect,
+            .podNotAvailable,
             .activationError(.activationPhase1NotCompleted),
             .bleCommunicationError,
             .bluetoothOff,

@@ -37,7 +37,7 @@ struct MockPodSettingsView: View {
 
         return Form {
             Section {
-                sendProgramErrorPicker
+                nextCommsErrorPicker
                 unacknowledgedCommandRetryResultPicker
             }
             
@@ -151,16 +151,16 @@ struct MockPodSettingsView: View {
         }
     }
     
-    var sendProgramErrorPicker: some View {
-        let sendProgramErrorBinding = Binding<Int>(get: {
+    var nextCommsErrorPicker: some View {
+        let nextCommsErrorBinding = Binding<Int>(get: {
             let idx = PodCommError.simulatedErrors.firstIndex {
                 $0?.localizedDescription ?? "" == self.model.mockPodCommManager.nextCommsError?.localizedDescription ?? ""
             }
             return idx ?? 0
         }, set: {
-            self.model.mockPodCommManager.nextCommsError = PodCommError.simulatedErrors[$0]
+            model.nextCommsError = PodCommError.simulatedErrors[$0]
         })
-        return Picker(selection: sendProgramErrorBinding, label: Text("Next Comms Error")) {
+        return Picker(selection: nextCommsErrorBinding, label: Text("Next Comms Error")) {
             ForEach(0 ..< PodCommError.simulatedErrors.count) {
                 Text(self.podCommErrorFormatted(PodCommError.simulatedErrors[$0]))
             }
