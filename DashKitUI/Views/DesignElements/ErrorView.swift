@@ -48,6 +48,8 @@ struct ErrorView: View {
             .accessibility(label: FrameworkLocalText("Error", comment: "Accessibility label indicating an error occurred"))
             
             Text(self.error.recoverySuggestion ?? "")
+                .foregroundColor(.secondary)
+                .font(.footnote)
                 .accessibility(identifier: "label_recovery_suggestion")
                 .fixedSize(horizontal: false, vertical: true)
         }

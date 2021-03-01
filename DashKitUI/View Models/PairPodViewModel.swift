@@ -77,7 +77,7 @@ class PairPodViewModel: ObservableObject, Identifiable {
                 if !error.recoverable {
                     return LocalizedString("Deactivate Pod", comment: "Pod pairing action button text while showing unrecoverable error")
                 } else {
-                    return LocalizedString("Try Pairing Again", comment: "Pod pairing action button text while showing recoverable error")
+                    return LocalizedString("Retry", comment: "Pod pairing action button text while showing recoverable error")
                 }
             case .pairing:
                 return LocalizedString("Pairing...", comment: "Pod pairing action button text while pairing")
