@@ -45,14 +45,10 @@ class InsertCannulaViewModel: ObservableObject, Identifiable {
             switch self {
             case .ready:
                 return LocalizedString("Insert Cannula", comment: "Cannula insertion button text while ready to insert")
-            case .error(let error):
-                if error.recoverable {
-                    return LocalizedString("Insert Cannula", comment: "Cannula insertion button text while showing error")
-                } else {
-                    return LocalizedString("Discard Pod", comment: "Cannula insertion button text after unrecoverable error")
-                }
+            case .error:
+                return LocalizedString("Retry", comment: "Cannula insertion button text while showing error")
             case .inserting, .startingInsertion:
-                return LocalizedString("Inserting...", comment: "CCannula insertion button text while inserting")
+                return LocalizedString("Inserting...", comment: "Cannula insertion button text while inserting")
             case .finished:
                 return LocalizedString("Continue", comment: "Cannula insertion button text when inserted")
             }

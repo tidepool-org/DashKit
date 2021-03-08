@@ -132,13 +132,7 @@ class DashSettingsViewModel: ObservableObject {
     let reservoirVolumeFormatter = QuantityFormatter(for: .internationalUnit())
     
     var allowedExpirationReminderDateRange: ClosedRange<Date> {
-        if let expiration = pumpManager.podExpiresAt {
-            let earliest = expiration.addingTimeInterval(.hours(-24))
-            let latest = expiration.addingTimeInterval(.hours(-1))
-            return earliest...latest
-        } else {
-            return Calendar.current.date(byAdding: .day, value: -2, to: Date())!...Date()
-        }
+        return pumpManager.allowedExpirationReminderDateRange ?? Calendar.current.date(byAdding: .day, value: -2, to: Date())!...Date()
     }
     
     var didFinish: (() -> Void)?

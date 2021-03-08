@@ -195,7 +195,7 @@ extension PodCommError: LocalizedError {
             return LocalizedString("No unacknowledged command to retry", comment: "Error description for PodCommError.noUnacknowledgedCommandToRetry")
 
         case .bleCommunicationError:
-            return LocalizedString("There was a bluetooth problem communicating with the Pod", comment: "Error description for PodCommError.bleCommunicationError")
+            return LocalizedString("Bluetooth Communication Error", comment: "Error description for PodCommError.bleCommunicationError")
             
         case .bluetoothUnauthorized:
             return LocalizedString("Bluetooth not authorized", comment: "Error description for PodCommError.bluetoothUnauthorized")
@@ -221,7 +221,7 @@ extension PodCommError: LocalizedError {
         case .systemError(let systemError):
             return systemError.recoverySuggestion
         case .bleCommunicationError, .podNotAvailable, .notConnected, .failToConnect:
-            return String(format: LocalizedString("Move to a new area, place your %1$@ and Pod close to each other, and tap “Try Pairing Again”", comment: "Format string for recovery suggestion when pod may be out of range of phone. (1: device model name)"), UIDevice.current.model)
+            return LocalizedString("There was a problem communicating with the pod. If this problem persists, tap Deactivate Pod. You can then activate a new Pod.", comment: "recovery suggestion for bleCommunicationError during pairing")
         case .phoneNotRegistered, .sdkNotInitialized, .messageSigningFailed:
             return LocalizedString("Please re-attempt app configuration.", comment: "Recovery suggestion for errors that should not happen after configuration.")
         case .podServiceIsBusy, .operationTimeout, .unknownError:
