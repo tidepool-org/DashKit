@@ -34,8 +34,8 @@ struct InsertCannulaView: View {
             }
             .accessibility(sortPriority: 1)
         }) {
-            if self.viewModel.state.showProgressDetail {
-                VStack {
+            VStack {
+                if self.viewModel.state.showProgressDetail {
                     self.viewModel.error.map {
                         ErrorView($0, errorClass: $0.recoverable ? .normal : .critical)
                             .accessibility(sortPriority: 0)
@@ -43,33 +43,43 @@ struct InsertCannulaView: View {
 
                     if self.viewModel.error == nil {
                         VStack {
-                            HStack { Spacer () }
                             ProgressIndicatorView(state: self.viewModel.state.progressState)
-                                .padding(.horizontal)
                             if self.viewModel.state.isFinished {
-                                FrameworkLocalText("Inserted", comment: "Label text indicating cannula inserted")
+                                FrameworkLocalText("Inserted", comment: "Label text indicating insertion finished.")
                                     .bold()
                                     .padding(.top)
                             }
                         }
+                        .padding(.bottom, 8)
                     }
                 }
-                .transition(AnyTransition.opacity.combined(with: .move(edge: .bottom)))
-                .padding([.top, .horizontal])
+                if self.viewModel.error != nil {
+                    Button(action: {
+                        self.viewModel.didRequestDeactivation?()
+                    }) {
+                        Text(LocalizedString("Deactivate Pod", comment: "Button text for deactivate pod button"))
+                            .accessibility(identifier: "button_deactivate_pod")
+                            .actionButtonStyle(.destructive)
+                    }
+                    .disabled(self.viewModel.state.isProcessing)
+                }
+                
+                if (self.viewModel.error == nil || self.viewModel.error?.recoverable == true) {
+                    Button(action: {
+                        self.viewModel.continueButtonTapped()
+                    }) {
+                        Text(self.viewModel.state.nextActionButtonDescription)
+                            .accessibility(identifier: "button_next_action")
+                            .accessibility(label: Text(self.viewModel.state.actionButtonAccessibilityLabel))
+                            .actionButtonStyle(.primary)
+                    }
+                    .disabled(self.viewModel.state.isProcessing)
+                    .animation(nil)
+                    .zIndex(1)
+                }
             }
-            Button(action: {
-                self.viewModel.continueButtonTapped()
-            }) {
-                Text(self.viewModel.state.nextActionButtonDescription)
-                    .accessibility(identifier: "button_next_action")
-                    .accessibility(label: Text(self.viewModel.state.actionButtonAccessibilityLabel))
-                    .actionButtonStyle(self.viewModel.state.nextActionButtonStyle)
-            }
-            .disabled(self.viewModel.state.isProcessing)
-            .animation(nil)
+            .transition(AnyTransition.opacity.combined(with: .move(edge: .bottom)))
             .padding()
-            .background(Color(UIColor.systemBackground))
-            .zIndex(1)
         }
         .animation(.default)
         .alert(isPresented: $cancelModalIsPresented) { cancelPairingModal }

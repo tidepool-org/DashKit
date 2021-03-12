@@ -129,7 +129,7 @@ public class MockPodCommManager: PodCommManagerProtocol {
         if incompatiblePod {
             return
         }
-
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
             eventListener(.event(.settingPodUid))
         }
