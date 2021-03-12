@@ -8,6 +8,7 @@
 
 import Foundation
 import DashKit
+import DashKitUI
 import LoopKit
 
 class MockPodPumpManager: DashPumpManager {
@@ -17,6 +18,11 @@ class MockPodPumpManager: DashPumpManager {
     public override var managerIdentifier: String {
         return "OmnipodDemo"
     }
+    
+    public override var registrationManager: PDMRegistrator {
+        return MockRegistrationManager(isRegistered: true)
+    }
+
 
     public required init(podStatus: MockPodStatus? = nil, state: DashPumpManagerState, dateGenerator: @escaping () -> Date = Date.init) {
         

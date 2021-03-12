@@ -11,7 +11,16 @@ import LoopKitUI
 
 struct CheckInsertedCannulaView: View {
     
-    var wasInsertedProperly: ((Bool) -> Void)?
+    
+    @State private var cancelModalIsPresented: Bool = false
+    
+    private var didRequestDeactivation: () -> Void
+    private var wasInsertedProperly: () -> Void
+
+    init(didRequestDeactivation: @escaping () -> Void, wasInsertedProperly: @escaping () -> Void) {
+        self.didRequestDeactivation = didRequestDeactivation
+        self.wasInsertedProperly = wasInsertedProperly
+    }
 
     var body: some View {
         GuidePage(content: {
@@ -31,26 +40,45 @@ struct CheckInsertedCannulaView: View {
         }) {
             VStack(spacing: 10) {
                 Button(action: {
-                    self.wasInsertedProperly?(false)
-                }) {
-                    Text(LocalizedString("No", comment: "Button label for user to answer cannula was not properly inserted"))
-                        .actionButtonStyle(.destructive)
-                }
-                Button(action: {
-                    self.wasInsertedProperly?(true)
+                    self.wasInsertedProperly()
                 }) {
                     Text(LocalizedString("Yes", comment: "Button label for user to answer cannula was properly inserted"))
                         .actionButtonStyle(.primary)
                 }
+                Button(action: {
+                    self.didRequestDeactivation()
+                }) {
+                    Text(LocalizedString("No", comment: "Button label for user to answer cannula was not properly inserted"))
+                        .actionButtonStyle(.destructive)
+                }
             }.padding()
         }
         .animation(.default)
+        .alert(isPresented: $cancelModalIsPresented) { cancelPairingModal }
         .navigationBarTitle("Check Cannula", displayMode: .automatic)
+        .navigationBarItems(trailing: cancelButton)
     }
+    
+    var cancelButton: some View {
+        Button(LocalizedString("Cancel", comment: "Cancel button text in navigation bar on insert cannula screen")) {
+            cancelModalIsPresented = true
+        }
+        .accessibility(identifier: "button_cancel")
+    }
+
+    var cancelPairingModal: Alert {
+        return Alert(
+            title: FrameworkLocalText("Are you sure you want to cancel Pod setup?", comment: "Alert title for cancel pairing modal"),
+            message: FrameworkLocalText("If you cancel Pod setup, the current Pod will be deactivated and will be unusable.", comment: "Alert message body for confirm pod attachment"),
+            primaryButton: .destructive(FrameworkLocalText("Yes, Deactivate Pod", comment: "Button title for confirm deactivation option"), action: { didRequestDeactivation() } ),
+            secondaryButton: .default(FrameworkLocalText("No, Continue With Pod", comment: "Continue pairing button title of in pairing cancel modal"))
+        )
+    }
+
 }
 
 struct CheckInsertedCannulaView_Previews: PreviewProvider {
     static var previews: some View {
-        CheckInsertedCannulaView()
+        CheckInsertedCannulaView(didRequestDeactivation: {}, wasInsertedProperly: {} )
     }
 }

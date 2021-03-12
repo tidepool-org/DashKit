@@ -23,6 +23,10 @@ open class DashPumpManager: PumpManager {
         return "OmnipodDash"
     }
 
+    open var registrationManager: PDMRegistrator {
+        return RegistrationManager.shared
+    }
+
     static let podAlarmNotificationIdentifier = "DASH:\(LoopNotificationCategory.pumpFault.rawValue)"
     
     static let systemErrorNotificationIdentifier = "DASH:system-error"
@@ -30,7 +34,7 @@ open class DashPumpManager: PumpManager {
     public var podCommManager: PodCommManagerProtocol
     
     public var unwrappedPodCommManager: PodCommManagerProtocol
-
+    
     public let log = OSLog(category: "DashPumpManager")
     
     public let localizedTitle = LocalizedString("Omnipod 5", comment: "Generic title of the omnipod 5 pump manager")
@@ -114,12 +118,12 @@ open class DashPumpManager: PumpManager {
         switch state.lastPodCommState {
         case .activating:
             return PumpManagerStatus.PumpStatusHighlight(
-                localizedMessage: NSLocalizedString("Pod Activating", comment: "Status highlight that when pod is activating."),
+                localizedMessage: NSLocalizedString("Finish Pairing", comment: "Status highlight that when pod is activating."),
                 imageName: "exclamationmark.circle.fill",
                 state: .warning)
         case .deactivating:
             return PumpManagerStatus.PumpStatusHighlight(
-                localizedMessage: NSLocalizedString("Pod Deactivating", comment: "Status highlight that when pod is deactivating."),
+                localizedMessage: NSLocalizedString("Finish Deactivation", comment: "Status highlight that when pod is deactivating."),
                 imageName: "exclamationmark.circle.fill",
                 state: .warning)
         case .noPod:
@@ -450,6 +454,7 @@ open class DashPumpManager: PumpManager {
             state.reservoirLevel = nil
             state.podTotalDelivery = nil
             state.alarmCode = nil
+            state.podAttachmentConfirmed = false
         })
         clearSuspendReminder()
     }
@@ -609,7 +614,7 @@ open class DashPumpManager: PumpManager {
         }
     }
     
-    public func updateExpirationReminder(_ intervalBeforeExpiration: TimeInterval, completion: @escaping (Error?) -> Void) {
+    public func updateExpirationReminder(_ intervalBeforeExpiration: TimeInterval, completion: @escaping (PodCommError?) -> Void) {
         guard let newAlert = try? PodExpirationAlert(intervalBeforeExpiration: intervalBeforeExpiration) else {
             completion(PodCommError.invalidAlertSetting)
             return
@@ -626,6 +631,16 @@ open class DashPumpManager: PumpManager {
                 completion(nil)
             }
         }
+    }
+    
+    public var allowedExpirationReminderDateRange: ClosedRange<Date>? {
+        guard let expiration = podExpiresAt else {
+            return nil
+        }
+        
+        let earliest = expiration.addingTimeInterval(.hours(-24))
+        let latest = expiration.addingTimeInterval(.hours(-1))
+        return earliest...latest
     }
     
     public func updateLowReservoirReminder(_ value: Int, completion: @escaping (Error?) -> Void) {
@@ -1383,6 +1398,17 @@ open class DashPumpManager: PumpManager {
         }
         get {
             state.defaultExpirationReminderOffset
+        }
+    }
+    
+    public var podAttachmentConfirmed: Bool {
+        set {
+            mutateState { (state) in
+                state.podAttachmentConfirmed = newValue
+            }
+        }
+        get {
+            state.podAttachmentConfirmed
         }
     }
 }

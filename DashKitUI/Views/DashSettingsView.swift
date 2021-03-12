@@ -122,12 +122,12 @@ struct DashSettingsView: View  {
                 }
             } else {
                 HStack(alignment: .center) {
-                    Image(systemName: "pause.circle.fill")
-                        .font(.system(size: 22))
-                        .foregroundColor(guidanceColors.warning)
-                    FrameworkLocalText("Insulin\nSuspended", comment: "Label for insulin suspended")
-                        .font(.system(size: 14))
-                        .fontWeight(.heavy)
+                    Image(systemName: "x.circle.fill")
+                        .font(.system(size: 34))
+                        .fixedSize()
+                        .foregroundColor(guidanceColors.critical)
+                    FrameworkLocalText("No\nDelivery", comment: "Text shown in insulin remaining space when no pod is paired")
+                        .fontWeight(.bold)
                         .fixedSize()
                 }
             }
@@ -171,8 +171,10 @@ struct DashSettingsView: View  {
                         .fontWeight(.heavy)
                         .fixedSize()
                 } else {
-                    Image(systemName: "x.circle.fill")
-                        .foregroundColor(Color(UIColor.secondaryLabel))
+                    Image(systemName: "exclamationmark.circle.fill")
+                        .font(.system(size: 34))
+                        .fixedSize()
+                        .foregroundColor(guidanceColors.warning)
                     
                     FrameworkLocalText("No Pod", comment: "Text shown in insulin remaining space when no pod is paired").fontWeight(.bold)
                 }
@@ -192,28 +194,25 @@ struct DashSettingsView: View  {
         }
     }
     
-    var suspendResumeRow: some View {
-        // podOK is true at this point. Thus there will be a basalDeliveryState
+    func suspendResumeRow(for basalState: PumpManagerStatus.BasalDeliveryState) -> some View {
         HStack {
-            if let basalState = self.viewModel.basalDeliveryState {
-                Button(action: {
-                    self.suspendResumeTapped()
-                }) {
-                    HStack {
-                        Image(systemName: "pause.circle.fill")
-                            .font(.system(size: 22))
-                            .foregroundColor(suspendResumeButtonColor(for: basalState))
-                        Text(basalState.suspendResumeActionText)
-                            .foregroundColor(basalState.suspendResumeActionColor)
-                    }
+            Button(action: {
+                self.suspendResumeTapped()
+            }) {
+                HStack {
+                    Image(systemName: "pause.circle.fill")
+                        .font(.system(size: 22))
+                        .foregroundColor(suspendResumeButtonColor(for: basalState))
+                    Text(basalState.suspendResumeActionText)
+                        .foregroundColor(basalState.suspendResumeActionColor)
                 }
-                .actionSheet(isPresented: $showSuspendOptions) {
-                    suspendOptionsActionSheet
-                }
-                Spacer()
-                if self.viewModel.basalDeliveryState!.transitioning {
-                    ActivityIndicator(isAnimating: .constant(true), style: .medium)
-                }
+            }
+            .actionSheet(isPresented: $showSuspendOptions) {
+                suspendOptionsActionSheet
+            }
+            Spacer()
+            if basalState.transitioning {
+                ActivityIndicator(isAnimating: .constant(true), style: .medium)
             }
         }
     }
@@ -252,12 +251,10 @@ struct DashSettingsView: View  {
 
                 lifecycleProgress
 
-                if self.viewModel.podOk {
-                    HStack(alignment: .top) {
-                        deliveryStatus
-                        Spacer()
-                        reservoirStatus
-                    }
+                HStack(alignment: .top) {
+                    deliveryStatus
+                    Spacer()
+                    reservoirStatus
                 }
                 
                 if let systemErrorDescription = viewModel.systemErrorDescription {
@@ -267,38 +264,44 @@ struct DashSettingsView: View  {
                 }
             }.padding(.bottom, 8)
             
-            if self.viewModel.podOk {
-                Section(header: FrameworkLocalText("Activity", comment: "Section header for activity section").font(.headline).foregroundColor(Color.primary)) {
-                    suspendResumeRow
-                    if case .suspended(let suspendDate) = self.viewModel.basalDeliveryState {
-                        HStack {
-                            FrameworkLocalText("Suspended At", comment: "Label for suspended at time")
-                            Spacer()
-                            Text(self.viewModel.timeFormatter.string(from: suspendDate))
-                                .foregroundColor(Color.secondary)
-                        }
+            Section(header: FrameworkLocalText("Activity", comment: "Section header for activity section").font(.headline).foregroundColor(Color.primary)) {
+                suspendResumeRow(for: self.viewModel.basalDeliveryState ?? .active(Date()))
+                    .disabled(!self.viewModel.podOk)
+                if case .suspended(let suspendDate) = self.viewModel.basalDeliveryState {
+                    HStack {
+                        FrameworkLocalText("Suspended At", comment: "Label for suspended at time")
+                        Spacer()
+                        Text(self.viewModel.timeFormatter.string(from: suspendDate))
+                            .foregroundColor(Color.secondary)
                     }
                 }
+            }
 
-                if let activatedAt = self.viewModel.activatedAt, let podVersion = self.viewModel.podVersion {
-                    Section() {
-                        HStack {
-                            FrameworkLocalText("Pod Insertion", comment: "Label for pod insertion row")
-                            Spacer()
-                            Text(self.viewModel.dateFormatter.string(from: activatedAt))
-                                .foregroundColor(Color.secondary)
-                        }
-                        
-                        HStack {
-                            FrameworkLocalText("Pod Expires", comment: "Label for pod expiration row")
-                            Spacer()
-                            Text(self.viewModel.dateFormatter.string(from: activatedAt + Pod.lifetime))
-                                .foregroundColor(Color.secondary)
-                        }
-                        
-                        NavigationLink(destination: PodDetailsView(podVersion: podVersion)) {
-                            FrameworkLocalText("Device Details", comment: "Text for device details disclosure row").foregroundColor(Color.primary)
-                        }
+            Section() {
+                HStack {
+                    FrameworkLocalText("Pod Insertion", comment: "Label for pod insertion row")
+                    Spacer()
+                    Text(self.viewModel.activatedAtString)
+                        .foregroundColor(Color.secondary)
+                }
+                
+                HStack {
+                    FrameworkLocalText("Pod Expires", comment: "Label for pod expiration row")
+                    Spacer()
+                    Text(self.viewModel.expiresAtString)
+                        .foregroundColor(Color.secondary)
+                }
+                
+                if let podVersion = self.viewModel.podVersion {
+                    NavigationLink(destination: PodDetailsView(podVersion: podVersion)) {
+                        FrameworkLocalText("Device Details", comment: "Text for device details disclosure row").foregroundColor(Color.primary)
+                    }
+                } else {
+                    HStack {
+                        FrameworkLocalText("Device Details", comment: "Text for device details disclosure row")
+                        Spacer()
+                        Text("—")
+                            .foregroundColor(Color.secondary)
                     }
                 }
             }

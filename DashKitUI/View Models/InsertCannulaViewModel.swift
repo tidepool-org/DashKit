@@ -32,12 +32,12 @@ class InsertCannulaViewModel: ObservableObject, Identifiable {
             }
         }
 
-        var instructionsColor: UIColor {
+        var instructionsDisabled: Bool {
             switch self {
             case .ready, .error:
-                return UIColor.label
+                return false
             default:
-                return UIColor.secondaryLabel
+                return true
             }
         }
         
@@ -45,14 +45,10 @@ class InsertCannulaViewModel: ObservableObject, Identifiable {
             switch self {
             case .ready:
                 return LocalizedString("Insert Cannula", comment: "Cannula insertion button text while ready to insert")
-            case .error(let error):
-                if error.recoverable {
-                    return LocalizedString("Insert Cannula", comment: "Cannula insertion button text while showing error")
-                } else {
-                    return LocalizedString("Discard Pod", comment: "Cannula insertion button text after unrecoverable error")
-                }
+            case .error:
+                return LocalizedString("Retry", comment: "Cannula insertion button text while showing error")
             case .inserting, .startingInsertion:
-                return LocalizedString("Inserting...", comment: "CCannula insertion button text while inserting")
+                return LocalizedString("Inserting...", comment: "Cannula insertion button text while inserting")
             case .finished:
                 return LocalizedString("Continue", comment: "Cannula insertion button text when inserted")
             }
@@ -120,15 +116,12 @@ class InsertCannulaViewModel: ObservableObject, Identifiable {
     
     var didFinish: (() -> Void)?
     
-    var didCancel: (() -> Void)?
+    var didRequestDeactivation: (() -> Void)?
     
     var cannulaInserter: CannulaInserter
     
-    weak var navigator: DashUINavigator?
-
-    init(cannulaInserter: CannulaInserter, navigator: DashUINavigator) {
+    init(cannulaInserter: CannulaInserter) {
         self.cannulaInserter = cannulaInserter
-        self.navigator = navigator
     }
     
     private func handleEvent(_ event: ActivationStep2Event) {
@@ -164,14 +157,11 @@ class InsertCannulaViewModel: ObservableObject, Identifiable {
             if error.recoverable {
                 insertCannula()
             } else {
-                navigator?.navigateTo(.deactivate)
+                didRequestDeactivation?()
             }
         default:
             insertCannula()
         }
     }
     
-    public func cancelButtonTapped() {
-        didCancel?()
-    }
 }

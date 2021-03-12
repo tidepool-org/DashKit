@@ -10,7 +10,7 @@ import Foundation
 import DashKit
 import PodSDK
 
-class MockRegistrationManager: PDMRegistrator {
+public class MockRegistrationManager: PDMRegistrator {
     
     public var initialResponse: RegistrationStatus = .connectionTimeout
     
@@ -18,7 +18,7 @@ class MockRegistrationManager: PDMRegistrator {
     
     private var _isRegistered: Bool
 
-    init(isRegistered: Bool = false) {
+    public init(isRegistered: Bool = false) {
         self._isRegistered = isRegistered
     }
     
@@ -27,7 +27,7 @@ class MockRegistrationManager: PDMRegistrator {
         completion(.invalidConfiguration)
     }
     
-    func startRegistration(completion: @escaping (RegistrationStatus) -> ()) {
+    public func startRegistration(completion: @escaping (RegistrationStatus) -> ()) {
         attemptCount += 1
         let localAttemptCount = attemptCount
         
@@ -51,7 +51,7 @@ class MockRegistrationManager: PDMRegistrator {
         completion(.registered)
     }
     
-    func isRegistered() -> Bool {
+    public func isRegistered() -> Bool {
         return _isRegistered
     }
     

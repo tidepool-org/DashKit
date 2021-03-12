@@ -87,7 +87,7 @@ enum PodLifeState {
     var nextPodLifecycleActionDescription: String {
         switch self {
         case .podActivating, .noPod:
-            return LocalizedString("Pair New Pod", comment: "Settings page link description when next lifecycle action is to pair new pod")
+            return LocalizedString("Pair Pod", comment: "Settings page link description when next lifecycle action is to pair new pod")
         case .podDeactivating:
             return LocalizedString("Finish deactivation", comment: "Settings page link description when next lifecycle action is to finish deactivation")
         default:

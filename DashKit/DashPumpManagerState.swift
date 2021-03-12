@@ -44,6 +44,8 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
     public var defaultExpirationReminderOffset = Pod.defaultExpirationReminderOffset
 
     public var lowReservoirReminderValue: Double
+    
+    public var podAttachmentConfirmed: Bool
 
     public var alarmCode: AlarmCode?
     
@@ -112,6 +114,7 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
         self.activeAlerts = []
         self.lastPodCommState = lastPodCommState
         self.lowReservoirReminderValue = Pod.defaultLowReservoirReminder
+        self.podAttachmentConfirmed = false
     }
 
 
@@ -201,6 +204,8 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
         self.defaultExpirationReminderOffset = rawValue["defaultExpirationReminderOffset"] as? TimeInterval ?? Pod.defaultExpirationReminderOffset
         
         self.lowReservoirReminderValue = rawValue["lowReservoirReminderValue"] as? Double ?? Pod.defaultLowReservoirReminder
+
+        self.podAttachmentConfirmed = rawValue["podAttachmentConfirmed"] as? Bool ?? false
     }
 
     public var rawValue: RawValue {
@@ -211,7 +216,8 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
             "basalProgram": basalProgram.rawValue,
             "maximumTempBasalRate": maximumTempBasalRate,
             "activeAlerts": activeAlerts.rawValue,
-            "lowReservoirReminderValue": lowReservoirReminderValue
+            "lowReservoirReminderValue": lowReservoirReminderValue,
+            "podAttachmentConfirmed": podAttachmentConfirmed
         ]
         
         rawValue["lastPodCommState"] = try? JSONEncoder().encode(lastPodCommState)
@@ -268,6 +274,7 @@ extension DashPumpManagerState: CustomDebugStringConvertible {
             "* connectionState: \(String(describing: connectionState))",
             "* lowReservoirReminderValue: \(lowReservoirReminderValue)",
             "* expirationReminderDate: \(String(describing: expirationReminderDate))",
+            "* podAttachmentConfirmed: \(podAttachmentConfirmed)"
             ].joined(separator: "\n")
     }
 }

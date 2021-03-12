@@ -43,18 +43,14 @@ class PairPodViewModel: ObservableObject, Identifiable {
         case error(DashPairingError, PodCommState)
         case finished
         
-        var instructionsColor: UIColor {
+        var instructionsDisabled: Bool {
             switch self {
             case .ready:
-                return UIColor.label
+                return false
             case .error(let error, _):
-                if error.recoverable {
-                    return UIColor.label
-                } else {
-                    return UIColor.secondaryLabel
-                }
+                return !error.recoverable
             default:
-                return UIColor.secondaryLabel
+                return true
             }
         }
         
@@ -77,12 +73,8 @@ class PairPodViewModel: ObservableObject, Identifiable {
             switch self {
             case .ready:
                 return LocalizedString("Pair Pod", comment: "Pod pairing action button text while ready to pair")
-            case .error(let error, _):
-                if !error.recoverable {
-                    return LocalizedString("Discard Pod", comment: "Pod pairing action button text while showing unrecoverable error")
-                } else {
-                    return LocalizedString("Try Pairing Again", comment: "Pod pairing action button text while showing recoverable error")
-                }
+            case .error:
+                return LocalizedString("Retry", comment: "Pod pairing action button text while showing error")
             case .pairing:
                 return LocalizedString("Pairing...", comment: "Pod pairing action button text while pairing")
             case .priming:
@@ -92,17 +84,9 @@ class PairPodViewModel: ObservableObject, Identifiable {
             }
         }
         
-        var actionButtonType: ActionButton.ButtonType {
-            if case .error(let error, _) = self, !error.recoverable {
-                return .destructive
-            } else {
-                return .primary
-            }
-        }
-        
         var navBarButtonAction: NavBarButtonAction {
             switch self {
-            case .error(let (_, podCommState)):
+            case .error(_, let podCommState):
                 if podCommState == .activating {
                     return .discard
                 }
@@ -113,7 +97,7 @@ class PairPodViewModel: ObservableObject, Identifiable {
         }
         
         var navBarVisible: Bool {
-            if case .error(let (error, _)) = self {
+            if case .error(let error, _) = self {
                 return error.recoverable
             }
             return true
@@ -167,10 +151,16 @@ class PairPodViewModel: ObservableObject, Identifiable {
 
     @Published var state: PairPodViewModelState = .ready
     
+    var podIsActivated: Bool {
+        return podPairer.podCommState != .noPod
+    }
+    
     var didFinish: (() -> Void)?
     
-    var didCancel: (() -> Void)?
+    var didRequestDeactivation: (() -> Void)?
     
+    var didCancelSetup: (() -> Void)?
+
     weak var navigator: DashUINavigator?
     
     var podPairer: PodPairer
@@ -221,17 +211,7 @@ class PairPodViewModel: ObservableObject, Identifiable {
         default:
             pair()
         }
-    }
-    
-    public func cancelButtonTapped() {
-        if case .discard = state.navBarButtonAction {
-            podPairer.discardPod { [weak self] (result) in
-                self?.state = .ready
-            }
-        } else {
-            didCancel?()
-        }
-    }
+    }    
 }
 
 // Pairing recovery suggestions
@@ -242,8 +222,8 @@ enum DashPairingError : LocalizedError {
         switch self {
         case .podCommError(let error):
             switch error {
-                case .podNotAvailable:
-                    return LocalizedString("Please make sure the pod is filled with insulin and is close to your device and try again.", comment: "recovery suggestion for podNotAvailable during pairing.")
+            case .podNotAvailable:
+                return LocalizedString("Please make sure the pod is filled with insulin and is close to your device and try again.", comment: "recovery suggestion for podNotAvailable during pairing.")
             default:
                 return error.recoverySuggestion
             }
@@ -262,24 +242,5 @@ enum DashPairingError : LocalizedError {
         case .podCommError(let error):
             return error.recoverable
         }
-    }
-}
-
-extension PodCommError {
-    var recoverable: Bool {
-        switch self {
-        case .internalError, .podIsInAlarm:
-            return false
-        case .activationError(let activationErrorCode):
-            switch activationErrorCode {
-            case .podIsLumpOfCoal1Hour, .podIsLumpOfCoal2Hours: // TODO: Add not compatible error, when availalble.
-                return false
-            default:
-                break
-            }
-        default:
-            break
-        }
-        return true
     }
 }

@@ -12,11 +12,11 @@ import LoopKitUI
 struct ErrorView: View {
     var error: LocalizedError
     
-    var errorClass: ErrorClass
+    var criticality: ErrorCriticality
     
     @Environment(\.guidanceColors) var guidanceColors
     
-    public enum ErrorClass {
+    public enum ErrorCriticality {
         case critical
         case normal
         
@@ -30,16 +30,16 @@ struct ErrorView: View {
         }
     }
     
-    init(_ error: LocalizedError, errorClass: ErrorClass = .normal) {
+    init(_ error: LocalizedError, errorClass: ErrorCriticality = .normal) {
         self.error = error
-        self.errorClass = errorClass
+        self.criticality = errorClass
     }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 15) {
             HStack {
                 Image(systemName: "exclamationmark.triangle.fill")
-                    .foregroundColor(self.errorClass.symbolColor(using: guidanceColors))
+                    .foregroundColor(self.criticality.symbolColor(using: guidanceColors))
                 Text(self.error.errorDescription ?? "")
                     .bold()
                     .accessibility(identifier: "label_error_description")
@@ -48,9 +48,12 @@ struct ErrorView: View {
             .accessibility(label: FrameworkLocalText("Error", comment: "Accessibility label indicating an error occurred"))
             
             Text(self.error.recoverySuggestion ?? "")
+                .foregroundColor(.secondary)
+                .font(.footnote)
                 .accessibility(identifier: "label_recovery_suggestion")
                 .fixedSize(horizontal: false, vertical: true)
         }
+        .padding(.bottom)
         .accessibilityElement(children: .combine)
     }
 }
