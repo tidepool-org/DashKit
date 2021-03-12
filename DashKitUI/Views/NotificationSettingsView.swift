@@ -23,7 +23,7 @@ struct NotificationSettingsView: View {
     
     var scheduledReminderDate: Date?
     
-    var allowedReminderDateRange: ClosedRange<Date>
+    var allowedScheduledReminderDates: [Date]?
     
     var lowReservoirReminderValue: Int
     
@@ -40,9 +40,15 @@ struct NotificationSettingsView: View {
                 footer: LocalizedString("The App notifies you in advance of Pod expiration.  Set the number of hours advance notice you would like to have.", comment: "Footer text for omnipod reminders section")
             ) {
                 expirationReminderRow
-                if let scheduledReminderDate = scheduledReminderDate  {
+            }
+
+            if let scheduledReminderDate = scheduledReminderDate, let allowedDates = allowedScheduledReminderDates {
+                RoundedCard(
+                    footer: LocalizedString("This is a reminder that you scheduled when you paired your current Pod. Tap to edit.", comment: "Footer text for scheduled reminder area"))
+                {
+                    Text("Scheduled Reminder")
                     Divider()
-                    scheduledReminderRow(scheduledDate: scheduledReminderDate)
+                    scheduledReminderRow(scheduledDate: scheduledReminderDate, allowedDates: allowedDates)
                 }
             }
 
@@ -57,12 +63,18 @@ struct NotificationSettingsView: View {
         .navigationBarTitle(LocalizedString("Notification Settings", comment: "navigation title for notification settings"))
     }
     
+    var expirationDefaultFormatter = QuantityFormatter(for: .hour())
+    
+    var expirationDefaultString: String {
+        return expirationDefaultFormatter.string(from: HKQuantity(unit: .hour(), doubleValue: Double(expirationReminderDefault)), for: .hour())!
+    }
+    
     var expirationReminderRow: some View {
         VStack {
             HStack {
                 Text(LocalizedString("Expiration Reminder Default", comment: "Label text for expiration reminder default row"))
                 Spacer()
-                Button("\(expirationReminderDefault) h") {
+                Button(expirationDefaultString) {
                     withAnimation {
                         showingHourPicker.toggle()
                     }
@@ -73,25 +85,28 @@ struct NotificationSettingsView: View {
                     ForEach(Self.expirationReminderHoursAllowed, id: \.self) { value in
                         Text("\(value) h")
                     }
-                }.pickerStyle(WheelPickerStyle())
+                }
+                .pickerStyle(WheelPickerStyle())
+                .frame(width: 100)
+                .clipped()
             }
         }
     }
     
     @State private var scheduleReminderDateEditViewIsShown: Bool = false
     
-    func scheduledReminderRow(scheduledDate: Date) -> some View {
+    func scheduledReminderRow(scheduledDate: Date, allowedDates: [Date]) -> some View {
         NavigationLink(
             destination: ScheduledExpirationReminderEditView(
                 scheduledExpirationReminderDate: scheduledDate,
-                allowedReminderDateRange: allowedReminderDateRange,
+                allowedDates: allowedDates,
                 dateFormatter: dateFormatter,
                 onSave: onSaveScheduledExpirationReminder,
                 onFinish: { scheduleReminderDateEditViewIsShown = false }),
             isActive: $scheduleReminderDateEditViewIsShown)
         {
             RoundedCardValueRow(
-                label: LocalizedString("Scheduled Reminder", comment: "Label for scheduled reminder row"),
+                label: LocalizedString("Time", comment: "Label for scheduled reminder value row"),
                 value: dateFormatter.string(from: scheduledReminderDate ?? Date()),
                 highlightValue: false,
                 disclosure: true
@@ -121,6 +136,6 @@ struct NotificationSettingsView: View {
 
 struct NotificationSettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        NotificationSettingsView(dateFormatter: DateFormatter(), expirationReminderDefault: .constant(2), scheduledReminderDate: Date(), allowedReminderDateRange: Calendar.current.date(byAdding: .day, value: -2, to: Date())!...Date(), lowReservoirReminderValue: 20)
+        NotificationSettingsView(dateFormatter: DateFormatter(), expirationReminderDefault: .constant(2), scheduledReminderDate: Date(), allowedScheduledReminderDates: [Date()], lowReservoirReminderValue: 20)
     }
 }

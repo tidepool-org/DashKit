@@ -322,7 +322,7 @@ struct DashSettingsView: View  {
                         dateFormatter: self.viewModel.dateFormatter,
                         expirationReminderDefault: self.$viewModel.expirationReminderDefault,
                         scheduledReminderDate: self.viewModel.expirationReminderDate,
-                        allowedReminderDateRange: self.viewModel.allowedExpirationReminderDateRange,
+                        allowedScheduledReminderDates: self.viewModel.allowedScheduledReminderDates,
                         lowReservoirReminderValue: self.viewModel.lowReservoirAlertValue,
                         onSaveScheduledExpirationReminder: self.viewModel.saveScheduledExpirationReminder,
                         onSaveLowReservoirReminder: self.viewModel.saveLowReservoirReminder))

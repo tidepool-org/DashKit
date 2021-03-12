@@ -73,6 +73,7 @@ struct RoundedCard<Content: View>: View {
     var alignment: HorizontalAlignment
     var title: String?
     var footer: String?
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
 
     init(title: String? = nil, footer: String? = nil, alignment: HorizontalAlignment = .leading, @ViewBuilder content: @escaping () -> Content) {
         self.content = content
@@ -87,24 +88,36 @@ struct RoundedCard<Content: View>: View {
                 RoundedCardTitle(title)
                     .frame(maxWidth: .infinity, alignment: Alignment(horizontal: .leading, vertical: .center))
             }
-            VStack(content: content)
+            
+            VStack(alignment: alignment, content: content)
                 .frame(maxWidth: .infinity, alignment: Alignment(horizontal: alignment, vertical: .center))
                 .padding(12)
                 .background(Color(.secondarySystemGroupedBackground))
-                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
             if let footer = footer {
                 RoundedCardFooter(footer)
-                    .frame(maxWidth: .infinity)
+                    .frame(maxWidth: .infinity, alignment: Alignment(horizontal: alignment, vertical: .center))
+                    .padding(.leading, 12)
             }
         }
         .padding(.bottom, 20)
     }
+    
+    private var padding: CGFloat {
+        return self.horizontalSizeClass == .regular ? 12 : 0
+    }
+
+    private var cornerRadius: CGFloat {
+        return self.horizontalSizeClass == .regular ? 8 : 0
+    }
+
 }
 
 struct RoundedCardScrollView<Content: View>: View {
     var content: () -> Content
     var title: String?
-    
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
+
     init(title: String? = nil, @ViewBuilder content: @escaping () -> Content) {
         self.title = title
         self.content = content
@@ -122,8 +135,13 @@ struct RoundedCardScrollView<Content: View>: View {
                 .padding([.leading, .trailing])
             }
             VStack(alignment: .leading, content: content)
-                .padding()
+                .padding(padding)
         }
         .background(Color(.systemGroupedBackground).edgesIgnoringSafeArea(.all))
     }
+    
+    private var padding: CGFloat {
+        return self.horizontalSizeClass == .regular ? 12 : 0
+    }
+
 }

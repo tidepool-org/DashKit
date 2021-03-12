@@ -163,9 +163,9 @@ class DashUICoordinator: UINavigationController, PumpManagerCreateNotifying, Pum
             hostedView.navigationItem.title = LocalizedString("Check Cannula", comment: "Title for check cannula screen")
             return hostedView
         case .setupComplete:
-            guard let expirationReminderDate = pumpManager.state.expirationReminderDate,
+            guard let expirationReminderDate = pumpManager.scheduledExpirationReminder,
                   let podExpiresAt = pumpManager.podExpiresAt,
-                  let allowedExpirationReminderDateRange = pumpManager.allowedExpirationReminderDateRange
+                  let allowedExpirationReminderDates = pumpManager.allowedExpirationReminderDates
             else {
                 fatalError("Cannot show setup complete UI without expiration reminder date.")
             }
@@ -174,9 +174,9 @@ class DashUICoordinator: UINavigationController, PumpManagerCreateNotifying, Pum
             formatter.timeStyle = .short
 
             let view = SetupCompleteView(
-                reminderDate: expirationReminderDate,
+                scheduledReminderDate: expirationReminderDate,
                 dateFormatter: formatter,
-                allowedReminderDateRange: allowedExpirationReminderDateRange,
+                allowedDates: allowedExpirationReminderDates,
                 onSaveScheduledExpirationReminder: { (newExpirationReminderDate, completion) in
                     let intervalBeforeExpiration = podExpiresAt.timeIntervalSince(newExpirationReminderDate)
                     self.pumpManager.updateExpirationReminder(intervalBeforeExpiration, completion: completion)

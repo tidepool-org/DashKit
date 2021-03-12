@@ -91,7 +91,6 @@
 		C171758C2437AFF200199ABC /* CheckInsertedCannulaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C171758B2437AFF200199ABC /* CheckInsertedCannulaView.swift */; };
 		C17A5B5825E03DC000721416 /* ReservoirLevelHighlightState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17A5B5725E03DC000721416 /* ReservoirLevelHighlightState.swift */; };
 		C188E42624C61E98002701AB /* PodAlerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = C188E42524C61E98002701AB /* PodAlerts.swift */; };
-		C194114E228DBEC000E886DD /* PodSetupCompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C194114D228DBEC000E886DD /* PodSetupCompleteViewController.swift */; };
 		C1941151228DBF2100E886DD /* ExpirationReminderDateTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1941150228DBF2100E886DD /* ExpirationReminderDateTableViewCell.swift */; };
 		C1941153228DBF8300E886DD /* NibLoadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1941152228DBF8300E886DD /* NibLoadable.swift */; };
 		C196751124EDD15A00118EC4 /* PendingCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C196751024EDD15A00118EC4 /* PendingCommand.swift */; };
@@ -311,7 +310,6 @@
 		C171758B2437AFF200199ABC /* CheckInsertedCannulaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInsertedCannulaView.swift; sourceTree = "<group>"; };
 		C17A5B5725E03DC000721416 /* ReservoirLevelHighlightState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReservoirLevelHighlightState.swift; sourceTree = "<group>"; };
 		C188E42524C61E98002701AB /* PodAlerts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodAlerts.swift; sourceTree = "<group>"; };
-		C194114D228DBEC000E886DD /* PodSetupCompleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodSetupCompleteViewController.swift; sourceTree = "<group>"; };
 		C1941150228DBF2100E886DD /* ExpirationReminderDateTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpirationReminderDateTableViewCell.swift; sourceTree = "<group>"; };
 		C1941152228DBF8300E886DD /* NibLoadable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NibLoadable.swift; sourceTree = "<group>"; };
 		C196751024EDD15A00118EC4 /* PendingCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingCommand.swift; sourceTree = "<group>"; };
@@ -479,7 +477,6 @@
 				C10EF92B24044B3B0091392C /* Protocols */,
 				C1ED19CE23F98C3800D55049 /* View Controllers */,
 				C12A06A823F2EFC50052195C /* Mocks */,
-				C1201E3D23EE1ABE002DA84A /* Old ViewControllers */,
 				C194114F228DBF0100E886DD /* UIViews */,
 				C15424302280C575006754B3 /* Assets.xcassets */,
 				C107D16B226A142500D63775 /* Extensions */,
@@ -576,14 +573,6 @@
 				C105E8E225F14866009C9EC3 /* RoundedCard.swift */,
 			);
 			path = DesignElements;
-			sourceTree = "<group>";
-		};
-		C1201E3D23EE1ABE002DA84A /* Old ViewControllers */ = {
-			isa = PBXGroup;
-			children = (
-				C194114D228DBEC000E886DD /* PodSetupCompleteViewController.swift */,
-			);
-			path = "Old ViewControllers";
 			sourceTree = "<group>";
 		};
 		C12A069F23F217630052195C /* View Models */ = {
@@ -1169,7 +1158,6 @@
 				C1ACF43222A03F0500F7DDB4 /* OmnipodReservoirView.swift in Sources */,
 				C107D17D226A24CE00D63775 /* TimeZone.swift in Sources */,
 				C105E8E325F14866009C9EC3 /* RoundedCard.swift in Sources */,
-				C194114E228DBEC000E886DD /* PodSetupCompleteViewController.swift in Sources */,
 				C10D1D77241169F50007ABF7 /* MockPodPairer.swift in Sources */,
 				C155759825CB552D008ADD91 /* NotificationSettingsView.swift in Sources */,
 				C107D16D226A143A00D63775 /* UIViewController.swift in Sources */,

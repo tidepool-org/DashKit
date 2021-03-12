@@ -9,9 +9,13 @@
 import SwiftUI
 import LoopKitUI
 
+extension Date: Identifiable {
+    public var id: Self { self }
+}
+
 struct ScheduledExpirationReminderEditView: View {
     
-    var allowedReminderDateRange: ClosedRange<Date>
+    var allowedDates: [Date]
     var dateFormatter: DateFormatter
     var onSave: ((_ selectedDate: Date, _ completion: @escaping (_ error: Error?) -> Void) -> Void)?
     var onFinish: (() -> Void)?
@@ -22,9 +26,9 @@ struct ScheduledExpirationReminderEditView: View {
     @State private var saving: Bool = false
     @State private var selectedDate: Date
 
-    init(scheduledExpirationReminderDate: Date, allowedReminderDateRange: ClosedRange<Date>, dateFormatter: DateFormatter, onSave: ((_ selectedDate: Date, _ completion: @escaping (_ error: Error?) -> Void) -> Void)? = nil, onFinish: (() -> Void)? = nil)
+    init(scheduledExpirationReminderDate: Date, allowedDates: [Date], dateFormatter: DateFormatter, onSave: ((_ selectedDate: Date, _ completion: @escaping (_ error: Error?) -> Void) -> Void)? = nil, onFinish: (() -> Void)? = nil)
     {
-        self.allowedReminderDateRange = allowedReminderDateRange
+        self.allowedDates = allowedDates
         self.dateFormatter = dateFormatter
         self.onSave = onSave
         self.onFinish = onFinish
@@ -45,8 +49,11 @@ struct ScheduledExpirationReminderEditView: View {
                         value: dateFormatter.string(from: selectedDate),
                         highlightValue: true
                     )
-                    DatePicker("", selection: $selectedDate, in: allowedReminderDateRange)
-                        .datePickerStyle(WheelDatePickerStyle())
+                }
+                Picker(selection: $selectedDate, label: Text("Numbers")) {
+                    ForEach(self.allowedDates) { date in
+                        Text(dateFormatter.string(from: date))
+                    }
                 }
             }
             Spacer()
@@ -117,7 +124,7 @@ struct ScheduledExpirationReminderEditView_Previews: PreviewProvider {
     static var previews: some View {
         ScheduledExpirationReminderEditView(
             scheduledExpirationReminderDate: Date(),
-            allowedReminderDateRange: Calendar.current.date(byAdding: .day, value: -2, to: Date())!...Date(),
+            allowedDates: [Date()],
             dateFormatter: DateFormatter(),
             onSave: { (_, _) in },
             onFinish: { }
