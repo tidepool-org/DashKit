@@ -194,14 +194,6 @@ public class MockPodCommManager: PodCommManagerProtocol {
                 eventListener(.error(error))
             }
         } else {
-            
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 11) {
-                eventListener(.error(.bleCommunicationError))
-            }
-            return
-
-                
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                 eventListener(.event(.programmingActiveBasal))
                 self.podStatus?.basalProgram = basalProgram

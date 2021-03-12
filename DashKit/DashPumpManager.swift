@@ -634,13 +634,13 @@ open class DashPumpManager: PumpManager {
     }
     
     public var allowedExpirationReminderDateRange: ClosedRange<Date>? {
-        if let expiration = podExpiresAt {
-            let earliest = expiration.addingTimeInterval(.hours(-24))
-            let latest = expiration.addingTimeInterval(.hours(-1))
-            return earliest...latest
-        } else {
+        guard let expiration = podExpiresAt else {
             return nil
         }
+        
+        let earliest = expiration.addingTimeInterval(.hours(-24))
+        let latest = expiration.addingTimeInterval(.hours(-1))
+        return earliest...latest
     }
     
     public func updateLowReservoirReminder(_ value: Int, completion: @escaping (Error?) -> Void) {
