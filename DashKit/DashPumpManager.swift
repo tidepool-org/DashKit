@@ -1007,6 +1007,10 @@ open class DashPumpManager: PumpManager {
     }
     
     private func configurePeriodicStatusCheck() {
+        guard podCommState == .active else {
+            return
+        }
+        
         self.log.debug("podCommManager periodic status: configuring")
         podCommManager.configPeriodicStatusCheck(interval: .minutes(1)) { (result) in
             switch result {

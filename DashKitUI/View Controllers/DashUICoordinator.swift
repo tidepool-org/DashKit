@@ -246,6 +246,8 @@ class DashUICoordinator: UINavigationController, PumpManagerCreateNotifying, Pum
         completionDelegate?.completionNotifyingDidComplete(self)
     }
     
+    private var isOnboarding: Bool
+    
     init(pumpManager: DashPumpManager? = nil, colorPalette: LoopUIColorPalette, pumpManagerType: DashPumpManager.Type? = nil, initialSettings: PumpManagerSetupSettings? = nil)
     {
         if pumpManager == nil {
@@ -274,6 +276,8 @@ class DashUICoordinator: UINavigationController, PumpManagerCreateNotifying, Pum
 
         self.initialSettings = initialSettings
         
+        self.isOnboarding = initialSettings != nil
+        
         super.init(navigationBarClass: UINavigationBar.self, toolbarClass: UIToolbar.self)
     }
     
@@ -293,7 +297,7 @@ class DashUICoordinator: UINavigationController, PumpManagerCreateNotifying, Pum
                 } else {
                     return .confirmAttachment
                 }
-            } else if pumpManager.podCommState == .noPod {
+            } else if pumpManager.podCommState == .noPod && isOnboarding {
                return .pairPod
             } else {
                 return .settings

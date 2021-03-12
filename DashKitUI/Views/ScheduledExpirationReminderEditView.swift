@@ -15,6 +15,8 @@ extension Date: Identifiable {
 
 struct ScheduledExpirationReminderEditView: View {
     
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    
     var allowedDates: [Date]
     var dateFormatter: DateFormatter
     var onSave: ((_ selectedDate: Date, _ completion: @escaping (_ error: Error?) -> Void) -> Void)?
@@ -43,16 +45,24 @@ struct ScheduledExpirationReminderEditView: View {
     var content: some View {
         VStack {
             RoundedCardScrollView(title: LocalizedString("Scheduled Reminder", comment: "Title for scheduled expiration reminder edit page")) {
-                RoundedCard {
-                    RoundedCardValueRow(
-                        label: LocalizedString("Scheduled Reminder", comment: "Label for scheduled expiration reminder row"),
-                        value: dateFormatter.string(from: selectedDate),
-                        highlightValue: true
-                    )
-                }
-                Picker(selection: $selectedDate, label: Text("Numbers")) {
-                    ForEach(self.allowedDates) { date in
-                        Text(dateFormatter.string(from: date))
+                if self.horizontalSizeClass == .compact {
+                    // Keep picker outside of card in compact view, because it
+                    VStack(spacing: 0) {
+                        RoundedCard {
+                            Text("Scheduled Reminder")
+                            Divider()
+                            valueRow
+                        }
+                        picker
+                            .background(Color(.secondarySystemGroupedBackground))
+                    }
+
+                } else {
+                    RoundedCard {
+                        Text("Scheduled Reminder")
+                        Divider()
+                        valueRow
+                        picker
                     }
                 }
             }
@@ -66,6 +76,22 @@ struct ScheduledExpirationReminderEditView: View {
         }
         .navigationBarTitle("", displayMode: .inline)
         .alert(isPresented: $alertIsPresented, content: { alert(error: error) })
+    }
+    
+    var valueRow: some View {
+        RoundedCardValueRow(
+            label: LocalizedString("Time", comment: "Label for scheduled expiration reminder row"),
+            value: dateFormatter.string(from: selectedDate),
+            highlightValue: true
+        )
+    }
+    
+    var picker: some View {
+        Picker(selection: $selectedDate, label: Text("Numbers")) {
+            ForEach(self.allowedDates) { date in
+                Text(dateFormatter.string(from: date))
+            }
+        }
     }
     
     var saveButtonText: String {
