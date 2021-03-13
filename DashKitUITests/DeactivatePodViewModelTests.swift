@@ -33,7 +33,7 @@ class DeactivatePodViewModelTests: XCTestCase {
     }
 
     func testContinueShouldAttemptDeactivation() {
-        let viewModel = DeactivatePodViewModel(podDeactivator: self)
+        let viewModel = DeactivatePodViewModel(podDeactivator: self, podAttachedToBody: true)
         
         deactivationExpectation = expectation(description: "Deactivate Pod")
 
@@ -43,7 +43,7 @@ class DeactivatePodViewModelTests: XCTestCase {
     }
     
     func testContinueAfterRecoverableErrorShouldRetry() {
-        let viewModel = DeactivatePodViewModel(podDeactivator: self)
+        let viewModel = DeactivatePodViewModel(podDeactivator: self, podAttachedToBody: true)
 
         deactivationError = .bleCommunicationError
         
@@ -60,7 +60,7 @@ class DeactivatePodViewModelTests: XCTestCase {
     }
     
     func testContinueAfterSuccessfulDeactivationShouldCallDidFinish() {
-        let viewModel = DeactivatePodViewModel(podDeactivator: self)
+        let viewModel = DeactivatePodViewModel(podDeactivator: self, podAttachedToBody: true)
 
         deactivationExpectation = expectation(description: "Deactivate Pod")
         viewModel.continueButtonTapped()
@@ -79,7 +79,7 @@ class DeactivatePodViewModelTests: XCTestCase {
     }
     
     func testTappingDiscardShouldDiscardPodAndFinish() {
-        let viewModel = DeactivatePodViewModel(podDeactivator: self)
+        let viewModel = DeactivatePodViewModel(podDeactivator: self, podAttachedToBody: true)
 
         discardPodExpectation = expectation(description: "Discard Pod")
         viewModel.discardPodButtonTapped()
@@ -98,7 +98,7 @@ class DeactivatePodViewModelTests: XCTestCase {
     }
 
     func testTappingDiscardAfterErrorClearsShouldDiscardPodAndFinish() {
-        let viewModel = DeactivatePodViewModel(podDeactivator: self)
+        let viewModel = DeactivatePodViewModel(podDeactivator: self, podAttachedToBody: true)
 
         discardError = .bleCommunicationError
 
