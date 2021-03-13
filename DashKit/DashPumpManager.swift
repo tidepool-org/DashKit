@@ -636,9 +636,11 @@ open class DashPumpManager: PumpManager {
             return nil
         }
         
-        return Array(stride(from: 24, through: 1, by: -1)).map { (i: Int) -> Date in
+        let allDates = Array(stride(from: 24, through: 1, by: -1)).map { (i: Int) -> Date in
             expiration.addingTimeInterval(.hours(Double(-i)))
         }
+        let now = dateGenerator()
+        return allDates.filter { $0.timeIntervalSince(now) > 0 }
     }
     
     public var scheduledExpirationReminder: Date? {
