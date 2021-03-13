@@ -85,7 +85,7 @@ struct RoundedCard<Content: View>: View {
     }
     
     var body: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: 10) {
             if let title = title {
                 RoundedCardTitle(title)
                     .frame(maxWidth: .infinity, alignment: Alignment(horizontal: .leading, vertical: .center))
@@ -104,7 +104,8 @@ struct RoundedCard<Content: View>: View {
             } else {
                 VStack(alignment: alignment, content: content)
                     .frame(maxWidth: .infinity, alignment: Alignment(horizontal: alignment, vertical: .center))
-                    .padding(inset)
+                    .padding(.horizontal, inset)
+                    .padding(.vertical, 10)
                     .background(Color(.secondarySystemGroupedBackground))
                     .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
             }

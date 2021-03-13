@@ -98,24 +98,35 @@ struct NotificationSettingsView: View {
     
     @State private var scheduleReminderDateEditViewIsShown: Bool = false
     
-    func scheduledReminderRow(scheduledDate: Date, allowedDates: [Date]) -> some View {
-        NavigationLink(
-            destination: ScheduledExpirationReminderEditView(
-                scheduledExpirationReminderDate: scheduledDate,
-                allowedDates: allowedDates,
-                dateFormatter: dateFormatter,
-                onSave: onSaveScheduledExpirationReminder,
-                onFinish: { scheduleReminderDateEditViewIsShown = false }),
-            isActive: $scheduleReminderDateEditViewIsShown)
-        {
-            RoundedCardValueRow(
-                label: LocalizedString("Time", comment: "Label for scheduled reminder value row"),
-                value: dateFormatter.string(from: scheduledReminderDate ?? Date()),
-                highlightValue: false,
-                disclosure: true
-            )
+    private func scheduledReminderRow(scheduledDate: Date, allowedDates: [Date]) -> some View {
+        Group {
+            if scheduledDate <= Date() {
+                scheduledReminderRowContents(disclosure: false)
+            } else {
+                NavigationLink(
+                    destination: ScheduledExpirationReminderEditView(
+                        scheduledExpirationReminderDate: scheduledDate,
+                        allowedDates: allowedDates,
+                        dateFormatter: dateFormatter,
+                        onSave: onSaveScheduledExpirationReminder,
+                        onFinish: { scheduleReminderDateEditViewIsShown = false }),
+                    isActive: $scheduleReminderDateEditViewIsShown)
+                {
+                    scheduledReminderRowContents(disclosure: true)
+                }
+            }
         }
     }
+    
+    private func scheduledReminderRowContents(disclosure: Bool) -> some View {
+        RoundedCardValueRow(
+            label: LocalizedString("Time", comment: "Label for scheduled reminder value row"),
+            value: dateFormatter.string(from: scheduledReminderDate ?? Date()),
+            highlightValue: false,
+            disclosure: disclosure
+        )
+    }
+
 
     @State private var lowReservoirReminderEditViewIsShown: Bool = false
 
