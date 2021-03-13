@@ -28,6 +28,8 @@ internal class DashHUDProvider: NSObject, HUDProvider {
 
     private var reservoirView: OmnipodReservoirView?
     
+    private let bluetoothProvider: BluetoothProvider
+
     private let colorPalette: LoopUIColorPalette
 
     var visible: Bool = false {
@@ -38,8 +40,9 @@ internal class DashHUDProvider: NSObject, HUDProvider {
         }
     }
 
-    public init(pumpManager: DashPumpManager, colorPalette: LoopUIColorPalette) {
+    public init(pumpManager: DashPumpManager, bluetoothProvider: BluetoothProvider, colorPalette: LoopUIColorPalette) {
         self.pumpManager = pumpManager
+        self.bluetoothProvider = bluetoothProvider
         self.colorPalette = colorPalette
         super.init()
         self.pumpManager.addPodStatusObserver(self, queue: .main)
@@ -53,7 +56,7 @@ internal class DashHUDProvider: NSObject, HUDProvider {
     }
 
     public func didTapOnHUDView(_ view: BaseHUDView) -> HUDTapAction? {
-        return HUDTapAction.presentViewController(pumpManager.settingsViewController(colorPalette: colorPalette))
+        return HUDTapAction.presentViewController(pumpManager.settingsViewController(bluetoothProvider: bluetoothProvider, colorPalette: colorPalette))
     }
 
     func hudDidAppear() {

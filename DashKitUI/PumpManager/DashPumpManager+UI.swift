@@ -14,12 +14,12 @@ import SwiftUI
 
 extension DashPumpManager: PumpManagerUI {
 
-    public static func setupViewController(initialSettings settings: PumpManagerSetupSettings, colorPalette: LoopUIColorPalette) -> SetupUIResult<UIViewController & PumpManagerCreateNotifying & PumpManagerOnboardNotifying & CompletionNotifying, PumpManagerUI> {
+    public static func setupViewController(initialSettings settings: PumpManagerSetupSettings, bluetoothProvider: BluetoothProvider, colorPalette: LoopUIColorPalette) -> SetupUIResult<UIViewController & PumpManagerCreateNotifying & PumpManagerOnboardNotifying & CompletionNotifying, PumpManagerUI> {
         let vc = DashUICoordinator(colorPalette: colorPalette, pumpManagerType: self, initialSettings: settings)
         return .userInteractionRequired(vc)
     }
 
-    public func settingsViewController(colorPalette: LoopUIColorPalette) -> (UIViewController & PumpManagerOnboardNotifying & CompletionNotifying) {
+    public func settingsViewController(bluetoothProvider: BluetoothProvider, colorPalette: LoopUIColorPalette) -> (UIViewController & PumpManagerOnboardNotifying & CompletionNotifying) {
         return DashUICoordinator(pumpManager: self, colorPalette: colorPalette)
     }
 
@@ -31,8 +31,8 @@ extension DashPumpManager: PumpManagerUI {
         return UIImage(named: "Pod", in: Bundle(for: DashSettingsViewModel.self), compatibleWith: nil)!
     }
 
-    public func hudProvider(colorPalette: LoopUIColorPalette) -> HUDProvider? {
-        return DashHUDProvider(pumpManager: self, colorPalette: colorPalette)
+    public func hudProvider(bluetoothProvider: BluetoothProvider, colorPalette: LoopUIColorPalette) -> HUDProvider? {
+        return DashHUDProvider(pumpManager: self, bluetoothProvider: bluetoothProvider, colorPalette: colorPalette)
     }
 
     public static func createHUDView(rawValue: HUDProvider.HUDViewRawState) -> LevelHUDView? {

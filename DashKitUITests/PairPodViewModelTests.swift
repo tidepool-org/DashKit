@@ -99,38 +99,6 @@ class PairPodViewModelTests: XCTestCase {
         
         waitForExpectations(timeout: 0.3, handler: nil)
     }
-    
-    func testCancelButtonTapShouldCallDidCancel() {
-        let viewModel = PairPodViewModel(podPairer: self, navigator: self)
-        
-        let didCancelExpectation = expectation(description: "didCancel() called")
-
-        viewModel.didCancel = {
-            didCancelExpectation.fulfill()
-        }
-
-        viewModel.cancelButtonTapped()
-        
-        waitForExpectations(timeout: 0.3, handler: nil)
-    }
-    
-    func testCancelButtonTapShouldDiscardPodWhenPodStateIsActivating() {
-        let viewModel = PairPodViewModel(podPairer: self, navigator: self)
-        
-        pairingError = .activationError(.activationPhase1NotCompleted)
-        _podCommState = .activating
-        
-        didPairExpectation = expectation(description: "Pair Attempt")
-        viewModel.continueButtonTapped()
-        
-        waitForExpectations(timeout: 0.3, handler: nil)
-
-        discardPodExpectation =  expectation(description: "discard pod")
-
-        viewModel.cancelButtonTapped()
-        
-        waitForExpectations(timeout: 0.3, handler: nil)
-    }
 
 }
 

@@ -15,9 +15,6 @@ class InsertCannulaViewModelTests: XCTestCase {
     
     var insertCannulaExpectation: XCTestExpectation?
     
-    var lastNavigation: DashUIScreen?    
-    var didNavigateExpectation: XCTestExpectation?
-    
     var insertionError: PodCommError?
 
 
@@ -30,8 +27,14 @@ class InsertCannulaViewModelTests: XCTestCase {
     }
 
     func testContinueShouldStartCannulaInsertion() {
-        let viewModel = InsertCannulaViewModel(cannulaInserter: self, navigator: self)
-        
+        let viewModel = InsertCannulaViewModel(cannulaInserter: self)
+        viewModel.didFinish = {
+            XCTFail("Unexpected finish")
+        }
+        viewModel.didRequestDeactivation = {
+            XCTFail("Unexpected request for deactivation")
+        }
+
         insertCannulaExpectation = expectation(description: "Cannula Insertion")
         
         viewModel.continueButtonTapped()
@@ -39,25 +42,38 @@ class InsertCannulaViewModelTests: XCTestCase {
         waitForExpectations(timeout: 0.3, handler: nil)
     }
     
-    func testContinueAfterUnrecoverableErrorShouldNavigateToDeactivate() {
-        let viewModel = InsertCannulaViewModel(cannulaInserter: self, navigator: self)
+    func testContinueAfterUnrecoverableErrorShouldRequestDeactivation() {
+        let viewModel = InsertCannulaViewModel(cannulaInserter: self)
+        viewModel.didFinish = {
+            XCTFail("Unexpected finish")
+        }
+        viewModel.didRequestDeactivation = {
+            XCTFail("Unexpected request for deactivation")
+        }
 
         insertionError = .podIsInAlarm(MockPodAlarm())
 
         insertCannulaExpectation = expectation(description: "Cannula Insertion")
         viewModel.continueButtonTapped()
 
-        waitForExpectations(timeout: 0.3, handler: nil)
+        let didRequestDeactivationExpectation = expectation(description: "Request Deactivation")
+        viewModel.didRequestDeactivation = {
+            didRequestDeactivationExpectation.fulfill()
+        }
 
-        didNavigateExpectation = expectation(description: "Navigate to deactivate")
         viewModel.continueButtonTapped()
 
         waitForExpectations(timeout: 0.3, handler: nil)
-        XCTAssertEqual(.deactivate, lastNavigation)
     }
 
     func testContinueAfterRecoverableErrorShouldRetry() {
-        let viewModel = InsertCannulaViewModel(cannulaInserter: self, navigator: self)
+        let viewModel = InsertCannulaViewModel(cannulaInserter: self)
+        viewModel.didFinish = {
+            XCTFail("Unexpected finish")
+        }
+        viewModel.didRequestDeactivation = {
+            XCTFail("Unexpected request for deactivation")
+        }
 
         insertionError = .bleCommunicationError
         
@@ -70,11 +86,16 @@ class InsertCannulaViewModelTests: XCTestCase {
         viewModel.continueButtonTapped()
         
         waitForExpectations(timeout: 0.3, handler: nil)
-        XCTAssertNil(lastNavigation)
     }
     
     func testContinueAfterSuccessfulInsertionShouldCallDidFinish() {
-        let viewModel = InsertCannulaViewModel(cannulaInserter: self, navigator: self)
+        let viewModel = InsertCannulaViewModel(cannulaInserter: self)
+        viewModel.didFinish = {
+            XCTFail("Unexpected finish")
+        }
+        viewModel.didRequestDeactivation = {
+            XCTFail("Unexpected request for deactivation")
+        }
 
         insertCannulaExpectation = expectation(description: "Cannula Insertion")
         viewModel.continueButtonTapped()
@@ -92,13 +113,6 @@ class InsertCannulaViewModelTests: XCTestCase {
         waitForExpectations(timeout: 0.3, handler: nil)
     }
 
-}
-
-extension InsertCannulaViewModelTests: DashUINavigator {
-    func navigateTo(_ screen: DashUIScreen) {
-        lastNavigation = screen
-        didNavigateExpectation?.fulfill()
-    }
 }
 
 extension InsertCannulaViewModelTests: CannulaInserter {
