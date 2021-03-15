@@ -69,8 +69,13 @@ struct NotificationSettingsView: View {
     var expirationDefaultFormatter = QuantityFormatter(for: .hour())
     
     var expirationDefaultString: String {
-        return expirationDefaultFormatter.string(from: HKQuantity(unit: .hour(), doubleValue: Double(expirationReminderDefault)), for: .hour())!
+        return expirationValueString(expirationReminderDefault)
     }
+    
+    func expirationValueString(_ value: Int) -> String {
+        return expirationDefaultFormatter.string(from: HKQuantity(unit: .hour(), doubleValue: Double(value)), for: .hour())!
+    }
+
     
     var expirationReminderRow: some View {
         VStack {
@@ -86,7 +91,7 @@ struct NotificationSettingsView: View {
             if showingHourPicker {
                 Picker("", selection: $expirationReminderDefault) {
                     ForEach(Self.expirationReminderHoursAllowed, id: \.self) { value in
-                        Text("\(value) h")
+                        Text(expirationValueString(value))
                     }
                 }
                 .pickerStyle(WheelPickerStyle())

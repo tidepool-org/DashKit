@@ -46,7 +46,7 @@ struct ScheduledExpirationReminderEditView: View {
         VStack {
             RoundedCardScrollView(title: LocalizedString("Scheduled Reminder", comment: "Title for scheduled expiration reminder edit page")) {
                 if self.horizontalSizeClass == .compact {
-                    // Keep picker outside of card in compact view, because it
+                    // Keep picker outside of card in compact view, because it forces full device width.
                     VStack(spacing: 0) {
                         RoundedCard {
                             Text("Scheduled Reminder")
