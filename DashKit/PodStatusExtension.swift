@@ -195,7 +195,7 @@ extension PodCommError: LocalizedError {
             return LocalizedString("No unacknowledged command to retry", comment: "Error description for PodCommError.noUnacknowledgedCommandToRetry")
 
         case .bleCommunicationError:
-            return LocalizedString("Bluetooth Communication Error", comment: "Error description for PodCommError.bleCommunicationError")
+            return LocalizedString("Communication Error", comment: "Error description for PodCommError.bleCommunicationError")
             
         case .bluetoothUnauthorized:
             return LocalizedString("Bluetooth not authorized", comment: "Error description for PodCommError.bluetoothUnauthorized")

@@ -286,9 +286,16 @@ public class MockPodCommManager: PodCommManagerProtocol {
             return
         }
         
+        if let commsError = nextCommsError {
+            nextCommsError = nil
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                completion(.failure(commsError))
+            }
+            return
+        }
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
             self.setDeactivatedState()
-            self.nextCommsError = nil
             self.unacknowledgedCommandRetryResult = nil
             completion(.success(podStatus))
         }

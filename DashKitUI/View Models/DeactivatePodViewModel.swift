@@ -17,7 +17,7 @@ class DeactivatePodViewModel: ObservableObject, Identifiable {
     
     var instructionText: String {
         if podAttachedToBody {
-            return LocalizedString("Please deactivate the pod. When deactivation is complete, remove pod from body.", comment: "Instructions for deactivate pod when pod is on body")
+            return LocalizedString("Please deactivate the pod. When deactivation is complete, you may remove it and pair a new pod.", comment: "Instructions for deactivate pod when pod is on body")
         } else {
             return LocalizedString("Please deactivate the pod. When deactivation is complete, you may pair a new pod.", comment: "Instructions for deactivate pod when pod not on body")
         }
@@ -47,7 +47,7 @@ class DeactivatePodViewModel: ObservableObject, Identifiable {
             case .active:
                 return LocalizedString("Deactivate Pod", comment: "Action button description for deactivate while pod still active")
             case .resultError:
-                return LocalizedString("Retry Deactivation", comment: "Action button description for deactivate after failed attempt")
+                return LocalizedString("Retry", comment: "Action button description for deactivate after failed attempt")
             case .deactivating:
                 return LocalizedString("Deactivating...", comment: "Action button description while deactivating")
             case .finished:
@@ -57,7 +57,7 @@ class DeactivatePodViewModel: ObservableObject, Identifiable {
         
         var actionButtonStyle: ActionButton.ButtonType {
             switch self {
-            case .active, .resultError:
+            case .active:
                 return .destructive
             default:
                 return .primary
