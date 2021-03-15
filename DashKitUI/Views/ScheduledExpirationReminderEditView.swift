@@ -9,9 +9,15 @@
 import SwiftUI
 import LoopKitUI
 
+extension Date: Identifiable {
+    public var id: Self { self }
+}
+
 struct ScheduledExpirationReminderEditView: View {
     
-    var allowedReminderDateRange: ClosedRange<Date>
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    
+    var allowedDates: [Date]
     var dateFormatter: DateFormatter
     var onSave: ((_ selectedDate: Date, _ completion: @escaping (_ error: Error?) -> Void) -> Void)?
     var onFinish: (() -> Void)?
@@ -22,9 +28,9 @@ struct ScheduledExpirationReminderEditView: View {
     @State private var saving: Bool = false
     @State private var selectedDate: Date
 
-    init(scheduledExpirationReminderDate: Date, allowedReminderDateRange: ClosedRange<Date>, dateFormatter: DateFormatter, onSave: ((_ selectedDate: Date, _ completion: @escaping (_ error: Error?) -> Void) -> Void)? = nil, onFinish: (() -> Void)? = nil)
+    init(scheduledExpirationReminderDate: Date, allowedDates: [Date], dateFormatter: DateFormatter, onSave: ((_ selectedDate: Date, _ completion: @escaping (_ error: Error?) -> Void) -> Void)? = nil, onFinish: (() -> Void)? = nil)
     {
-        self.allowedReminderDateRange = allowedReminderDateRange
+        self.allowedDates = allowedDates
         self.dateFormatter = dateFormatter
         self.onSave = onSave
         self.onFinish = onFinish
@@ -39,14 +45,25 @@ struct ScheduledExpirationReminderEditView: View {
     var content: some View {
         VStack {
             RoundedCardScrollView(title: LocalizedString("Scheduled Reminder", comment: "Title for scheduled expiration reminder edit page")) {
-                RoundedCard {
-                    RoundedCardValueRow(
-                        label: LocalizedString("Scheduled Reminder", comment: "Label for scheduled expiration reminder row"),
-                        value: dateFormatter.string(from: selectedDate),
-                        highlightValue: true
-                    )
-                    DatePicker("", selection: $selectedDate, in: allowedReminderDateRange)
-                        .datePickerStyle(WheelDatePickerStyle())
+                if self.horizontalSizeClass == .compact {
+                    // Keep picker outside of card in compact view, because it forces full device width.
+                    VStack(spacing: 0) {
+                        RoundedCard {
+                            Text("Scheduled Reminder")
+                            Divider()
+                            valueRow
+                        }
+                        picker
+                            .background(Color(.secondarySystemGroupedBackground))
+                    }
+
+                } else {
+                    RoundedCard {
+                        Text("Scheduled Reminder")
+                        Divider()
+                        valueRow
+                        picker
+                    }
                 }
             }
             Spacer()
@@ -59,6 +76,22 @@ struct ScheduledExpirationReminderEditView: View {
         }
         .navigationBarTitle("", displayMode: .inline)
         .alert(isPresented: $alertIsPresented, content: { alert(error: error) })
+    }
+    
+    var valueRow: some View {
+        RoundedCardValueRow(
+            label: LocalizedString("Time", comment: "Label for scheduled expiration reminder row"),
+            value: dateFormatter.string(from: selectedDate),
+            highlightValue: true
+        )
+    }
+    
+    var picker: some View {
+        Picker(selection: $selectedDate, label: Text("Numbers")) {
+            ForEach(self.allowedDates) { date in
+                Text(dateFormatter.string(from: date))
+            }
+        }
     }
     
     var saveButtonText: String {
@@ -117,7 +150,7 @@ struct ScheduledExpirationReminderEditView_Previews: PreviewProvider {
     static var previews: some View {
         ScheduledExpirationReminderEditView(
             scheduledExpirationReminderDate: Date(),
-            allowedReminderDateRange: Calendar.current.date(byAdding: .day, value: -2, to: Date())!...Date(),
+            allowedDates: [Date()],
             dateFormatter: DateFormatter(),
             onSave: { (_, _) in },
             onFinish: { }

@@ -400,10 +400,8 @@ open class DashPumpManager: PumpManager {
                 })
             }
             if case .event(let event) = activationStatus, case .step1Completed = event {
-                if let activationDate = self.state.podActivatedAt {
-                    self.mutateState { (state) in
-                        state.expirationReminderDate = activationDate + Pod.lifetime - podExpirationAlert.intervalBeforeExpiration
-                    }
+                self.mutateState { (state) in
+                    state.scheduledExpirationReminderOffset = podExpirationAlert.intervalBeforeExpiration
                 }
             }
             eventListener(activationStatus)
@@ -625,7 +623,7 @@ open class DashPumpManager: PumpManager {
                 completion(error)
             case .success(let status):
                 self.mutateState({ (state) in
-                    state.expirationReminderDate = state.podActivatedAt?.addingTimeInterval(Pod.lifetime - intervalBeforeExpiration)
+                    state.scheduledExpirationReminderOffset = intervalBeforeExpiration
                     state.updateFromPodStatus(status: status)
                 })
                 completion(nil)
@@ -633,14 +631,23 @@ open class DashPumpManager: PumpManager {
         }
     }
     
-    public var allowedExpirationReminderDateRange: ClosedRange<Date>? {
+    public var allowedExpirationReminderDates: [Date]? {
         guard let expiration = podExpiresAt else {
             return nil
         }
         
-        let earliest = expiration.addingTimeInterval(.hours(-24))
-        let latest = expiration.addingTimeInterval(.hours(-1))
-        return earliest...latest
+        let allDates = Array(stride(from: -24, through: -1, by: 1)).map { (i: Int) -> Date in
+            expiration.addingTimeInterval(.hours(Double(i)))
+        }
+        let now = dateGenerator()
+        return allDates.filter { $0.timeIntervalSince(now) > 0 }
+    }
+    
+    public var scheduledExpirationReminder: Date? {
+        guard let expiration = podExpiresAt, let offset = state.scheduledExpirationReminderOffset else {
+            return nil
+        }
+        return expiration.addingTimeInterval(-offset)
     }
     
     public func updateLowReservoirReminder(_ value: Int, completion: @escaping (Error?) -> Void) {
@@ -1002,6 +1009,10 @@ open class DashPumpManager: PumpManager {
     }
     
     private func configurePeriodicStatusCheck() {
+        guard podCommState == .active else {
+            return
+        }
+        
         self.log.debug("podCommManager periodic status: configuring")
         podCommManager.configPeriodicStatusCheck(interval: .minutes(1)) { (result) in
             switch result {

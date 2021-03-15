@@ -46,6 +46,10 @@ class DashSettingsViewModel: ObservableObject {
 
     // Expiration reminder date for current pod
     @Published var expirationReminderDate: Date?
+    
+    var allowedScheduledReminderDates: [Date]? {
+        return pumpManager.allowedExpirationReminderDates
+    }
 
     // Hours before expiration
     @Published var expirationReminderDefault: Int {
@@ -131,10 +135,6 @@ class DashSettingsViewModel: ObservableObject {
     
     let reservoirVolumeFormatter = QuantityFormatter(for: .internationalUnit())
     
-    var allowedExpirationReminderDateRange: ClosedRange<Date> {
-        return pumpManager.allowedExpirationReminderDateRange ?? Calendar.current.date(byAdding: .day, value: -2, to: Date())!...Date()
-    }
-    
     var didFinish: (() -> Void)?
     
     private let pumpManager: DashPumpManager
@@ -148,7 +148,7 @@ class DashSettingsViewModel: ObservableObject {
         basalDeliveryRate = self.pumpManager.basalDeliveryRate
         reservoirLevel = self.pumpManager.reservoirLevel
         reservoirLevelHighlightState = self.pumpManager.reservoirLevelHighlightState
-        expirationReminderDate = self.pumpManager.state.expirationReminderDate
+        expirationReminderDate = self.pumpManager.scheduledExpirationReminder
         expirationReminderDefault = Int(self.pumpManager.defaultExpirationReminderOffset.hours)
         lowReservoirAlertValue = Int(self.pumpManager.state.lowReservoirReminderValue)
         pumpManager.addPodStatusObserver(self, queue: DispatchQueue.main)

@@ -39,7 +39,7 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
 
     public var lastStatusDate: Date?
     
-    public var expirationReminderDate: Date?
+    public var scheduledExpirationReminderOffset: TimeInterval?
     
     public var defaultExpirationReminderOffset = Pod.defaultExpirationReminderOffset
 
@@ -199,7 +199,7 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
             self.lastPodCommState = .noPod
         }
         
-        self.expirationReminderDate = rawValue["expirationReminderDate"] as? Date
+        self.scheduledExpirationReminderOffset = rawValue["scheduledExpirationReminderOffset"] as? TimeInterval
         
         self.defaultExpirationReminderOffset = rawValue["defaultExpirationReminderOffset"] as? TimeInterval ?? Pod.defaultExpirationReminderOffset
         
@@ -231,7 +231,7 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
         rawValue["unfinalizedTempBasal"] = unfinalizedTempBasal?.rawValue
         rawValue["alarmCode"] = alarmCode?.rawValue
         rawValue["pendingCommand"] = pendingCommand?.rawValue
-        rawValue["expirationReminderDate"] =  expirationReminderDate
+        rawValue["scheduledExpirationReminderOffset"] =  scheduledExpirationReminderOffset
         rawValue["defaultExpirationReminderOffset"] = defaultExpirationReminderOffset
         
         return rawValue
@@ -273,7 +273,7 @@ extension DashPumpManagerState: CustomDebugStringConvertible {
             "* pendingCommand: \(String(describing: pendingCommand))",
             "* connectionState: \(String(describing: connectionState))",
             "* lowReservoirReminderValue: \(lowReservoirReminderValue)",
-            "* expirationReminderDate: \(String(describing: expirationReminderDate))",
+            "* scheduledExpirationReminderOffset: \(String(describing: scheduledExpirationReminderOffset))",
             "* podAttachmentConfirmed: \(podAttachmentConfirmed)"
             ].joined(separator: "\n")
     }

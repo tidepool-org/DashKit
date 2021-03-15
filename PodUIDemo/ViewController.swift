@@ -90,7 +90,7 @@ class ViewController: UIViewController {
     
     private func createPumpManagerIfNeeded() {
         let activationDate = Date()-TimeInterval(24 * 60 * 60)
-        let podCommState = PodCommState.activating
+        let podCommState = PodCommState.active
         if pumpManager == nil {
             let podStatus = MockPodStatus(
                 activationDate: activationDate,
@@ -107,7 +107,7 @@ class ViewController: UIViewController {
                 maximumTempBasalRate: 3,
                 lastPodCommState: podCommState)!
             state.podActivatedAt = activationDate
-            state.expirationReminderDate = activationDate + TimeInterval(50 * 60 * 60)
+            state.scheduledExpirationReminderOffset = TimeInterval(4 * 60 * 60)
             state.reservoirLevel = .aboveThreshold
             state.podAttachmentConfirmed = true
             pumpManager = MockPodPumpManager(podStatus: podStatus, state: state)

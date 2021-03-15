@@ -6,6 +6,8 @@
 //
 import SwiftUI
 
+fileprivate let inset: CGFloat = 16
+
 struct RoundedCardTitle: View {
     var title: String
     
@@ -73,6 +75,7 @@ struct RoundedCard<Content: View>: View {
     var alignment: HorizontalAlignment
     var title: String?
     var footer: String?
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
 
     init(title: String? = nil, footer: String? = nil, alignment: HorizontalAlignment = .leading, @ViewBuilder content: @escaping () -> Content) {
         self.content = content
@@ -82,29 +85,66 @@ struct RoundedCard<Content: View>: View {
     }
     
     var body: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: 10) {
             if let title = title {
                 RoundedCardTitle(title)
                     .frame(maxWidth: .infinity, alignment: Alignment(horizontal: .leading, vertical: .center))
+                    .padding(.leading, titleInset)
             }
-            VStack(content: content)
-                .frame(maxWidth: .infinity, alignment: Alignment(horizontal: alignment, vertical: .center))
-                .padding(12)
-                .background(Color(.secondarySystemGroupedBackground))
-                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+            
+            if isCompact {
+                VStack(spacing: 0) {
+                    borderLine
+                    VStack(alignment: alignment, content: content)
+                        .frame(maxWidth: .infinity, alignment: Alignment(horizontal: alignment, vertical: .center))
+                        .padding(inset)
+                        .background(Color(.secondarySystemGroupedBackground))
+                    borderLine
+                }
+            } else {
+                VStack(alignment: alignment, content: content)
+                    .frame(maxWidth: .infinity, alignment: Alignment(horizontal: alignment, vertical: .center))
+                    .padding(.horizontal, inset)
+                    .padding(.vertical, 10)
+                    .background(Color(.secondarySystemGroupedBackground))
+                    .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
+            }
             if let footer = footer {
                 RoundedCardFooter(footer)
-                    .frame(maxWidth: .infinity)
+                    .frame(maxWidth: .infinity, alignment: Alignment(horizontal: alignment, vertical: .center))
+                    .padding(.horizontal, inset)
             }
         }
-        .padding(.bottom, 20)
     }
+    
+    var borderLine: some View {
+        Rectangle().fill(Color(.quaternaryLabel))
+            .frame(height: 0.5)
+    }
+    
+    private var isCompact: Bool {
+        return self.horizontalSizeClass == .compact
+    }
+    
+    private var titleInset: CGFloat {
+        return isCompact ? inset : 0
+    }
+    
+    private var padding: CGFloat {
+        return isCompact ? 0 : inset
+    }
+
+    private var cornerRadius: CGFloat {
+        return isCompact ? 0 : 8
+    }
+
 }
 
 struct RoundedCardScrollView<Content: View>: View {
     var content: () -> Content
     var title: String?
-    
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
+
     init(title: String? = nil, @ViewBuilder content: @escaping () -> Content) {
         self.title = title
         self.content = content
@@ -121,9 +161,14 @@ struct RoundedCardScrollView<Content: View>: View {
                 }
                 .padding([.leading, .trailing])
             }
-            VStack(alignment: .leading, content: content)
-                .padding()
+            VStack(alignment: .leading, spacing: 25, content: content)
+                .padding(padding)
         }
         .background(Color(.systemGroupedBackground).edgesIgnoringSafeArea(.all))
     }
+    
+    private var padding: CGFloat {
+        return self.horizontalSizeClass == .regular ? inset : 0
+    }
+
 }

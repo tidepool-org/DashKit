@@ -163,9 +163,9 @@ class DashUICoordinator: UINavigationController, PumpManagerCreateNotifying, Pum
             hostedView.navigationItem.title = LocalizedString("Check Cannula", comment: "Title for check cannula screen")
             return hostedView
         case .setupComplete:
-            guard let expirationReminderDate = pumpManager.state.expirationReminderDate,
+            guard let expirationReminderDate = pumpManager.scheduledExpirationReminder,
                   let podExpiresAt = pumpManager.podExpiresAt,
-                  let allowedExpirationReminderDateRange = pumpManager.allowedExpirationReminderDateRange
+                  let allowedExpirationReminderDates = pumpManager.allowedExpirationReminderDates
             else {
                 fatalError("Cannot show setup complete UI without expiration reminder date.")
             }
@@ -174,9 +174,9 @@ class DashUICoordinator: UINavigationController, PumpManagerCreateNotifying, Pum
             formatter.timeStyle = .short
 
             let view = SetupCompleteView(
-                reminderDate: expirationReminderDate,
+                scheduledReminderDate: expirationReminderDate,
                 dateFormatter: formatter,
-                allowedReminderDateRange: allowedExpirationReminderDateRange,
+                allowedDates: allowedExpirationReminderDates,
                 onSaveScheduledExpirationReminder: { (newExpirationReminderDate, completion) in
                     let intervalBeforeExpiration = podExpiresAt.timeIntervalSince(newExpirationReminderDate)
                     self.pumpManager.updateExpirationReminder(intervalBeforeExpiration, completion: completion)
@@ -246,6 +246,8 @@ class DashUICoordinator: UINavigationController, PumpManagerCreateNotifying, Pum
         completionDelegate?.completionNotifyingDidComplete(self)
     }
     
+    private var isOnboarding: Bool
+    
     init(pumpManager: DashPumpManager? = nil, colorPalette: LoopUIColorPalette, pumpManagerType: DashPumpManager.Type? = nil, initialSettings: PumpManagerSetupSettings? = nil)
     {
         if pumpManager == nil {
@@ -274,6 +276,8 @@ class DashUICoordinator: UINavigationController, PumpManagerCreateNotifying, Pum
 
         self.initialSettings = initialSettings
         
+        self.isOnboarding = initialSettings != nil
+        
         super.init(navigationBarClass: UINavigationBar.self, toolbarClass: UIToolbar.self)
     }
     
@@ -293,7 +297,7 @@ class DashUICoordinator: UINavigationController, PumpManagerCreateNotifying, Pum
                 } else {
                     return .confirmAttachment
                 }
-            } else if pumpManager.podCommState == .noPod {
+            } else if pumpManager.podCommState == .noPod && isOnboarding {
                return .pairPod
             } else {
                 return .settings

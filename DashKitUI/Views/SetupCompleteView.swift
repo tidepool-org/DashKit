@@ -22,17 +22,17 @@ struct SetupCompleteView: View {
     private var didRequestDeactivation: () -> Void
     private var dateFormatter: DateFormatter
 
-    @State private var configuredReminderDate: Date
+    @State private var scheduledReminderDate: Date
 
     @State private var scheduleReminderDateEditViewIsShown: Bool = false
 
-    var allowedReminderDateRange: ClosedRange<Date>
+    var allowedDates: [Date]
 
-    init(reminderDate: Date, dateFormatter: DateFormatter, allowedReminderDateRange: ClosedRange<Date>, onSaveScheduledExpirationReminder: ((_ selectedDate: Date, _ completion: @escaping (_ error: Error?) -> Void) -> Void)?, didFinish: @escaping () -> Void, didRequestDeactivation: @escaping () -> Void)
+    init(scheduledReminderDate: Date, dateFormatter: DateFormatter, allowedDates: [Date], onSaveScheduledExpirationReminder: ((_ selectedDate: Date, _ completion: @escaping (_ error: Error?) -> Void) -> Void)?, didFinish: @escaping () -> Void, didRequestDeactivation: @escaping () -> Void)
     {
-        self._configuredReminderDate = State(initialValue: reminderDate)
+        self._scheduledReminderDate = State(initialValue: scheduledReminderDate)
         self.dateFormatter = dateFormatter
-        self.allowedReminderDateRange = allowedReminderDateRange
+        self.allowedDates = allowedDates
         self.onSaveScheduledExpirationReminder = onSaveScheduledExpirationReminder
         self.didFinish = didFinish
         self.didRequestDeactivation = didRequestDeactivation
@@ -46,18 +46,20 @@ struct SetupCompleteView: View {
                     .fixedSize(horizontal: false, vertical: true)
                 Divider()
                 HStack {
+                    Text("Scheduled Reminder")
+                    Divider()
                     NavigationLink(
                         destination: ScheduledExpirationReminderEditView(
-                            scheduledExpirationReminderDate: configuredReminderDate,
-                            allowedReminderDateRange: allowedReminderDateRange,
+                            scheduledExpirationReminderDate: scheduledReminderDate,
+                            allowedDates: allowedDates,
                             dateFormatter: dateFormatter,
                             onSave: onSaveScheduledExpirationReminder,
                             onFinish: { scheduleReminderDateEditViewIsShown = false }),
                         isActive: $scheduleReminderDateEditViewIsShown)
                     {
                         RoundedCardValueRow(
-                            label: LocalizedString("Expiration Reminder", comment: "Label for expiration reminder row"),
-                            value: dateFormatter.string(from: configuredReminderDate),
+                            label: LocalizedString("Time", comment: "Label for expiration reminder row"),
+                            value: dateFormatter.string(from: scheduledReminderDate),
                             highlightValue: false
                         )
                     }
@@ -83,9 +85,9 @@ struct SetupCompleteView: View {
 struct SetupCompleteView_Previews: PreviewProvider {
     static var previews: some View {
         SetupCompleteView(
-            reminderDate: Date(),
+            scheduledReminderDate: Date(),
             dateFormatter: DateFormatter(),
-            allowedReminderDateRange: Calendar.current.date(byAdding: .day, value: -2, to: Date())!...Date(),
+            allowedDates: [Date()],
             onSaveScheduledExpirationReminder: { (date, completion) in
             },
             didFinish: {
