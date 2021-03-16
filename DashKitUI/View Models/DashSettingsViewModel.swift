@@ -27,6 +27,15 @@ class DashSettingsViewModel: ObservableObject {
     @Published var lifeState: PodLifeState
     
     @Published var activatedAt: Date?
+
+    var confidenceRemindersEnabled: Bool {
+        get {
+            pumpManager.confidenceRemindersEnabled
+        }
+        set {
+            pumpManager.confidenceRemindersEnabled = newValue
+        }
+    }
     
     var activatedAtString: String {
         if let activatedAt = activatedAt {

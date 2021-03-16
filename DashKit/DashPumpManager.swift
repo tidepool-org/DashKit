@@ -107,6 +107,23 @@ open class DashPumpManager: PumpManager {
     public var state: DashPumpManagerState {
         return lockedState.value
     }
+
+    public var confidenceRemindersEnabled: Bool {
+        get {
+            state.confidenceRemindersEnabled
+        }
+        set {
+            self.mutateState({ (state) in
+                state.confidenceRemindersEnabled = newValue
+            })
+        }
+    }
+
+    private var beepOption: BeepOption? {
+        guard confidenceRemindersEnabled else { return .none }
+
+        return try? BeepOption(beepAtBegining: true, beepAtEnd: true, beepInterval: 0)
+    }
     
     private func pumpStatusHighlight(for state: DashPumpManagerState) -> PumpManagerStatus.PumpStatusHighlight? {
         if state.pendingCommand != nil {
@@ -795,7 +812,7 @@ open class DashPumpManager: PumpManager {
         let endDate = startDate.addingTimeInterval(enactUnits / Pod.bolusDeliveryRate)
         let dose = DoseEntry(type: .bolus, startDate: startDate, endDate: endDate, value: enactUnits, unit: .units)
 
-        sendProgram(programType: program, beepOption: nil) { (result) in
+        sendProgram(programType: program, beepOption: beepOption) { (result) in
             switch result {
             case .success(let podStatus):
                 self.mutateState({ (state) in
@@ -1121,7 +1138,7 @@ open class DashPumpManager: PumpManager {
         let offset = state.timeZone.scheduleOffset(forDate: dateGenerator())
         let programType = ProgramType.basalProgram(basal: state.basalProgram, secondsSinceMidnight: Int(offset.rounded()))
 
-        sendProgram(programType: programType, beepOption: .none) { (result) in
+        sendProgram(programType: programType, beepOption: beepOption) { (result) in
             switch result {
             case .failure(let error):
                 self.mutateState({ (state) in
