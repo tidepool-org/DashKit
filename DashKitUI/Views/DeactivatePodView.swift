@@ -15,6 +15,8 @@ struct DeactivatePodView: View {
 
     @Environment(\.verticalSizeClass) var verticalSizeClass
     @Environment(\.guidanceColors) var guidanceColors
+    
+    @State private var removePodModalIsPresented: Bool = false
 
     var body: some View {
         GuidePage(content: {
@@ -51,7 +53,11 @@ struct DeactivatePodView: View {
                 }
                 if viewModel.error != nil {
                     Button(action: {
-                        viewModel.discardPodButtonTapped()
+                        if viewModel.podAttachedToBody {
+                            removePodModalIsPresented = true
+                        } else {
+                            viewModel.discardPod()
+                        }
                     }) {
                         FrameworkLocalText("Discard Pod", comment: "Text for discard pod button")
                             .accessibility(identifier: "button_discard_pod_action")
@@ -71,6 +77,7 @@ struct DeactivatePodView: View {
             }
             .padding()
         }
+        .alert(isPresented: $removePodModalIsPresented) { removePodModal }
         .navigationBarTitle("Deactivate Pod", displayMode: .automatic)
         .navigationBarItems(trailing:
             Button("Cancel") {
@@ -79,6 +86,14 @@ struct DeactivatePodView: View {
         )
     }
     
+    var removePodModal: Alert {
+        return Alert(
+            title: FrameworkLocalText("Remove Pod from Body", comment: "Title for remove pod modal"),
+            message: FrameworkLocalText("Your Pod may still be delivering Insulin.\nRemove it from your body, then tap “Continue.“", comment: "Alert message body for confirm pod attachment"),
+            primaryButton: .cancel(),
+            secondaryButton: .default(FrameworkLocalText("Continue", comment: "Title of button to continue discard"), action: { viewModel.discardPod() })
+        )
+    }
 }
 
 struct DeactivatePodView_Previews: PreviewProvider {

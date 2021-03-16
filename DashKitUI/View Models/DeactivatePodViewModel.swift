@@ -139,7 +139,7 @@ class DeactivatePodViewModel: ObservableObject, Identifiable {
         }
     }
     
-    public func discardPodButtonTapped() {
+    public func discardPod() {
         podDeactivator.discardPod { (result) in
             DispatchQueue.main.async {
                 switch result {
