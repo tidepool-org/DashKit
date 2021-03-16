@@ -197,18 +197,21 @@ open class DashPumpManager: PumpManager {
     private func pumpLifecycleProgress(for state: DashPumpManagerState) -> PumpManagerStatus.PumpLifecycleProgress? {
         switch state.lastPodCommState {
         case .active:
-            if isPodInLastDay,
+            if shouldWarnPodEOL,
                let podTimeRemaining = podTimeRemaining
             {
-                let percentCompleted = max(0, min(1, podTimeRemaining / Pod.lifetime))
+                let percentCompleted = max(0, min(1, (Pod.lifetime - podTimeRemaining) / Pod.lifetime))
                 return PumpManagerStatus.PumpLifecycleProgress(percentComplete: percentCompleted, progressState: .warning)
+            } else if let podTimeRemaining = podTimeRemaining, podTimeRemaining < 0 {
+                // Pod is expired
+                return PumpManagerStatus.PumpLifecycleProgress(percentComplete: 1, progressState: .critical)
             }
             return nil
         case .alarm(let detail):
             if let detail = detail, detail.alarmCode == .podExpired {
                 return PumpManagerStatus.PumpLifecycleProgress(percentComplete: 100, progressState: .critical)
             } else {
-                if isPodInLastDay,
+                if shouldWarnPodEOL,
                    let timeOfLastPodComm = timeOfLastPodComm
                 {
                     let percentCompleted = max(0, min(1, timeOfLastPodComm / Pod.lifetime))
@@ -217,7 +220,7 @@ open class DashPumpManager: PumpManager {
             }
             return nil
         case .systemError:
-            if isPodInLastDay,
+            if shouldWarnPodEOL,
                let timeOfLastPodComm = timeOfLastPodComm
             {
                 let percentCompleted = max(0, min(1, timeOfLastPodComm / Pod.lifetime))
@@ -236,9 +239,9 @@ open class DashPumpManager: PumpManager {
         return Pod.lifetime - timeActive
     }
 
-    private var isPodInLastDay: Bool {
+    private var shouldWarnPodEOL: Bool {
         guard let podTimeRemaining = podTimeRemaining,
-              podTimeRemaining > 0 && podTimeRemaining <= TimeInterval(days: 1) else
+              podTimeRemaining > 0 && podTimeRemaining <= Pod.timeRemainingWarningThreshold else
         {
             return false
         }

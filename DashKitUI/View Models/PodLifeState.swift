@@ -27,7 +27,7 @@ enum PodLifeState {
     var progress: Double {
         switch self {
         case .timeRemaining(let timeRemaining):
-            return max(0, min(1, timeRemaining / Pod.lifetime))
+            return max(0, min(1, (Pod.lifetime - timeRemaining) / Pod.lifetime))
         case .expiredFor(let expiryAge):
             return max(0, min(1, expiryAge / Pod.expirationWindow))
         case .podAlarm(let alarm, let timeRemaining):
@@ -55,8 +55,8 @@ enum PodLifeState {
             default:
                 return Color.secondary
             }
-        case .timeRemaining:
-            return progress < 0.25 ? guidanceColors.warning : insulinTintColor
+        case .timeRemaining(let timeRemaining):
+            return timeRemaining <= Pod.timeRemainingWarningThreshold ? guidanceColors.warning : insulinTintColor
         default:
             return Color.secondary
         }
