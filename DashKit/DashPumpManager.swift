@@ -200,7 +200,7 @@ open class DashPumpManager: PumpManager {
             if shouldWarnPodEOL,
                let podTimeRemaining = podTimeRemaining
             {
-                let percentCompleted = max(0, min(1, (Pod.lifetime - podTimeRemaining) / Pod.lifetime))
+                let percentCompleted = max(0, min(1, (1 - (podTimeRemaining / Pod.lifetime))))
                 return PumpManagerStatus.PumpLifecycleProgress(percentComplete: percentCompleted, progressState: .warning)
             } else if let podTimeRemaining = podTimeRemaining, podTimeRemaining < 0 {
                 // Pod is expired

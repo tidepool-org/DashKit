@@ -21,23 +21,25 @@ enum PodLifeState {
     case expiredFor(TimeInterval)
     case podDeactivating
     case podAlarm(PodAlarm?, TimeInterval?)
-    case systemError(SystemError)
+    case systemError(SystemError, TimeInterval?)
     case noPod
     
     var progress: Double {
         switch self {
         case .timeRemaining(let timeRemaining):
-            return max(0, min(1, (Pod.lifetime - timeRemaining) / Pod.lifetime))
+            return max(0, min(1, (1 - (timeRemaining / Pod.lifetime))))
         case .expiredFor(let expiryAge):
             return max(0, min(1, expiryAge / Pod.expirationWindow))
-        case .podAlarm(let alarm, let timeRemaining):
+        case .podAlarm(let alarm, let timeOfAlarm):
             switch alarm?.alarmCode {
             case .podExpired:
                 return 1
             default:
-                return max(0, min(1, (timeRemaining ?? Pod.lifetime) / Pod.lifetime))
+                return max(0, min(1, (timeOfAlarm ?? Pod.lifetime) / Pod.lifetime))
             }
-        case .systemError, .podDeactivating:
+        case .systemError(_, let timeOfError):
+            return max(0, min(1, (timeOfError ?? Pod.lifetime) / Pod.lifetime))
+        case .podDeactivating:
             return 1
         case .noPod, .podActivating:
             return 0
