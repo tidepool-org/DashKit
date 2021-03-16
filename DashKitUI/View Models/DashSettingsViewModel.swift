@@ -265,7 +265,12 @@ extension DashPumpManager {
     var lifeState: PodLifeState {
         switch podCommState {
         case .alarm(let alarm):
-            return .podAlarm(alarm)
+            if let activationTime = podActivatedAt {
+                let timeActive = dateGenerator().timeIntervalSince(activationTime)
+                return .podAlarm(alarm, Pod.lifetime - timeActive)
+            } else {
+                return .podAlarm(alarm, nil)
+            }
         case .noPod:
             return .noPod
         case .activating:
@@ -273,12 +278,11 @@ extension DashPumpManager {
         case .deactivating:
             return .podDeactivating
         case .active:
-            if let activationTime = podActivatedAt {                
-                let timeActive = dateGenerator().timeIntervalSince(activationTime)
-                if timeActive < Pod.lifetime {
-                    return .timeRemaining(Pod.lifetime - timeActive)
+            if let podTimeRemaining = podTimeRemaining {
+                if podTimeRemaining > 0 {
+                    return .timeRemaining(podTimeRemaining)
                 } else {
-                    return .expiredFor(timeActive - Pod.lifetime)
+                    return .expiredFor(-podTimeRemaining)
                 }
             } else {
                 return .podDeactivating

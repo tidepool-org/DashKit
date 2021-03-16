@@ -196,18 +196,57 @@ open class DashPumpManager: PumpManager {
     
     private func pumpLifecycleProgress(for state: DashPumpManagerState) -> PumpManagerStatus.PumpLifecycleProgress? {
         switch state.lastPodCommState {
-        // TODO: Handle active lifecycle progress
+        case .active:
+            if isPodInLastDay,
+               let podTimeRemaining = podTimeRemaining
+            {
+                let percentCompleted = max(0, min(1, podTimeRemaining / Pod.lifetime))
+                return PumpManagerStatus.PumpLifecycleProgress(percentComplete: percentCompleted, progressState: .warning)
+            }
+            return nil
         case .alarm(let detail):
             if let detail = detail, detail.alarmCode == .podExpired {
                 return PumpManagerStatus.PumpLifecycleProgress(percentComplete: 100, progressState: .critical)
             } else {
-                return nil
+                //TODO the progress bar should stop progressing when the device encounters an error that isn't an expired error. Maybe there should be an podErroredAt date and delta between podErroredAt and activationTime compared to Pod.lifetime for the progress amount
+                if isPodInLastDay,
+                   let podTimeRemaining = podTimeRemaining
+                {
+                    let percentCompleted = max(0, min(1, podTimeRemaining / Pod.lifetime))
+                    return PumpManagerStatus.PumpLifecycleProgress(percentComplete: percentCompleted, progressState: .dimmed)
+                }
             }
-        default:
+            return nil
+        case .systemError:
+            //TODO the progress bar should stop progressing when the device encounters an error that isn't an expired error. Maybe there should be an podErroredAt date and delta between podErroredAt and activationTime compared to Pod.lifetime for the progress amount
+            if isPodInLastDay,
+               let podTimeRemaining = podTimeRemaining
+            {
+                let percentCompleted = max(0, min(1, podTimeRemaining / Pod.lifetime))
+                return PumpManagerStatus.PumpLifecycleProgress(percentComplete: percentCompleted, progressState: .dimmed)
+            }
+            return nil
+        case .noPod, .activating, .deactivating:
             return nil
         }
     }
 
+    private var isPodInLastDay: Bool {
+        guard let podTimeRemaining = podTimeRemaining,
+              podTimeRemaining > 0 && podTimeRemaining <= TimeInterval(days: 1) else
+        {
+            return false
+        }
+
+        return true
+    }
+
+    // If time remaining is negative, the pod has been expired for that amount of time.
+    public var podTimeRemaining: TimeInterval? {
+        guard let activationTime = podActivatedAt else { return nil }
+        let timeActive = dateGenerator().timeIntervalSince(activationTime)
+        return Pod.lifetime - timeActive
+    }
     
     private func status(for state: DashPumpManagerState) -> PumpManagerStatus {
         return PumpManagerStatus(

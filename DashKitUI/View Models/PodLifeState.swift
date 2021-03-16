@@ -20,7 +20,7 @@ enum PodLifeState {
     // Time since expiry
     case expiredFor(TimeInterval)
     case podDeactivating
-    case podAlarm(PodAlarm?)
+    case podAlarm(PodAlarm?, TimeInterval?)
     case systemError(SystemError)
     case noPod
     
@@ -30,7 +30,14 @@ enum PodLifeState {
             return max(0, min(1, timeRemaining / Pod.lifetime))
         case .expiredFor(let expiryAge):
             return max(0, min(1, expiryAge / Pod.expirationWindow))
-        case .podAlarm, .systemError, .podDeactivating:
+        case .podAlarm(let alarm, let timeRemaining):
+            switch alarm?.alarmCode {
+            case .podExpired:
+                return 1
+            default:
+                return max(0, min(1, (timeRemaining ?? Pod.lifetime) / Pod.lifetime))
+            }
+        case .systemError, .podDeactivating:
             return 1
         case .noPod, .podActivating:
             return 0
@@ -38,10 +45,21 @@ enum PodLifeState {
     }
     
     func progressColor(insulinTintColor: Color, guidanceColors: GuidanceColors) -> Color {
-        if case .timeRemaining = self {
+        switch self {
+        case .expiredFor:
+            return guidanceColors.critical
+        case .podAlarm(let alarm, _):
+            switch alarm?.alarmCode {
+            case .podExpired:
+                return guidanceColors.critical
+            default:
+                return Color.secondary
+            }
+        case .timeRemaining:
             return progress < 0.25 ? guidanceColors.warning : insulinTintColor
+        default:
+            return Color.secondary
         }
-        return guidanceColors.critical
     }
     
     func labelColor(using guidanceColors: GuidanceColors) -> Color  {
@@ -62,7 +80,7 @@ enum PodLifeState {
             return LocalizedString("Pod expired", comment: "Label for pod life state when within pod expiration window")
         case .podDeactivating:
             return LocalizedString("Unfinished deactivation", comment: "Label for pod life state when pod not fully deactivated")
-        case .podAlarm(let alarm):
+        case .podAlarm(let alarm, _):
             if let alarm = alarm {
                 return alarm.alarmDescription
             } else {
