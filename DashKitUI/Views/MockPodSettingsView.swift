@@ -44,6 +44,10 @@ struct MockPodSettingsView: View {
             Section(header: Text("Reservoir Remaining").font(.headline).foregroundColor(Color.primary)) {
                 reservoirRemainingEntry
             }
+
+            Section(header: Text("Activation Date").font(.headline).foregroundColor(Color.primary)) {
+                activatedAtEntry
+            }
             
             Section(header: Text("Alerts").font(.headline).foregroundColor(Color.primary)) {
                 ForEach(SimulatedPodAlerts.allCases, id: \.self) { item in
@@ -171,6 +175,9 @@ struct MockPodSettingsView: View {
         return MockPodReservoirRemainingEntryView(reservoirRemaining: $model.reservoirString)
     }
 
+    var activatedAtEntry: some View {
+        DatePicker("Activated", selection: $model.activationDate)
+    }
 }
 
 struct MockPodReservoirRemainingEntryView: View {
