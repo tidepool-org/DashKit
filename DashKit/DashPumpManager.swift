@@ -120,9 +120,7 @@ open class DashPumpManager: PumpManager {
     }
 
     private var beepOption: BeepOption? {
-        guard confidenceRemindersEnabled else { return .none }
-
-        return try? BeepOption(beepAtBegining: true, beepAtEnd: true, beepInterval: 0)
+        return try? BeepOption(beepAtBegining: confidenceRemindersEnabled, beepAtEnd: confidenceRemindersEnabled, beepInterval: 0)
     }
     
     private func pumpStatusHighlight(for state: DashPumpManagerState) -> PumpManagerStatus.PumpStatusHighlight? {
@@ -515,7 +513,7 @@ open class DashPumpManager: PumpManager {
             }
             let offset = timeZone.scheduleOffset(forDate: self.dateGenerator())
 
-            self.sendProgram(programType: .basalProgram(basal: basalProgram, secondsSinceMidnight: Int(offset.rounded())), beepOption: .none) { (result) in
+            self.sendProgram(programType: .basalProgram(basal: basalProgram, secondsSinceMidnight: Int(offset.rounded())), beepOption: self.beepOption) { (result) in
                 switch result {
                 case .failure(let error):
                     completion(DashPumpManagerError(error))
