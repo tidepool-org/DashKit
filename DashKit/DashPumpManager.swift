@@ -208,27 +208,32 @@ open class DashPumpManager: PumpManager {
             if let detail = detail, detail.alarmCode == .podExpired {
                 return PumpManagerStatus.PumpLifecycleProgress(percentComplete: 100, progressState: .critical)
             } else {
-                //TODO the progress bar should stop progressing when the device encounters an error that isn't an expired error. Maybe there should be an podErroredAt date and delta between podErroredAt and activationTime compared to Pod.lifetime for the progress amount
                 if isPodInLastDay,
-                   let podTimeRemaining = podTimeRemaining
+                   let timeOfLastPodComm = timeOfLastPodComm
                 {
-                    let percentCompleted = max(0, min(1, podTimeRemaining / Pod.lifetime))
+                    let percentCompleted = max(0, min(1, timeOfLastPodComm / Pod.lifetime))
                     return PumpManagerStatus.PumpLifecycleProgress(percentComplete: percentCompleted, progressState: .dimmed)
                 }
             }
             return nil
         case .systemError:
-            //TODO the progress bar should stop progressing when the device encounters an error that isn't an expired error. Maybe there should be an podErroredAt date and delta between podErroredAt and activationTime compared to Pod.lifetime for the progress amount
             if isPodInLastDay,
-               let podTimeRemaining = podTimeRemaining
+               let timeOfLastPodComm = timeOfLastPodComm
             {
-                let percentCompleted = max(0, min(1, podTimeRemaining / Pod.lifetime))
+                let percentCompleted = max(0, min(1, timeOfLastPodComm / Pod.lifetime))
                 return PumpManagerStatus.PumpLifecycleProgress(percentComplete: percentCompleted, progressState: .dimmed)
             }
             return nil
         case .noPod, .activating, .deactivating:
             return nil
         }
+    }
+
+    // If time remaining is negative, the pod has been expired for that amount of time.
+    public var podTimeRemaining: TimeInterval? {
+        guard let activationTime = podActivatedAt else { return nil }
+        let timeActive = dateGenerator().timeIntervalSince(activationTime)
+        return Pod.lifetime - timeActive
     }
 
     private var isPodInLastDay: Bool {
@@ -241,11 +246,14 @@ open class DashPumpManager: PumpManager {
         return true
     }
 
-    // If time remaining is negative, the pod has been expired for that amount of time.
-    public var podTimeRemaining: TimeInterval? {
-        guard let activationTime = podActivatedAt else { return nil }
-        let timeActive = dateGenerator().timeIntervalSince(activationTime)
-        return Pod.lifetime - timeActive
+    public var timeOfLastPodComm: TimeInterval? {
+        guard let lastPodCommDate = state.lastPodCommDate,
+              let activationTime = podActivatedAt else
+        {
+            return nil
+        }
+
+        return lastPodCommDate.timeIntervalSince(activationTime)
     }
     
     private func status(for state: DashPumpManagerState) -> PumpManagerStatus {
