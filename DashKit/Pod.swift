@@ -59,6 +59,6 @@ public struct Pod {
     // Support phone number (TODO: get from SDK?)
     public static let supportPhoneNumber: String = "1-800-591-3455"
 
-    // Threshold used to display pod near end of life warnings
+    // Threshold used to display pod end of life warnings
     public static let timeRemainingWarningThreshold = TimeInterval(days: 1)
 }

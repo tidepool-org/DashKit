@@ -253,10 +253,6 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
         podTotalDelivery = status.delivered
     }
 
-    mutating func updateLastPodComm(state: PodCommState, date: Date) {
-
-    }
-    
     mutating func finalizeDoses() {
         if let bolus = unfinalizedBolus, bolus.isFinished(at: dateGenerator()) {
             finishedDoses.append(bolus)
