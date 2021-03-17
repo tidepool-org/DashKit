@@ -82,7 +82,7 @@ class DeactivatePodViewModelTests: XCTestCase {
         let viewModel = DeactivatePodViewModel(podDeactivator: self, podAttachedToBody: true)
 
         discardPodExpectation = expectation(description: "Discard Pod")
-        viewModel.discardPodButtonTapped()
+        viewModel.discardPod()
         
         waitForExpectations(timeout: 0.3, handler: nil)
 
@@ -103,7 +103,7 @@ class DeactivatePodViewModelTests: XCTestCase {
         discardError = .bleCommunicationError
 
         discardPodExpectation = expectation(description: "Discard Pod")
-        viewModel.discardPodButtonTapped()
+        viewModel.discardPod()
         
         waitForExpectations(timeout: 0.3, handler: nil)
 
@@ -117,7 +117,7 @@ class DeactivatePodViewModelTests: XCTestCase {
         
         discardError = nil
 
-        viewModel.discardPodButtonTapped()
+        viewModel.discardPod()
 
         waitForExpectations(timeout: 0.3, handler: nil)
     }
