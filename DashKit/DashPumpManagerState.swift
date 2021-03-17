@@ -61,6 +61,8 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
     public var suspendState: SuspendState?
     
     public var pendingCommand: PendingCommand?
+
+    public var confidenceRemindersEnabled: Bool = false
     
     public var isSuspended: Bool {
         if case .suspended = suspendState {
@@ -206,6 +208,8 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
         self.lowReservoirReminderValue = rawValue["lowReservoirReminderValue"] as? Double ?? Pod.defaultLowReservoirReminder
 
         self.podAttachmentConfirmed = rawValue["podAttachmentConfirmed"] as? Bool ?? false
+
+        self.confidenceRemindersEnabled = rawValue["confidenceRemindersEnabled"] as? Bool ?? false
     }
 
     public var rawValue: RawValue {
@@ -217,7 +221,8 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
             "maximumTempBasalRate": maximumTempBasalRate,
             "activeAlerts": activeAlerts.rawValue,
             "lowReservoirReminderValue": lowReservoirReminderValue,
-            "podAttachmentConfirmed": podAttachmentConfirmed
+            "podAttachmentConfirmed": podAttachmentConfirmed,
+            "confidenceRemindersEnabled": confidenceRemindersEnabled
         ]
         
         rawValue["lastPodCommState"] = try? JSONEncoder().encode(lastPodCommState)
@@ -274,7 +279,8 @@ extension DashPumpManagerState: CustomDebugStringConvertible {
             "* connectionState: \(String(describing: connectionState))",
             "* lowReservoirReminderValue: \(lowReservoirReminderValue)",
             "* scheduledExpirationReminderOffset: \(String(describing: scheduledExpirationReminderOffset))",
-            "* podAttachmentConfirmed: \(podAttachmentConfirmed)"
+            "* podAttachmentConfirmed: \(podAttachmentConfirmed)",
+            "* confidenceRemindersEnabled: \(confidenceRemindersEnabled)"
             ].joined(separator: "\n")
     }
 }
