@@ -20,8 +20,6 @@ struct DashSettingsView: View  {
 
    @State private var showSuspendOptions = false;
 
-   @State private var confidenceRemindersEnabled = false;
-
    @Environment(\.guidanceColors) var guidanceColors
    @Environment(\.insulinTintColor) var insulinTintColor
 
