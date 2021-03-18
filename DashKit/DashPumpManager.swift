@@ -211,18 +211,68 @@ open class DashPumpManager: PumpManager {
     
     private func pumpLifecycleProgress(for state: DashPumpManagerState) -> PumpManagerStatus.PumpLifecycleProgress? {
         switch state.lastPodCommState {
-        // TODO: Handle active lifecycle progress
+        case .active:
+            if shouldWarnPodEOL,
+               let podTimeRemaining = podTimeRemaining
+            {
+                let percentCompleted = max(0, min(1, (1 - (podTimeRemaining / Pod.lifetime))))
+                return PumpManagerStatus.PumpLifecycleProgress(percentComplete: percentCompleted, progressState: .warning)
+            } else if let podTimeRemaining = podTimeRemaining, podTimeRemaining <= 0 {
+                // Pod is expired
+                return PumpManagerStatus.PumpLifecycleProgress(percentComplete: 1, progressState: .critical)
+            }
+            return nil
         case .alarm(let detail):
             if let detail = detail, detail.alarmCode == .podExpired {
                 return PumpManagerStatus.PumpLifecycleProgress(percentComplete: 100, progressState: .critical)
             } else {
-                return nil
+                if shouldWarnPodEOL,
+                   let durationBetweenLastPodCommAndActivation = durationBetweenLastPodCommAndActivation
+                {
+                    let percentCompleted = max(0, min(1, durationBetweenLastPodCommAndActivation / Pod.lifetime))
+                    return PumpManagerStatus.PumpLifecycleProgress(percentComplete: percentCompleted, progressState: .dimmed)
+                }
             }
-        default:
+            return nil
+        case .systemError:
+            if shouldWarnPodEOL,
+               let durationBetweenLastPodCommAndActivation = durationBetweenLastPodCommAndActivation
+            {
+                let percentCompleted = max(0, min(1, durationBetweenLastPodCommAndActivation / Pod.lifetime))
+                return PumpManagerStatus.PumpLifecycleProgress(percentComplete: percentCompleted, progressState: .dimmed)
+            }
+            return nil
+        case .noPod, .activating, .deactivating:
             return nil
         }
     }
 
+    // If time remaining is negative, the pod has been expired for that amount of time.
+    public var podTimeRemaining: TimeInterval? {
+        guard let activationTime = podActivatedAt else { return nil }
+        let timeActive = dateGenerator().timeIntervalSince(activationTime)
+        return Pod.lifetime - timeActive
+    }
+
+    private var shouldWarnPodEOL: Bool {
+        guard let podTimeRemaining = podTimeRemaining,
+              podTimeRemaining > 0 && podTimeRemaining <= Pod.timeRemainingWarningThreshold else
+        {
+            return false
+        }
+
+        return true
+    }
+
+    public var durationBetweenLastPodCommAndActivation: TimeInterval? {
+        guard let lastPodCommDate = state.lastPodCommDate,
+              let activationTime = podActivatedAt else
+        {
+            return nil
+        }
+
+        return lastPodCommDate.timeIntervalSince(activationTime)
+    }
     
     private func status(for state: DashPumpManagerState) -> PumpManagerStatus {
         return PumpManagerStatus(

@@ -237,7 +237,7 @@ class DashSettingsViewModel: ObservableObject {
     
     var systemErrorDescription: String? {
         switch lifeState {
-        case .systemError(let systemError):
+        case .systemError(let systemError, _):
             return systemError.localizedDescription
         default:
             break
@@ -274,7 +274,7 @@ extension DashPumpManager {
     var lifeState: PodLifeState {
         switch podCommState {
         case .alarm(let alarm):
-            return .podAlarm(alarm)
+            return .podAlarm(alarm, durationBetweenLastPodCommAndActivation)
         case .noPod:
             return .noPod
         case .activating:
@@ -282,18 +282,17 @@ extension DashPumpManager {
         case .deactivating:
             return .podDeactivating
         case .active:
-            if let activationTime = podActivatedAt {                
-                let timeActive = dateGenerator().timeIntervalSince(activationTime)
-                if timeActive < Pod.lifetime {
-                    return .timeRemaining(Pod.lifetime - timeActive)
+            if let podTimeRemaining = podTimeRemaining {
+                if podTimeRemaining > 0 {
+                    return .timeRemaining(podTimeRemaining)
                 } else {
-                    return .expiredFor(timeActive - Pod.lifetime)
+                    return .expiredFor(-podTimeRemaining)
                 }
             } else {
                 return .podDeactivating
             }
         case .systemError(let error):
-            return .systemError(error)
+            return .systemError(error, durationBetweenLastPodCommAndActivation)
         }
     }
     

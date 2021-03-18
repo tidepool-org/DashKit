@@ -49,7 +49,12 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
 
     public var alarmCode: AlarmCode?
     
-    public var lastPodCommState: PodCommState
+    public var lastPodCommState: PodCommState {
+        didSet {
+            lastPodCommDate = dateGenerator()
+        }
+    }
+    public private(set) var lastPodCommDate: Date?
     
     public var unfinalizedBolus: UnfinalizedDose?
     public var unfinalizedTempBasal: UnfinalizedDose?
@@ -115,6 +120,7 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
         self.maximumTempBasalRate = maximumTempBasalRate
         self.activeAlerts = []
         self.lastPodCommState = lastPodCommState
+        self.lastPodCommDate = dateGenerator()
         self.lowReservoirReminderValue = Pod.defaultLowReservoirReminder
         self.podAttachmentConfirmed = false
     }
@@ -200,6 +206,8 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
         } else {
             self.lastPodCommState = .noPod
         }
+
+        self.lastPodCommDate = rawValue["lastPodCommDate"] as? Date
         
         self.scheduledExpirationReminderOffset = rawValue["scheduledExpirationReminderOffset"] as? TimeInterval
         
@@ -226,6 +234,7 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
         ]
         
         rawValue["lastPodCommState"] = try? JSONEncoder().encode(lastPodCommState)
+        rawValue["lastPodCommDate"] = lastPodCommDate
         rawValue["suspendState"] = suspendState?.rawValue
         rawValue["lastStatusDate"] = lastStatusDate
         rawValue["reservoirLevel"] = reservoirLevel?.rawValue
@@ -248,7 +257,7 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
         podActivatedAt = status.expirationDate - Pod.lifetime
         podTotalDelivery = status.delivered
     }
-    
+
     mutating func finalizeDoses() {
         if let bolus = unfinalizedBolus, bolus.isFinished(at: dateGenerator()) {
             finishedDoses.append(bolus)

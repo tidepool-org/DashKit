@@ -27,6 +27,8 @@ class MockPodSettingsViewModel: ObservableObject, Identifiable {
         }
     }
 
+    @Published var activationDate: Date
+
     var numberFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
@@ -41,9 +43,11 @@ class MockPodSettingsViewModel: ObservableObject, Identifiable {
         
         if let podStatus = mockPodCommManager.podStatus {
             self.activeAlerts = podStatus.activeAlerts
+            self.activationDate = podStatus.activationDate
             reservoirAmount = podStatus.initialInsulinAmount - podStatus.insulinDelivered
         } else {
             self.activeAlerts = PodAlerts()
+            self.activationDate = Date()
             reservoirAmount = 0
         }
         
@@ -83,6 +87,7 @@ class MockPodSettingsViewModel: ObservableObject, Identifiable {
             if let value = numberFormatter.number(from: reservoirString) {
                 mockPodCommManager.podStatus?.insulinDelivered = podStatus.initialInsulinAmount - Double(truncating: value)
             }
+            mockPodCommManager.podStatus?.activationDate = activationDate
         }
         mockPodCommManager.dashPumpManager?.getPodStatus() { _ in }
     }
