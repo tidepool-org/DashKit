@@ -389,7 +389,7 @@ struct DashSettingsView: View  {
    }
 
    private var confidenceRemindersSection: some View {
-      Section(footer: FrameworkLocalText("When enabled, your pod will audibly beep when you start a bolus, complete a bolus, suspend insulin delivery or resume insulin delivery.", comment: "Descriptive text for confidence reminders section")) {
+      Section(footer: FrameworkLocalText("When enabled, your pod will audibly beep when you start a bolus, complete a bolus, and when you resume after suspending insulin delivery.", comment: "Descriptive text for confidence reminders section")) {
          if #available(iOS 14.0, *) {
             Toggle(isOn: $viewModel.confidenceRemindersEnabled) {
                Text("Confidence Reminders")
