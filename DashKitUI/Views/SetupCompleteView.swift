@@ -45,7 +45,7 @@ struct SetupCompleteView: View {
                 Text(String(format: LocalizedString("Your Pod is ready for use.\n\n%1$@ will remind you to change your pod before it expires. You can change this to a time convenient for you.", comment: "Format string for instructions for setup complete view. (1: app name)"), appName))
                     .fixedSize(horizontal: false, vertical: true)
                 Divider()
-                VStack {
+                VStack(alignment: .leading) {
                     Text("Scheduled Reminder")
                     Divider()
                     NavigationLink(
@@ -53,7 +53,14 @@ struct SetupCompleteView: View {
                             scheduledExpirationReminderDate: scheduledReminderDate,
                             allowedDates: allowedDates,
                             dateFormatter: dateFormatter,
-                            onSave: onSaveScheduledExpirationReminder,
+                            onSave: { (newDate, completion) in
+                                onSaveScheduledExpirationReminder?(newDate) { (error) in
+                                    if error == nil {
+                                        scheduledReminderDate = newDate
+                                    }
+                                    completion(error)
+                                }
+                            },
                             onFinish: { scheduleReminderDateEditViewIsShown = false }),
                         isActive: $scheduleReminderDateEditViewIsShown)
                     {

@@ -110,6 +110,9 @@ extension PodCommError {
             .failToConnect,
             .podNotAvailable,
             .activationError(.activationPhase1NotCompleted),
+            .activationError(.podIsLumpOfCoal1Hour),
+            .activationError(.podIsLumpOfCoal2Hours),
+            .activationError(.moreThanOnePodAvailable),
             .bleCommunicationError,
             .bluetoothOff,
             .bluetoothUnauthorized,
@@ -119,7 +122,7 @@ extension PodCommError {
             .invalidProgramStatus(nil),
             .messageSigningFailed,
             .nackReceived(.errorPodState),
-            .noUnacknowledgedCommandToRetry
+            .noUnacknowledgedCommandToRetry,
         ]
     }
 }
