@@ -30,15 +30,15 @@ enum PodLifeState {
             return max(0, min(1, (1 - (timeRemaining / Pod.lifetime))))
         case .expiredFor(let expiryAge):
             return max(0, min(1, expiryAge / Pod.expirationWindow))
-        case .podAlarm(let alarm, let timeOfAlarm):
+        case .podAlarm(let alarm, let timestampOfAlarm):
             switch alarm?.alarmCode {
             case .podExpired:
                 return 1
             default:
-                return max(0, min(1, (timeOfAlarm ?? Pod.lifetime) / Pod.lifetime))
+                return max(0, min(1, (timestampOfAlarm ?? Pod.lifetime) / Pod.lifetime))
             }
-        case .systemError(_, let timeOfError):
-            return max(0, min(1, (timeOfError ?? Pod.lifetime) / Pod.lifetime))
+        case .systemError(_, let timestampOfError):
+            return max(0, min(1, (timestampOfError ?? Pod.lifetime) / Pod.lifetime))
         case .podDeactivating:
             return 1
         case .noPod, .podActivating:

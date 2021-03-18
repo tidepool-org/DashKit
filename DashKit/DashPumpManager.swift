@@ -202,7 +202,7 @@ open class DashPumpManager: PumpManager {
             {
                 let percentCompleted = max(0, min(1, (1 - (podTimeRemaining / Pod.lifetime))))
                 return PumpManagerStatus.PumpLifecycleProgress(percentComplete: percentCompleted, progressState: .warning)
-            } else if let podTimeRemaining = podTimeRemaining, podTimeRemaining < 0 {
+            } else if let podTimeRemaining = podTimeRemaining, podTimeRemaining <= 0 {
                 // Pod is expired
                 return PumpManagerStatus.PumpLifecycleProgress(percentComplete: 1, progressState: .critical)
             }
@@ -212,18 +212,18 @@ open class DashPumpManager: PumpManager {
                 return PumpManagerStatus.PumpLifecycleProgress(percentComplete: 100, progressState: .critical)
             } else {
                 if shouldWarnPodEOL,
-                   let timeOfLastPodComm = timeOfLastPodComm
+                   let durationBetweenLastPodCommAndActivation = durationBetweenLastPodCommAndActivation
                 {
-                    let percentCompleted = max(0, min(1, timeOfLastPodComm / Pod.lifetime))
+                    let percentCompleted = max(0, min(1, durationBetweenLastPodCommAndActivation / Pod.lifetime))
                     return PumpManagerStatus.PumpLifecycleProgress(percentComplete: percentCompleted, progressState: .dimmed)
                 }
             }
             return nil
         case .systemError:
             if shouldWarnPodEOL,
-               let timeOfLastPodComm = timeOfLastPodComm
+               let durationBetweenLastPodCommAndActivation = durationBetweenLastPodCommAndActivation
             {
-                let percentCompleted = max(0, min(1, timeOfLastPodComm / Pod.lifetime))
+                let percentCompleted = max(0, min(1, durationBetweenLastPodCommAndActivation / Pod.lifetime))
                 return PumpManagerStatus.PumpLifecycleProgress(percentComplete: percentCompleted, progressState: .dimmed)
             }
             return nil
@@ -249,7 +249,7 @@ open class DashPumpManager: PumpManager {
         return true
     }
 
-    public var timeOfLastPodComm: TimeInterval? {
+    public var durationBetweenLastPodCommAndActivation: TimeInterval? {
         guard let lastPodCommDate = state.lastPodCommDate,
               let activationTime = podActivatedAt else
         {

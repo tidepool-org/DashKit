@@ -265,7 +265,7 @@ extension DashPumpManager {
     var lifeState: PodLifeState {
         switch podCommState {
         case .alarm(let alarm):
-            return .podAlarm(alarm, timeOfLastPodComm)
+            return .podAlarm(alarm, durationBetweenLastPodCommAndActivation)
         case .noPod:
             return .noPod
         case .activating:
@@ -283,7 +283,7 @@ extension DashPumpManager {
                 return .podDeactivating
             }
         case .systemError(let error):
-            return .systemError(error, timeOfLastPodComm)
+            return .systemError(error, durationBetweenLastPodCommAndActivation)
         }
     }
     
