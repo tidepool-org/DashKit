@@ -12,7 +12,9 @@ import LoopKitUI
 import HealthKit
 
 struct LowReservoirReminderEditView: View {
-    
+
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
+
     // Allowed Low Reservoir reminder values
     static let lowReservoirReminderAllowedRange = 10..<50
     
@@ -43,17 +45,28 @@ struct LowReservoirReminderEditView: View {
     var content: some View {
         VStack {
             RoundedCardScrollView(title: LocalizedString("Low Reservoir Reminder", comment: "Title for low reservoir reminder edit page")) {
-                RoundedCard {
-                    RoundedCardValueRow(
-                        label: LocalizedString("Low Reservoir Reminder", comment: "Label for low reservoir reminder row"),
-                        value: formatValue(selectedValue),
-                        highlightValue: true
-                    )
-                    Picker("", selection: $selectedValue) {
-                        ForEach(Self.lowReservoirReminderAllowedRange, id: \.self) { value in
-                            Text(formatValue(value))
+                if self.horizontalSizeClass == .compact {
+                    // Keep picker outside of card in compact view, because it forces full device width.
+                    VStack(spacing: 0) {
+                        RoundedCard {
+                            RoundedCardValueRow(
+                                label: LocalizedString("Low Reservoir Reminder", comment: "Label for low reservoir reminder row"),
+                                value: formatValue(selectedValue),
+                                highlightValue: true
+                            )
                         }
-                    }.pickerStyle(WheelPickerStyle())
+                        picker
+                            .background(Color(.secondarySystemGroupedBackground))
+                    }
+                } else {
+                    RoundedCard {
+                        RoundedCardValueRow(
+                            label: LocalizedString("Low Reservoir Reminder", comment: "Label for low reservoir reminder row"),
+                            value: formatValue(selectedValue),
+                            highlightValue: true
+                        )
+                        picker
+                    }
                 }
             }
             Spacer()
@@ -66,6 +79,14 @@ struct LowReservoirReminderEditView: View {
         }
         .navigationBarTitle("", displayMode: .inline)
         .alert(isPresented: $alertIsPresented, content: { alert(error: error) })
+    }
+
+    private var picker: some View {
+        Picker("", selection: $selectedValue) {
+            ForEach(Self.lowReservoirReminderAllowedRange, id: \.self) { value in
+                Text(formatValue(value))
+            }
+        }.pickerStyle(WheelPickerStyle())
     }
     
     func formatValue(_ value: Int) -> String {
