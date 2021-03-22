@@ -13,7 +13,7 @@ import HealthKit
 
 struct NotificationSettingsView: View {
     
-    static let expirationReminderHoursAllowed = 1..<25
+    static let expirationReminderHoursAllowed = 1...24
     
     var dateFormatter: DateFormatter
     
