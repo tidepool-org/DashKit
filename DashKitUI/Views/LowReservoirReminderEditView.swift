@@ -16,7 +16,7 @@ struct LowReservoirReminderEditView: View {
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
 
     // Allowed Low Reservoir reminder values
-    static let lowReservoirReminderAllowedRange = 10..<50
+    static let lowReservoirReminderAllowedRange = 10...50
     
     var onSave: ((_ selectedValue: Int, _ completion: @escaping (_ error: Error?) -> Void) -> Void)?
     var onFinish: (() -> Void)?
