@@ -267,6 +267,7 @@ extension DashSettingsViewModel: PodStatusObserver {
         basalDeliveryRate = self.pumpManager.basalDeliveryRate
         reservoirLevel = self.pumpManager.reservoirLevel
         reservoirLevelHighlightState = self.pumpManager.reservoirLevelHighlightState
+        expirationReminderDate = self.pumpManager.scheduledExpirationReminder
     }
 }
 
