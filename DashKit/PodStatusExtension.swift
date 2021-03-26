@@ -156,7 +156,7 @@ extension PodCommError: LocalizedError {
             return LocalizedString("Operation timed out", comment: "Error description for PodCommError.operationTimeout")
 
         case .notConnected:
-            return LocalizedString("Phone is not connected to the Pod", comment: "Error description for PodCommError.notConnected")
+            return LocalizedString("There was a problem communicating with the pod", comment: "Error description for PodCommError.notConnected")
 
         case .messageSigningFailed:
             return LocalizedString("Message signing failed", comment: "Error description for PodCommError.messageSigningFailed")
@@ -221,7 +221,7 @@ extension PodCommError: LocalizedError {
         case .systemError(let systemError):
             return systemError.recoverySuggestion
         case .bleCommunicationError, .podNotAvailable, .notConnected, .failToConnect:
-            return LocalizedString("There was a problem communicating with the pod. If this problem persists, tap Deactivate Pod. You can then activate a new Pod.", comment: "recovery suggestion for bleCommunicationError during pairing")
+            return LocalizedString("If this problem persists, tap Deactivate Pod. You can then activate a new Pod.", comment: "recovery suggestion for bleCommunicationError during pairing")
         case .phoneNotRegistered, .sdkNotInitialized, .messageSigningFailed:
             return LocalizedString("Please re-attempt app configuration.", comment: "Recovery suggestion for errors that should not happen after configuration.")
         case .podServiceIsBusy, .operationTimeout, .unknownError:

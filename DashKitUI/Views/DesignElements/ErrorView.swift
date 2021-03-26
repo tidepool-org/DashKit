@@ -43,6 +43,7 @@ struct ErrorView: View {
                 Text(self.error.errorDescription ?? "")
                     .bold()
                     .accessibility(identifier: "label_error_description")
+                    .fixedSize(horizontal: false, vertical: true)
             }
             .accessibilityElement(children: .ignore)
             .accessibility(label: FrameworkLocalText("Error", comment: "Accessibility label indicating an error occurred"))
