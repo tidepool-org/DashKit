@@ -700,7 +700,7 @@ open class DashPumpManager: PumpManager {
         guard let expiration = podExpiresAt else {
             return nil
         }
-        
+
         let allDates = Array(stride(from: -24, through: -1, by: 1)).map { (i: Int) -> Date in
             expiration.addingTimeInterval(.hours(Double(i)))
         }
@@ -712,7 +712,10 @@ open class DashPumpManager: PumpManager {
         guard let expiration = podExpiresAt, let offset = state.scheduledExpirationReminderOffset else {
             return nil
         }
-        return expiration.addingTimeInterval(-offset)
+
+        // It is possible the scheduledExpirationReminderOffset does not fall on the hour, but instead be a few seconds off
+        // since the allowedExpirationReminderDates are by the hour, force the offset to be on the hour
+        return expiration.addingTimeInterval(-.hours(round(offset.hours)))
     }
     
     public func updateLowReservoirReminder(_ value: Int, completion: @escaping (Error?) -> Void) {

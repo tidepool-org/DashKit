@@ -25,7 +25,7 @@ public enum DashPumpManagerError: Error, LocalizedError {
         case .invalidBasalSchedule:
             return LocalizedString("Invalid basal schedule.", comment: "Description of DashPumpManagerError for .invalidBasalSchedule")
         case .invalidBolusVolume:
-            return LocalizedString("Invalid bolus bolume.", comment: "Description of DashPumpManagerError for .invalidBolusVolume")
+            return LocalizedString("Invalid bolus volume.", comment: "Description of DashPumpManagerError for .invalidBolusVolume")
         case .invalidTempBasalRate:
             return LocalizedString("Invalid temp basal rate.", comment: "Description of DashPumpManagerError for .invalidTempBasalRate")
         case .podCommError(let error):
