@@ -159,7 +159,7 @@ enum DeactivationError : LocalizedError {
     var recoverySuggestion: String? {
         switch self {
         case .podCommError:
-            return LocalizedString("There was a problem communicating with the pod.  If this problem persists, tap Discard Pod.  You can then activate a new Pod.", comment: "Format string for recovery suggestion during deactivate pod.")
+            return LocalizedString("There was a problem communicating with the pod. If this problem persists, tap Discard Pod. You can then activate a new Pod.", comment: "Format string for recovery suggestion during deactivate pod.")
         }
     }
     
