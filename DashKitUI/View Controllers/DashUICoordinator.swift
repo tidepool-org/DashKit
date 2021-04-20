@@ -61,11 +61,9 @@ protocol DashUINavigator: class {
     func navigateTo(_ screen: DashUIScreen)
 }
 
-class DashUICoordinator: UINavigationController, PumpManagerCreateNotifying, PumpManagerOnboardNotifying, CompletionNotifying, UINavigationControllerDelegate {
-    
-    public weak var pumpManagerCreateDelegate: PumpManagerCreateDelegate?
+class DashUICoordinator: UINavigationController, PumpManagerOnboarding, CompletionNotifying, UINavigationControllerDelegate {
 
-    public weak var pumpManagerOnboardDelegate: PumpManagerOnboardDelegate?
+    public weak var pumpManagerOnboardingDelegate: PumpManagerOnboardingDelegate?
 
     public weak var completionDelegate: CompletionDelegate?
     
@@ -116,7 +114,7 @@ class DashUICoordinator: UINavigationController, PumpManagerCreateNotifying, Pum
             view.navigationItem.title = LocalizedString("Register Device", comment: "Title for register device screen")
             return view
         case .pairPod:
-            pumpManagerCreateDelegate?.pumpManagerCreateNotifying(didCreatePumpManager: pumpManager)
+            pumpManagerOnboardingDelegate?.pumpManagerOnboarding(didCreatePumpManager: pumpManager)
 
             let viewModel = PairPodViewModel(podPairer: pumpManager, navigator: self)
 
@@ -183,7 +181,7 @@ class DashUICoordinator: UINavigationController, PumpManagerCreateNotifying, Pum
                 },
                 didFinish: {
                     if let initialSettings = self.initialSettings {
-                        self.pumpManagerOnboardDelegate?.pumpManagerOnboardNotifying(didOnboardPumpManager: self.pumpManager, withFinalSettings: initialSettings)
+                        self.pumpManagerOnboardingDelegate?.pumpManagerOnboarding(didOnboardPumpManager: self.pumpManager, withFinalSettings: initialSettings)
                     }
                     self.stepFinished()
                 },
