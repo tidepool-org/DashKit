@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import LoopKitUI
 import PodSDK
 import DashKit
 
@@ -41,15 +42,15 @@ struct MockPodSettingsView: View {
                 unacknowledgedCommandRetryResultPicker
             }
             
-            Section(header: Text("Reservoir Remaining").font(.headline).foregroundColor(Color.primary)) {
+            Section(header: SectionHeader(label: "Reservoir Remaining")) {
                 reservoirRemainingEntry
             }
 
-            Section(header: Text("Activation Date").font(.headline).foregroundColor(Color.primary)) {
+            Section(header: SectionHeader(label: "Activation Date")) {
                 activatedAtEntry
             }
             
-            Section(header: Text("Alerts").font(.headline).foregroundColor(Color.primary)) {
+            Section(header: SectionHeader(label: "Alerts")) {
                 ForEach(SimulatedPodAlerts.allCases, id: \.self) { item in
                     Button(action: {
                         if self.model.activeAlerts.contains(item.podAlerts) {
@@ -84,7 +85,7 @@ struct MockPodSettingsView: View {
                     ]
                 )
             }
-            Section(header: Text("Alarms").font(.headline).foregroundColor(Color.primary)) {
+            Section(header: SectionHeader(label: "Alarms")) {
                 ForEach(SimulatedPodAlarm.allCases, id: \.self) { item in
                     Button(action: {
                         self.selectedAlarm = item
@@ -109,7 +110,7 @@ struct MockPodSettingsView: View {
                     ]
                 )
             }
-            Section(header: Text("System Errors").font(.headline).foregroundColor(Color.primary)) {
+            Section(header: SectionHeader(label: "System Errors")) {
                 Button(action: {
                     self.showSystemErrorActions = true
                 }) {
