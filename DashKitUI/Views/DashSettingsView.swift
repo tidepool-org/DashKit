@@ -262,7 +262,7 @@ struct DashSettingsView: View  {
             }
          }.padding(.bottom, 8)
 
-         Section(header: FrameworkLocalText("Activity", comment: "Section header for activity section").font(.headline).foregroundColor(Color.primary)) {
+         Section(header: SectionHeader(label: LocalizedString("Activity", comment: "Section header for activity section"))) {
             suspendResumeRow(for: self.viewModel.basalDeliveryState ?? .active(Date()))
                .disabled(!self.viewModel.podOk)
             if case .suspended(let suspendDate) = self.viewModel.basalDeliveryState {
@@ -313,7 +313,7 @@ struct DashSettingsView: View  {
             }
          }
 
-         Section(header: FrameworkLocalText("Configuration", comment: "Section header for configuration section").font(.headline).foregroundColor(Color.primary))
+         Section(header: SectionHeader(label: LocalizedString("Configuration", comment: "Section header for configuration section")))
          {
             NavigationLink(destination:
                             NotificationSettingsView(
@@ -374,7 +374,7 @@ struct DashSettingsView: View  {
             }
          }
 
-         Section(header: FrameworkLocalText("Support", comment: "Label for support disclosure row").font(.headline).foregroundColor(Color.primary)) {
+         Section(header: SectionHeader(label: LocalizedString("Support", comment: "Label for support disclosure row"))) {
             NavigationLink(destination: Text("Not Implemented Yet")) {
                // Placeholder
                Text("Get Help with Omnipod 5").foregroundColor(Color.primary)
