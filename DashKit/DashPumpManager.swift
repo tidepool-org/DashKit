@@ -906,7 +906,7 @@ open class DashPumpManager: PumpManager {
             return
         }
 
-        podCommManager.stopProgram(programType: .bolus) { (result) in
+        stopProgram(stopProgramType: .bolus) { (result) in
             switch result {
             case .success(let status):
                 self.mutateState({ (state) in
@@ -921,7 +921,12 @@ open class DashPumpManager: PumpManager {
                 self.mutateState({ (state) in
                     state.activeTransition = nil
                 })
-                completion(.failure(.communication(DashPumpManagerError(error))))
+                
+                if self.state.pendingCommand != nil {
+                    completion(.failure(.uncertainDelivery))
+                } else {
+                    completion(.failure(.communication(DashPumpManagerError(error))))
+                }
             }
         }
     }
