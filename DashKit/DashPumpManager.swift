@@ -854,6 +854,9 @@ open class DashPumpManager: PumpManager {
         let enactUnits = roundToSupportedBolusVolume(units: units)
         
         guard let bolus = try? Bolus(immediateVolume: Int(round(enactUnits * Pod.podSDKInsulinMultiplier))) else {
+            self.mutateState({ (state) in
+                state.activeTransition = nil
+            })
             completion(.failure(.configuration(DashPumpManagerError.invalidBolusVolume)))
             return
         }
