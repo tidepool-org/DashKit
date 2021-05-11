@@ -55,7 +55,7 @@
 		C11B2C2D2425846D00308035 /* MockNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11B2C2C2425846D00308035 /* MockNavigator.swift */; };
 		C1201E3123EDF498002DA84A /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1201E3023EDF498002DA84A /* Image.swift */; };
 		C1201E3F23EE1B03002DA84A /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1201E3E23EE1B03002DA84A /* RegisterView.swift */; };
-		C1245D4C24B78FFA0065120F /* PodAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1245D4B24B78FFA0065120F /* PodAlert.swift */; };
+		C1245D4C24B78FFA0065120F /* PumpManagerAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1245D4B24B78FFA0065120F /* PumpManagerAlert.swift */; };
 		C127160C237A07B60093DAB7 /* UnfinalizedDoseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C127160B237A07B60093DAB7 /* UnfinalizedDoseTests.swift */; };
 		C12A06A123F217A40052195C /* RegistrationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12A06A023F217A40052195C /* RegistrationViewModel.swift */; };
 		C12A06AA23F2EFED0052195C /* MockRegistrationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12A06A923F2EFED0052195C /* MockRegistrationManager.swift */; };
@@ -146,6 +146,8 @@
 		C1ED19D223F98C5C00D55049 /* DashUICoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ED19D123F98C5C00D55049 /* DashUICoordinator.swift */; };
 		C1ED19D623F9C63E00D55049 /* InsertCannulaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ED19D523F9C63E00D55049 /* InsertCannulaView.swift */; };
 		C1F8403623D7A0B200673141 /* PodSDKLoggingShim.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F8403523D7A0B200673141 /* PodSDKLoggingShim.swift */; };
+		C1FAEC1B2649D21B00A3250B /* TimeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FAEC1A2649D21B00A3250B /* TimeView.swift */; };
+		C1FAEC23264AF21400A3250B /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FAEC22264AF21400A3250B /* UIImage.swift */; };
 		C1FDF4AC235EC930008B0251 /* HUDAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C1FDF4AB235EC930008B0251 /* HUDAssets.xcassets */; };
 		C1FE2E3A22EA0B360035DCA0 /* LoopKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E3922EA0B360035DCA0 /* LoopKit.framework */; };
 		C1FE2E3C22EA0B360035DCA0 /* LoopKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FE2E3B22EA0B360035DCA0 /* LoopKitUI.framework */; };
@@ -278,7 +280,7 @@
 		C11B2C2C2425846D00308035 /* MockNavigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNavigator.swift; sourceTree = "<group>"; };
 		C1201E3023EDF498002DA84A /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		C1201E3E23EE1B03002DA84A /* RegisterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
-		C1245D4B24B78FFA0065120F /* PodAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodAlert.swift; sourceTree = "<group>"; };
+		C1245D4B24B78FFA0065120F /* PumpManagerAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PumpManagerAlert.swift; sourceTree = "<group>"; };
 		C127160B237A07B60093DAB7 /* UnfinalizedDoseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnfinalizedDoseTests.swift; sourceTree = "<group>"; };
 		C12A06A023F217A40052195C /* RegistrationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationViewModel.swift; sourceTree = "<group>"; };
 		C12A06A923F2EFED0052195C /* MockRegistrationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockRegistrationManager.swift; sourceTree = "<group>"; };
@@ -367,6 +369,8 @@
 		C1ED19D123F98C5C00D55049 /* DashUICoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashUICoordinator.swift; sourceTree = "<group>"; };
 		C1ED19D523F9C63E00D55049 /* InsertCannulaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsertCannulaView.swift; sourceTree = "<group>"; };
 		C1F8403523D7A0B200673141 /* PodSDKLoggingShim.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodSDKLoggingShim.swift; sourceTree = "<group>"; };
+		C1FAEC1A2649D21B00A3250B /* TimeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeView.swift; sourceTree = "<group>"; };
+		C1FAEC22264AF21400A3250B /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
 		C1FDF4AB235EC930008B0251 /* HUDAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = HUDAssets.xcassets; sourceTree = "<group>"; };
 		C1FE2E3922EA0B360035DCA0 /* LoopKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = LoopKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1FE2E3B22EA0B360035DCA0 /* LoopKitUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = LoopKitUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -519,6 +523,7 @@
 				C1E2561D25DEF855005F609E /* LowReservoirReminderEditView.swift */,
 				C142DF1E25E57AEE00D15EEA /* AttachPodView.swift */,
 				C1B1CBFF25EE8350004D05C4 /* SetupCompleteView.swift */,
+				C1FAEC1A2649D21B00A3250B /* TimeView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -529,6 +534,7 @@
 				C107D16C226A143A00D63775 /* UIViewController.swift */,
 				C107D17B226A243A00D63775 /* UITableViewCell.swift */,
 				C1201E3023EDF498002DA84A /* Image.swift */,
+				C1FAEC22264AF21400A3250B /* UIImage.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -732,7 +738,7 @@
 				C1ACF43A22A173FF00F7DDB4 /* ReservoirLevel.swift */,
 				C1ACF44122A1FC1F00F7DDB4 /* PodDoseProgressTimerEstimator.swift */,
 				C1ACF44322A200B100F7DDB4 /* UnfinalizedDose.swift */,
-				C1245D4B24B78FFA0065120F /* PodAlert.swift */,
+				C1245D4B24B78FFA0065120F /* PumpManagerAlert.swift */,
 				C196751024EDD15A00118EC4 /* PendingCommand.swift */,
 			);
 			path = DashKit;
@@ -1166,6 +1172,7 @@
 				C107D17C226A243A00D63775 /* UITableViewCell.swift in Sources */,
 				C1562F8724169C41006952D6 /* DeactivatePodView.swift in Sources */,
 				C1941153228DBF8300E886DD /* NibLoadable.swift in Sources */,
+				C1FAEC23264AF21400A3250B /* UIImage.swift in Sources */,
 				C107D161226A0DCF00D63775 /* DashPumpManager+UI.swift in Sources */,
 				C118C71D25A7D7550029C451 /* MockPodSettingsViewModel.swift in Sources */,
 				C14C6F27241A754B00CF3408 /* ErrorView.swift in Sources */,
@@ -1179,6 +1186,7 @@
 				C107D176226A22BF00D63775 /* LocalizedString.swift in Sources */,
 				C1A701B923EB7EC2002D1E45 /* PairPodView.swift in Sources */,
 				C13DA2AE24F5C3530098BB29 /* UncertaintyRecoveredView.swift in Sources */,
+				C1FAEC1B2649D21B00A3250B /* TimeView.swift in Sources */,
 				C107D17A226A241200D63775 /* IdentifiableClass.swift in Sources */,
 				C1DFF91F2417C88600EAC44E /* InsertCannulaViewModel.swift in Sources */,
 				C1B1CC0025EE8350004D05C4 /* SetupCompleteView.swift in Sources */,
@@ -1249,7 +1257,7 @@
 				C17A5B5825E03DC000721416 /* ReservoirLevelHighlightState.swift in Sources */,
 				C15424332280C75E006754B3 /* PodStatusExtension.swift in Sources */,
 				C1ACF44022A1F9B400F7DDB4 /* OSLog.swift in Sources */,
-				C1245D4C24B78FFA0065120F /* PodAlert.swift in Sources */,
+				C1245D4C24B78FFA0065120F /* PumpManagerAlert.swift in Sources */,
 				C12A06AC23F2F0070052195C /* PDMRegistrator.swift in Sources */,
 				C107D11522692BDE00D63775 /* TimeInterval.swift in Sources */,
 				C115A5FB245B4069005ACEF7 /* MockPodAlarm.swift in Sources */,

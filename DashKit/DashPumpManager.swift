@@ -13,7 +13,7 @@ import os.log
 import PodSDK
 
 
-public protocol PodStatusObserver: class {
+public protocol PodStatusObserver: AnyObject {
     func didUpdatePodStatus()
 }
 
@@ -123,7 +123,7 @@ open class DashPumpManager: PumpManager {
         return try? BeepOption(beepAtBegining: confidenceRemindersEnabled, beepAtEnd: confidenceRemindersEnabled, beepInterval: 0)
     }
     
-    private func pumpStatusHighlight(for state: DashPumpManagerState) -> PumpManagerStatus.PumpStatusHighlight? {
+    public func buildPumpStatusHighlight(for state: DashPumpManagerState) -> PumpManagerStatus.PumpStatusHighlight? {
         if state.pendingCommand != nil {
             return PumpManagerStatus.PumpStatusHighlight(localizedMessage: NSLocalizedString("Comms Issue", comment: "Status highlight that delivery is uncertain."),
                                                          imageName: "exclamationmark.circle.fill",
@@ -209,7 +209,7 @@ open class DashPumpManager: PumpManager {
         }
     }
     
-    private func pumpLifecycleProgress(for state: DashPumpManagerState) -> PumpManagerStatus.PumpLifecycleProgress? {
+    public func buildPumpLifecycleProgress(for state: DashPumpManagerState) -> PumpManagerStatus.PumpLifecycleProgress? {
         switch state.lastPodCommState {
         case .active:
             if shouldWarnPodEOL,
@@ -281,8 +281,6 @@ open class DashPumpManager: PumpManager {
             pumpBatteryChargeRemaining: nil,
             basalDeliveryState: basalDeliveryState(for: state),
             bolusState: bolusState(for: state),
-            pumpStatusHighlight: pumpStatusHighlight(for: state),
-            pumpLifecycleProgress: pumpLifecycleProgress(for: state),
             deliveryIsUncertain: state.pendingCommand != nil
         )
     }
@@ -545,7 +543,7 @@ open class DashPumpManager: PumpManager {
         }
     }
 
-    public func setBasalSchedule(basalProgram: BasalProgram, timeZone: TimeZone, completion: @escaping (Error?) -> Void) {
+    public func setBasalSchedule(basalProgram: BasalProgram, timeZone: TimeZone, completion: @escaping (DashPumpManagerError?) -> Void) {
         guard !state.isSuspended && podCommManager.podCommState != .noPod else {
             log.default("Storing basal schedule change locally.")
             self.mutateState { (state) in
@@ -556,7 +554,8 @@ open class DashPumpManager: PumpManager {
             return
         }
         
-        suspendDelivery { (error) in
+        let reminder = try! StopProgramReminder(value: StopProgramReminder.maxSuspendDuration)
+        suspendDelivery(withReminder: reminder) { (error) in
             if let error = error {
                 completion(error)
                 return
@@ -598,7 +597,7 @@ open class DashPumpManager: PumpManager {
         }
     }
 
-    public func setTime(completion: @escaping (Error?) -> Void) {
+    public func setTime(completion: @escaping (DashPumpManagerError?) -> Void) {
         setBasalSchedule(basalProgram: state.basalProgram, timeZone: TimeZone.currentFixed, completion: completion)
     }
 
@@ -674,6 +673,24 @@ open class DashPumpManager: PumpManager {
             self.log.default("Recommending Loop")
             completion?()
             delegate?.pumpManagerRecommendsLoop(self)
+        }
+        
+        // Check if timezone or dst changed
+        checkForTimeOffsetChange()
+    }
+    
+    public var isClockOffset: Bool {
+        let now = dateGenerator()
+        return TimeZone.current.secondsFromGMT(for: now) != state.timeZone.secondsFromGMT(for: now)
+    }
+    
+    func checkForTimeOffsetChange() {
+        let isAlertActive = state.activeAlerts.contains(.timeOffsetChangeDetected)
+        
+        if !isAlertActive && isClockOffset && !state.acknowledgedTimeOffsetAlert {
+            issueAlert(alert: .timeOffsetChangeDetected)
+        } else if isAlertActive && !isClockOffset {
+            retractAlert(alert: .timeOffsetChangeDetected)
         }
     }
     
@@ -1168,8 +1185,8 @@ open class DashPumpManager: PumpManager {
 
     fileprivate func clearSuspendReminder() {
         self.pumpDelegate.notify { (delegate) in
-            delegate?.retractAlert(identifier: Alert.Identifier(managerIdentifier: self.managerIdentifier, alertIdentifier: PodAlerts.suspendEnded.alertIdentifier))
-            delegate?.retractAlert(identifier: Alert.Identifier(managerIdentifier: self.managerIdentifier, alertIdentifier: PodAlerts.suspendEnded.repeatingAlertIdentifier))
+            delegate?.retractAlert(identifier: Alert.Identifier(managerIdentifier: self.managerIdentifier, alertIdentifier: PumpManagerAlert.suspendEnded.alertIdentifier))
+            delegate?.retractAlert(identifier: Alert.Identifier(managerIdentifier: self.managerIdentifier, alertIdentifier: PumpManagerAlert.suspendEnded.repeatingAlertIdentifier))
         }
     }
 
@@ -1549,7 +1566,7 @@ extension DashPumpManager: PodCommManagerDelegate {
         return alert.isIgnored
     }
     
-    private func podAlertFromSDKAlert(_ sdkAlert: PodAlerts) -> PodAlert? {
+    private func pumpManagerAlertFromSDKAlert(_ sdkAlert: PodAlerts) -> PumpManagerAlert? {
         switch sdkAlert {
         case .autoOff:
             return .autoOff
@@ -1571,54 +1588,67 @@ extension DashPumpManager: PodCommManagerDelegate {
             return nil
         }
     }
+    
+    func issueAlert(alert: PumpManagerAlert) {
+        let identifier = Alert.Identifier(managerIdentifier: self.managerIdentifier, alertIdentifier: alert.alertIdentifier)
+        let loopAlert = Alert(identifier: identifier, foregroundContent: alert.foregroundContent, backgroundContent: alert.backgroundContent, trigger: .immediate)
+        pumpDelegate.notify { (delegate) in
+            delegate?.issueAlert(loopAlert)
+        }
+        
+        if let repeatInterval = alert.repeatInterval {
+            // Schedule an additional repeating 15 minute reminder for suspend period ended.
+            let repeatingIdentifier = Alert.Identifier(managerIdentifier: self.managerIdentifier, alertIdentifier: alert.repeatingAlertIdentifier)
+            let loopAlert = Alert(identifier: repeatingIdentifier, foregroundContent: alert.foregroundContent, backgroundContent: alert.backgroundContent, trigger: .repeating(repeatInterval: repeatInterval))
+            pumpDelegate.notify { (delegate) in
+                delegate?.issueAlert(loopAlert)
+            }
+        }
+        
+        self.mutateState { (state) in
+            state.activeAlerts.insert(alert)
+        }
+    }
+    
+    func retractAlert(alert: PumpManagerAlert) {
+        pumpDelegate.notify { (delegate) in
+            let identifier = Alert.Identifier(managerIdentifier: self.managerIdentifier, alertIdentifier: alert.alertIdentifier)
+            delegate?.retractAlert(identifier: identifier)
+        }
+        if alert.isRepeating {
+            let repeatingIdentifier = Alert.Identifier(managerIdentifier: self.managerIdentifier, alertIdentifier: alert.repeatingAlertIdentifier)
+            pumpDelegate.notify { (delegate) in
+                delegate?.retractAlert(identifier: repeatingIdentifier)
+            }
+        }
+        self.mutateState { (state) in
+            state.activeAlerts.remove(alert)
+        }
+    }
 
     // Add additional optional signature for this method for testing, as PodCommManager cannot be instantiate on the simulator
     public func podCommManagerHasAlerts(_ alerts: PodAlerts) {
         logPodCommManagerDelegateMessage("hasAlerts: \(String(describing: alerts))")
         
-        let newAlerts = alerts.subtracting(self.state.activeAlerts)
+        let activePodAlerts = self.state.activeAlerts.podAlerts
+        
+        let newAlerts = alerts.subtracting(activePodAlerts)
         
         if !newAlerts.isEmpty {
-            for sdkAlert in newAlerts.allPodAlerts {
-                if !shouldIgnorePodAlert(sdkAlert), let alert = podAlertFromSDKAlert(sdkAlert) {
-                    let identifier = Alert.Identifier(managerIdentifier: self.managerIdentifier, alertIdentifier: sdkAlert.alertIdentifier)
-                    let loopAlert = Alert(identifier: identifier, foregroundContent: alert.foregroundContent, backgroundContent: alert.backgroundContent, trigger: .immediate)
-                    pumpDelegate.notify { (delegate) in
-                        delegate?.issueAlert(loopAlert)
-                    }
-                    
-                    if let repeatInterval = alert.repeatInterval {
-                        // Schedule an additional repeating 15 minute reminder for suspend period ended.
-                        let repeatingIdentifier = Alert.Identifier(managerIdentifier: self.managerIdentifier, alertIdentifier: sdkAlert.repeatingAlertIdentifier)
-                        let loopAlert = Alert(identifier: repeatingIdentifier, foregroundContent: alert.foregroundContent, backgroundContent: alert.backgroundContent, trigger: .repeating(repeatInterval: repeatInterval))
-                        pumpDelegate.notify { (delegate) in
-                            delegate?.issueAlert(loopAlert)
-                        }
-                    }
+            for sdkAlert in newAlerts.asArray() {
+                if !shouldIgnorePodAlert(sdkAlert), let alert = pumpManagerAlertFromSDKAlert(sdkAlert) {
+                    issueAlert(alert: alert)
                 }
             }
         }
         
-        let clearedAlerts = self.state.activeAlerts.subtracting(alerts)
+        let clearedAlerts = activePodAlerts.subtracting(alerts)
         if !clearedAlerts.isEmpty {
-            for sdkAlert in clearedAlerts.allPodAlerts {
-                if !sdkAlert.isIgnored, let alert = podAlertFromSDKAlert(sdkAlert) {
-                    pumpDelegate.notify { (delegate) in
-                        let identifier = Alert.Identifier(managerIdentifier: self.managerIdentifier, alertIdentifier: sdkAlert.alertIdentifier)
-                        delegate?.retractAlert(identifier: identifier)
-                    }
-                    if alert.isRepeating {
-                        let repeatingIdentifier = Alert.Identifier(managerIdentifier: self.managerIdentifier, alertIdentifier: sdkAlert.repeatingAlertIdentifier)
-                        pumpDelegate.notify { (delegate) in
-                            delegate?.retractAlert(identifier: repeatingIdentifier)
-                        }
-                    }
+            for sdkAlert in clearedAlerts.asArray() {
+                if !sdkAlert.isIgnored, let alert = pumpManagerAlertFromSDKAlert(sdkAlert) {
+                    retractAlert(alert: alert)
                 }
             }
-        }
-        
-        self.mutateState { (state) in
-            state.activeAlerts = alerts
         }
     }
 
@@ -1724,20 +1754,29 @@ extension DashPumpManager: PodSDKLoggingShimDelegate {
 // MARK: - AlertResponder implementation
 extension DashPumpManager {
     public func acknowledgeAlert(alertIdentifier: Alert.AlertIdentifier) {
-        guard let podAlert = PodAlerts(identifier: alertIdentifier) else {
-            return
-        }
         
-        if state.activeAlerts.contains(podAlert) {
-            podCommManager.silenceAlerts(alert: podAlert) { (result) in
-                switch result {
-                case .success(let status):
-                    self.mutateState { (state) in
-                        state.activeAlerts = status.activeAlerts
+        for alert in state.activeAlerts {
+            if alert.alertIdentifier == alertIdentifier {
+                if alert.podAlerts != PodAlerts() {
+                    podCommManager.silenceAlerts(alert: alert.podAlerts) { (result) in
+                        switch result {
+                        case .success:
+                            self.mutateState { state in
+                                state.activeAlerts.remove(alert)
+                            }
+                        case .failure:
+                            // already logged
+                            break
+                        }
                     }
-                case .failure:
-                    // already logged
-                    break
+                } else {
+                    // Non-pod alert
+                    self.mutateState { state in
+                        state.activeAlerts.remove(alert)
+                        if alert == .timeOffsetChangeDetected {
+                            state.acknowledgedTimeOffsetAlert = true
+                        }
+                    }
                 }
             }
         }

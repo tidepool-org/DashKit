@@ -11,7 +11,7 @@ import PodSDK
 import LoopKit
 import HealthKit
 
-public enum PodAlert {
+public enum PumpManagerAlert: Hashable {
     case autoOff
     case multiCommand
     case podExpireImminent
@@ -20,6 +20,7 @@ public enum PodAlert {
     case suspendInProgress
     case suspendEnded
     case podExpiring
+    case timeOffsetChangeDetected
     
     var isRepeating: Bool {
         return repeatInterval != nil
@@ -52,6 +53,8 @@ public enum PodAlert {
             return LocalizedString("Suspend In Progress Reminder", comment: "Alert content title for suspendInProgress pod alert")
         case .suspendEnded:
             return LocalizedString("Resume Insulin", comment: "Alert content title for suspendEnded pod alert")
+        case .timeOffsetChangeDetected:
+            return LocalizedString("Time Change Detected", comment: "Alert content title for timeOffsetChangeDetected pod alert")
         }
     }
     
@@ -75,6 +78,8 @@ public enum PodAlert {
             return LocalizedString("Suspend In Progress Reminder", comment: "Alert content body for suspendInProgress pod alert")
         case .suspendEnded:
             return LocalizedString("The insulin suspension period has ended.\n\nYou can resume delivery from the banner on the home screen or from your pump settings screen. You will be reminded again in 15 minutes.", comment: "Alert content body for suspendEnded pod alert")
+        case .timeOffsetChangeDetected:
+            return LocalizedString("The time on your pump is different from the current time. You can review the pump time and and sync to current time in settings.", comment: "Alert content body for timeOffsetChangeDetected pod alert")
         }
     }
     
@@ -105,7 +110,6 @@ public enum PodAlert {
     var backgroundContent: Alert.Content {
         return Alert.Content(title: backgroundContentTitle, body: backgroundContentBody, acknowledgeActionButtonLabel: actionButtonLabel)
     }
-
     
     var podAlerts: PodAlerts {
         switch self {
@@ -125,6 +129,89 @@ public enum PodAlert {
             return PodAlerts.suspendEnded
         case .podExpiring:
             return PodAlerts.podExpiring
+        default:
+            return []
+        }
+    }
+    
+    var alertIdentifier: String {
+        switch self {
+        case .autoOff:
+            return "autoOff"
+        case .multiCommand:
+            return "multiCommand"
+        case .userPodExpiration:
+            return "userPodExpiration"
+        case .podExpiring:
+            return "podExpiring"
+        case .podExpireImminent:
+            return "podExpireImminent"
+        case .lowReservoir:
+            return "lowReservoir"
+        case .suspendInProgress:
+            return "suspendInProgress"
+        case .suspendEnded:
+            return "suspendEnded"
+        case .timeOffsetChangeDetected:
+            return "timeOffsetChangeDetected"
+        }
+    }
+        
+    var repeatingAlertIdentifier: String {
+        return alertIdentifier + "-repeating"
+    }
+}
+
+extension Collection where Element == PumpManagerAlert {
+    var podAlerts: PodAlerts {
+        var podAlerts = PodAlerts()
+        self.forEach { podAlerts.insert($0.podAlerts) }
+        return podAlerts
+    }
+}
+
+extension PumpManagerAlert: RawRepresentable {
+    
+    public typealias RawValue = [String: Any]
+    
+    public init?(rawValue: RawValue) {
+        guard let identifier = rawValue["identifier"] as? String else {
+            return nil
+        }
+        
+        switch identifier {
+        case "autoOff":
+            self = .autoOff
+        case "multiCommand":
+            self = .multiCommand
+        case "userPodExpiration":
+            self = .userPodExpiration
+        case "podExpiring":
+            self = .podExpiring
+        case "podExpireImminent":
+            self = .podExpireImminent
+        case "lowReservoir":
+            guard let value = rawValue["value"] as? Double else {
+                return nil
+            }
+            self = .lowReservoir(lowReservoirReminderValue: value)
+        case "suspendInProgress":
+            self = .suspendInProgress
+        case "suspendEnded":
+            self = .suspendEnded
+        case "timeOffsetChangeDetected":
+            self = .timeOffsetChangeDetected
+        default:
+            return nil
+        }
+    }
+
+    public var rawValue: [String : Any] {
+        switch self {
+        case .lowReservoir(lowReservoirReminderValue: let value):
+            return ["identifier": alertIdentifier, "value": value]
+        default:
+            return ["identifier:": alertIdentifier]
         }
     }
 }
@@ -140,7 +227,7 @@ extension PodAlerts {
         }
     }
     
-    var allPodAlerts: [PodAlerts] {
+    func asArray() -> [PodAlerts] {
         var alerts: [PodAlerts] = []
         if self.contains(.autoOff) {
             alerts.append(.autoOff)
@@ -169,53 +256,4 @@ extension PodAlerts {
         return alerts
     }
     
-    var alertIdentifier: String {
-        switch self {
-        case .autoOff:
-            return "autoOff"
-        case .multiCommand:
-            return "multiCommand"
-        case .userPodExpiration:
-            return "userPodExpiration"
-        case .podExpiring:
-            return "podExpiring"
-        case .podExpireImminent:
-            return "podExpireImminent"
-        case .lowReservoir:
-            return "lowReservoir"
-        case .suspendInProgress:
-            return "suspendInProgress"
-        case .suspendEnded:
-            return "suspendEnded"
-        default:
-            return "other"
-        }
-    }
-    
-    init?(identifier: String) {
-        switch identifier {
-        case "autoOff":
-            self = .autoOff
-        case "multiCommand":
-            self = .multiCommand
-        case "userPodExpiration":
-            self = .userPodExpiration
-        case "podExpiring":
-            self = .podExpiring
-        case "podExpireImminent":
-            self = .podExpireImminent
-        case "lowReservoir":
-            self = .lowReservoir
-        case "suspendInProgress":
-            self = .suspendInProgress
-        case "suspendEnded":
-            self = .suspendEnded
-        default:
-            return nil
-        }
-    }
-    
-    var repeatingAlertIdentifier: String {
-        return alertIdentifier + "-repeating"
-    }
 }

@@ -20,6 +20,12 @@ struct BasalDeliveryRate {
 enum DashSettingsViewAlert {
     case suspendError(DashPumpManagerError)
     case resumeError(DashPumpManagerError)
+    case syncTimeError(DashPumpManagerError)
+}
+
+struct DashSettingsNotice {
+    let title: String
+    let description: String
 }
 
 class DashSettingsViewModel: ObservableObject {
@@ -94,6 +100,8 @@ class DashSettingsViewModel: ObservableObject {
     
     @Published var reservoirLevelHighlightState: ReservoirLevelHighlightState?
     
+    @Published var synchronizingTime: Bool = false
+    
     var podCommManager: PodCommManagerProtocol {
         return pumpManager.unwrappedPodCommManager
     }
@@ -116,6 +124,16 @@ class DashSettingsViewModel: ObservableObject {
     
     var viewTitle: String {
         return pumpManager.localizedTitle
+    }
+    
+    var notice: DashSettingsNotice? {
+        if pumpManager.isClockOffset {
+            return DashSettingsNotice(
+                title: LocalizedString("Time Change Detected", comment: "title for time change detected notice"),
+                description: LocalizedString("The time on your pump is different from the current time. Your pump’s time controls your scheduled basal rates. You can review the time difference and configure your pump.", comment: "description for time change detected notice"))
+        } else {
+            return nil
+        }
     }
     
     let dateFormatter: DateFormatter = {
@@ -164,9 +182,13 @@ class DashSettingsViewModel: ObservableObject {
     }
     
     func changeTimeZoneTapped() {
+        synchronizingTime = true
         pumpManager.setTime { (error) in
-            // TODO: handle error
-            self.lifeState = self.pumpManager.lifeState            
+            self.synchronizingTime = false
+            self.lifeState = self.pumpManager.lifeState
+            if let error = error {
+                self.activeAlert = .syncTimeError(error)
+            }
         }
     }
     
