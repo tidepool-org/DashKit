@@ -833,31 +833,31 @@ open class DashPumpManager: PumpManager {
     }
 
     public func enactBolus(units: Double, at startDate: Date, completion: @escaping (PumpManagerResult<DoseEntry>) -> Void) {
-        let preflightError = self.setStateWithResult({ (state) -> PumpManagerError? in
-            if state.activeTransition != nil {
-                return .deviceState(DashPumpManagerError.busy)
-            }
-            if let bolus = state.unfinalizedBolus, !bolus.isFinished(at: dateGenerator()) {
-                return .deviceState(DashPumpManagerError.busy)
-            }
-            
-            state.activeTransition = .startingBolus
-            return nil
-        })
-        
-        guard preflightError == nil else {
-            completion(.failure(preflightError!))
-            return
-        }
-        
         // Round to nearest supported volume
         let enactUnits = roundToSupportedBolusVolume(units: units)
-        
-        guard let bolus = try? Bolus(immediateVolume: Int(round(enactUnits * Pod.podSDKInsulinMultiplier))) else {
-            completion(.failure(.configuration(DashPumpManagerError.invalidBolusVolume)))
+
+        let preflightCheck = self.setStateWithResult({ (state) -> Result<Bolus, PumpManagerError> in
+            guard let bolus = try? Bolus(immediateVolume: Int(round(enactUnits * Pod.podSDKInsulinMultiplier))) else {
+                return .failure(.configuration(DashPumpManagerError.invalidBolusVolume))
+            }
+            if state.activeTransition != nil {
+                return .failure(.deviceState(DashPumpManagerError.busy))
+            }
+            if let bolus = state.unfinalizedBolus, !bolus.isFinished(at: dateGenerator()) {
+                return .failure(.deviceState(DashPumpManagerError.busy))
+            }
+
+            state.activeTransition = .startingBolus
+            return .success(bolus)
+        })
+
+        guard let bolus = try? preflightCheck.get() else {
+            if case .failure(let pumpManagerError) = preflightCheck {
+                completion(.failure(pumpManagerError))
+            }
             return
         }
-        
+
         let program = ProgramType.bolus(bolus: bolus)
 
         let endDate = startDate.addingTimeInterval(enactUnits / Pod.bolusDeliveryRate)
