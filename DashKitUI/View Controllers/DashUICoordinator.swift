@@ -123,7 +123,7 @@ class DashUICoordinator: UINavigationController, PumpManagerOnboarding, Completi
             viewModel.didRequestDeactivation = { self.navigateTo(.deactivate) }
             
             let view = hostingController(rootView: PairPodView(viewModel: viewModel))
-            view.navigationItem.title = LocalizedString("Pod Pairing", comment: "Title for pod pairing screen")
+            view.navigationItem.title = LocalizedString("Pair Pod", comment: "Title for pod pairing screen")
             return view
         case .confirmAttachment:
             let view = AttachPodView(
