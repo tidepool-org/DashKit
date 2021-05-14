@@ -1611,8 +1611,8 @@ extension DashPumpManager: PodCommManagerDelegate {
     }
     
     func retractAlert(alert: PumpManagerAlert) {
+        let identifier = Alert.Identifier(managerIdentifier: self.managerIdentifier, alertIdentifier: alert.alertIdentifier)
         pumpDelegate.notify { (delegate) in
-            let identifier = Alert.Identifier(managerIdentifier: self.managerIdentifier, alertIdentifier: alert.alertIdentifier)
             delegate?.retractAlert(identifier: identifier)
         }
         if alert.isRepeating {

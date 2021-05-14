@@ -27,11 +27,6 @@ struct DashSettingsView: View  {
    
    weak var navigator: DashUINavigator?
    
-   var pumpTimeIsOffset: Bool {
-      let now = Date()
-      return viewModel.timeZone.secondsFromGMT(for: now) != TimeZone.current.secondsFromGMT(for: now)
-   }
-
    private var daysRemaining: Int? {
       if case .timeRemaining(let remaining) = viewModel.lifeState, remaining > .days(1) {
          return Int(remaining.days)
@@ -331,12 +326,12 @@ struct DashSettingsView: View  {
             HStack {
                FrameworkLocalText("Pump Time", comment: "The title of the command to change pump time zone")
                Spacer()
-               if pumpTimeIsOffset {
+               if viewModel.isClockOffset {
                   Image(systemName: "clock.fill")
                      .foregroundColor(guidanceColors.warning)
                }
                TimeView(timeZone: viewModel.timeZone)
-                  .foregroundColor(pumpTimeIsOffset ? guidanceColors.warning : nil)
+                  .foregroundColor( viewModel.isClockOffset ? guidanceColors.warning : nil)
             }
             if viewModel.synchronizingTime {
                HStack {

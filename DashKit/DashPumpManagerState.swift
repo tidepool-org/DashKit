@@ -190,22 +190,16 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
             self.finishedDoses = []
         }
         
+        self.activeAlerts = []
         if let rawActiveAlerts = rawValue["activeAlerts"] as? [PumpManagerAlert.RawValue] {
-            self.activeAlerts = []
             for rawAlert in rawActiveAlerts {
                 if let alert = PumpManagerAlert(rawValue: rawAlert) {
                     self.activeAlerts.insert(alert)
                 }
             }
-        } else {
-            self.activeAlerts = []
         }
         
-        if let acknowledgedTimeOffsetAlert = rawValue["acknowledgedTimeOffsetAlert"] as? Bool {
-            self.acknowledgedTimeOffsetAlert = acknowledgedTimeOffsetAlert
-        } else {
-            self.acknowledgedTimeOffsetAlert = false
-        }
+        self.acknowledgedTimeOffsetAlert = rawValue["acknowledgedTimeOffsetAlert"] as? Bool ?? false
         
         if let rawPendingCommand = rawValue["pendingCommand"] as? PendingCommand.RawValue {
             self.pendingCommand = PendingCommand(rawValue: rawPendingCommand)
@@ -304,6 +298,7 @@ extension DashPumpManagerState: CustomDebugStringConvertible {
             "* lowReservoirReminderValue: \(lowReservoirReminderValue)",
             "* scheduledExpirationReminderOffset: \(String(describing: scheduledExpirationReminderOffset))",
             "* podAttachmentConfirmed: \(podAttachmentConfirmed)",
+            "* activeAlerts: \(activeAlerts)",
             "* confidenceRemindersEnabled: \(confidenceRemindersEnabled)",
             "* acknowledgedTimeOffsetAlert: \(acknowledgedTimeOffsetAlert)"
             ].joined(separator: "\n")

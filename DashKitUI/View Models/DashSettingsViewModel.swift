@@ -126,6 +126,10 @@ class DashSettingsViewModel: ObservableObject {
         return pumpManager.localizedTitle
     }
     
+    var isClockOffset: Bool {
+        return pumpManager.isClockOffset
+    }
+    
     var notice: DashSettingsNotice? {
         if pumpManager.isClockOffset {
             return DashSettingsNotice(
