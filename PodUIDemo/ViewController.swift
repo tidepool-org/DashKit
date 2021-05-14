@@ -23,6 +23,7 @@ class ViewController: UIViewController {
         carbTintColor: .green,
         glucoseTintColor: .blue,
         insulinTintColor: .orange,
+        loopStatusColorPalette: StateColorPalette(unknown: .black, normal: .green, warning: .orange, error: .red),
         chartColorPalette: ChartColorPalette(axisLine: .label, axisLabel: .label, grid: .secondaryLabel, glucoseTint: .blue, insulinTint: .orange))
     
     let basalSchedule = BasalRateSchedule(dailyItems: [RepeatingScheduleValue(startTime: 0, value: 1.0)])!
@@ -73,7 +74,6 @@ class ViewController: UIViewController {
         case .userInteractionRequired(var settingsViewController):
             self.settingsViewController = settingsViewController
             settingsViewController.completionDelegate = self
-            settingsViewController.pumpManagerCreateDelegate = self
             present(settingsViewController, animated: true)
         }
     }
@@ -110,6 +110,7 @@ class ViewController: UIViewController {
             state.scheduledExpirationReminderOffset = TimeInterval(4 * 60 * 60)
             state.reservoirLevel = .aboveThreshold
             state.podAttachmentConfirmed = true
+            state.timeZone = TimeZone(secondsFromGMT: -4*60*60)!
             pumpManager = MockPodPumpManager(podStatus: podStatus, state: state)
             pumpManager?.pumpManagerDelegate = self
         }
@@ -175,14 +176,6 @@ extension ViewController: PumpManagerDelegate {
     }
     
     
-}
-
-extension ViewController: PumpManagerCreateDelegate {
-    func pumpManagerCreateNotifying(didCreatePumpManager pumpManager: PumpManagerUI) {
-        if let pumpManager = pumpManager as? DashPumpManager {
-            self.pumpManager = pumpManager
-        }
-    }
 }
 
 extension ViewController: CompletionDelegate {

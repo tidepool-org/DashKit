@@ -43,6 +43,7 @@ extension DashPumpManager: PumpManagerUI {
 
 // MARK: - DeliveryLimitSettingsTableViewControllerSyncSource
 extension DashPumpManager {
+    
     public func syncDeliveryLimitSettings(for viewController: DeliveryLimitSettingsTableViewController, completion: @escaping (DeliveryLimitSettingsResult) -> Void) {
         guard let maximumBasalRatePerHour = viewController.maximumBasalRatePerHour,
             let maximumBolus = viewController.maximumBolus else
@@ -95,5 +96,45 @@ extension DashPumpManager {
 
     public func basalScheduleTableViewControllerIsReadOnly(_ viewController: BasalScheduleTableViewController) -> Bool {
         return false
+    }
+}
+
+public enum DashStatusBadge: DeviceStatusBadge {
+    case timeSyncNeeded
+    
+    public var image: UIImage? {
+        switch self {
+        case .timeSyncNeeded:
+            return UIImage(systemName: "clock.fill")
+        }
+    }
+    
+    public var state: DeviceStatusBadgeState {
+        switch self {
+        case .timeSyncNeeded:
+            return .warning
+        }
+    }
+}
+
+
+
+// MARK: - PumpStatusIndicator
+extension DashPumpManager {
+    
+    public var pumpStatusHighlight: DeviceStatusHighlight? {
+        return buildPumpStatusHighlight(for: state)
+    }
+    
+    public var pumpLifecycleProgress: DeviceLifecycleProgress? {
+        return buildPumpLifecycleProgress(for: state)
+    }
+    
+    public var pumpStatusBadge: DeviceStatusBadge? {
+        if isClockOffset {
+            return DashStatusBadge.timeSyncNeeded
+        } else {
+            return nil
+        }
     }
 }

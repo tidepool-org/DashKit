@@ -86,7 +86,9 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
         return false
     }
     
-    public var activeAlerts: PodAlerts
+    public var activeAlerts: Set<PumpManagerAlert>
+    
+    public var acknowledgedTimeOffsetAlert: Bool
 
     // Temporal state not persisted
     
@@ -123,6 +125,7 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
         self.lastPodCommDate = dateGenerator()
         self.lowReservoirReminderValue = Pod.defaultLowReservoirReminder
         self.podAttachmentConfirmed = false
+        self.acknowledgedTimeOffsetAlert = false
     }
 
 
@@ -187,11 +190,16 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
             self.finishedDoses = []
         }
         
-        if let rawActiveAlerts = rawValue["activeAlerts"] as? PodAlerts.RawValue {
-            self.activeAlerts = PodAlerts(rawValue: rawActiveAlerts)
-        } else {
-            self.activeAlerts = []
+        self.activeAlerts = []
+        if let rawActiveAlerts = rawValue["activeAlerts"] as? [PumpManagerAlert.RawValue] {
+            for rawAlert in rawActiveAlerts {
+                if let alert = PumpManagerAlert(rawValue: rawAlert) {
+                    self.activeAlerts.insert(alert)
+                }
+            }
         }
+        
+        self.acknowledgedTimeOffsetAlert = rawValue["acknowledgedTimeOffsetAlert"] as? Bool ?? false
         
         if let rawPendingCommand = rawValue["pendingCommand"] as? PendingCommand.RawValue {
             self.pendingCommand = PendingCommand(rawValue: rawPendingCommand)
@@ -227,10 +235,11 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
             "finishedDoses": finishedDoses.map( { $0.rawValue }),
             "basalProgram": basalProgram.rawValue,
             "maximumTempBasalRate": maximumTempBasalRate,
-            "activeAlerts": activeAlerts.rawValue,
+            "activeAlerts": activeAlerts.map { $0.rawValue },
             "lowReservoirReminderValue": lowReservoirReminderValue,
             "podAttachmentConfirmed": podAttachmentConfirmed,
-            "confidenceRemindersEnabled": confidenceRemindersEnabled
+            "confidenceRemindersEnabled": confidenceRemindersEnabled,
+            "acknowledgedTimeOffsetAlert": acknowledgedTimeOffsetAlert
         ]
         
         rawValue["lastPodCommState"] = try? JSONEncoder().encode(lastPodCommState)
@@ -289,7 +298,9 @@ extension DashPumpManagerState: CustomDebugStringConvertible {
             "* lowReservoirReminderValue: \(lowReservoirReminderValue)",
             "* scheduledExpirationReminderOffset: \(String(describing: scheduledExpirationReminderOffset))",
             "* podAttachmentConfirmed: \(podAttachmentConfirmed)",
-            "* confidenceRemindersEnabled: \(confidenceRemindersEnabled)"
+            "* activeAlerts: \(activeAlerts)",
+            "* confidenceRemindersEnabled: \(confidenceRemindersEnabled)",
+            "* acknowledgedTimeOffsetAlert: \(acknowledgedTimeOffsetAlert)"
             ].joined(separator: "\n")
     }
 }

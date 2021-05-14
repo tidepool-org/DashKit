@@ -19,12 +19,14 @@ struct DashSettingsView: View  {
    @State private var showingDeleteConfirmation = false
 
    @State private var showSuspendOptions = false;
+   
+   @State private var showSyncTimeOptions = false;
 
    @Environment(\.guidanceColors) var guidanceColors
    @Environment(\.insulinTintColor) var insulinTintColor
-
+   
    weak var navigator: DashUINavigator?
-
+   
    private var daysRemaining: Int? {
       if case .timeRemaining(let remaining) = viewModel.lifeState, remaining > .days(1) {
          return Int(remaining.days)
@@ -77,18 +79,6 @@ struct DashSettingsView: View  {
          }
          ProgressView(progress: CGFloat(self.viewModel.lifeState.progress)).accentColor(self.viewModel.lifeState.progressColor(insulinTintColor: insulinTintColor, guidanceColors: guidanceColors))
       }
-   }
-
-   var timeZoneString: String {
-      let localTimeZone = TimeZone.current
-      let localTimeZoneName = localTimeZone.abbreviation() ?? localTimeZone.identifier
-
-      let timeZoneDiff = TimeInterval(viewModel.timeZone.secondsFromGMT() - localTimeZone.secondsFromGMT())
-      let formatter = DateComponentsFormatter()
-      formatter.allowedUnits = [.hour, .minute]
-      let diffString = timeZoneDiff != 0 ? formatter.string(from: abs(timeZoneDiff)) ?? String(abs(timeZoneDiff)) : ""
-
-      return String(format: LocalizedString("%1$@%2$@%3$@", comment: "The format string for displaying an offset from a time zone: (1: GMT)(2: -)(3: 4:00)"), localTimeZoneName, timeZoneDiff != 0 ? (timeZoneDiff < 0 ? "-" : "+") : "", diffString)
    }
 
    func cancelDelete() {
@@ -233,34 +223,37 @@ struct DashSettingsView: View  {
 
    var body: some View {
       List {
-         VStack(alignment: .leading) {
-
-            if let mockPodCommManager = viewModel.podCommManager as? MockPodCommManager {
-               ZStack {
-                  headerImage
-                  NavigationLink(destination: MockPodSettingsView(model: MockPodSettingsViewModel(mockPodCommManager: mockPodCommManager))) {
-                     EmptyView()
+         Section() {
+            VStack {
+               if let mockPodCommManager = viewModel.podCommManager as? MockPodCommManager {
+                  ZStack {
+                     headerImage
+                     NavigationLink(destination: MockPodSettingsView(model: MockPodSettingsViewModel(mockPodCommManager: mockPodCommManager))) {
+                        EmptyView()
+                     }
+                     .buttonStyle(PlainButtonStyle())
                   }
-                  .buttonStyle(PlainButtonStyle())
+               } else {
+                  headerImage
                }
-            } else {
-               headerImage
-            }
 
-            lifecycleProgress
+               lifecycleProgress
 
-            HStack(alignment: .top) {
-               deliveryStatus
-               Spacer()
-               reservoirStatus
+               HStack(alignment: .top) {
+                  deliveryStatus
+                  Spacer()
+                  reservoirStatus
+               }
             }
-
-            if let systemErrorDescription = viewModel.systemErrorDescription {
-               Text(systemErrorDescription)
-                  .lineLimit(nil)
-                  .fixedSize(horizontal: false, vertical: true)
+            if let notice = viewModel.notice {
+               VStack(alignment: .leading, spacing: 4) {
+                  Text(notice.title)
+                     .font(Font.subheadline.weight(.bold))
+                  Text(notice.description)
+                     .font(Font.footnote.weight(.semibold))
+               }.padding(.vertical, 8)
             }
-         }.padding(.bottom, 8)
+         }
 
          Section(header: SectionHeader(label: LocalizedString("Activity", comment: "Section header for activity section"))) {
             suspendResumeRow(for: self.viewModel.basalDeliveryState ?? .active(Date()))
@@ -327,21 +320,38 @@ struct DashSettingsView: View  {
             {
                FrameworkLocalText("Notification Settings", comment: "Text for pod details disclosure row").foregroundColor(Color.primary)
             }
-
+         }
+         
+         Section() {
             HStack {
-               if self.viewModel.timeZone != TimeZone.currentFixed {
-                  Button(action: {
-                     self.viewModel.changeTimeZoneTapped()
-                  }) {
-                     FrameworkLocalText("Change Time Zone", comment: "The title of the command to change pump time zone")
-                  }
-               } else {
-                  FrameworkLocalText("Time Zone", comment: "Label for row showing pump time zone")
-               }
+               FrameworkLocalText("Pump Time", comment: "The title of the command to change pump time zone")
                Spacer()
-               Text(timeZoneString)
+               if viewModel.isClockOffset {
+                  Image(systemName: "clock.fill")
+                     .foregroundColor(guidanceColors.warning)
+               }
+               TimeView(timeZone: viewModel.timeZone)
+                  .foregroundColor( viewModel.isClockOffset ? guidanceColors.warning : nil)
+            }
+            if viewModel.synchronizingTime {
+               HStack {
+                  FrameworkLocalText("Adjusting Pump Time...", comment: "Text indicating ongoing pump time synchronization")
+                     .foregroundColor(.secondary)
+                  Spacer()
+                  ActivityIndicator(isAnimating: .constant(true), style: .medium)
+               }
+            } else if self.viewModel.timeZone != TimeZone.currentFixed {
+               Button(action: {
+                  showSyncTimeOptions = true
+               }) {
+                  FrameworkLocalText("Sync to Current Time", comment: "The title of the command to change pump time zone")
+               }
+               .actionSheet(isPresented: $showSyncTimeOptions) {
+                  syncPumpTimeActionSheet
+               }
             }
          }
+         
 
          confidenceRemindersSection
 
@@ -402,6 +412,15 @@ struct DashSettingsView: View  {
          }
       }
    }
+   
+   var syncPumpTimeActionSheet: ActionSheet {
+      ActionSheet(title: FrameworkLocalText("Time Change Detected", comment: "Title for pod sync time action sheet."), message: FrameworkLocalText("The time on your pump is different from the current time. Do you want to update the time on your pump to the current time?", comment: "Message for pod sync time action sheet"), buttons: [
+         .default(FrameworkLocalText("Yes, Sync to Current Time", comment: "Button text to confirm pump time sync")) {
+            self.viewModel.changeTimeZoneTapped()
+         },
+         .cancel(FrameworkLocalText("No, Keep Pump As Is", comment: "Button text to cancel pump time sync"))
+      ])
+   }
 
    var removePumpManagerActionSheet: ActionSheet {
       ActionSheet(title: FrameworkLocalText("Remove Pump", comment: "Title for Omnipod PumpManager deletion action sheet."), message: FrameworkLocalText("Are you sure you want to stop using Omnipod?", comment: "Message for Omnipod PumpManager deletion action sheet"), buttons: [
@@ -447,6 +466,12 @@ struct DashSettingsView: View  {
       case .resumeError(let error):
          return SwiftUI.Alert(
             title: Text("Failed to Resume Insulin Delivery", comment: "Alert title for resume error"),
+            message: Text(error.localizedDescription)
+         )
+         
+      case .syncTimeError(let error):
+         return SwiftUI.Alert(
+            title: Text("Failed to Set Pump Time", comment: "Alert title for time sync error"),
             message: Text(error.localizedDescription)
          )
       }
