@@ -19,6 +19,20 @@ public protocol PodStatusObserver: AnyObject {
 
 open class DashPumpManager: PumpManager {
     
+    public static var onboardingSupportedBolusVolumes: [Double] {
+        // 0.05 units for rates between 0.05-30U
+        return (1...600).map { Double($0) / Double(Pod.pulsesPerUnit) }
+    }
+
+    public static var onboardingSupportedBasalRates: [Double] {
+        // 0.05 units for rates between 0.05-30U/hr
+        return (1...600).map { Double($0) / Double(Pod.pulsesPerUnit) }
+    }
+
+    public static var onboardingMaximumBasalScheduleEntryCount: Int {
+        return Pod.maximumBasalScheduleEntryCount
+    }
+    
     open var managerIdentifier: String {
         return "OmnipodDash"
     }
