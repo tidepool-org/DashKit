@@ -61,4 +61,7 @@ public struct Pod {
 
     // Threshold used to display pod end of life warnings
     public static let timeRemainingWarningThreshold = TimeInterval(days: 1)
+    
+    // Allowed Low Reservoir reminder values
+    public static let lowReservoirReminderAllowedRange = 10...50
 }

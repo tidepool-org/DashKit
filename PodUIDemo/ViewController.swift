@@ -67,13 +67,14 @@ class ViewController: UIViewController {
     
     @objc func firstTimeFlow(sender: UIButton!) {
         let settings = PumpManagerSetupSettings(maxBasalRateUnitsPerHour: 3, maxBolusUnits: 3, basalSchedule: basalSchedule)
-        let uiResult = MockPodPumpManager.setupViewController(initialSettings: settings, bluetoothProvider: self, colorPalette: palette)
+        let uiResult = MockPodPumpManager.setupViewController(initialSettings: settings, bluetoothProvider: self, colorPalette: palette, allowDebugFeatures: true)
         switch uiResult {
         case .createdAndOnboarded:
             return
         case .userInteractionRequired(var settingsViewController):
             self.settingsViewController = settingsViewController
             settingsViewController.completionDelegate = self
+            settingsViewController.pumpManagerOnboardingDelegate = self
             present(settingsViewController, animated: true)
         }
     }
@@ -82,7 +83,7 @@ class ViewController: UIViewController {
         createPumpManagerIfNeeded()
         
         if let pumpManager = pumpManager {
-            var vc = pumpManager.settingsViewController(bluetoothProvider: self, colorPalette: palette)
+            var vc = pumpManager.settingsViewController(bluetoothProvider: self, colorPalette: palette, allowDebugFeatures: true)
             vc.completionDelegate = self
             present(vc, animated: true)
         }
@@ -114,6 +115,22 @@ class ViewController: UIViewController {
             pumpManager = MockPodPumpManager(podStatus: podStatus, state: state)
             pumpManager?.pumpManagerDelegate = self
         }
+    }
+    
+    var allowDebugFeatures: Bool {
+        return true
+    }
+
+}
+
+extension ViewController: PumpManagerOnboardingDelegate {
+    func pumpManagerOnboarding(didCreatePumpManager pumpManager: PumpManagerUI) {
+        self.pumpManager = (pumpManager as! DashPumpManager)
+        self.pumpManager?.pumpManagerDelegate = self
+    }
+    
+    func pumpManagerOnboarding(didOnboardPumpManager pumpManager: PumpManagerUI, withFinalSettings settings: PumpManagerSetupSettings) {
+        
     }
 }
 

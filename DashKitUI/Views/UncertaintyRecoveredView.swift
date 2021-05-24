@@ -9,7 +9,7 @@
 import SwiftUI
 import LoopKitUI
 
-struct UncertaintyRecoveredView: View, HorizontalSizeClassOverride {
+struct UncertaintyRecoveredView: View {
     var appName: String
     
     var didFinish: (() -> Void)?
@@ -29,7 +29,6 @@ struct UncertaintyRecoveredView: View, HorizontalSizeClassOverride {
                 }
             }
         }
-        .environment(\.horizontalSizeClass, horizontalOverride)
         .navigationBarTitle(Text("Comms Recovered"), displayMode: .large)
         .navigationBarBackButtonHidden(true)
     }    
