@@ -14,6 +14,10 @@ import SwiftUI
 
 extension DashPumpManager: PumpManagerUI {
 
+    public static var onboardingImage: UIImage? {
+        return UIImage(named: "Onboarding", in: Bundle(for: DashSettingsViewModel.self), compatibleWith: nil)
+    }
+
     public static func setupViewController(initialSettings settings: PumpManagerSetupSettings, bluetoothProvider: BluetoothProvider, colorPalette: LoopUIColorPalette) -> SetupUIResult<PumpManagerViewController, PumpManagerUI> {
         let vc = DashUICoordinator(colorPalette: colorPalette, pumpManagerType: self, initialSettings: settings)
         return .userInteractionRequired(vc)
