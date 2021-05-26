@@ -89,7 +89,7 @@ struct PodSetupView: View {
     }
 
     private var continueButton: some View {
-        Button("Continue", action: nextAction)
+        Button(LocalizedString("Continue", comment: "Text for continue button on PodSetupView"), action: nextAction)
             .buttonStyle(ActionButtonStyle())
     }
     
