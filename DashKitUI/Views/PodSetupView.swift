@@ -71,7 +71,7 @@ struct PodSetupView: View {
 
     @ViewBuilder
     private var title: some View {
-        Text("Pod Setup")
+        Text(LocalizedString("Pod Setup", comment: "Title for PodSetupView"))
             .font(.largeTitle)
             .bold()
             .padding(.vertical)
@@ -79,7 +79,7 @@ struct PodSetupView: View {
     
     @ViewBuilder
     private var bodyText: some View {
-        Text("You will now begin the process of configuring your reminders, filling your Pod with insulin, pairing to to your device and placing it on your body.")
+        Text(LocalizedString("You will now begin the process of configuring your reminders, filling your Pod with insulin, pairing to to your device and placing it on your body.", comment: "bodyText for PodSetupView"))
     }
     
     private var closeButton: some View {

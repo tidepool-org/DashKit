@@ -224,6 +224,7 @@ class DashUICoordinator: UINavigationController, PumpManagerOnboarding, Completi
                 },
                 didFinish: {
                     if let initialSettings = self.initialSettings {
+                        self.pumpManager.markOnboardingCompleted()
                         self.pumpManagerOnboardingDelegate?.pumpManagerOnboarding(didOnboardPumpManager: self.pumpManager, withFinalSettings: initialSettings)
                     }
                     self.stepFinished()
