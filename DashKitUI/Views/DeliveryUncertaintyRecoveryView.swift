@@ -10,7 +10,7 @@ import SwiftUI
 import LoopKitUI
 import DashKit
 
-struct DeliveryUncertaintyRecoveryView: View, HorizontalSizeClassOverride {
+struct DeliveryUncertaintyRecoveryView: View {
     
     let model: DeliveryUncertaintyRecoveryViewModel
 
@@ -35,7 +35,6 @@ struct DeliveryUncertaintyRecoveryView: View, HorizontalSizeClassOverride {
                 }
             }
         }
-        .environment(\.horizontalSizeClass, horizontalOverride)
         .navigationBarTitle(Text(LocalizedString("Unable to Reach Pod", comment: "Title of delivery uncertainty recovery page")), displayMode: .large)
         .navigationBarItems(leading: backButton)
     }

@@ -53,8 +53,16 @@ open class DashPumpManager: PumpManager {
     
     public let localizedTitle = LocalizedString("Omnipod 5", comment: "Generic title of the omnipod 5 pump manager")
     
-    public let isOnboarded = true // TODO: Update DashPumpManager to set isOnboarded to true when actually ready for use (otherwise false).
-
+    public var isOnboarded: Bool {
+        return state.onboardingCompleted
+    }
+    
+    public func markOnboardingCompleted() {
+        mutateState { state in
+            state.onboardingCompleted = true
+        }
+    }
+    
     public var lastReconciliation: Date? {
         return dateGenerator()
     }
@@ -1516,6 +1524,17 @@ open class DashPumpManager: PumpManager {
         }
     }
     
+    public var lowReservoirReminderValue: Double {
+        set {
+            mutateState { (state) in
+                state.lowReservoirReminderValue = newValue
+            }
+        }
+        get {
+            state.lowReservoirReminderValue
+        }
+    }
+    
     public var podAttachmentConfirmed: Bool {
         set {
             mutateState { (state) in
@@ -1524,6 +1543,17 @@ open class DashPumpManager: PumpManager {
         }
         get {
             state.podAttachmentConfirmed
+        }
+    }
+
+    public var initialConfigurationCompleted: Bool {
+        set {
+            mutateState { (state) in
+                state.initialConfigurationCompleted = newValue
+            }
+        }
+        get {
+            state.initialConfigurationCompleted
         }
     }
 }

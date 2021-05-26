@@ -89,6 +89,13 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
     public var activeAlerts: Set<PumpManagerAlert>
     
     public var acknowledgedTimeOffsetAlert: Bool
+    
+    // Indicates that the user has completed initial configuration
+    // which means they have configured any parameters, but may not have paired a pod yet.
+    public var initialConfigurationCompleted: Bool = false
+    
+    // Indicates that the user has completed onboarding
+    public var onboardingCompleted: Bool = false
 
     // Temporal state not persisted
     
@@ -226,6 +233,10 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
         self.podAttachmentConfirmed = rawValue["podAttachmentConfirmed"] as? Bool ?? false
 
         self.confidenceRemindersEnabled = rawValue["confidenceRemindersEnabled"] as? Bool ?? false
+
+        self.initialConfigurationCompleted = rawValue["initialConfigurationCompleted"] as? Bool ?? true
+
+        self.onboardingCompleted = rawValue["onboardingCompleted"] as? Bool ?? true
     }
 
     public var rawValue: RawValue {
@@ -239,7 +250,9 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
             "lowReservoirReminderValue": lowReservoirReminderValue,
             "podAttachmentConfirmed": podAttachmentConfirmed,
             "confidenceRemindersEnabled": confidenceRemindersEnabled,
-            "acknowledgedTimeOffsetAlert": acknowledgedTimeOffsetAlert
+            "acknowledgedTimeOffsetAlert": acknowledgedTimeOffsetAlert,
+            "initialConfigurationCompleted": initialConfigurationCompleted,
+            "onboardingCompleted": onboardingCompleted
         ]
         
         rawValue["lastPodCommState"] = try? JSONEncoder().encode(lastPodCommState)
@@ -256,7 +269,7 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
         rawValue["pendingCommand"] = pendingCommand?.rawValue
         rawValue["scheduledExpirationReminderOffset"] =  scheduledExpirationReminderOffset
         rawValue["defaultExpirationReminderOffset"] = defaultExpirationReminderOffset
-        
+
         return rawValue
     }
     
@@ -297,10 +310,13 @@ extension DashPumpManagerState: CustomDebugStringConvertible {
             "* connectionState: \(String(describing: connectionState))",
             "* lowReservoirReminderValue: \(lowReservoirReminderValue)",
             "* scheduledExpirationReminderOffset: \(String(describing: scheduledExpirationReminderOffset))",
+            "* defaultExpirationReminderOffset: \(defaultExpirationReminderOffset)",
             "* podAttachmentConfirmed: \(podAttachmentConfirmed)",
             "* activeAlerts: \(activeAlerts)",
             "* confidenceRemindersEnabled: \(confidenceRemindersEnabled)",
-            "* acknowledgedTimeOffsetAlert: \(acknowledgedTimeOffsetAlert)"
+            "* acknowledgedTimeOffsetAlert: \(acknowledgedTimeOffsetAlert)",
+            "* initialConfigurationCompleted: \(initialConfigurationCompleted)",
+            "* onboardingCompleted: \(onboardingCompleted)"
             ].joined(separator: "\n")
     }
 }

@@ -13,8 +13,6 @@ import HealthKit
 
 struct NotificationSettingsView: View {
     
-    static let expirationReminderHoursAllowed = 1...24
-    
     var dateFormatter: DateFormatter
     
     @Binding var expirationReminderDefault: Int
@@ -39,7 +37,7 @@ struct NotificationSettingsView: View {
                 title: LocalizedString("Omnipod Reminders", comment: "Title for omnipod reminders section"),
                 footer: LocalizedString("The App notifies you in advance of Pod expiration.  Set the number of hours advance notice you would like to have.", comment: "Footer text for omnipod reminders section")
             ) {
-                expirationReminderRow
+                ExpirationReminderPickerView(expirationReminderDefault: $expirationReminderDefault)
             }
 
             if let scheduledReminderDate = scheduledReminderDate, let allowedDates = allowedScheduledReminderDates {
@@ -64,41 +62,6 @@ struct NotificationSettingsView: View {
             .padding(.horizontal, 16)
         }
         .navigationBarTitle(LocalizedString("Notification Settings", comment: "navigation title for notification settings"))
-    }
-    
-    var expirationDefaultFormatter = QuantityFormatter(for: .hour())
-    
-    var expirationDefaultString: String {
-        return expirationValueString(expirationReminderDefault)
-    }
-    
-    func expirationValueString(_ value: Int) -> String {
-        return expirationDefaultFormatter.string(from: HKQuantity(unit: .hour(), doubleValue: Double(value)), for: .hour())!
-    }
-
-    
-    var expirationReminderRow: some View {
-        VStack {
-            HStack {
-                Text(LocalizedString("Expiration Reminder Default", comment: "Label text for expiration reminder default row"))
-                Spacer()
-                Button(expirationDefaultString) {
-                    withAnimation {
-                        showingHourPicker.toggle()
-                    }
-                }
-            }
-            if showingHourPicker {
-                Picker("", selection: $expirationReminderDefault) {
-                    ForEach(Self.expirationReminderHoursAllowed, id: \.self) { value in
-                        Text(expirationValueString(value))
-                    }
-                }
-                .pickerStyle(WheelPickerStyle())
-                .frame(width: 100)
-                .clipped()
-            }
-        }
     }
     
     @State private var scheduleReminderDateEditViewIsShown: Bool = false

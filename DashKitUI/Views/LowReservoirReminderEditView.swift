@@ -10,13 +10,11 @@ import SwiftUI
 import LoopKit
 import LoopKitUI
 import HealthKit
+import DashKit
 
 struct LowReservoirReminderEditView: View {
 
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
-
-    // Allowed Low Reservoir reminder values
-    static let lowReservoirReminderAllowedRange = 10...50
     
     var onSave: ((_ selectedValue: Int, _ completion: @escaping (_ error: Error?) -> Void) -> Void)?
     var onFinish: (() -> Void)?
@@ -83,7 +81,7 @@ struct LowReservoirReminderEditView: View {
 
     private var picker: some View {
         Picker("", selection: $selectedValue) {
-            ForEach(Self.lowReservoirReminderAllowedRange, id: \.self) { value in
+            ForEach(Pod.lowReservoirReminderAllowedRange, id: \.self) { value in
                 Text(formatValue(value))
             }
         }.pickerStyle(WheelPickerStyle())

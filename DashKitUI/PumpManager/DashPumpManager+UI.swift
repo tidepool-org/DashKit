@@ -18,17 +18,17 @@ extension DashPumpManager: PumpManagerUI {
         return UIImage(named: "Onboarding", in: Bundle(for: DashSettingsViewModel.self), compatibleWith: nil)
     }
 
-    public static func setupViewController(initialSettings settings: PumpManagerSetupSettings, bluetoothProvider: BluetoothProvider, colorPalette: LoopUIColorPalette) -> SetupUIResult<PumpManagerViewController, PumpManagerUI> {
-        let vc = DashUICoordinator(colorPalette: colorPalette, pumpManagerType: self, initialSettings: settings)
+    public static func setupViewController(initialSettings settings: PumpManagerSetupSettings, bluetoothProvider: BluetoothProvider, colorPalette: LoopUIColorPalette, allowDebugFeatures: Bool) -> SetupUIResult<PumpManagerViewController, PumpManagerUI> {
+        let vc = DashUICoordinator(colorPalette: colorPalette, pumpManagerType: self, initialSettings: settings, allowDebugFeatures: allowDebugFeatures)
         return .userInteractionRequired(vc)
     }
 
-    public func settingsViewController(bluetoothProvider: BluetoothProvider, colorPalette: LoopUIColorPalette) -> PumpManagerViewController {
-        return DashUICoordinator(pumpManager: self, colorPalette: colorPalette)
+    public func settingsViewController(bluetoothProvider: BluetoothProvider, colorPalette: LoopUIColorPalette, allowDebugFeatures: Bool) -> PumpManagerViewController {
+        return DashUICoordinator(pumpManager: self, colorPalette: colorPalette, allowDebugFeatures: allowDebugFeatures)
     }
 
-    public func deliveryUncertaintyRecoveryViewController(colorPalette: LoopUIColorPalette) -> (UIViewController & CompletionNotifying) {
-        return DashUICoordinator(pumpManager: self, colorPalette: colorPalette)
+    public func deliveryUncertaintyRecoveryViewController(colorPalette: LoopUIColorPalette, allowDebugFeatures: Bool) -> (UIViewController & CompletionNotifying) {
+        return DashUICoordinator(pumpManager: self, colorPalette: colorPalette, allowDebugFeatures: allowDebugFeatures)
     }
     
     public var smallImage: UIImage? {

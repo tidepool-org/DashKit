@@ -123,6 +123,10 @@
 		C1B1CC2825EE8D14004D05C4 /* DashKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C107D15322694B9C00D63775 /* DashKitUI.framework */; };
 		C1B1CC5225EE92AA004D05C4 /* MockPodPumpManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11AA45B25841DFC00BDE12F /* MockPodPumpManager.swift */; };
 		C1B1CC6D25EED20B004D05C4 /* PodCommError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B1CC6C25EED20B004D05C4 /* PodCommError.swift */; };
+		C1BAA72D2652BE96009F3E3F /* PodSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BAA72C2652BE96009F3E3F /* PodSetupView.swift */; };
+		C1BAA72F2652CCB9009F3E3F /* ExpirationReminderSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BAA72E2652CCB9009F3E3F /* ExpirationReminderSetupView.swift */; };
+		C1BAA7312652E4F8009F3E3F /* ExpirationReminderPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BAA7302652E4F8009F3E3F /* ExpirationReminderPickerView.swift */; };
+		C1BAA73326530169009F3E3F /* LowReservoirReminderSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BAA73226530169009F3E3F /* LowReservoirReminderSetupView.swift */; };
 		C1BBA85B25BA1EC400AD4CDE /* INSSDK.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1BBA83D25BA065000AD4CDE /* INSSDK.xcframework */; };
 		C1BBA85C25BA1EC500AD4CDE /* INSSDK.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1BBA83D25BA065000AD4CDE /* INSSDK.xcframework */; };
 		C1BBA86525BA1F6C00AD4CDE /* PodSDK.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C11097CD238F14A4004F1A04 /* PodSDK.xcframework */; };
@@ -347,6 +351,10 @@
 		C1B1CC1725EE889E004D05C4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C1B1CC1925EE889E004D05C4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C1B1CC6C25EED20B004D05C4 /* PodCommError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodCommError.swift; sourceTree = "<group>"; };
+		C1BAA72C2652BE96009F3E3F /* PodSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodSetupView.swift; sourceTree = "<group>"; };
+		C1BAA72E2652CCB9009F3E3F /* ExpirationReminderSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpirationReminderSetupView.swift; sourceTree = "<group>"; };
+		C1BAA7302652E4F8009F3E3F /* ExpirationReminderPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpirationReminderPickerView.swift; sourceTree = "<group>"; };
+		C1BAA73226530169009F3E3F /* LowReservoirReminderSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LowReservoirReminderSetupView.swift; sourceTree = "<group>"; };
 		C1BBA83D25BA065000AD4CDE /* INSSDK.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = INSSDK.xcframework; path = "dash-sdk-ios/frameworks/INSSDK.xcframework"; sourceTree = "<group>"; };
 		C1BC259B2314604800E80E3F /* DashPumpManagerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashPumpManagerError.swift; sourceTree = "<group>"; };
 		C1C72D8A241568E700DB224B /* DashSettingsView.swift */ = {isa = PBXFileReference; indentWidth = 3; lastKnownFileType = sourcecode.swift; path = DashSettingsView.swift; sourceTree = "<group>"; };
@@ -524,6 +532,10 @@
 				C142DF1E25E57AEE00D15EEA /* AttachPodView.swift */,
 				C1B1CBFF25EE8350004D05C4 /* SetupCompleteView.swift */,
 				C1FAEC1A2649D21B00A3250B /* TimeView.swift */,
+				C1BAA72C2652BE96009F3E3F /* PodSetupView.swift */,
+				C1BAA72E2652CCB9009F3E3F /* ExpirationReminderSetupView.swift */,
+				C1BAA7302652E4F8009F3E3F /* ExpirationReminderPickerView.swift */,
+				C1BAA73226530169009F3E3F /* LowReservoirReminderSetupView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1140,6 +1152,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C1562F85241698C0006952D6 /* PodLifeState.swift in Sources */,
+				C1BAA73326530169009F3E3F /* LowReservoirReminderSetupView.swift in Sources */,
 				C1562F7F241581C7006952D6 /* DashSettingsViewModel.swift in Sources */,
 				C1A8310624F5AEE400C3BD13 /* DeliveryUncertaintyRecoveryViewModel.swift in Sources */,
 				C171758C2437AFF200199ABC /* CheckInsertedCannulaView.swift in Sources */,
@@ -1147,13 +1160,16 @@
 				C1ED19D223F98C5C00D55049 /* DashUICoordinator.swift in Sources */,
 				C168F188244611E7002447D5 /* PodDetails .swift in Sources */,
 				C1562F8B2416A7C8006952D6 /* MockPodDeactivater.swift in Sources */,
+				C1BAA72D2652BE96009F3E3F /* PodSetupView.swift in Sources */,
 				C14386B9244F59800070B0FF /* BasalStateView.swift in Sources */,
 				C12A06A123F217A40052195C /* RegistrationViewModel.swift in Sources */,
+				C1BAA72F2652CCB9009F3E3F /* ExpirationReminderSetupView.swift in Sources */,
 				C1D68E322284B50300019CAE /* TimeInterval.swift in Sources */,
 				C14C6F252419F95E00CF3408 /* LeadingImage.swift in Sources */,
 				C1ACF43D22A1D00500F7DDB4 /* PodExpirationTableViewCell.swift in Sources */,
 				C1201E3123EDF498002DA84A /* Image.swift in Sources */,
 				C1941151228DBF2100E886DD /* ExpirationReminderDateTableViewCell.swift in Sources */,
+				C1BAA7312652E4F8009F3E3F /* ExpirationReminderPickerView.swift in Sources */,
 				C1E2561E25DEF855005F609E /* LowReservoirReminderEditView.swift in Sources */,
 				C1562F8924169C65006952D6 /* DeactivatePodViewModel.swift in Sources */,
 				C1C72D8B241568E700DB224B /* DashSettingsView.swift in Sources */,

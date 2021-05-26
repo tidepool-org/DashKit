@@ -17,6 +17,9 @@ import DashKit
 import PodSDK
 
 enum DashUIScreen {
+    case firstRunScreen
+    case expirationReminderSetup
+    case lowReservoirReminderSetup
     case deactivate
     case settings
     case registration
@@ -30,6 +33,12 @@ enum DashUIScreen {
     
     func next() -> DashUIScreen? {
         switch self {
+        case .firstRunScreen:
+            return .expirationReminderSetup
+        case .expirationReminderSetup:
+            return .lowReservoirReminderSetup
+        case .lowReservoirReminderSetup:
+            return .pairPod
         case .deactivate:
             return .pairPod
         case .settings:
@@ -57,7 +66,7 @@ enum DashUIScreen {
     }
 }
 
-protocol DashUINavigator: class {
+protocol DashUINavigator: AnyObject {
     func navigateTo(_ screen: DashUIScreen)
 }
 
@@ -83,8 +92,42 @@ class DashUICoordinator: UINavigationController, PumpManagerOnboarding, Completi
     
     private var initialSettings: PumpManagerSetupSettings?
     
+    private var allowDebugFeatures: Bool
+    
     private func viewControllerForScreen(_ screen: DashUIScreen) -> UIViewController {
         switch screen {
+        case .firstRunScreen:
+            let view = PodSetupView(nextAction: stepFinished,
+                                    allowDebugFeatures: allowDebugFeatures,
+                                    skipOnboarding: {    // NOTE: DEBUG FEATURES - DEBUG AND TEST ONLY
+                                        self.pumpManager.markOnboardingCompleted()
+                                        self.completionDelegate?.completionNotifyingDidComplete(self)
+                                    })
+            return hostingController(rootView: view)
+        case .expirationReminderSetup:
+            var view = ExpirationReminderSetupView(expirationReminderDefault: Int(pumpManager.defaultExpirationReminderOffset.hours))
+            view.valueChanged = { value in
+                self.pumpManager.defaultExpirationReminderOffset = .hours(Double(value))
+            }
+            view.continueButtonTapped = {
+                self.stepFinished()
+            }
+            let hostedView = hostingController(rootView: view)
+            hostedView.navigationItem.title = LocalizedString("Expiration Reminder", comment: "Title for ExpirationReminderSetupView")
+            return hostedView
+        case .lowReservoirReminderSetup:
+            var view = LowReservoirReminderSetupView(lowReservoirReminderValue: Int(pumpManager.lowReservoirReminderValue))
+            view.valueChanged = { value in
+                self.pumpManager.lowReservoirReminderValue = Double(value)
+            }
+            view.continueButtonTapped = {
+                self.pumpManager.initialConfigurationCompleted = true
+                self.stepFinished()
+            }
+            
+            let hostedView = hostingController(rootView: view)
+            hostedView.navigationItem.title = LocalizedString("Low Reservoir", comment: "Title for LowReservoirReminderSetupView")
+            return hostedView
         case .deactivate:
             let viewModel = DeactivatePodViewModel(podDeactivator: pumpManager, podAttachedToBody: pumpManager.podAttachmentConfirmed)
 
@@ -181,6 +224,7 @@ class DashUICoordinator: UINavigationController, PumpManagerOnboarding, Completi
                 },
                 didFinish: {
                     if let initialSettings = self.initialSettings {
+                        self.pumpManager.markOnboardingCompleted()
                         self.pumpManagerOnboardingDelegate?.pumpManagerOnboarding(didOnboardPumpManager: self.pumpManager, withFinalSettings: initialSettings)
                     }
                     self.stepFinished()
@@ -246,7 +290,7 @@ class DashUICoordinator: UINavigationController, PumpManagerOnboarding, Completi
     
     private var isOnboarding: Bool
     
-    init(pumpManager: DashPumpManager? = nil, colorPalette: LoopUIColorPalette, pumpManagerType: DashPumpManager.Type? = nil, initialSettings: PumpManagerSetupSettings? = nil)
+    init(pumpManager: DashPumpManager? = nil, colorPalette: LoopUIColorPalette, pumpManagerType: DashPumpManager.Type? = nil, initialSettings: PumpManagerSetupSettings? = nil, allowDebugFeatures: Bool)
     {
         if pumpManager == nil {
             PodCommManager.shared.setup(withLaunchingOptions: nil)
@@ -276,6 +320,8 @@ class DashUICoordinator: UINavigationController, PumpManagerOnboarding, Completi
         
         self.isOnboarding = initialSettings != nil
         
+        self.allowDebugFeatures = allowDebugFeatures
+        
         super.init(navigationBarClass: UINavigationBar.self, toolbarClass: UIToolbar.self)
     }
     
@@ -296,7 +342,10 @@ class DashUICoordinator: UINavigationController, PumpManagerOnboarding, Completi
                     return .confirmAttachment
                 }
             } else if pumpManager.podCommState == .noPod && isOnboarding {
-               return .pairPod
+                if !pumpManager.initialConfigurationCompleted {
+                    return .firstRunScreen
+                }
+                return .pairPod
             } else {
                 return .settings
             }
