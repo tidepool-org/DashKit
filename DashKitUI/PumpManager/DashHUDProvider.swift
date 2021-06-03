@@ -88,7 +88,7 @@ internal class DashHUDProvider: NSObject, HUDProvider {
 
         if let lastStatusDate = rawValue["lastStatusDate"] as? Date {
             reservoirView = OmnipodReservoirView.instantiate()
-            reservoirView!.update(level: reservoirLevel, at: lastStatusDate, reservoirAlertState: .ok)
+            reservoirView!.update(level: reservoirLevel, at: lastStatusDate, reservoirAlertState: reservoirAlertStateFor(reservoirLevel))
         } else {
             reservoirView = nil
         }
@@ -106,23 +106,27 @@ internal class DashHUDProvider: NSObject, HUDProvider {
         let reservoirAlertState: ReservoirAlertState
         
         if let reservoirLevel = pumpManager.reservoirLevel {
-            switch reservoirLevel {
-            case .aboveThreshold:
-                reservoirAlertState = .ok
-            case .valid(let amount):
-                if amount > Pod.defaultLowReservoirReminder {
-                    reservoirAlertState = .ok
-                } else if amount <= 0 {
-                    reservoirAlertState = .empty
-                } else {
-                    reservoirAlertState = .lowReservoir
-                }
-            }
+            reservoirAlertState = DashHUDProvider.reservoirAlertStateFor(reservoirLevel)
         } else {
             reservoirAlertState = .ok
         }
 
         reservoirView.update(level: pumpManager.reservoirLevel, at: lastStatusDate, reservoirAlertState: reservoirAlertState)
+    }
+
+    private static func reservoirAlertStateFor(_ reservoirLevel: ReservoirLevel) -> ReservoirAlertState {
+        switch reservoirLevel {
+        case .aboveThreshold:
+            return .ok
+        case .valid(let amount):
+            if amount > Pod.defaultLowReservoirReminder {
+                return .ok
+            } else if amount <= 0 {
+                return .empty
+            } else {
+                return .lowReservoir
+            }
+        }
     }
 }
 
