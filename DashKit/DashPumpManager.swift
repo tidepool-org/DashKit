@@ -18,7 +18,7 @@ public protocol PodStatusObserver: AnyObject {
 }
 
 open class DashPumpManager: PumpManager {
-    
+        
     public static var onboardingSupportedBolusVolumes: [Double] {
         // 0.05 units for rates between 0.05-30U
         return (1...600).map { Double($0) / Double(Pod.pulsesPerUnit) }
@@ -63,10 +63,6 @@ open class DashPumpManager: PumpManager {
         }
     }
     
-    public var lastReconciliation: Date? {
-        return dateGenerator()
-    }
-
     public func roundToSupportedBasalRate(unitsPerHour: Double) -> Double {
          return supportedBasalRates.filter({$0 <= unitsPerHour}).max() ?? 0
     }
@@ -525,12 +521,13 @@ open class DashPumpManager: PumpManager {
     public func podDeactivated() {
         self.resolveAnyPendingCommandWithUncertainty()
         
+        
         mutateState({ (state) in
-            let now = self.dateGenerator()
-            state.unfinalizedBolus?.cancel(at: now)
-            state.unfinalizedTempBasal?.cancel(at: now)
+            let deactivationTime = min(podExpiresAt ?? Date.distantFuture, self.dateGenerator())
+            state.unfinalizedBolus?.cancel(at: deactivationTime)
+            state.unfinalizedTempBasal?.cancel(at: deactivationTime)
             state.finalizeDoses()
-            state.finishedDoses.append(UnfinalizedDose(suspendStartTime: now, scheduledCertainty: .certain))
+            state.finishedDoses.append(UnfinalizedDose(suspendStartTime: deactivationTime, scheduledCertainty: .certain))
             state.suspendState = nil
             state.podActivatedAt = nil
             state.lastStatusDate = nil
@@ -554,7 +551,14 @@ open class DashPumpManager: PumpManager {
     public func deactivatePod(completion: @escaping (PodCommResult<PartialPodStatus>) -> ()) {
         podCommManager.deactivatePod { (result) in
             switch result {
-            case .success:
+            case .success(let status):
+                self.mutateState{ state in
+                    if let podStatus = status as? PodStatus {
+                        state.updateFromPodStatus(status: podStatus)
+                    } else {
+                        self.log.error("Partial status for pod returned.")
+                    }
+                }
                 self.podDeactivated()
                 self.finalizeAndStoreDoses(completion: { (_) in
                     completion(result)
@@ -629,7 +633,7 @@ open class DashPumpManager: PumpManager {
         return pumpDataAge > pumpStatusAgeTolerance
     }
 
-    private func finalizeAndStoreDoses(completion: ((Error?) -> Void)? = nil) {
+    private func finalizeAndStoreDoses(reconciledAt: Date? = nil, completion: ((Error?) -> Void)? = nil) {
         var dosesToStore: [UnfinalizedDose] = []
 
         lockedState.mutate { (state) in
@@ -645,10 +649,9 @@ open class DashPumpManager: PumpManager {
             }
         }
 
-        let lastPumpReconciliation = lastReconciliation
-
         pumpDelegate.notify { (delegate) in
-            delegate?.pumpManager(self, hasNewPumpEvents: dosesToStore.map { NewPumpEvent($0, at: self.dateGenerator()) }, lastReconciliation: lastPumpReconciliation, completion: { (error) in
+            let now = self.dateGenerator()
+            delegate?.pumpManager(self, hasNewPumpEvents: dosesToStore.map { NewPumpEvent($0, at: now) }, lastReconciliation: reconciledAt ?? now, completion: { (error) in
                 if let error = error {
                     self.log.error("Error storing pod events: %@", String(describing: error))
                     completion?(error)
