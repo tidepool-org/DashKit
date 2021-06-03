@@ -13,7 +13,7 @@ import HealthKit
 import DashKit
 
 struct LowReservoirReminderSetupView: View {
-    
+
     @State var lowReservoirReminderValue: Int
     
     public var valueChanged: ((_ value: Int) -> Void)?
@@ -54,7 +54,7 @@ struct LowReservoirReminderSetupView: View {
     
     private var picker: some View {
         Picker("", selection: $lowReservoirReminderValue) {
-            ForEach(Pod.lowReservoirReminderAllowedRange, id: \.self) { value in
+            ForEach(Pod.allowedLowReservoirReminderValues, id: \.self) { value in
                 Text(formatValue(value))
             }
         }.pickerStyle(WheelPickerStyle())

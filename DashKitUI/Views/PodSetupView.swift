@@ -35,7 +35,6 @@ struct PodSetupView: View {
                 .padding(.bottom)
         }
         .padding(.horizontal)
-        .navigationBarTitle("")
         .navigationBarHidden(true)
         .alert(item: $alertIdentifier) { alert in
             switch alert.id {
