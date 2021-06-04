@@ -78,7 +78,7 @@ struct PodSetupView: View {
     
     @ViewBuilder
     private var bodyText: some View {
-        Text(LocalizedString("You will now begin the process of configuring your reminders, filling your Pod with insulin, pairing to to your device and placing it on your body.", comment: "bodyText for PodSetupView"))
+        Text(LocalizedString("You will now begin the process of configuring your reminders, filling your Pod with insulin, pairing to your device and placing it on your body.", comment: "bodyText for PodSetupView"))
     }
     
     private var closeButton: some View {
