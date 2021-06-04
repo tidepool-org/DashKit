@@ -57,6 +57,7 @@ struct AttachPodView: View {
         .alert(item: $activeModal, content: self.alert(for:))
         .navigationBarTitle("Attach Pod", displayMode: .automatic)
         .navigationBarItems(trailing: cancelButton)
+        .navigationBarBackButtonHidden(true)
     }
     
     var cancelButton: some View {

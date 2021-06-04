@@ -63,5 +63,5 @@ public struct Pod {
     public static let timeRemainingWarningThreshold = TimeInterval(days: 1)
     
     // Allowed Low Reservoir reminder values
-    public static let lowReservoirReminderAllowedRange = 10...50
+    public static let allowedLowReservoirReminderValues = Array(stride(from: 10, through: 50, by: 5))
 }

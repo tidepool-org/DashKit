@@ -10,7 +10,6 @@ import SwiftUI
 import LoopKitUI
 
 struct ExpirationReminderSetupView: View {
-    
     @State var expirationReminderDefault: Int = 2
     
     public var valueChanged: ((_ value: Int) -> Void)?

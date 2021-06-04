@@ -81,7 +81,7 @@ struct LowReservoirReminderEditView: View {
 
     private var picker: some View {
         Picker("", selection: $selectedValue) {
-            ForEach(Pod.lowReservoirReminderAllowedRange, id: \.self) { value in
+            ForEach(Pod.allowedLowReservoirReminderValues, id: \.self) { value in
                 Text(formatValue(value))
             }
         }.pickerStyle(WheelPickerStyle())
