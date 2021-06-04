@@ -127,6 +127,7 @@ class DashUICoordinator: UINavigationController, PumpManagerOnboarding, Completi
             
             let hostedView = hostingController(rootView: view)
             hostedView.navigationItem.title = LocalizedString("Low Reservoir", comment: "Title for LowReservoirReminderSetupView")
+            hostedView.navigationItem.backButtonDisplayMode = .generic
             return hostedView
         case .deactivate:
             let viewModel = DeactivatePodViewModel(podDeactivator: pumpManager, podAttachedToBody: pumpManager.podAttachmentConfirmed)
@@ -167,6 +168,7 @@ class DashUICoordinator: UINavigationController, PumpManagerOnboarding, Completi
             
             let view = hostingController(rootView: PairPodView(viewModel: viewModel))
             view.navigationItem.title = LocalizedString("Pair Pod", comment: "Title for pod pairing screen")
+            view.navigationItem.backButtonDisplayMode = .generic
             return view
         case .confirmAttachment:
             let view = AttachPodView(
@@ -180,6 +182,7 @@ class DashUICoordinator: UINavigationController, PumpManagerOnboarding, Completi
             
             let vc = hostingController(rootView: view)
             vc.navigationItem.title = LocalizedString("Attach Pod", comment: "Title for Attach Pod screen")
+            vc.navigationItem.hidesBackButton = true
             return vc
 
         case .insertCannula:
@@ -190,6 +193,7 @@ class DashUICoordinator: UINavigationController, PumpManagerOnboarding, Completi
 
             let view = hostingController(rootView: InsertCannulaView(viewModel: viewModel))
             view.navigationItem.title = LocalizedString("Insert Cannula", comment: "Title for insert cannula screen")
+            view.navigationItem.hidesBackButton = true
             return view
         case .checkInsertedCannula:
             let view = CheckInsertedCannulaView(
@@ -202,6 +206,7 @@ class DashUICoordinator: UINavigationController, PumpManagerOnboarding, Completi
             )
             let hostedView = hostingController(rootView: view)
             hostedView.navigationItem.title = LocalizedString("Check Cannula", comment: "Title for check cannula screen")
+            hostedView.navigationItem.hidesBackButton = true
             return hostedView
         case .setupComplete:
             guard let expirationReminderDate = pumpManager.scheduledExpirationReminder,
@@ -381,14 +386,6 @@ class DashUICoordinator: UINavigationController, PumpManagerOnboarding, Completi
 
     public func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
                 
-        // Deal with UIHostingController navigationItem.backBarButtonItem being nil at view load time
-        // Seems like an iOS bug; hopefully fixed with later SwiftUI updates.
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            if viewController.navigationItem.backBarButtonItem == nil, let title = viewController.navigationItem.title {
-                viewController.navigationItem.backBarButtonItem = UIBarButtonItem(title: title, style: .plain, target: nil, action: nil)
-            }
-        }
-
         setOverrideTraitCollection(customTraitCollection, forChild: viewController)
         
         if viewControllers.count < screenStack.count {
@@ -407,5 +404,6 @@ extension DashUICoordinator: DashUINavigator {
         let viewController = viewControllerForScreen(screen)
         viewController.isModalInPresentation = false
         self.pushViewController(viewController, animated: true)
+        viewController.view.layoutSubviews()
     }
 }

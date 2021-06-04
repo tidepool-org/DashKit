@@ -143,7 +143,7 @@ class PairPodViewModel: ObservableObject, Identifiable {
     }
     
     var error: DashPairingError? {
-        if case .error(let error, _) = self.state {
+        if case .error(let error, _) = state {
             return error
         }
         return nil
@@ -153,6 +153,16 @@ class PairPodViewModel: ObservableObject, Identifiable {
     
     var podIsActivated: Bool {
         return podPairer.podCommState != .noPod
+    }
+    
+    var backButtonHidden: Bool {
+        if case .pairing = state {
+            return true
+        }
+        if podIsActivated {
+            return true
+        }
+        return false
     }
     
     var didFinish: (() -> Void)?
