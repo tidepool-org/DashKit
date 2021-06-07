@@ -369,6 +369,21 @@ class DashPumpManagerTests: XCTestCase {
         XCTAssertNil(lastPumpManagerStatus.basalDeliveryState)
     }
     
+    func testLastReconciliationIsTracked() {
+        let firstStatusTime = dateGenerator()
+        
+        let getPodStatusCallbackExpectation = expectation(description: "get pod status callbacks")
+        pumpManager.getPodStatus { _ in
+            getPodStatusCallbackExpectation.fulfill()
+        }
+        waitForExpectations(timeout: 3)
+
+        timeTravel(.minutes(3))
+        
+        XCTAssertEqual(firstStatusTime, pumpManager.lastReconciliation)
+    }
+
+    
     func testAlarmDuringBolusShouldUseRemainingInsulinField() {
         
         let bolusCallbacks = expectation(description: "bolus callbacks")
