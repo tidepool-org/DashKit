@@ -63,6 +63,10 @@ open class DashPumpManager: PumpManager {
         }
     }
     
+    public var lastReconciliation: Date? {
+        return state.lastStatusDate
+    }
+    
     public func roundToSupportedBasalRate(unitsPerHour: Double) -> Double {
          return supportedBasalRates.filter({$0 <= unitsPerHour}).max() ?? 0
     }
@@ -523,6 +527,7 @@ open class DashPumpManager: PumpManager {
         
         
         mutateState({ (state) in
+            let podExpiresAt = state.podActivatedAt?.addingTimeInterval(Pod.lifetime)
             let deactivationTime = min(podExpiresAt ?? Date.distantFuture, self.dateGenerator())
             state.unfinalizedBolus?.cancel(at: deactivationTime)
             state.unfinalizedTempBasal?.cancel(at: deactivationTime)
@@ -633,7 +638,7 @@ open class DashPumpManager: PumpManager {
         return pumpDataAge > pumpStatusAgeTolerance
     }
 
-    private func finalizeAndStoreDoses(reconciledAt: Date? = nil, completion: ((Error?) -> Void)? = nil) {
+    private func finalizeAndStoreDoses(completion: ((Error?) -> Void)? = nil) {
         var dosesToStore: [UnfinalizedDose] = []
 
         lockedState.mutate { (state) in
@@ -651,7 +656,7 @@ open class DashPumpManager: PumpManager {
 
         pumpDelegate.notify { (delegate) in
             let now = self.dateGenerator()
-            delegate?.pumpManager(self, hasNewPumpEvents: dosesToStore.map { NewPumpEvent($0, at: now) }, lastReconciliation: reconciledAt ?? now, completion: { (error) in
+            delegate?.pumpManager(self, hasNewPumpEvents: dosesToStore.map { NewPumpEvent($0, at: now) }, lastReconciliation: self.state.lastStatusDate, completion: { (error) in
                 if let error = error {
                     self.log.error("Error storing pod events: %@", String(describing: error))
                     completion?(error)
