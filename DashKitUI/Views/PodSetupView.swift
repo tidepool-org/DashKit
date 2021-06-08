@@ -10,7 +10,7 @@ import SwiftUI
 import LoopKitUI
 
 struct PodSetupView: View {
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.dismissAction) private var dismiss
     
     private struct AlertIdentifier: Identifiable {
         enum Choice {
