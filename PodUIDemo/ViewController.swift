@@ -66,8 +66,7 @@ class ViewController: UIViewController {
     }
     
     @objc func firstTimeFlow(sender: UIButton!) {
-        let settings = PumpManagerSetupSettings(maxBasalRateUnitsPerHour: 3, maxBolusUnits: 3, basalSchedule: basalSchedule)
-        let uiResult = MockPodPumpManager.setupViewController(initialSettings: settings, bluetoothProvider: self, colorPalette: palette, allowDebugFeatures: true)
+        let uiResult = MockPodPumpManager.setupViewController(basalSchedule: basalSchedule, bluetoothProvider: self, colorPalette: palette, allowDebugFeatures: true)
         switch uiResult {
         case .createdAndOnboarded:
             return
@@ -105,7 +104,6 @@ class ViewController: UIViewController {
                 podCommState: podCommState)
             var state = DashPumpManagerState(
                 basalRateSchedule: basalSchedule,
-                maximumTempBasalRate: 3,
                 lastPodCommState: podCommState)!
             state.podActivatedAt = activationDate
             state.scheduledExpirationReminderOffset = TimeInterval(4 * 60 * 60)
@@ -129,7 +127,7 @@ extension ViewController: PumpManagerOnboardingDelegate {
         self.pumpManager?.pumpManagerDelegate = self
     }
     
-    func pumpManagerOnboarding(didOnboardPumpManager pumpManager: PumpManagerUI, withFinalSettings settings: PumpManagerSetupSettings) {
+    func pumpManagerOnboarding(didOnboardPumpManager pumpManager: PumpManagerUI) {
         
     }
 }
@@ -169,15 +167,6 @@ extension ViewController: PumpManagerDelegate {
     
     func startDateToFilterNewPumpEvents(for manager: PumpManager) -> Date {
         return Date()
-    }
-    
-    func scheduleNotification(for manager: DeviceManager, identifier: String, content: UNNotificationContent, trigger: UNNotificationTrigger?) {
-    }
-    
-    func clearNotification(for manager: DeviceManager, identifier: String) {
-    }
-    
-    func removeNotificationRequests(for manager: DeviceManager, identifiers: [String]) {
     }
     
     func deviceManager(_ manager: DeviceManager, logEventForDeviceIdentifier deviceIdentifier: String?, type: DeviceLogEntryType, message: String, completion: ((Error?) -> Void)?) {

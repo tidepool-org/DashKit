@@ -86,7 +86,7 @@ struct DashSettingsView: View  {
    }
 
    var deliverySectionTitle: String {
-      if let rate = self.viewModel.basalDeliveryRate, rate.netPercent == 0 {
+      if self.viewModel.basalDeliveryRate != nil {
          return LocalizedString("Scheduled Basal", comment: "Title of insulin delivery section")
       } else {
          return LocalizedString("Insulin Delivery", comment: "Title of insulin delivery section")
@@ -98,10 +98,10 @@ struct DashSettingsView: View  {
       VStack(alignment: .leading, spacing: 5) {
          Text(deliverySectionTitle)
             .foregroundColor(Color(UIColor.secondaryLabel))
-         if let rate = self.viewModel.basalDeliveryRate {
+         if let basalRate = self.viewModel.basalDeliveryRate {
             HStack(alignment: .center) {
                HStack(alignment: .lastTextBaseline, spacing: 3) {
-                  Text(self.viewModel.basalRateFormatter.string(from: rate.absoluteRate) ?? "")
+                  Text(self.viewModel.basalRateFormatter.string(from: basalRate) ?? "")
                      .font(.system(size: 28))
                      .fontWeight(.heavy)
                      .fixedSize()
@@ -503,7 +503,7 @@ struct DashSettingsSheetView: View {
          }.sheet(isPresented: $showingDetail) {
             NavigationView {
                ZStack {
-                  DashSettingsView(viewModel: previewModel(), navigator: MockNavigator())
+                  DashSettingsView(viewModel: previewModel(), navigator: nil)
                }
             }
          }
@@ -518,7 +518,7 @@ struct DashSettingsSheetView: View {
    func previewModel() -> DashSettingsViewModel {
       let basalScheduleItems = [RepeatingScheduleValue(startTime: 0, value: 1.0)]
       let schedule = BasalRateSchedule(dailyItems: basalScheduleItems, timeZone: .current)!
-      let state = DashPumpManagerState(basalRateSchedule: schedule, maximumTempBasalRate: 3.0, lastPodCommState: .active)!
+      let state = DashPumpManagerState(basalRateSchedule: schedule, lastPodCommState: .active)!
 
       let mockPodCommManager = MockPodCommManager()
       let pumpManager = DashPumpManager(state: state, podCommManager: mockPodCommManager)

@@ -12,11 +12,6 @@ import LoopKit
 import HealthKit
 import PodSDK
 
-struct BasalDeliveryRate {
-    var absoluteRate: Double
-    var netPercent: Double
-}
-
 enum DashSettingsViewAlert {
     case suspendError(DashPumpManagerError)
     case resumeError(DashPumpManagerError)
@@ -78,7 +73,7 @@ class DashSettingsViewModel: ObservableObject {
     
     @Published var basalDeliveryState: PumpManagerStatus.BasalDeliveryState?
 
-    @Published var basalDeliveryRate: BasalDeliveryRate?
+    @Published var basalDeliveryRate: Double?
 
     @Published var activeAlert: DashSettingsViewAlert? = nil {
         didSet {
@@ -323,37 +318,20 @@ extension DashPumpManager {
         }
     }
     
-    var basalDeliveryRate: BasalDeliveryRate? {
-        var calendar = Calendar(identifier: .gregorian)
-        calendar.timeZone = state.timeZone
-        let scheduledRate = state.basalProgram.currentRate(using: calendar, at: dateGenerator()).basalRateUnitsPerHour
-        let maximumTempBasalRate = state.maximumTempBasalRate
-        
-        var netBasalPercent: Double
-        var absoluteRate: Double
-
+    var basalDeliveryRate: Double? {
         if let tempBasal = state.unfinalizedTempBasal, !tempBasal.isFinished(at: dateGenerator()) {
-            
-            absoluteRate = tempBasal.rate
-            
-            let rate = tempBasal.rate - scheduledRate
-            
-            if rate < 0 {
-                netBasalPercent = rate / scheduledRate
-            } else {
-                netBasalPercent = rate / (maximumTempBasalRate - scheduledRate )
-            }
+            return tempBasal.rate
         } else {
             switch state.suspendState {
             case .resumed:
-                absoluteRate = scheduledRate
-                netBasalPercent = 0
+                var calendar = Calendar(identifier: .gregorian)
+                calendar.timeZone = state.timeZone
+                let scheduledRate = state.basalProgram.currentRate(using: calendar, at: dateGenerator()).basalRateUnitsPerHour
+                return scheduledRate
             case .suspended, .none:
                 return nil
             }
         }
-        
-        return BasalDeliveryRate(absoluteRate: absoluteRate, netPercent: netBasalPercent)
     }
 }
 

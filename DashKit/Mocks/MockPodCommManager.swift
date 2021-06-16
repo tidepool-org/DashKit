@@ -10,7 +10,7 @@ import Foundation
 import PodSDK
 import LoopKit
 
-public protocol MockPodCommManagerObserver: class {
+public protocol MockPodCommManagerObserver: AnyObject {
     func mockPodCommManagerDidUpdate()
 }
 

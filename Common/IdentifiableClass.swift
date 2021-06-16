@@ -10,7 +10,7 @@
 import Foundation
 
 
-protocol IdentifiableClass: class {
+protocol IdentifiableClass: AnyObject {
     static var className: String { get }
 }
 

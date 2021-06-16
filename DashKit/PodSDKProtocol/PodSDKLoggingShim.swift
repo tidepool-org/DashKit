@@ -10,7 +10,7 @@ import Foundation
 import PodSDK
 import LoopKit
 
-protocol PodSDKLoggingShimDelegate: class {
+protocol PodSDKLoggingShimDelegate: AnyObject {
     func podSDKLoggingShim(_ shim: PodSDKLoggingShim, didLogEventForDevice deviceIdentifier: String?, type: DeviceLogEntryType, message: String, completion: ((Error?) -> Void)?)
 }
 

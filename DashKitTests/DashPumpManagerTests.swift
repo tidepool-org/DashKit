@@ -74,7 +74,7 @@ class DashPumpManagerTests: XCTestCase {
         mockPodCommManager.simulatedCommsDelay = TimeInterval(0)
         mockPodCommManager.podCommState = .active
                 
-        var state = DashPumpManagerState(basalRateSchedule: schedule, maximumTempBasalRate: 3.0, lastPodCommState: .active, dateGenerator: dateGenerator)!
+        var state = DashPumpManagerState(basalRateSchedule: schedule, lastPodCommState: .active, dateGenerator: dateGenerator)!
         state.podActivatedAt = activation
         pumpManager = DashPumpManager(state: state, podCommManager: mockPodCommManager, dateGenerator: dateGenerator)
         pumpManager.addPodStatusObserver(self, queue: DispatchQueue.main)
@@ -126,16 +126,11 @@ class DashPumpManagerTests: XCTestCase {
         let delivered = mockPodCommManager.podStatus!.initialInsulinAmount - 5.0
         mockPodCommManager.podStatus?.insulinDelivered = delivered
 
-        pumpManager.enactBolus(units: 1, at: startDate) { (result) in
+        pumpManager.enactBolus(units: 1, at: startDate) { (error) in
             bolusCallbacks.fulfill()
-            switch result {
-            case .failure(let error):
+            if let error = error {
                 XCTFail("enactBolus failed with error: \(error)")
-            case .success(let dose):
-                XCTAssertEqual(startDate, dose.startDate)
-                XCTAssertEqual(DoseType.bolus, dose.type)
-                XCTAssertEqual(DoseUnit.units, dose.unit)
-                XCTAssertEqual(1.0, dose.programmedUnits)
+            } else {
                 XCTAssertEqual(1.0, self.mockPodCommManager.podStatus?.bolus?.units)
             }
         }
@@ -177,18 +172,17 @@ class DashPumpManagerTests: XCTestCase {
 
         mockPodCommManager.nextCommsError = .podNotAvailable
 
-        pumpManager.enactBolus(units: 1, at: startDate) { (result) in
+        pumpManager.enactBolus(units: 1, at: startDate) { (error) in
             bolusCallbacks.fulfill()
-            switch result {
-            case .success:
-                XCTFail("Enact bolus with no pod should return error")
-            case .failure(let error):
+            if let error = error {
                 switch error {
                 case .communication:
                     break
                 default:
                     XCTFail("Expected communication error")
                 }
+            } else {
+                XCTFail("Enact bolus with no pod should return error")
             }
         }
         waitForExpectations(timeout: 3)
@@ -246,15 +240,10 @@ class DashPumpManagerTests: XCTestCase {
         let delivered = mockPodCommManager.podStatus!.initialInsulinAmount - 5.0
         mockPodCommManager.podStatus?.insulinDelivered = delivered
 
-        pumpManager.enactTempBasal(unitsPerHour: 1, for: .minutes(30)) { (result) in
+        pumpManager.enactTempBasal(unitsPerHour: 1, for: .minutes(30)) { (error) in
             tempBasalCallbackExpectation.fulfill()
-            switch result {
-            case .failure(let error):
+            if let error = error {
                 XCTFail("enactTempBasal failed with error: \(error)")
-            case .success(let dose):
-                XCTAssertEqual(DoseType.tempBasal, dose.type)
-                XCTAssertEqual(DoseUnit.unitsPerHour, dose.unit)
-                XCTAssertEqual(1.0, dose.unitsPerHour)
             }
         }
         waitForExpectations(timeout: 3)
@@ -486,16 +475,15 @@ class DashPumpManagerTests: XCTestCase {
         pumpManagerStatusUpdateExpectation = expectation(description: "pumpmanager status updates")
         pumpManagerStatusUpdateExpectation?.assertForOverFulfill = false
 
-        pumpManager.enactBolus(units: 1, at: Date()) { (result) in
-            switch result {
-            case .failure(let error):
+        pumpManager.enactBolus(units: 1, at: Date()) { (error) in
+            if let error = error {
                 switch error {
                 case .uncertainDelivery:
                     break
                 default:
                     XCTFail("Enact bolus should fail with uncertainDelivery error on unacknowledged command")
                 }
-            case .success:
+            } else {
                 XCTFail("Enact bolus should not succeed when send program fails with unacknowledged command")
             }
             bolusCompletion.fulfill()
@@ -525,16 +513,15 @@ class DashPumpManagerTests: XCTestCase {
         mockPodCommManager.nextCommsError = .unacknowledgedCommandPendingRetry
         let bolusCompletion = expectation(description: "enactBolus completed")
 
-        pumpManager.enactBolus(units: 1, at: Date()) { (result) in
-            switch result {
-            case .failure(let error):
+        pumpManager.enactBolus(units: 1, at: Date()) { (error) in
+            if let error = error {
                 switch error {
                 case .uncertainDelivery:
                     break
                 default:
                     XCTFail("Enact bolus should fail with uncertainDelivery error on unacknowledged command")
                 }
-            case .success:
+            } else {
                 XCTFail("Enact bolus should not succeed when send program fails with unacknowledged command")
             }
             bolusCompletion.fulfill()
@@ -562,16 +549,15 @@ class DashPumpManagerTests: XCTestCase {
         mockPodCommManager.nextCommsError = .unacknowledgedCommandPendingRetry
         let bolusCompletion = expectation(description: "enactBolus completed")
         
-        pumpManager.enactBolus(units: 1, at: Date()) { (result) in
-            switch result {
-            case .failure(let error):
+        pumpManager.enactBolus(units: 1, at: Date()) { (error) in
+            if let error = error {
                 switch error {
                 case .uncertainDelivery:
                     break
                 default:
                     XCTFail("Enact bolus should fail with uncertainDelivery error on unacknowledged command")
                 }
-            case .success:
+            } else {
                 XCTFail("Enact bolus should not succeed when send program fails with unacknowledged command")
             }
             bolusCompletion.fulfill()
@@ -610,16 +596,15 @@ class DashPumpManagerTests: XCTestCase {
         let tempBasalCompletion = expectation(description: "enactTempBasal completed")
         
         // scheduled basal rate is 1U/hr (see setUp())
-        pumpManager.enactTempBasal(unitsPerHour: 3, for: .minutes(30)) { (result) in
-            switch result {
-            case .failure(let error):
+        pumpManager.enactTempBasal(unitsPerHour: 3, for: .minutes(30)) { (error) in
+            if let error = error {
                 switch error {
                 case .uncertainDelivery:
                     break
                 default:
                     XCTFail("Enact tempBasal should fail with uncertainDelivery error on unacknowledged command")
                 }
-            case .success:
+            } else {
                 XCTFail("Enact bolus should not succeed when send program fails with unacknowledged command")
             }
             tempBasalCompletion.fulfill()
@@ -658,16 +643,15 @@ class DashPumpManagerTests: XCTestCase {
         let tempBasalCompletion = expectation(description: "enactTempBasal completed")
         
         // scheduled basal rate is 1U/hr (see setUp())
-        pumpManager.enactTempBasal(unitsPerHour: 0.5, for: .minutes(30)) { (result) in
-            switch result {
-            case .failure(let error):
+        pumpManager.enactTempBasal(unitsPerHour: 0.5, for: .minutes(30)) { (error) in
+            if let error = error {
                 switch error {
                 case .uncertainDelivery:
                     break
                 default:
                     XCTFail("Enact tempBasal should fail with uncertainDelivery error on unacknowledged command")
                 }
-            case .success:
+            } else {
                 XCTFail("Enact bolus should not succeed when send program fails with unacknowledged command")
             }
             tempBasalCompletion.fulfill()
@@ -861,15 +845,6 @@ extension DashPumpManagerTests: PumpManagerDelegate {
         return Date()
     }
 
-    func scheduleNotification(for manager: DeviceManager, identifier: String, content: UNNotificationContent, trigger: UNNotificationTrigger?) {
-    }
-    
-    func removeNotificationRequests(for manager: DeviceManager, identifiers: [String]) {
-    }
-
-    func clearNotification(for manager: DeviceManager, identifier: String) {
-    }
-        
     func deviceManager(_ manager: DeviceManager, logEventForDeviceIdentifier deviceIdentifier: String?, type: DeviceLogEntryType, message: String, completion: ((Error?) -> Void)?) {
     }
 }

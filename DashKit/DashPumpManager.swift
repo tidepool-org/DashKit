@@ -622,12 +622,6 @@ open class DashPumpManager: PumpManager {
         
     }
     
-    public func setMaximumTempBasalRate(_ rate: Double) {
-        lockedState.mutate { (state) in
-            state.maximumTempBasalRate = rate
-        }
-    }
-
     public func setTime(completion: @escaping (DashPumpManagerError?) -> Void) {
         setBasalSchedule(basalProgram: state.basalProgram, timeZone: TimeZone.currentFixed, completion: completion)
     }
@@ -879,7 +873,7 @@ open class DashPumpManager: PumpManager {
         }
     }
 
-    public func enactBolus(units: Double, at startDate: Date, completion: @escaping (PumpManagerResult<DoseEntry>) -> Void) {
+    public func  enactBolus(units: Double, at startDate: Date, completion: @escaping (PumpManagerError?) -> Void) {
         // Round to nearest supported volume
         let enactUnits = roundToSupportedBolusVolume(units: units)
 
@@ -900,15 +894,12 @@ open class DashPumpManager: PumpManager {
 
         guard let bolus = try? preflightCheck.get() else {
             if case .failure(let pumpManagerError) = preflightCheck {
-                completion(.failure(pumpManagerError))
+                completion(pumpManagerError)
             }
             return
         }
 
         let program = ProgramType.bolus(bolus: bolus)
-
-        let endDate = startDate.addingTimeInterval(enactUnits / Pod.bolusDeliveryRate)
-        let dose = DoseEntry(type: .bolus, startDate: startDate, endDate: endDate, value: enactUnits, unit: .units)
 
         sendProgram(programType: program, beepOption: beepOption) { (result) in
             switch result {
@@ -922,16 +913,16 @@ open class DashPumpManager: PumpManager {
                     state.activeTransition = nil
                 })
                 self.finalizeAndStoreDoses()
-                completion(.success(dose))
+                completion(nil)
             case .failure(let error):
                 self.mutateState({ (state) in
                     state.activeTransition = nil
                 })
                 self.finalizeAndStoreDoses()
                 if self.state.pendingCommand != nil {
-                    completion(.failure(.uncertainDelivery))
+                    completion(.uncertainDelivery)
                 } else {
-                    completion(.failure(.communication(DashPumpManagerError(error))))
+                    completion(.communication(DashPumpManagerError(error)))
                 }
             }
         }
@@ -1016,10 +1007,10 @@ open class DashPumpManager: PumpManager {
         }
     }
 
-    public func enactTempBasal(unitsPerHour: Double, for duration: TimeInterval, completion: @escaping (PumpManagerResult<DoseEntry>) -> Void) {
+    public func enactTempBasal(unitsPerHour: Double, for duration: TimeInterval, completion: @escaping (PumpManagerError?) -> Void) {
         
         guard podCommManager.podCommState == .active else {
-            completion(.failure(.deviceState(PodCommError.podIsNotActive)))
+            completion(.deviceState(PodCommError.podIsNotActive))
             return
         }
         
@@ -1036,7 +1027,7 @@ open class DashPumpManager: PumpManager {
                 program = ProgramType.tempBasal(tempBasal: tempBasal)
             }
         } catch {
-            completion(.failure(.configuration(DashPumpManagerError.invalidTempBasalRate)))
+            completion(.configuration(DashPumpManagerError.invalidTempBasalRate))
             return
         }
         
@@ -1070,14 +1061,14 @@ open class DashPumpManager: PumpManager {
         
         preflight { (error) in
             if let error = error {
-                completion(.failure(.configuration(error)))
+                completion(.configuration(error))
             } else {
                 self.log.default("preflight succeeded")
                 guard let program = program else {
                     // 0 duration temp basals are used to cancel any existing temp basal
                     let date = self.dateGenerator()
                     self.finalizeAndStoreDoses()
-                    completion(.success(DoseEntry(type: .tempBasal, startDate: date, endDate: date, value: 0, unit: .unitsPerHour)))
+                    completion(nil)
                     return
                 }
                 
@@ -1091,13 +1082,11 @@ open class DashPumpManager: PumpManager {
                 })
                 
                 guard preflightError == nil else {
-                    completion(.failure(.communication(preflightError!)))
+                    completion(.communication(preflightError!))
                     return
                 }
                 
                 let startDate = self.dateGenerator()
-                
-                let dose = DoseEntry(type: .tempBasal, startDate: startDate, endDate: startDate.addingTimeInterval(duration), value: enactRate, unit: .unitsPerHour)
                 
                 // SDK not allowing us to make calls from a callback thread, so dispatch.
                 DispatchQueue.global(qos: .userInteractive).async {
@@ -1109,9 +1098,9 @@ open class DashPumpManager: PumpManager {
                             })
                             self.finalizeAndStoreDoses()
                             if self.state.pendingCommand != nil {
-                                completion(.failure(.uncertainDelivery))
+                                completion(.uncertainDelivery)
                             } else {
-                                completion(.failure(.communication(DashPumpManagerError(error))))
+                                completion(.communication(DashPumpManagerError(error)))
                             }
                         case .success(let podStatus):
                             self.mutateState({ (state) in
@@ -1120,7 +1109,7 @@ open class DashPumpManager: PumpManager {
                                 state.activeTransition = nil
                             })
                             self.finalizeAndStoreDoses()
-                            completion(.success(dose))
+                            completion(nil)
                         }
                     }
                 }
