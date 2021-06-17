@@ -18,8 +18,8 @@ extension DashPumpManager: PumpManagerUI {
         return UIImage(named: "Onboarding", in: Bundle(for: DashSettingsViewModel.self), compatibleWith: nil)
     }
 
-    public static func setupViewController(basalSchedule: BasalRateSchedule, bluetoothProvider: BluetoothProvider, colorPalette: LoopUIColorPalette, allowDebugFeatures: Bool) -> SetupUIResult<PumpManagerViewController, PumpManagerUI> {
-        let vc = DashUICoordinator(colorPalette: colorPalette, pumpManagerType: self, basalSchedule: basalSchedule, allowDebugFeatures: allowDebugFeatures)
+    public static func setupViewController(initialSettings settings: PumpManagerSetupSettings, bluetoothProvider: BluetoothProvider, colorPalette: LoopUIColorPalette, allowDebugFeatures: Bool) -> SetupUIResult<PumpManagerViewController, PumpManagerUI> {
+        let vc = DashUICoordinator(colorPalette: colorPalette, pumpManagerType: self, basalSchedule: settings.basalSchedule, allowDebugFeatures: allowDebugFeatures)
         return .userInteractionRequired(vc)
     }
 
