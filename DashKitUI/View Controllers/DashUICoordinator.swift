@@ -90,7 +90,7 @@ class DashUICoordinator: UINavigationController, PumpManagerOnboarding, Completi
 
     private var pumpManagerType: DashPumpManager.Type?
     
-    private var initialSettings: PumpManagerSetupSettings?
+    private var basalSchedule: BasalRateSchedule?
     
     private var allowDebugFeatures: Bool
     
@@ -228,9 +228,9 @@ class DashUICoordinator: UINavigationController, PumpManagerOnboarding, Completi
                     self.pumpManager.updateExpirationReminder(intervalBeforeExpiration, completion: completion)
                 },
                 didFinish: {
-                    if let initialSettings = self.initialSettings {
+                    if !self.pumpManager.isOnboarded {
                         self.pumpManager.markOnboardingCompleted()
-                        self.pumpManagerOnboardingDelegate?.pumpManagerOnboarding(didOnboardPumpManager: self.pumpManager, withFinalSettings: initialSettings)
+                        self.pumpManagerOnboardingDelegate?.pumpManagerOnboarding(didOnboardPumpManager: self.pumpManager)
                     }
                     self.stepFinished()
                 },
@@ -293,20 +293,16 @@ class DashUICoordinator: UINavigationController, PumpManagerOnboarding, Completi
         completionDelegate?.completionNotifyingDidComplete(self)
     }
     
-    private var isOnboarding: Bool
-    
-    init(pumpManager: DashPumpManager? = nil, colorPalette: LoopUIColorPalette, pumpManagerType: DashPumpManager.Type? = nil, initialSettings: PumpManagerSetupSettings? = nil, allowDebugFeatures: Bool)
+    init(pumpManager: DashPumpManager? = nil, colorPalette: LoopUIColorPalette, pumpManagerType: DashPumpManager.Type? = nil, basalSchedule: BasalRateSchedule? = nil, allowDebugFeatures: Bool)
     {
         if pumpManager == nil {
             PodCommManager.shared.setup(withLaunchingOptions: nil)
         }
         
         if pumpManager == nil,
-           let initialSettings = initialSettings,
-           let basalRateSchedule = initialSettings.basalSchedule,
-           let maxBasalRateUnitsPerHour = initialSettings.maxBasalRateUnitsPerHour,
            let pumpManagerType = pumpManagerType,
-           let pumpManagerState = DashPumpManagerState(basalRateSchedule: basalRateSchedule, maximumTempBasalRate: maxBasalRateUnitsPerHour, lastPodCommState: .noPod)
+           let basalSchedule = basalSchedule,
+           let pumpManagerState = DashPumpManagerState(basalRateSchedule: basalSchedule, lastPodCommState: .noPod)
         {
             let pumpManager = pumpManagerType.init(state: pumpManagerState)
             self.pumpManager = pumpManager
@@ -321,9 +317,7 @@ class DashUICoordinator: UINavigationController, PumpManagerOnboarding, Completi
         
         self.pumpManagerType = pumpManagerType
 
-        self.initialSettings = initialSettings
-        
-        self.isOnboarding = initialSettings != nil
+        self.basalSchedule = basalSchedule
         
         self.allowDebugFeatures = allowDebugFeatures
         
@@ -346,10 +340,12 @@ class DashUICoordinator: UINavigationController, PumpManagerOnboarding, Completi
                 } else {
                     return .confirmAttachment
                 }
-            } else if pumpManager.podCommState == .noPod && isOnboarding {
+            } else if !pumpManager.isOnboarded {
                 if !pumpManager.initialConfigurationCompleted {
                     return .firstRunScreen
                 }
+                return .pairPod
+            } else if pumpManager.podCommState == .noPod {
                 return .pairPod
             } else {
                 return .settings

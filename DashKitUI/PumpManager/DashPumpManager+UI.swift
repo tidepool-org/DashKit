@@ -19,7 +19,7 @@ extension DashPumpManager: PumpManagerUI {
     }
 
     public static func setupViewController(initialSettings settings: PumpManagerSetupSettings, bluetoothProvider: BluetoothProvider, colorPalette: LoopUIColorPalette, allowDebugFeatures: Bool) -> SetupUIResult<PumpManagerViewController, PumpManagerUI> {
-        let vc = DashUICoordinator(colorPalette: colorPalette, pumpManagerType: self, initialSettings: settings, allowDebugFeatures: allowDebugFeatures)
+        let vc = DashUICoordinator(colorPalette: colorPalette, pumpManagerType: self, basalSchedule: settings.basalSchedule, allowDebugFeatures: allowDebugFeatures)
         return .userInteractionRequired(vc)
     }
 
