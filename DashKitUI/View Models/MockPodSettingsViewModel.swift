@@ -132,6 +132,7 @@ enum SimulatedPodAlerts: String, CaseIterable {
     case suspendInProgress
     case podExpireImminent
     case podExpiring
+    case userPodExpiration
     
     var podAlerts: PodAlerts {
         switch self {
@@ -143,6 +144,8 @@ enum SimulatedPodAlerts: String, CaseIterable {
             return PodAlerts.podExpireImminent
         case .podExpiring:
             return PodAlerts.podExpiring
+        case .userPodExpiration:
+            return PodAlerts.userPodExpiration
         }
     }
 }

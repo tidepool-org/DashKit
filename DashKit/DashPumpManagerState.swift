@@ -260,7 +260,7 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
         rawValue["unfinalizedTempBasal"] = unfinalizedTempBasal?.rawValue
         rawValue["alarmCode"] = alarmCode?.rawValue
         rawValue["pendingCommand"] = pendingCommand?.rawValue
-        rawValue["scheduledExpirationReminderOffset"] =  scheduledExpirationReminderOffset
+        rawValue["scheduledExpirationReminderOffset"] = scheduledExpirationReminderOffset
         rawValue["defaultExpirationReminderOffset"] = defaultExpirationReminderOffset
 
         return rawValue
