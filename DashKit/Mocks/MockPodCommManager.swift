@@ -203,6 +203,7 @@ public class MockPodCommManager: PodCommManagerProtocol {
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 self.podStatus!.podState = .basalProgramRunning
+                self.podStatus!.programStatus = .basalRunning
                 self.podStatus!.activeAlerts = PodAlerts(rawValue: 128)
                 eventListener(.event(.podStatus(self.podStatus!)))
             }
