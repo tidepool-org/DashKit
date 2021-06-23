@@ -1616,7 +1616,8 @@ extension DashPumpManager: PodCommManagerDelegate {
         case .podExpireImminent:
             return .podExpireImminent
         case .userPodExpiration:
-            return .userPodExpiration
+            let offset = self.state.scheduledExpirationReminderOffset ?? PodExpirationAlert.defaultTimeIntervalAlert
+            return .userPodExpiration(scheduledExpirationReminderOffset: offset)
         case .lowReservoir:
             return .lowReservoir(lowReservoirReminderValue: self.state.lowReservoirReminderValue)
         case .suspendInProgress:

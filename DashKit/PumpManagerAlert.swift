@@ -15,7 +15,7 @@ public enum PumpManagerAlert: Hashable {
     case autoOff
     case multiCommand
     case podExpireImminent
-    case userPodExpiration
+    case userPodExpiration(scheduledExpirationReminderOffset: TimeInterval)
     case lowReservoir(lowReservoirReminderValue: Double)
     case suspendInProgress
     case suspendEnded
@@ -64,8 +64,12 @@ public enum PumpManagerAlert: Hashable {
             return LocalizedString("Auto Off Alert", comment: "Alert content body for autoOff pod alert")
         case .multiCommand:
             return LocalizedString("Multiple Command Alert", comment: "Alert content body for multiCommand pod alert")
-        case .userPodExpiration:
-            return LocalizedString("Pod Expiration Reminder", comment: "Alert content body for userPodExpiration pod alert")
+        case .userPodExpiration(let offset):
+            let formatter = DateComponentsFormatter()
+            formatter.allowedUnits = [.hour]
+            formatter.unitsStyle = .full
+            let timeString = formatter.string(from: TimeInterval(offset))!
+            return String(format: LocalizedString("Pod expires in %1$@.", comment: "Format string for alert content body for userPodExpiration pod alert. (1: time until expiration)"), timeString)
         case .podExpiring:
             return LocalizedString("Change Pod now. Pod has been active for 72 hours.", comment: "Alert content body for podExpiring pod alert")
         case .podExpireImminent:
@@ -185,7 +189,10 @@ extension PumpManagerAlert: RawRepresentable {
         case "multiCommand":
             self = .multiCommand
         case "userPodExpiration":
-            self = .userPodExpiration
+            guard let offset = rawValue["offset"] as? TimeInterval else {
+                return nil
+            }
+            self = .userPodExpiration(scheduledExpirationReminderOffset: offset)
         case "podExpiring":
             self = .podExpiring
         case "podExpireImminent":
@@ -210,6 +217,8 @@ extension PumpManagerAlert: RawRepresentable {
         switch self {
         case .lowReservoir(lowReservoirReminderValue: let value):
             return ["identifier": alertIdentifier, "value": value]
+        case .userPodExpiration(scheduledExpirationReminderOffset: let offset):
+            return ["identifier": alertIdentifier, "offset": offset]
         default:
             return ["identifier:": alertIdentifier]
         }
