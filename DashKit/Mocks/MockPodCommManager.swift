@@ -94,6 +94,27 @@ public class MockPodCommManager: PodCommManagerProtocol {
     public var simulateDisconnectionOnUnacknowledgedCommand: Bool = false
     
     public var bleConnected: Bool = true
+    
+    var activationTasks: [DispatchWorkItem] = []
+    var activationDispatchGroup = DispatchGroup()
+    
+    func scheduleActivationTask(at time: TimeInterval, completion: @escaping () -> Void) {
+        let workItem = DispatchWorkItem {
+            self.activationDispatchGroup.enter()
+            completion()
+            self.activationDispatchGroup.leave()
+        }
+        activationTasks.append(workItem)
+        DispatchQueue.main.asyncAfter(deadline: .now() + time, execute: workItem)
+    }
+    
+    func cancelPodActivationTasks() {
+        for task in activationTasks {
+            task.cancel()
+        }
+        activationTasks.removeAll()
+        activationDispatchGroup.wait()
+    }
 
     public func startPodActivation(lowReservoirAlert: LowReservoirAlert?, podExpirationAlert: PodExpirationAlert?, eventListener: @escaping (ActivationStatus<ActivationStep1Event>) -> ()) {
         
@@ -111,11 +132,12 @@ public class MockPodCommManager: PodCommManagerProtocol {
             }
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+        scheduleActivationTask(at: 2) {
             eventListener(.event(.connecting))
             self.dashPumpManager?.podCommManager(self, connectionStateDidChange: .tryConnecting)
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 7) {
+        
+        scheduleActivationTask(at: 7) {
             self.dashPumpManager?.podCommManager(self, connectionStateDidChange: .connected)
             // Start out with 100U
             self.podStatus = MockPodStatus(activationDate: self.dateGenerator(), podState: .uninitialized, programStatus: ProgramStatus(rawValue: 0), activeAlerts: PodAlerts(rawValue: 128), bolusUnitsRemaining: 0, initialInsulinAmount: 100)
@@ -130,55 +152,56 @@ public class MockPodCommManager: PodCommManagerProtocol {
             return
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
+        scheduleActivationTask(at: 10) {
             eventListener(.event(.settingPodUid))
         }
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 11) {
+        scheduleActivationTask(at: 11) {
             eventListener(.event(.programmingLowReservoirAlert))
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 11.5) {
+        scheduleActivationTask(at: 11.5) {
             self.podStatus?.podState = .uidSet
             self.podStatus?.lowReservoirAlert = lowReservoirAlert
             eventListener(.event(.podStatus(self.podStatus!)))
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 12) {
+        scheduleActivationTask(at: 12) {
             eventListener(.event(.programmingLumpOfCoal))
         }
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 12.5) {
+        scheduleActivationTask(at: 12.5) {
             self.podStatus!.activeAlerts = PodAlerts(rawValue: 0)
             eventListener(.event(.podStatus(self.podStatus!)))
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 12.8) {
+        scheduleActivationTask(at: 12.8) {
             eventListener(.event(.primingPod))
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 15) {
+        scheduleActivationTask(at: 15) {
             self.podStatus!.podState = .engagingClutchDrive
             eventListener(.event(.podStatus(self.podStatus!)))
         }
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 30) {
+        scheduleActivationTask(at: 30) {
             eventListener(.event(.checkingPodStatus))
         }
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 30.5) {
+        scheduleActivationTask(at: 30.5) {
             self.podStatus!.podState = .clutchDriveEngaged
             self.podStatus!.insulinDelivered = 1.40
             eventListener(.event(.podStatus(self.podStatus!)))
             eventListener(.event(.programmingPodExpireAlert))
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 31) {
+        scheduleActivationTask(at: 31) {
             eventListener(.event(.podStatus(self.podStatus!)))
         }
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 32) {
+        scheduleActivationTask(at: 32) {
             eventListener(.event(.step1Completed))
+            self.activationTasks.removeAll()
         }
     }
     
@@ -190,54 +213,55 @@ public class MockPodCommManager: PodCommManagerProtocol {
         }
         
         if let error = nextCommsError {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            scheduleActivationTask(at: 2) {
                 eventListener(.error(error))
             }
         } else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            scheduleActivationTask(at: 0.2) {
                 eventListener(.event(.programmingActiveBasal))
                 self.podStatus?.basalProgram = basalProgram
                 self.podStatus?.basalProgramStartOffset = secondsSinceMidnight.map {Double($0)} ?? -Calendar.current.startOfDay(for: self.dateGenerator()).timeIntervalSinceNow
                 self.podStatus?.basalProgramStartDate = self.dateGenerator()
             }
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            scheduleActivationTask(at: 0.5) {
                 self.podStatus!.podState = .basalProgramRunning
                 self.podStatus!.programStatus = .basalRunning
                 self.podStatus!.activeAlerts = PodAlerts(rawValue: 128)
                 eventListener(.event(.podStatus(self.podStatus!)))
             }
 
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            scheduleActivationTask(at: 1) {
                 eventListener(.event(.cancelLumpOfCoalProgrammingAutoOff))
                 self.podStatus!.activeAlerts = PodAlerts(rawValue: 0)
                 eventListener(.event(.podStatus(self.podStatus!)))
             }
 
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
+            scheduleActivationTask(at: 1.2) {
                 eventListener(.event(.insertingCannula))
             }
 
-            DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+            scheduleActivationTask(at: 4) {
                 self.podStatus!.podState = .priming
                 self.podStatus!.bolusUnitsRemaining = 50
                 eventListener(.event(.podStatus(self.podStatus!)))
             }
 
-            DispatchQueue.main.asyncAfter(deadline: .now() + 14) {
+            scheduleActivationTask(at: 14) {
                 eventListener(.event(.checkingPodStatus))
             }
 
-            DispatchQueue.main.asyncAfter(deadline: .now() + 15) {
+            scheduleActivationTask(at: 15) {
                 self.podStatus!.podState = .runningAboveMinVolume
                 self.podStatus!.bolusUnitsRemaining = 0
                 self.podStatus!.insulinDelivered = 1.90
                 eventListener(.event(.podStatus(self.podStatus!)))
             }
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 16) {
+            scheduleActivationTask(at: 16) {
                 self.podCommState = .active
                 eventListener(.event(.step2Completed))
+                self.activationTasks.removeAll()
             }
         }
     }
@@ -303,6 +327,7 @@ public class MockPodCommManager: PodCommManagerProtocol {
     }
     
     private func setDeactivatedState() {
+        cancelPodActivationTasks()
         podStatus = nil
         podCommState = .noPod
     }
