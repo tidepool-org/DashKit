@@ -109,13 +109,11 @@ public class MockPodCommManager: PodCommManagerProtocol {
     }
     
     func cancelPodActivationTasks() {
-        print("cleaning up pod activation tasks")
         for task in activationTasks {
             task.cancel()
         }
         activationTasks.removeAll()
         activationDispatchGroup.wait()
-        print("pod activation cleanup finished")
     }
 
     public func startPodActivation(lowReservoirAlert: LowReservoirAlert?, podExpirationAlert: PodExpirationAlert?, eventListener: @escaping (ActivationStatus<ActivationStep1Event>) -> ()) {
