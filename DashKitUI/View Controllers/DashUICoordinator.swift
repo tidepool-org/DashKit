@@ -345,8 +345,6 @@ class DashUICoordinator: UINavigationController, PumpManagerOnboarding, Completi
                     return .firstRunScreen
                 }
                 return .pairPod
-            } else if pumpManager.podCommState == .noPod {
-                return .pairPod
             } else {
                 return .settings
             }
