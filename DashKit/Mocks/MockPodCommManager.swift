@@ -268,6 +268,15 @@ public class MockPodCommManager: PodCommManagerProtocol {
     
     public func issueAlerts(_ alerts: PodAlerts) {
         if var podStatus = podStatus {
+            switch alerts {
+            case .userPodExpiration:
+                if let intervalBeforeExpiration = self.podStatus?.podExpirationAlert?.intervalBeforeExpiration {
+                    self.podStatus?.activationDate = Date().addingTimeInterval(intervalBeforeExpiration - Pod.lifetime)
+                }
+            default:
+                break
+            }
+            
             podStatus.activeAlerts.insert(alerts)
             self.podStatus = podStatus
             self.dashPumpManager?.podCommManagerHasAlerts(podStatus.activeAlerts)
