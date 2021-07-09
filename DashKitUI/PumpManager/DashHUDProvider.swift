@@ -31,6 +31,8 @@ internal class DashHUDProvider: NSObject, HUDProvider {
     private let bluetoothProvider: BluetoothProvider
 
     private let colorPalette: LoopUIColorPalette
+    
+    private var refreshTimer: Timer?
 
     var visible: Bool = false {
         didSet {
@@ -63,6 +65,7 @@ internal class DashHUDProvider: NSObject, HUDProvider {
     func hudDidAppear() {
         updateReservoirView()
         pumpManager.getPodStatus { (_) in }
+        updateRefreshTimer()
     }
     
     public var hudViewRawState: HUDProvider.HUDViewRawState {
@@ -128,10 +131,38 @@ internal class DashHUDProvider: NSObject, HUDProvider {
             }
         }
     }
+    
+    private func ensureRefreshTimerRunning() {
+        guard refreshTimer == nil else {
+            return
+        }
+        
+        // 40 seconds is time for one unit
+        refreshTimer = Timer(timeInterval: .seconds(40) , repeats: true) { _ in
+            self.pumpManager.getPodStatus { _ in
+                self.updateReservoirView()
+            }
+        }
+        RunLoop.main.add(refreshTimer!, forMode: .default)
+    }
+    
+    private func stopRefreshTimer() {
+        refreshTimer?.invalidate()
+        refreshTimer = nil
+    }
+    
+    private func updateRefreshTimer() {
+        if case .inProgress = pumpManager.status.bolusState, visible {
+            ensureRefreshTimerRunning()
+        } else {
+            stopRefreshTimer()
+        }
+    }
 }
 
 extension DashHUDProvider: PodStatusObserver {
     func didUpdatePodStatus() {
+        updateRefreshTimer()
         updateReservoirView()
     }
 }
