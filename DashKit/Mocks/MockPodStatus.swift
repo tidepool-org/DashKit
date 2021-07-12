@@ -20,6 +20,8 @@ public struct MockPodStatus: PodStatus, Equatable {
     public var activeAlerts: PodAlerts
 
     public var bolusUnitsRemaining: Int
+    
+    public var currentBolusDelivered: Double = 0
 
     public var insulinDelivered: Double
     
@@ -35,7 +37,7 @@ public struct MockPodStatus: PodStatus, Equatable {
 
     public var reservoirUnitsRemaining: Int {
         get {
-            let remaining = initialInsulinAmount - insulinDelivered
+            let remaining = initialInsulinAmount - insulinDelivered - currentBolusDelivered
             
             if remaining > Pod.maximumReservoirReading {
                 return ReservoirLevel.aboveThresholdMagicNumber
@@ -198,9 +200,13 @@ public struct MockPodStatus: PodStatus, Equatable {
         }
         insulinDelivered += basalDelivery
 
-        if let bolus = bolus, bolus.isFinished(at: now) {
-            insulinDelivered += bolus.units
-            self.bolus = nil
+        if let bolus = bolus {
+            if bolus.isFinished(at: now) {
+                insulinDelivered += bolus.units
+                self.bolus = nil
+            } else {
+                currentBolusDelivered = bolus.progress(at: now) * bolus.units
+            }
         }
         
         if let tempBasal = tempBasal, tempBasal.isFinished(at: now) {
