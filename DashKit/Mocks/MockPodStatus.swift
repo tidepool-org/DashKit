@@ -26,6 +26,8 @@ public struct MockPodStatus: PodStatus, Equatable {
     public var insulinDelivered: Double
     
     public var lowReservoirAlert: LowReservoirAlert?
+    
+    public var podExpirationAlert: PodExpirationAlert?
 
     public var totalUnitsDelivered: Int {
         return Int(insulinDelivered / Pod.podSDKInsulinMultiplier)
@@ -342,6 +344,11 @@ extension MockPodStatus: RawRepresentable {
         {
             self.lowReservoirAlert = lowReservoirAlert
         }
+        
+        if let podExpirationAlertRaw = rawValue["podExpirationAlert"] as? PodExpirationAlert.RawValue, let podExpirationAlert = PodExpirationAlert(rawValue: podExpirationAlertRaw)
+        {
+            self.podExpirationAlert = podExpirationAlert
+        }
 
     }
     
@@ -370,6 +377,7 @@ extension MockPodStatus: RawRepresentable {
         rawValue["alarmReferenceCode"] = alarmReferenceCode
         rawValue["podCommState"] = try? JSONEncoder().encode(podCommState)
         rawValue["lowReservoirAlert"] = lowReservoirAlert?.rawValue
+        rawValue["podExpirationAlert"] = podExpirationAlert?.rawValue
 
         return rawValue
     }
@@ -389,6 +397,25 @@ extension LowReservoirAlert: RawRepresentable {
     public var rawValue: RawValue {
         let rawValue: RawValue = [
             "reservoirVolumeBelow": reservoirVolumeBelow,
+        ]
+        return rawValue
+    }
+}
+
+extension PodExpirationAlert: RawRepresentable {
+    public typealias RawValue = [String: Any]
+
+    public init?(rawValue: RawValue) {
+        guard let intervalBeforeExpiration = rawValue["intervalBeforeExpiration"] as? TimeInterval else {
+            return nil
+        }
+        
+        try? self.init(intervalBeforeExpiration: intervalBeforeExpiration)
+    }
+    
+    public var rawValue: RawValue {
+        let rawValue: RawValue = [
+            "intervalBeforeExpiration": intervalBeforeExpiration,
         ]
         return rawValue
     }

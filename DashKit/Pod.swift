@@ -36,6 +36,9 @@ public struct Pod {
     // Time from pod activation until expiration
     public static let lifetime = TimeInterval(hours: 72)
 
+    // Time from pod activation until podExpireImminent alert
+    public static let expirationImminentInterval = TimeInterval(hours: 79)
+
     // Time from expiration until pod fault
     public static let expirationWindow = TimeInterval(hours: 8)
 
