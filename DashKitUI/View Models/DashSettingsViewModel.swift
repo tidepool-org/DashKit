@@ -308,7 +308,7 @@ extension DashPumpManager {
                 if podTimeRemaining > 0 {
                     return .timeRemaining(podTimeRemaining)
                 } else {
-                    return .expiredFor(-podTimeRemaining)
+                    return .expired
                 }
             } else {
                 return .podDeactivating

@@ -18,7 +18,7 @@ enum PodLifeState {
     // Time remaining
     case timeRemaining(TimeInterval)
     // Time since expiry
-    case expiredFor(TimeInterval)
+    case expired
     case podDeactivating
     case podAlarm(PodAlarm?, TimeInterval?)
     case systemError(SystemError, TimeInterval?)
@@ -28,8 +28,8 @@ enum PodLifeState {
         switch self {
         case .timeRemaining(let timeRemaining):
             return max(0, min(1, (1 - (timeRemaining / Pod.lifetime))))
-        case .expiredFor(let expiryAge):
-            return max(0, min(1, expiryAge / Pod.expirationWindow))
+        case .expired:
+            return 1
         case .podAlarm(let alarm, let timestampOfAlarm):
             switch alarm?.alarmCode {
             case .podExpired:
@@ -48,7 +48,7 @@ enum PodLifeState {
     
     func progressColor(insulinTintColor: Color, guidanceColors: GuidanceColors) -> Color {
         switch self {
-        case .expiredFor:
+        case .expired:
             return guidanceColors.critical
         case .podAlarm(let alarm, _):
             switch alarm?.alarmCode {
@@ -65,10 +65,12 @@ enum PodLifeState {
     }
     
     func labelColor(using guidanceColors: GuidanceColors) -> Color  {
-        if case .podAlarm = self {
+        switch self {
+        case .podAlarm, .expired:
             return guidanceColors.critical
+        default:
+            return .secondary
         }
-        return .secondary
     }
 
     
@@ -78,7 +80,7 @@ enum PodLifeState {
             return LocalizedString("Unfinished Activation", comment: "Label for pod life state when pod not fully activated")
         case .timeRemaining:
             return LocalizedString("Pod expires in", comment: "Label for pod life state when time remaining")
-        case .expiredFor:
+        case .expired:
             return LocalizedString("Pod expired", comment: "Label for pod life state when within pod expiration window")
         case .podDeactivating:
             return LocalizedString("Unfinished deactivation", comment: "Label for pod life state when pod not fully deactivated")
@@ -126,7 +128,7 @@ enum PodLifeState {
 
     var isActive: Bool {
         switch self {
-        case .expiredFor, .timeRemaining:
+        case .expired, .timeRemaining:
             return true
         default:
             return false

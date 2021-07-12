@@ -141,6 +141,7 @@ public class MockPodCommManager: PodCommManagerProtocol {
             self.dashPumpManager?.podCommManager(self, connectionStateDidChange: .connected)
             // Start out with 100U
             self.podStatus = MockPodStatus(activationDate: self.dateGenerator(), podState: .uninitialized, programStatus: ProgramStatus(rawValue: 0), activeAlerts: PodAlerts(rawValue: 128), bolusUnitsRemaining: 0, initialInsulinAmount: 100)
+            self.podStatus!.podExpirationAlert = podExpirationAlert
             self.podCommState = .activating
             eventListener(.event(.retrievingPodVersion))
             if incompatiblePod {
@@ -270,9 +271,13 @@ public class MockPodCommManager: PodCommManagerProtocol {
         if var podStatus = podStatus {
             switch alerts {
             case .userPodExpiration:
-                if let intervalBeforeExpiration = self.podStatus?.podExpirationAlert?.intervalBeforeExpiration {
-                    self.podStatus?.activationDate = Date().addingTimeInterval(intervalBeforeExpiration - Pod.lifetime)
+                if let intervalBeforeExpiration = podStatus.podExpirationAlert?.intervalBeforeExpiration {
+                    podStatus.activationDate = Date().addingTimeInterval(intervalBeforeExpiration - Pod.lifetime)
                 }
+            case .podExpiring:
+                podStatus.activationDate = Date().addingTimeInterval(-Pod.lifetime)
+            case .podExpireImminent:
+                podStatus.activationDate = Date().addingTimeInterval(-Pod.expirationImminentInterval)
             default:
                 break
             }
@@ -294,6 +299,9 @@ public class MockPodCommManager: PodCommManagerProtocol {
     public func triggerAlarm(_ alarmCode: AlarmCode, alarmDate: Date = Date()) {
         guard var podStatus = podStatus else {
             return
+        }
+        if alarmCode == .podExpired {
+            podStatus.activationDate = Date().addingTimeInterval(-Pod.lifetime-Pod.expirationWindow)
         }
         podStatus.enterAlarmState(alarmCode: alarmCode, alarmDescription: String(describing: alarmCode), didErrorOccuredFetchingBolusInfo: false, alarmDate: alarmDate, referenceCode: "0000-mock-pod-0000")
         self.podStatus = podStatus
