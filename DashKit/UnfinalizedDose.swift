@@ -82,9 +82,6 @@ public struct UnfinalizedDose: RawRepresentable, Equatable, CustomStringConverti
         get {
             return duration != nil ? startTime.addingTimeInterval(duration!) : nil
         }
-        set {
-            duration = newValue?.timeIntervalSince(startTime)
-        }
     }
 
     public func progress(at date: Date) -> Double {
@@ -159,7 +156,14 @@ public struct UnfinalizedDose: RawRepresentable, Equatable, CustomStringConverti
             programmedRate = oldRate
         }
         
-        duration = max(0, date.timeIntervalSince(startTime))
+        let newDuration = date.timeIntervalSince(startTime)
+        
+        guard newDuration > 0 else {
+            // endTime > startTime is invalid; clock shift must have happened. Assume full delivery
+            return
+        }
+        
+        duration = newDuration
         if let remainingHundredths = remainingHundredths {
             units = units - (Double(remainingHundredths) / Pod.podSDKInsulinMultiplier)
         } else if let duration = duration {
