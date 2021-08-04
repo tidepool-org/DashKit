@@ -163,7 +163,9 @@ public struct UnfinalizedDose: RawRepresentable, Equatable, CustomStringConverti
             return
         }
         
-        duration = newDuration
+        // Do not let canceled duration exceed original
+        duration = min(duration ?? .infinity, newDuration)
+        
         if let remainingHundredths = remainingHundredths {
             units = units - (Double(remainingHundredths) / Pod.podSDKInsulinMultiplier)
         } else if let duration = duration {
