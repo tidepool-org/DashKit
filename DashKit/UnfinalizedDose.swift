@@ -79,9 +79,7 @@ public struct UnfinalizedDose: RawRepresentable, Equatable, CustomStringConverti
     var scheduledCertainty: ScheduledCertainty
 
     var endTime: Date? {
-        get {
-            return duration != nil ? startTime.addingTimeInterval(duration!) : nil
-        }
+        return duration != nil ? startTime.addingTimeInterval(duration!) : nil
     }
 
     public func progress(at date: Date) -> Double {
