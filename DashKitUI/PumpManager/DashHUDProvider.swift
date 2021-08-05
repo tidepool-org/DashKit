@@ -33,6 +33,8 @@ internal class DashHUDProvider: NSObject, HUDProvider {
     private let colorPalette: LoopUIColorPalette
     
     private var refreshTimer: Timer?
+    
+    private let allowedInsulinTypes: [InsulinType]
 
     var visible: Bool = false {
         didSet {
@@ -42,10 +44,11 @@ internal class DashHUDProvider: NSObject, HUDProvider {
         }
     }
 
-    public init(pumpManager: DashPumpManager, bluetoothProvider: BluetoothProvider, colorPalette: LoopUIColorPalette) {
+    public init(pumpManager: DashPumpManager, bluetoothProvider: BluetoothProvider, colorPalette: LoopUIColorPalette, allowedInsulinTypes: [InsulinType]) {
         self.pumpManager = pumpManager
         self.bluetoothProvider = bluetoothProvider
         self.colorPalette = colorPalette
+        self.allowedInsulinTypes = allowedInsulinTypes
         super.init()
         self.pumpManager.addPodStatusObserver(self, queue: .main)
     }
@@ -58,7 +61,7 @@ internal class DashHUDProvider: NSObject, HUDProvider {
     }
 
     public func didTapOnHUDView(_ view: BaseHUDView, allowDebugFeatures: Bool) -> HUDTapAction? {
-        let vc = pumpManager.settingsViewController(bluetoothProvider: bluetoothProvider, colorPalette: colorPalette, allowDebugFeatures: allowDebugFeatures)
+        let vc = pumpManager.settingsViewController(bluetoothProvider: bluetoothProvider, colorPalette: colorPalette, allowDebugFeatures: allowDebugFeatures, allowedInsulinTypes: allowedInsulinTypes)
         return HUDTapAction.presentViewController(vc)
     }
 

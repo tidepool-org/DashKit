@@ -303,6 +303,7 @@ open class DashPumpManager: PumpManager {
             pumpBatteryChargeRemaining: nil,
             basalDeliveryState: basalDeliveryState(for: state),
             bolusState: bolusState(for: state),
+            insulinType: nil, // Not supporting insulin type yet
             deliveryIsUncertain: state.pendingCommand != nil
         )
     }
@@ -873,7 +874,7 @@ open class DashPumpManager: PumpManager {
         }
     }
 
-    public func  enactBolus(units: Double, at startDate: Date, completion: @escaping (PumpManagerError?) -> Void) {
+    public func  enactBolus(units: Double, automatic: Bool, completion: @escaping (PumpManagerError?) -> Void) {
         // Round to nearest supported volume
         let enactUnits = roundToSupportedBolusVolume(units: units)
 
@@ -900,6 +901,7 @@ open class DashPumpManager: PumpManager {
         }
 
         let program = ProgramType.bolus(bolus: bolus)
+        let startDate = self.dateGenerator()
 
         sendProgram(programType: program, beepOption: beepOption) { (result) in
             switch result {
@@ -1066,7 +1068,6 @@ open class DashPumpManager: PumpManager {
                 self.log.default("preflight succeeded")
                 guard let program = program else {
                     // 0 duration temp basals are used to cancel any existing temp basal
-                    let date = self.dateGenerator()
                     self.finalizeAndStoreDoses()
                     completion(nil)
                     return

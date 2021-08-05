@@ -126,7 +126,7 @@ class DashPumpManagerTests: XCTestCase {
         let delivered = mockPodCommManager.podStatus!.initialInsulinAmount - 5.0
         mockPodCommManager.podStatus?.insulinDelivered = delivered
 
-        pumpManager.enactBolus(units: 1, at: startDate) { (error) in
+        pumpManager.enactBolus(units: 1, automatic: false) { (error) in
             bolusCallbacks.fulfill()
             if let error = error {
                 XCTFail("enactBolus failed with error: \(error)")
@@ -142,7 +142,6 @@ class DashPumpManagerTests: XCTestCase {
         }
 
         XCTAssertEqual(1, dose.programmedUnits)
-        XCTAssertEqual(startDate, dose.startDate)
 
         XCTAssert(!posStatusUpdates.isEmpty)
         let lastState = posStatusUpdates.last!
@@ -172,7 +171,7 @@ class DashPumpManagerTests: XCTestCase {
 
         mockPodCommManager.nextCommsError = .podNotAvailable
 
-        pumpManager.enactBolus(units: 1, at: startDate) { (error) in
+        pumpManager.enactBolus(units: 1, automatic: false) { (error) in
             bolusCallbacks.fulfill()
             if let error = error {
                 switch error {
@@ -197,7 +196,7 @@ class DashPumpManagerTests: XCTestCase {
 
         let enactBolusCallbackExpectation = expectation(description: "enact bolus callbacks")
 
-        pumpManager.enactBolus(units: 1, at: dateGenerator()) { (result) in
+        pumpManager.enactBolus(units: 1, automatic: false) { (result) in
             enactBolusCallbackExpectation.fulfill()
         }
         waitForExpectations(timeout: 3)
@@ -379,7 +378,7 @@ class DashPumpManagerTests: XCTestCase {
 
         pumpEventStorageExpectation = expectation(description: "pumpmanager stores bolus")
 
-        pumpManager.enactBolus(units: 5, at: simulatedDate) { (result) in
+        pumpManager.enactBolus(units: 5, automatic: false) { (result) in
             bolusCallbacks.fulfill()
         }
 
@@ -475,7 +474,7 @@ class DashPumpManagerTests: XCTestCase {
         pumpManagerStatusUpdateExpectation = expectation(description: "pumpmanager status updates")
         pumpManagerStatusUpdateExpectation?.assertForOverFulfill = false
 
-        pumpManager.enactBolus(units: 1, at: Date()) { (error) in
+        pumpManager.enactBolus(units: 1, automatic: false) { (error) in
             if let error = error {
                 switch error {
                 case .uncertainDelivery:
@@ -513,7 +512,7 @@ class DashPumpManagerTests: XCTestCase {
         mockPodCommManager.nextCommsError = .unacknowledgedCommandPendingRetry
         let bolusCompletion = expectation(description: "enactBolus completed")
 
-        pumpManager.enactBolus(units: 1, at: Date()) { (error) in
+        pumpManager.enactBolus(units: 1, automatic: false) { (error) in
             if let error = error {
                 switch error {
                 case .uncertainDelivery:
@@ -549,7 +548,7 @@ class DashPumpManagerTests: XCTestCase {
         mockPodCommManager.nextCommsError = .unacknowledgedCommandPendingRetry
         let bolusCompletion = expectation(description: "enactBolus completed")
         
-        pumpManager.enactBolus(units: 1, at: Date()) { (error) in
+        pumpManager.enactBolus(units: 1, automatic: false) { (error) in
             if let error = error {
                 switch error {
                 case .uncertainDelivery:
