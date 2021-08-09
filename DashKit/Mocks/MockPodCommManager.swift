@@ -467,10 +467,19 @@ public class MockPodCommManager: PodCommManagerProtocol {
             completion(.failure(.podIsNotActive))
             return
         }
-        podStatus.activeAlerts = podStatus.activeAlerts.subtracting(alert)
-        silencedAlerts.append(alert)
-        self.podStatus = podStatus
-        completion(.success(podStatus))
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + simulatedCommsDelay) {
+            if let error = self.nextCommsError {
+                completion(.failure(error))
+                self.nextCommsError = nil
+                return
+            }
+            
+            podStatus.activeAlerts = podStatus.activeAlerts.subtracting(alert)
+            self.silencedAlerts.append(alert)
+            self.podStatus = podStatus
+            completion(.success(podStatus))
+        }
     }
 
     public func retryUnacknowledgedCommand(completion: @escaping (PodCommResult<PodStatus>) -> ()) {

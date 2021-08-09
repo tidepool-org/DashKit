@@ -433,7 +433,7 @@ class DashPumpManagerTests: XCTestCase {
         
         let issuedAlert = alertsIssued.last!
         
-        pumpManager.acknowledgeAlert(alertIdentifier: issuedAlert.identifier.alertIdentifier)
+        pumpManager.acknowledgeAlert(alertIdentifier: issuedAlert.identifier.alertIdentifier) { (error) in }
         
         XCTAssert(!mockPodCommManager.silencedAlerts.isEmpty)
     }

@@ -86,6 +86,8 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
     
     public var activeAlerts: Set<PumpManagerAlert>
     
+    public var alertsWithPendingAcknowledgment: Set<PumpManagerAlert>
+
     public var acknowledgedTimeOffsetAlert: Bool
     
     // Indicates that the user has completed initial configuration
@@ -125,6 +127,7 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
         self.finishedDoses = []
         self.suspendState = .resumed(dateGenerator())
         self.activeAlerts = []
+        self.alertsWithPendingAcknowledgment = []
         self.lastPodCommState = lastPodCommState
         self.lastPodCommDate = dateGenerator()
         self.lowReservoirReminderValue = Pod.defaultLowReservoirReminder
@@ -199,7 +202,16 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
                 }
             }
         }
-        
+
+        self.alertsWithPendingAcknowledgment = []
+        if let rawAlerts = rawValue["alertsWithPendingAcknowledgment"] as? [PumpManagerAlert.RawValue] {
+            for rawAlert in rawAlerts {
+                if let alert = PumpManagerAlert(rawValue: rawAlert) {
+                    self.alertsWithPendingAcknowledgment.insert(alert)
+                }
+            }
+        }
+
         self.acknowledgedTimeOffsetAlert = rawValue["acknowledgedTimeOffsetAlert"] as? Bool ?? false
         
         if let rawPendingCommand = rawValue["pendingCommand"] as? PendingCommand.RawValue {
@@ -240,6 +252,7 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
             "finishedDoses": finishedDoses.map( { $0.rawValue }),
             "basalProgram": basalProgram.rawValue,
             "activeAlerts": activeAlerts.map { $0.rawValue },
+            "alertsWithPendingAcknowledgment": alertsWithPendingAcknowledgment.map { $0.rawValue },
             "lowReservoirReminderValue": lowReservoirReminderValue,
             "podAttachmentConfirmed": podAttachmentConfirmed,
             "confidenceRemindersEnabled": confidenceRemindersEnabled,
@@ -306,6 +319,7 @@ extension DashPumpManagerState: CustomDebugStringConvertible {
             "* defaultExpirationReminderOffset: \(defaultExpirationReminderOffset)",
             "* podAttachmentConfirmed: \(podAttachmentConfirmed)",
             "* activeAlerts: \(activeAlerts)",
+            "* alertsWithPendingAcknowledgment: \(alertsWithPendingAcknowledgment)",
             "* confidenceRemindersEnabled: \(confidenceRemindersEnabled)",
             "* acknowledgedTimeOffsetAlert: \(acknowledgedTimeOffsetAlert)",
             "* initialConfigurationCompleted: \(initialConfigurationCompleted)",
