@@ -73,7 +73,6 @@ class DashPumpManagerTests: XCTestCase {
         mockPodCommManager = MockPodCommManager(podStatus: podStatus, dateGenerator: dateGenerator)
         mockPodCommManager.simulatedCommsDelay = TimeInterval(0)
         mockPodCommManager.podCommState = .active
-        mockPodCommManager.nextCommsError = nil
                 
         var state = DashPumpManagerState(basalRateSchedule: schedule, lastPodCommState: .active, dateGenerator: dateGenerator)!
         state.podActivatedAt = activation
@@ -433,7 +432,12 @@ class DashPumpManagerTests: XCTestCase {
         
         let issuedAlert = alertsIssued.last!
         
-        pumpManager.acknowledgeAlert(alertIdentifier: issuedAlert.identifier.alertIdentifier) { (error) in }
+        let acknowledgeAlertExpectation = expectation(description: "acknowledgeAlert should call completion handler")
+
+        pumpManager.acknowledgeAlert(alertIdentifier: issuedAlert.identifier.alertIdentifier) { (error) in
+            XCTAssertNil(error)
+            acknowledgeAlertExpectation.fulfill()
+        }
         
         XCTAssert(!mockPodCommManager.silencedAlerts.isEmpty)
     }
@@ -453,8 +457,6 @@ class DashPumpManagerTests: XCTestCase {
         
         mockPodCommManager.nextCommsError = .bleCommunicationError
         
-        pumpEventStorageExpectation = expectation(description: "pumpmanager stores bolus")
-
         let acknowledgeAlertExpectation = expectation(description: "acknowledgeAlert should call completion handler")
         
         pumpManager.acknowledgeAlert(alertIdentifier: issuedAlert.identifier.alertIdentifier) { (error) in
