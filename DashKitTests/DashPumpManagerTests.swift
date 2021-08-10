@@ -73,6 +73,7 @@ class DashPumpManagerTests: XCTestCase {
         mockPodCommManager = MockPodCommManager(podStatus: podStatus, dateGenerator: dateGenerator)
         mockPodCommManager.simulatedCommsDelay = TimeInterval(0)
         mockPodCommManager.podCommState = .active
+        mockPodCommManager.nextCommsError = nil
                 
         var state = DashPumpManagerState(basalRateSchedule: schedule, lastPodCommState: .active, dateGenerator: dateGenerator)!
         state.podActivatedAt = activation
@@ -423,7 +424,6 @@ class DashPumpManagerTests: XCTestCase {
         let suspendEndedAlert = PodAlerts.podExpiring
         
         pumpManagerAlertIssuanceExpectation = expectation(description: "DashPumpManager should issue alert")
-        
         
         pumpManager.podCommManagerHasAlerts(suspendEndedAlert)
 
