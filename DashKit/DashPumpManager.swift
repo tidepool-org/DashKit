@@ -1824,6 +1824,7 @@ extension DashPumpManager {
                             self.mutateState { state in
                                 state.activeAlerts.remove(alert)
                             }
+                            completion(nil)
                         case .failure:
                             self.mutateState { state in
                                 state.alertsWithPendingAcknowledgment.insert(alert)
@@ -1840,6 +1841,7 @@ extension DashPumpManager {
                             state.acknowledgedTimeOffsetAlert = true
                         }
                     }
+                    completion(nil)
                 }
             }
         }
