@@ -439,6 +439,8 @@ class DashPumpManagerTests: XCTestCase {
             acknowledgeAlertExpectation.fulfill()
         }
         
+        waitForExpectations(timeout: 3)
+
         XCTAssert(!mockPodCommManager.silencedAlerts.isEmpty)
     }
     
