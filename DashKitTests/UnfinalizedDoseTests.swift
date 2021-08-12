@@ -127,6 +127,27 @@ class UnfinalizedDoseTests: XCTestCase {
         XCTAssertEqual(dose.units, Pod.bolusDeliveryRate * .minutes(1))
     }
     
+    func testCancelWithTimeShiftKeepsFullDose() {
+        let start = Date()
+        var dose = UnfinalizedDose(bolusAmount: 3, startTime: start, scheduledCertainty: .certain)
+        dose.cancel(at: start - .hours(1))
+        XCTAssertEqual(3, dose.units)
+    }
+    
+    func testCancelAfterDoseEndDoesNotIncreaseDoseSize() {
+        let start = Date()
+        var dose = UnfinalizedDose(bolusAmount: 3, startTime: start, scheduledCertainty: .certain)
+        dose.cancel(at: start + .hours(12))
+        XCTAssertEqual(3, dose.units)
+    }
+
+    func testCancelAfterDoseEndDoesNotIncreaseDuration() {
+        let start = Date()
+        var dose = UnfinalizedDose(tempBasalRate: 1.2, startTime: start, duration: .minutes(30), scheduledCertainty: .certain)
+        dose.cancel(at: start + .hours(12))
+        XCTAssertEqual(TimeInterval.minutes(30), dose.duration)
+    }
+
     func testRawValue() {
         let amount = 3.5
         let startTime = Date()

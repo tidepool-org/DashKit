@@ -79,12 +79,7 @@ public struct UnfinalizedDose: RawRepresentable, Equatable, CustomStringConverti
     var scheduledCertainty: ScheduledCertainty
 
     var endTime: Date? {
-        get {
-            return duration != nil ? startTime.addingTimeInterval(duration!) : nil
-        }
-        set {
-            duration = newValue?.timeIntervalSince(startTime)
-        }
+        return duration != nil ? startTime.addingTimeInterval(duration!) : nil
     }
 
     public func progress(at date: Date) -> Double {
@@ -159,7 +154,16 @@ public struct UnfinalizedDose: RawRepresentable, Equatable, CustomStringConverti
             programmedRate = oldRate
         }
         
-        duration = date.timeIntervalSince(startTime)
+        let newDuration = date.timeIntervalSince(startTime)
+        
+        guard newDuration > 0 else {
+            // endTime > startTime is invalid; clock shift must have happened. Assume full delivery
+            return
+        }
+        
+        // Do not let canceled duration exceed original
+        duration = min(duration ?? .infinity, newDuration)
+        
         if let remainingHundredths = remainingHundredths {
             units = units - (Double(remainingHundredths) / Pod.podSDKInsulinMultiplier)
         } else if let duration = duration {
