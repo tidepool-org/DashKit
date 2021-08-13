@@ -423,6 +423,30 @@ class DashPumpManagerTests: XCTestCase {
         
         pumpManagerAlertIssuanceExpectation = expectation(description: "DashPumpManager should issue alert")
         
+        pumpManager.podCommManagerHasAlerts(suspendEndedAlert)
+
+        waitForExpectations(timeout: 3)
+
+        XCTAssert(!alertsIssued.isEmpty)
+        
+        let issuedAlert = alertsIssued.last!
+        
+        let acknowledgeAlertExpectation = expectation(description: "acknowledgeAlert should call completion handler")
+
+        pumpManager.acknowledgeAlert(alertIdentifier: issuedAlert.identifier.alertIdentifier) { (error) in
+            XCTAssertNil(error)
+            acknowledgeAlertExpectation.fulfill()
+        }
+        
+        waitForExpectations(timeout: 3)
+
+        XCTAssert(!mockPodCommManager.silencedAlerts.isEmpty)
+    }
+    
+    func testAlertAcknowledgementWithError() {
+        let suspendEndedAlert = PodAlerts.podExpiring
+        
+        pumpManagerAlertIssuanceExpectation = expectation(description: "DashPumpManager should issue alert")
         
         pumpManager.podCommManagerHasAlerts(suspendEndedAlert)
 
@@ -432,10 +456,18 @@ class DashPumpManagerTests: XCTestCase {
         
         let issuedAlert = alertsIssued.last!
         
-        pumpManager.acknowledgeAlert(alertIdentifier: issuedAlert.identifier.alertIdentifier)
+        mockPodCommManager.nextCommsError = .bleCommunicationError
         
-        XCTAssert(!mockPodCommManager.silencedAlerts.isEmpty)
+        let acknowledgeAlertExpectation = expectation(description: "acknowledgeAlert should call completion handler")
+        
+        pumpManager.acknowledgeAlert(alertIdentifier: issuedAlert.identifier.alertIdentifier) { (error) in
+            XCTAssertNotNil(error)
+            acknowledgeAlertExpectation.fulfill()
+        }
+
+        waitForExpectations(timeout: 3)
     }
+
 
     func testAlertIssuanceAndRetraction() {
         let suspendEndedAlert = PodAlerts.suspendEnded

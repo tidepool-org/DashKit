@@ -472,6 +472,7 @@ open class DashPumpManager: PumpManager {
                 self.mutateState({ (state) in
                     state.updateFromPodStatus(status: status)
                 })
+                self.silenceAcknowledgedAlerts()
             }
             completion(response)
         }
@@ -1761,6 +1762,24 @@ extension DashPumpManager: PodCommManagerDelegate {
     public func podCommManager(_ podCommManager: PodCommManager, podCommStateDidChange podCommState: PodCommState) {
         self.podCommManager(podCommManager as PodCommManagerProtocol, podCommStateDidChange: podCommState)
     }
+    
+    private func silenceAcknowledgedAlerts() {
+        for alert in state.alertsWithPendingAcknowledgment {
+            if alert.podAlerts != PodAlerts() {
+                podCommManager.silenceAlerts(alert: alert.podAlerts) { (result) in
+                    switch result {
+                    case .success:
+                        self.mutateState { state in
+                            state.activeAlerts.remove(alert)
+                        }
+                    case .failure:
+                        // Ignore failures here
+                        break
+                    }
+                }
+            }
+        }
+    }
 
     public func podCommManager(_ podCommManager: PodCommManagerProtocol, connectionStateDidChange connectionState: ConnectionState) {
         // TODO: log this as a connection event.
@@ -1773,6 +1792,7 @@ extension DashPumpManager: PodCommManagerDelegate {
             if !isPeriodicStatusCheckConfigured {
                 configurePeriodicStatusCheck()
             }
+            silenceAcknowledgedAlerts()
         }
         
         self.mutateState { (state) in
@@ -1796,8 +1816,7 @@ extension DashPumpManager: PodSDKLoggingShimDelegate {
 
 // MARK: - AlertResponder implementation
 extension DashPumpManager {
-    public func acknowledgeAlert(alertIdentifier: Alert.AlertIdentifier) {
-        
+    public func acknowledgeAlert(alertIdentifier: Alert.AlertIdentifier, completion: @escaping (Error?) -> Void) {
         for alert in state.activeAlerts {
             if alert.alertIdentifier == alertIdentifier {
                 if alert.podAlerts != PodAlerts() {
@@ -1807,8 +1826,12 @@ extension DashPumpManager {
                             self.mutateState { state in
                                 state.activeAlerts.remove(alert)
                             }
+                            completion(nil)
                         case .failure:
-                            // already logged
+                            self.mutateState { state in
+                                state.alertsWithPendingAcknowledgment.insert(alert)
+                            }
+                            completion(DashPumpManagerError.acknowledgingAlertFailed)
                             break
                         }
                     }
@@ -1820,6 +1843,7 @@ extension DashPumpManager {
                             state.acknowledgedTimeOffsetAlert = true
                         }
                     }
+                    completion(nil)
                 }
             }
         }
