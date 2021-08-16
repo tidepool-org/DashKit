@@ -8,7 +8,7 @@
 
 import Foundation
 
-public enum ReservoirLevelHighlightState {
+public enum ReservoirLevelHighlightState: String, Equatable {
     case normal
     case warning
     case critical

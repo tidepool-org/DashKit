@@ -39,7 +39,7 @@ public final class OmnipodReservoirView: LevelHUDView, NibLoadable {
 
     private var reservoirLevel: ReservoirLevel?
     private var lastUpdateDate: Date?
-    private var reservoirAlertState = ReservoirAlertState.ok
+    private var reservoirLevelHighlightState = ReservoirLevelHighlightState.normal
 
     override public func tintColorDidChange() {
         super.tintColorDidChange()
@@ -49,13 +49,14 @@ public final class OmnipodReservoirView: LevelHUDView, NibLoadable {
         levelMaskView.tintColor = tintColor
     }
 
-    
     override public func updateColor() {
-        switch reservoirAlertState {
-        case .lowReservoir, .empty:
-            tintColor = stateColors?.warning
-        case .ok:
+        switch reservoirLevelHighlightState {
+        case .normal:
             tintColor = stateColors?.normal
+        case .warning:
+            tintColor = stateColors?.warning
+        case .critical:
+            tintColor = stateColors?.error
         }
     }
 
@@ -105,10 +106,10 @@ public final class OmnipodReservoirView: LevelHUDView, NibLoadable {
         }
 
         var alertLabelAlpha: CGFloat = 1
-        switch reservoirAlertState {
-        case .ok:
+        switch reservoirLevelHighlightState {
+        case .normal:
             alertLabelAlpha = 0
-        case .lowReservoir, .empty:
+        case .warning, .critical:
             alertLabel?.text = "!"
         }
 
@@ -117,10 +118,10 @@ public final class OmnipodReservoirView: LevelHUDView, NibLoadable {
         })
     }
     
-    public func update(level: ReservoirLevel?, at date: Date, reservoirAlertState: ReservoirAlertState) {
+    public func update(level: ReservoirLevel?, at date: Date, reservoirLevelHighlightState: ReservoirLevelHighlightState) {
         self.reservoirLevel = level
         self.lastUpdateDate = date
-        self.reservoirAlertState = reservoirAlertState
+        self.reservoirLevelHighlightState = reservoirLevelHighlightState
         updateViews()
     }
 }
