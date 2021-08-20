@@ -118,6 +118,19 @@ struct NotificationSettingsView: View {
 
 struct NotificationSettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        NotificationSettingsView(dateFormatter: DateFormatter(), expirationReminderDefault: .constant(2), scheduledReminderDate: Date(), allowedScheduledReminderDates: [Date()], lowReservoirReminderValue: 20)
+        return Group {
+            NavigationView {
+                NotificationSettingsView(dateFormatter: DateFormatter(), expirationReminderDefault: .constant(2), scheduledReminderDate: Date(), allowedScheduledReminderDates: [Date()], lowReservoirReminderValue: 20)
+                    .previewDevice(PreviewDevice(rawValue:"iPod touch (7th generation)"))
+                    .previewDisplayName("iPod touch (7th generation)")
+            }
+
+            NavigationView {
+                NotificationSettingsView(dateFormatter: DateFormatter(), expirationReminderDefault: .constant(2), scheduledReminderDate: Date(), allowedScheduledReminderDates: [Date()], lowReservoirReminderValue: 20)
+                    .colorScheme(.dark)
+                    .previewDevice(PreviewDevice(rawValue: "iPhone XS Max"))
+                    .previewDisplayName("iPhone XS Max - Dark")
+            }
+        }
     }
 }

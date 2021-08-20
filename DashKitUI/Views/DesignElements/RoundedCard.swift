@@ -127,7 +127,7 @@ struct RoundedCard<Content: View>: View {
     }
     
     private var titleInset: CGFloat {
-        return isCompact ? inset : 0
+        return inset
     }
     
     private var padding: CGFloat {
