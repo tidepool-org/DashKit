@@ -12,7 +12,7 @@ import LoopKitUI
 import HealthKit
 
 struct NotificationSettingsView: View {
-    
+
     var dateFormatter: DateFormatter
     
     @Binding var expirationReminderDefault: Int
@@ -54,12 +54,10 @@ struct NotificationSettingsView: View {
                 lowReservoirValueRow
             }
 
-            VStack(alignment: .leading) {
-                RoundedCardTitle(LocalizedString("Critical Alerts", comment: "Title for critical alerts description"))
-                    .padding(.bottom, 1)
-                RoundedCardFooter(LocalizedString("The reminders above will not sound if your device is in Silent or Do Not Disturb mode.\n\nThere are other critical Pod alerts and alarms that will sound even if you device is set to Silent or Do Not Disturb mode.", comment: "Description text for critical alerts"))
-            }
-            .padding(.horizontal, 16)
+            RoundedCard<EmptyView>(
+                title: LocalizedString("Critical Alerts", comment: "Title for critical alerts description"),
+                footer: LocalizedString("The reminders above will not sound if your device is in Silent or Do Not Disturb mode.\n\nThere are other critical Pod alerts and alarms that will sound even if you device is set to Silent or Do Not Disturb mode.", comment: "Description text for critical alerts")
+            )
         }
         .navigationBarTitle(LocalizedString("Notification Settings", comment: "navigation title for notification settings"))
     }
@@ -118,6 +116,19 @@ struct NotificationSettingsView: View {
 
 struct NotificationSettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        NotificationSettingsView(dateFormatter: DateFormatter(), expirationReminderDefault: .constant(2), scheduledReminderDate: Date(), allowedScheduledReminderDates: [Date()], lowReservoirReminderValue: 20)
+        return Group {
+            NavigationView {
+                NotificationSettingsView(dateFormatter: DateFormatter(), expirationReminderDefault: .constant(2), scheduledReminderDate: Date(), allowedScheduledReminderDates: [Date()], lowReservoirReminderValue: 20)
+                    .previewDevice(PreviewDevice(rawValue:"iPod touch (7th generation)"))
+                    .previewDisplayName("iPod touch (7th generation)")
+            }
+
+            NavigationView {
+                NotificationSettingsView(dateFormatter: DateFormatter(), expirationReminderDefault: .constant(2), scheduledReminderDate: Date(), allowedScheduledReminderDates: [Date()], lowReservoirReminderValue: 20)
+                    .colorScheme(.dark)
+                    .previewDevice(PreviewDevice(rawValue: "iPhone XS Max"))
+                    .previewDisplayName("iPhone XS Max - Dark")
+            }
+        }
     }
 }

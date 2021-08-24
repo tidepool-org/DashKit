@@ -71,19 +71,19 @@ public struct RoundedCardValueRow: View {
 }
 
 struct RoundedCard<Content: View>: View {
-    var content: () -> Content
+    var content: () -> Content?
     var alignment: HorizontalAlignment
     var title: String?
     var footer: String?
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
 
-    init(title: String? = nil, footer: String? = nil, alignment: HorizontalAlignment = .leading, @ViewBuilder content: @escaping () -> Content) {
+    init(title: String? = nil, footer: String? = nil, alignment: HorizontalAlignment = .leading, @ViewBuilder content: @escaping () -> Content? = { nil }) {
         self.content = content
         self.alignment = alignment
         self.title = title
         self.footer = footer
     }
-    
+
     var body: some View {
         VStack(spacing: 10) {
             if let title = title {
@@ -91,24 +91,27 @@ struct RoundedCard<Content: View>: View {
                     .frame(maxWidth: .infinity, alignment: Alignment(horizontal: .leading, vertical: .center))
                     .padding(.leading, titleInset)
             }
-            
-            if isCompact {
-                VStack(spacing: 0) {
-                    borderLine
+
+            if content() != nil {
+                if isCompact {
+                    VStack(spacing: 0) {
+                        borderLine
+                        VStack(alignment: alignment, content: content)
+                            .frame(maxWidth: .infinity, alignment: Alignment(horizontal: alignment, vertical: .center))
+                            .padding(inset)
+                            .background(Color(.secondarySystemGroupedBackground))
+                        borderLine
+                    }
+                } else {
                     VStack(alignment: alignment, content: content)
                         .frame(maxWidth: .infinity, alignment: Alignment(horizontal: alignment, vertical: .center))
-                        .padding(inset)
+                        .padding(.horizontal, inset)
+                        .padding(.vertical, 10)
                         .background(Color(.secondarySystemGroupedBackground))
-                    borderLine
+                        .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
                 }
-            } else {
-                VStack(alignment: alignment, content: content)
-                    .frame(maxWidth: .infinity, alignment: Alignment(horizontal: alignment, vertical: .center))
-                    .padding(.horizontal, inset)
-                    .padding(.vertical, 10)
-                    .background(Color(.secondarySystemGroupedBackground))
-                    .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
             }
+
             if let footer = footer {
                 RoundedCardFooter(footer)
                     .frame(maxWidth: .infinity, alignment: Alignment(horizontal: alignment, vertical: .center))
