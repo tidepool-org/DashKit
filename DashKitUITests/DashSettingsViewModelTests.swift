@@ -100,5 +100,27 @@ class DashSettingsViewModelTests: XCTestCase {
         XCTAssertEqual(0.5, basalDeliveryRate)
     }
 
+    func testIsScheduledBasal() {
+        // scheduled basal
+        let basalScheduleItems = [RepeatingScheduleValue(startTime: 0, value: 1.0)]
+        let schedule = BasalRateSchedule(dailyItems: basalScheduleItems, timeZone: .current)!
+        var state = DashPumpManagerState(basalRateSchedule: schedule, lastPodCommState: .active, dateGenerator: dateGenerator)!
+        let mockPodCommManager = MockPodCommManager()
+        mockPodCommManager.simulatedCommsDelay = TimeInterval(0)
+        var pumpManager = DashPumpManager(state: state, podCommManager: mockPodCommManager, dateGenerator: dateGenerator)
+        var viewModel = DashSettingsViewModel(pumpManager: pumpManager)
+        XCTAssertTrue(viewModel.isScheduledBasal)
 
+        // suspended
+        state.suspendState = .suspended(dateGenerator() - .hours(1))
+        pumpManager = DashPumpManager(state: state, podCommManager: mockPodCommManager, dateGenerator: dateGenerator)
+        viewModel = DashSettingsViewModel(pumpManager: pumpManager)
+        XCTAssertFalse(viewModel.isScheduledBasal)
+
+        // temp basal
+        state.unfinalizedTempBasal = UnfinalizedDose(tempBasalRate: 2.0, startTime: dateGenerator() - .minutes(5), duration: .minutes(30), scheduledCertainty: .certain)
+        pumpManager = DashPumpManager(state: state, podCommManager: mockPodCommManager, dateGenerator: dateGenerator)
+        viewModel = DashSettingsViewModel(pumpManager: pumpManager)
+        XCTAssertFalse(viewModel.isScheduledBasal)
+    }
 }

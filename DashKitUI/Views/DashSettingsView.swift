@@ -85,8 +85,9 @@ struct DashSettingsView: View  {
       showingDeleteConfirmation = false
    }
 
+
    var deliverySectionTitle: String {
-      if self.viewModel.basalDeliveryRate != nil {
+      if self.viewModel.isScheduledBasal {
          return LocalizedString("Scheduled Basal", comment: "Title of insulin delivery section")
       } else {
          return LocalizedString("Insulin Delivery", comment: "Title of insulin delivery section")
