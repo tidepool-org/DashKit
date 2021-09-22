@@ -63,7 +63,10 @@ open class DashPumpManager: PumpManager {
         }
     }
     
-    public var lastReconciliation: Date? {
+    public var lastSync: Date? {
+        guard hasActivePod else {
+            return Date()
+        }
         return state.lastStatusDate
     }
     
@@ -651,7 +654,7 @@ open class DashPumpManager: PumpManager {
 
         pumpDelegate.notify { (delegate) in
             let now = self.dateGenerator()
-            delegate?.pumpManager(self, hasNewPumpEvents: dosesToStore.map { NewPumpEvent($0, at: now) }, lastReconciliation: self.state.lastStatusDate, completion: { (error) in
+            delegate?.pumpManager(self, hasNewPumpEvents: dosesToStore.map { NewPumpEvent($0, at: now) }, lastSync: self.state.lastStatusDate, completion: { (error) in
                 if let error = error {
                     self.log.error("Error storing pod events: %@", String(describing: error))
                     completion?(error)
@@ -666,9 +669,10 @@ open class DashPumpManager: PumpManager {
         }
     }
 
-    public func ensureCurrentPumpData(completion: (() -> Void)?) {
+    public func ensureCurrentPumpData(completion: ((Date?) -> Void)?) {
 
         guard hasActivePod, state.pendingCommand == nil else {
+            completion?(lastSync)
             return
         }
 
@@ -679,14 +683,11 @@ open class DashPumpManager: PumpManager {
                 case .success:
                     self.log.default("Recommending Loop")
                     self.finalizeAndStoreDoses()
-                    self.pumpDelegate.notify({ (delegate) in
-                        completion?()
-                        delegate?.pumpManagerRecommendsLoop(self)
-                    })
+                    completion?(self.lastSync)
                 case .failure(let error):
                     self.log.default("Not recommending Loop because pump data is stale: %@", String(describing: error))
+                    completion?(self.lastSync)
                     self.pumpDelegate.notify({ (delegate) in
-                        completion?()
                         delegate?.pumpManager(self, didError: PumpManagerError.communication(error))
                     })
                 }
@@ -694,11 +695,7 @@ open class DashPumpManager: PumpManager {
             return
         }
 
-        pumpDelegate.notify { (delegate) in
-            self.log.default("Recommending Loop")
-            completion?()
-            delegate?.pumpManagerRecommendsLoop(self)
-        }
+        completion?(self.lastSync)
         
         // Check if timezone or dst changed
         checkForTimeOffsetChange()
