@@ -149,7 +149,7 @@ extension ViewController: PumpManagerDelegate {
     func pumpManager(_ pumpManager: PumpManager, didError error: PumpManagerError) {
     }
     
-    func pumpManager(_ pumpManager: PumpManager, hasNewPumpEvents events: [NewPumpEvent], lastReconciliation: Date?, completion: @escaping (Error?) -> Void) {
+    func pumpManager(_ pumpManager: PumpManager, hasNewPumpEvents events: [NewPumpEvent], lastSync: Date?, completion: @escaping (Error?) -> Void) {
         completion(nil)
     }
     
