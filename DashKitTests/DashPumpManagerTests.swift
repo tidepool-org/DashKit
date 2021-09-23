@@ -110,7 +110,7 @@ class DashPumpManagerTests: XCTestCase {
         XCTAssertEqual(pumpManager.hasActivePod, true)
 
         let bolusCallbacks = expectation(description: "bolus callbacks")
-
+        
         let startDate = Date()
 
         podStatusUpdateExpectation = expectation(description: "pod state updates")
@@ -161,7 +161,7 @@ class DashPumpManagerTests: XCTestCase {
         XCTAssertEqual(pumpManager.hasActivePod, true)
 
         let bolusCallbacks = expectation(description: "bolus callbacks")
-
+        
         let startDate = Date()
 
         pumpManagerStatusUpdateExpectation = expectation(description: "pumpmanager status updates")
@@ -369,7 +369,7 @@ class DashPumpManagerTests: XCTestCase {
 
         timeTravel(.minutes(3))
         
-        XCTAssertEqual(firstStatusTime, pumpManager.lastReconciliation)
+        XCTAssertEqual(firstStatusTime, pumpManager.lastSync)
     }
 
     
@@ -771,7 +771,7 @@ class DashPumpManagerTests: XCTestCase {
         timeTravel(delay)
         
         let ensureCurrentPumpDataCompletionCalledExpectation = expectation(description: "ensureCurrentPumpData calls completion")
-        self.pumpManager.ensureCurrentPumpData {
+        self.pumpManager.ensureCurrentPumpData { (_) in
             ensureCurrentPumpDataCompletionCalledExpectation.fulfill()
         }
 
@@ -854,7 +854,7 @@ extension DashPumpManagerTests: PumpManagerDelegate {
     func pumpManager(_ pumpManager: PumpManager, didError error: PumpManagerError) {
     }
 
-    func pumpManager(_ pumpManager: PumpManager, hasNewPumpEvents events: [NewPumpEvent], lastReconciliation: Date?, completion: @escaping (Error?) -> Void) {
+    func pumpManager(_ pumpManager: PumpManager, hasNewPumpEvents events: [NewPumpEvent], lastSync: Date?, completion: @escaping (Error?) -> Void) {
         pumpEventStorageExpectation?.fulfill()
         reportedPumpEvents.append(contentsOf: events)
         completion(nil)
