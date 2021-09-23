@@ -110,6 +110,8 @@ class DashPumpManagerTests: XCTestCase {
         XCTAssertEqual(pumpManager.hasActivePod, true)
 
         let bolusCallbacks = expectation(description: "bolus callbacks")
+        
+        let startDate = Date()
 
         podStatusUpdateExpectation = expectation(description: "pod state updates")
         podStatusUpdateExpectation?.expectedFulfillmentCount = 2
@@ -159,6 +161,8 @@ class DashPumpManagerTests: XCTestCase {
         XCTAssertEqual(pumpManager.hasActivePod, true)
 
         let bolusCallbacks = expectation(description: "bolus callbacks")
+        
+        let startDate = Date()
 
         pumpManagerStatusUpdateExpectation = expectation(description: "pumpmanager status updates")
         pumpManagerStatusUpdateExpectation?.expectedFulfillmentCount = 2
