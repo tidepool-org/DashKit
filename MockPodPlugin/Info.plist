@@ -26,5 +26,7 @@
 	<string>Omnipod (Demo)</string>
 	<key>com.loopkit.Loop.PumpManagerIdentifier</key>
 	<string>OmnipodDemo</string>
+	<key>com.loopkit.Loop.PluginIsSimulator</key>
+	<true/>
 </dict>
 </plist>
