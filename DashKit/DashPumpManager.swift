@@ -1260,6 +1260,10 @@ open class DashPumpManager: PumpManager {
             }
         }
     }
+
+    public func syncDeliveryLimits(limits deliveryLimits: DeliveryLimits, completion: @escaping (Result<DeliveryLimits, Error>) -> Void) {
+        completion(.success(deliveryLimits))
+    }
     
     // Reconnected to the pod, and we know program was successful
     private func pendingCommandSucceeded(pendingCommand: PendingCommand, podStatus: PodStatus) {
