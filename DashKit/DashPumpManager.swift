@@ -475,6 +475,7 @@ open class DashPumpManager: PumpManager {
                     state.updateFromPodStatus(status: status)
                 })
                 self.silenceAcknowledgedAlerts()
+                self.finalizeAndStoreDoses()
             }
             completion(response)
         }
@@ -679,17 +680,14 @@ open class DashPumpManager: PumpManager {
         guard !isPumpDataStale else {
             log.default("Fetching status because pumpData is too old")
             getPodStatus { (response) in
+                completion?(self.lastSync)
                 switch response {
-                case .success:
-                    self.log.default("Recommending Loop")
-                    self.finalizeAndStoreDoses()
-                    completion?(self.lastSync)
                 case .failure(let error):
-                    self.log.default("Not recommending Loop because pump data is stale: %@", String(describing: error))
-                    completion?(self.lastSync)
                     self.pumpDelegate.notify({ (delegate) in
                         delegate?.pumpManager(self, didError: PumpManagerError.communication(error))
                     })
+                default:
+                    break
                 }
             }
             return
