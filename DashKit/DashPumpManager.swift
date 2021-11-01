@@ -24,6 +24,10 @@ open class DashPumpManager: PumpManager {
         return (1...600).map { Double($0) / Double(Pod.pulsesPerUnit) }
     }
 
+    public static var onboardingSupportedMaximumBolusVolumes: [Double] {
+        return onboardingSupportedBolusVolumes
+    }
+
     public static var onboardingSupportedBasalRates: [Double] {
         // 0.05 units for rates between 0.05-30U/hr
         return (1...600).map { Double($0) / Double(Pod.pulsesPerUnit) }
