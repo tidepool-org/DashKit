@@ -225,9 +225,9 @@ class DashSettingsViewModel: ObservableObject {
     }
     
     func saveScheduledExpirationReminder(_ selectedDate: Date, _ completion: @escaping (Error?) -> Void) {
-        if let activatedAt = activatedAt {
-            let intervalBeforeExpiration = activatedAt.addingTimeInterval(Pod.lifetime).timeIntervalSince(selectedDate)
-            pumpManager.updateExpirationReminder(intervalBeforeExpiration) { (error) in
+        if let podExpiresAt = pumpManager.podExpiresAt {
+            let intervalBeforeExpiration = podExpiresAt.timeIntervalSince(selectedDate)
+            pumpManager.updateExpirationReminder(.hours(round(intervalBeforeExpiration.hours))) { (error) in
                 if error == nil {
                     self.expirationReminderDate = selectedDate
                 }
