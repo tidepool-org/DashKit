@@ -6,20 +6,6 @@
 	objectVersion = 52;
 	objects = {
 
-/* Begin PBXAggregateTarget section */
-		C11615F0239588DB0039A072 /* Cartfile */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = C11615F3239588DB0039A072 /* Build configuration list for PBXAggregateTarget "Cartfile" */;
-			buildPhases = (
-				C11615F4239588F40039A072 /* Carthage Bootstrap */,
-			);
-			dependencies = (
-			);
-			name = Cartfile;
-			productName = Cartfile;
-		};
-/* End PBXAggregateTarget section */
-
 /* Begin PBXBuildFile section */
 		C105E8E325F14866009C9EC3 /* RoundedCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C105E8E225F14866009C9EC3 /* RoundedCard.swift */; };
 		C107D10B22692A1700D63775 /* DashPumpManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C107D10A22692A1700D63775 /* DashPumpManager.swift */; };
@@ -77,6 +63,11 @@
 		C15424312280C575006754B3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C15424302280C575006754B3 /* Assets.xcassets */; };
 		C15424332280C75E006754B3 /* PodStatusExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C15424322280C75D006754B3 /* PodStatusExtension.swift */; };
 		C155759825CB552D008ADD91 /* NotificationSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C155759725CB552D008ADD91 /* NotificationSettingsView.swift */; };
+		C155B5BE273ED68300A10104 /* DashKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1E753D9226928F700A0BC48 /* DashKit.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C155B5BF273ED68C00A10104 /* DashKitUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C107D15322694B9C00D63775 /* DashKitUI.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C155B5C0273ED6C700A10104 /* RxSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1B91458273315CB005827BB /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C155B5C1273ED9B100A10104 /* INSSDK.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1B914562733159A005827BB /* INSSDK.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C155B5C2273ED9BB00A10104 /* PodSDK.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C1B914542733158A005827BB /* PodSDK.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C1562F7F241581C7006952D6 /* DashSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1562F7E241581C7006952D6 /* DashSettingsViewModel.swift */; };
 		C1562F85241698C0006952D6 /* PodLifeState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1562F84241698C0006952D6 /* PodLifeState.swift */; };
 		C1562F8724169C41006952D6 /* DeactivatePodView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1562F8624169C41006952D6 /* DeactivatePodView.swift */; };
@@ -250,6 +241,11 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				C155B5C2273ED9BB00A10104 /* PodSDK.xcframework in Embed Frameworks */,
+				C155B5C1273ED9B100A10104 /* INSSDK.xcframework in Embed Frameworks */,
+				C155B5C0273ED6C700A10104 /* RxSwift.framework in Embed Frameworks */,
+				C155B5BF273ED68C00A10104 /* DashKitUI.framework in Embed Frameworks */,
+				C155B5BE273ED68300A10104 /* DashKit.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -948,9 +944,6 @@
 						CreatedOnToolsVersion = 10.2;
 						LastSwiftMigration = 1020;
 					};
-					C11615F0239588DB0039A072 = {
-						CreatedOnToolsVersion = 11.1;
-					};
 					C19BB3E422E776AE00EA5C2E = {
 						CreatedOnToolsVersion = 10.3;
 						LastSwiftMigration = 1030;
@@ -988,7 +981,6 @@
 				C107D15222694B9C00D63775 /* DashKitUI */,
 				C1A9193C24325D3B008D216E /* DashKitUITests */,
 				C19BB3E422E776AE00EA5C2E /* DashKitPlugin */,
-				C11615F0239588DB0039A072 /* Cartfile */,
 				C10CFCF42584137200CD89D8 /* MockPodPlugin */,
 				C1B1CC0825EE889C004D05C4 /* PodUIDemo */,
 			);
@@ -1054,24 +1046,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		C11615F4239588F40039A072 /* Carthage Bootstrap */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Carthage Bootstrap";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "echo \"Bootstrapping carthage dependencies\"\nunset LLVM_TARGET_TRIPLE_SUFFIX\n\nif ! cmp -s Cartfile.Resolved Carthage/Cartfile.resolved; then\n    time ./Scripts/carthage.sh bootstrap --project-directory \"$SRCROOT\" --platform ios,watchos --cache-builds --verbose\n    cp Cartfile.resolved Carthage\nelse\n    echo \"Carthage: not bootstrapping\"\nfi\n";
-		};
 		C1B1CC2E25EE8D5D004D05C4 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1455,24 +1429,6 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = loopplugin;
-			};
-			name = Release;
-		};
-		C11615F1239588DB0039A072 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		C11615F2239588DB0039A072 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
-				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
@@ -1897,15 +1853,6 @@
 			buildConfigurations = (
 				C10CFD062584137200CD89D8 /* Debug */,
 				C10CFD072584137200CD89D8 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		C11615F3239588DB0039A072 /* Build configuration list for PBXAggregateTarget "Cartfile" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				C11615F1239588DB0039A072 /* Debug */,
-				C11615F2239588DB0039A072 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
