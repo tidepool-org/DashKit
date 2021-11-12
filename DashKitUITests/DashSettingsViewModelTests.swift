@@ -99,6 +99,20 @@ class DashSettingsViewModelTests: XCTestCase {
         
         XCTAssertEqual(0.5, basalDeliveryRate)
     }
+    
+    func testExpirationReminderShouldBeComputedRelativeExpirationTime() {
+        let basalScheduleItems = [RepeatingScheduleValue(startTime: 0, value: 1.0)]
+        let schedule = BasalRateSchedule(dailyItems: basalScheduleItems, timeZone: .current)!
+        var state = DashPumpManagerState(basalRateSchedule: schedule, lastPodCommState: .active, dateGenerator: dateGenerator)!
+        state.unfinalizedTempBasal = UnfinalizedDose(tempBasalRate: 0.5, startTime: dateGenerator() - .minutes(5), duration: .minutes(30), scheduledCertainty: .certain)
+        
+        let mockPodCommManager = MockPodCommManager()
+        mockPodCommManager.simulatedCommsDelay = TimeInterval(0)
+        let pumpManager = DashPumpManager(state: state, podCommManager: mockPodCommManager, dateGenerator: dateGenerator)
+        let viewModel = DashSettingsViewModel(pumpManager: pumpManager)
+        
+        
+    }
 
 
 }
