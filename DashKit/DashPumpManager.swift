@@ -442,7 +442,7 @@ open class DashPumpManager: PumpManager {
     }
 
     public var podExpiresAt: Date? {
-        return state.podActivatedAt?.addingTimeInterval(Pod.lifetime)
+        return state.podExpiresAt
     }
 
     // From last status response

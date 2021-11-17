@@ -456,7 +456,7 @@ public class MockPodCommManager: PodCommManagerProtocol {
     }
 
     public func updateAlertSetting(alertSetting: PodAlertSetting, completion: @escaping (PodCommResult<PodStatus>) -> ()) {
-        guard let podStatus = podStatus else {
+        guard var podStatus = podStatus else {
             completion(.failure(.podIsNotActive))
             return
         }
@@ -464,6 +464,11 @@ public class MockPodCommManager: PodCommManagerProtocol {
             errorTriggered()
             completion(.failure(error))
         } else {
+            if let expirationAlert = alertSetting as? PodExpirationAlert {
+                podStatus.podExpirationAlert = expirationAlert
+                self.podStatus = podStatus
+            }
+            
             DispatchQueue.main.asyncAfter(deadline: .now() + simulatedCommsDelay) {
                 completion(.success(podStatus))
             }

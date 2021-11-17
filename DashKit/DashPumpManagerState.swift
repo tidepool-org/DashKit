@@ -32,6 +32,8 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
     public var basalProgram: BasalProgram
 
     public var podActivatedAt: Date?
+    
+    public var podExpiresAt: Date?
 
     public var reservoirLevel: ReservoirLevel?
     
@@ -150,6 +152,7 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
         self.basalProgram = basalProgram
         
         self.podActivatedAt = rawValue["podActivatedAt"] as? Date
+        self.podExpiresAt = rawValue["podExpiresAt"] as? Date
         self.lastStatusDate = rawValue["lastStatusDate"] as? Date
         self.podTotalDelivery = rawValue["podTotalDelivery"] as? Double
         
@@ -269,6 +272,7 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
         rawValue["podTotalDelivery"] = podTotalDelivery
         rawValue["lastStatusDate"] = lastStatusDate
         rawValue["podActivatedAt"] = podActivatedAt
+        rawValue["podExpiresAt"] = podExpiresAt
         rawValue["unfinalizedBolus"] = unfinalizedBolus?.rawValue
         rawValue["unfinalizedTempBasal"] = unfinalizedTempBasal?.rawValue
         rawValue["alarmCode"] = alarmCode?.rawValue
@@ -282,7 +286,10 @@ public struct DashPumpManagerState: RawRepresentable, Equatable {
     mutating func updateFromPodStatus(status: PodStatus) {
         lastStatusDate = dateGenerator()
         reservoirLevel = ReservoirLevel(rawValue: status.reservoirUnitsRemaining)
-        podActivatedAt = status.expirationDate - Pod.lifetime
+        if podActivatedAt == nil {
+            podActivatedAt = status.expirationDate - Pod.lifetime
+        }
+        podExpiresAt = status.expirationDate
         podTotalDelivery = status.delivered
     }
 

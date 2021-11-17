@@ -99,6 +99,36 @@ class DashSettingsViewModelTests: XCTestCase {
         
         XCTAssertEqual(0.5, basalDeliveryRate)
     }
+    
+    func testExpirationReminderShouldBeComputedRelativeToExpirationTime() {
+        let basalScheduleItems = [RepeatingScheduleValue(startTime: 0, value: 1.0)]
+        let schedule = BasalRateSchedule(dailyItems: basalScheduleItems, timeZone: .current)!
+        var state = DashPumpManagerState(basalRateSchedule: schedule, lastPodCommState: .active, dateGenerator: dateGenerator)!
+        state.unfinalizedTempBasal = UnfinalizedDose(tempBasalRate: 0.5, startTime: dateGenerator() - .minutes(5), duration: .minutes(30), scheduledCertainty: .certain)
+        
+        // Simulate pod clock running 15 minutes fast
+        let activationTime = dateGenerator() - TimeInterval(days: 2)
+        state.podActivatedAt = activationTime
+        let expirationTime = activationTime + Pod.lifetime - TimeInterval(minutes: 15)
+        state.podExpiresAt = expirationTime
+        
+        let mockPodCommManager = MockPodCommManager(podStatus: .normal, dateGenerator: dateGenerator)
+        mockPodCommManager.simulatedCommsDelay = TimeInterval(0)
+        let pumpManager = DashPumpManager(state: state, podCommManager: mockPodCommManager, dateGenerator: dateGenerator)
+        let viewModel = DashSettingsViewModel(pumpManager: pumpManager)
+        
+        let intervalBeforeExpiration = TimeInterval(hours: 3)
+        
+        let selectedDate = expirationTime - intervalBeforeExpiration
+        viewModel.saveScheduledExpirationReminder(selectedDate) { error in
+            XCTAssertNil(error)
+            if let configuredIntervalBeforeExpiration = mockPodCommManager.podStatus?.podExpirationAlert?.intervalBeforeExpiration {
+                XCTAssertEqual(configuredIntervalBeforeExpiration, intervalBeforeExpiration, accuracy: 0.1)
+            } else {
+                XCTFail("Expiration alert was not configured")
+            }
+        }
+    }
 
 
 }
