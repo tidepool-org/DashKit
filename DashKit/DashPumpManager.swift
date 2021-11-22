@@ -38,7 +38,7 @@ open class DashPumpManager: PumpManager {
     }
     
     open var managerIdentifier: String {
-        return "OmnipodDash"
+        return "Omnipod"
     }
 
     open var registrationManager: PDMRegistrator {
@@ -404,7 +404,7 @@ open class DashPumpManager: PumpManager {
         return HKDevice(
             name: managerIdentifier,
             manufacturer: "Insulet",
-            model: "DASH",
+            model: "Omnipod 5",
             hardwareVersion: hardwareVersion,
             firmwareVersion: firmwareVersion,
             softwareVersion: String(DashKitVersionNumber),

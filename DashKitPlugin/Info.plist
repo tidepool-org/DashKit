@@ -5,7 +5,7 @@
 	<key>com.loopkit.Loop.PumpManagerDisplayName</key>
 	<string>Omnipod</string>
 	<key>com.loopkit.Loop.PumpManagerIdentifier</key>
-	<string>OmnipodDash</string>
+	<string>Omnipod</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
