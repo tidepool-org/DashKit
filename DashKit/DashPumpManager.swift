@@ -484,6 +484,7 @@ open class DashPumpManager: PumpManager {
                     state.updateFromPodStatus(status: status)
                 })
                 self.silenceAcknowledgedAlerts()
+                self.finalizeAndStoreDoses()
             }
             completion(response)
         }
@@ -688,6 +689,7 @@ open class DashPumpManager: PumpManager {
         guard !isPumpDataStale else {
             log.default("Fetching status because pumpData is too old")
             getPodStatus { (response) in
+                completion?(self.lastSync)
                 switch response {
                 case .success:
                     self.log.default("Recommending Loop")
@@ -699,6 +701,8 @@ open class DashPumpManager: PumpManager {
                     self.pumpDelegate.notify({ (delegate) in
                         delegate?.pumpManager(self, didError: PumpManagerError.communication(error))
                     })
+                default:
+                    break
                 }
             }
             return
