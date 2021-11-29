@@ -691,13 +691,7 @@ open class DashPumpManager: PumpManager {
             getPodStatus { (response) in
                 completion?(self.lastSync)
                 switch response {
-                case .success:
-                    self.log.default("Recommending Loop")
-                    self.finalizeAndStoreDoses()
-                    completion?(self.lastSync)
                 case .failure(let error):
-                    self.log.default("Not recommending Loop because pump data is stale: %@", String(describing: error))
-                    completion?(self.lastSync)
                     self.pumpDelegate.notify({ (delegate) in
                         delegate?.pumpManager(self, didError: PumpManagerError.communication(error))
                     })
