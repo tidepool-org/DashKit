@@ -134,6 +134,15 @@ class DashSettingsViewModel: ObservableObject {
             return nil
         }
     }
+
+    var isScheduledBasal: Bool {
+        switch basalDeliveryState {
+        case .active(_), .initiatingTempBasal:
+            return true
+        case .tempBasal(_), .cancelingTempBasal, .suspending, .suspended(_), .resuming, .none:
+            return false
+        }
+    }
     
     let dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()

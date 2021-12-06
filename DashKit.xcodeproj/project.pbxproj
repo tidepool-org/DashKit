@@ -106,6 +106,10 @@
 		C1ACF44222A1FC1F00F7DDB4 /* PodDoseProgressTimerEstimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ACF44122A1FC1F00F7DDB4 /* PodDoseProgressTimerEstimator.swift */; };
 		C1ACF44422A200B100F7DDB4 /* UnfinalizedDose.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ACF44322A200B100F7DDB4 /* UnfinalizedDose.swift */; };
 		C1ACF44522A200D700F7DDB4 /* NumberFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1ACF43622A04B4800F7DDB4 /* NumberFormatter.swift */; };
+		C1AD3FA227555B95007C2FCD /* INSSDK.xcframework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C1B914562733159A005827BB /* INSSDK.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C1AD3FA327555BA1007C2FCD /* PodSDK.xcframework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C1B914542733158A005827BB /* PodSDK.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C1AD3FA527555C10007C2FCD /* INSSDK.xcframework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C1B914562733159A005827BB /* INSSDK.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C1AD3FA627555C19007C2FCD /* PodSDK.xcframework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C1B914542733158A005827BB /* PodSDK.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C1B1CC0025EE8350004D05C4 /* SetupCompleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B1CBFF25EE8350004D05C4 /* SetupCompleteView.swift */; };
 		C1B1CC0C25EE889C004D05C4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B1CC0B25EE889C004D05C4 /* AppDelegate.swift */; };
 		C1B1CC0E25EE889D004D05C4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B1CC0D25EE889D004D05C4 /* SceneDelegate.swift */; };
@@ -232,6 +236,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				C1AD3FA327555BA1007C2FCD /* PodSDK.xcframework in CopyFiles */,
+				C1AD3FA227555B95007C2FCD /* INSSDK.xcframework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -248,6 +254,17 @@
 				C155B5BE273ED68300A10104 /* DashKit.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C1AD3FA427555C04007C2FCD /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				C1AD3FA627555C19007C2FCD /* PodSDK.xcframework in CopyFiles */,
+				C1AD3FA527555C10007C2FCD /* INSSDK.xcframework in CopyFiles */,
+			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -863,6 +880,7 @@
 				C1A9193924325D3B008D216E /* Sources */,
 				C1A9193A24325D3B008D216E /* Frameworks */,
 				C1A9193B24325D3B008D216E /* Resources */,
+				C1AD3FA427555C04007C2FCD /* CopyFiles */,
 			);
 			buildRules = (
 			);
