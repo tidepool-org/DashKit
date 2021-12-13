@@ -20,6 +20,8 @@ public class MockPodCommManager: PodCommManagerProtocol {
     
     public var simulatedCommsDelay = TimeInterval(2)
     
+    public var preCommunicationCallback: (() -> Void)? = nil
+    
     private let lockedPodStatus: Locked<MockPodStatus?>
     
     public var podStatus: MockPodStatus? {
@@ -401,6 +403,7 @@ public class MockPodCommManager: PodCommManagerProtocol {
             completion(.failure(error))
         } else {
             DispatchQueue.main.asyncAfter(deadline: .now() + simulatedCommsDelay) {
+                self.preCommunicationCallback?()
                 switch programType {
                 case .basalProgram(let program, let offset):
                     let now = self.dateGenerator()
@@ -437,6 +440,7 @@ public class MockPodCommManager: PodCommManagerProtocol {
             completion(.failure(error))
         } else {
             DispatchQueue.main.asyncAfter(deadline: .now() + simulatedCommsDelay) {
+                self.preCommunicationCallback?()
                 switch programType {
                 case .bolus:
                     podStatus.cancelBolus(at: self.dateGenerator())
@@ -470,6 +474,7 @@ public class MockPodCommManager: PodCommManagerProtocol {
             }
             
             DispatchQueue.main.asyncAfter(deadline: .now() + simulatedCommsDelay) {
+                self.preCommunicationCallback?()
                 completion(.success(podStatus))
             }
         }
@@ -491,6 +496,7 @@ public class MockPodCommManager: PodCommManagerProtocol {
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + simulatedCommsDelay) {
+            self.preCommunicationCallback?()
             if let error = self.nextCommsError {
                 completion(.failure(error))
                 self.nextCommsError = nil
