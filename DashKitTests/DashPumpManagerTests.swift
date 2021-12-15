@@ -216,6 +216,86 @@ class DashPumpManagerTests: XCTestCase {
         waitForExpectations(timeout: 3)
         
     }
+    
+    // If comms are fast enough, the PumpManager should make the ending of the previous temp basal and the start of the new
+    // temp basal align, otherwise LoopKit will fill in the gap with a basal record, usually 0 delivery.
+    func testFastTempBasalChangeHasNoGap() {
+        // Schedule an initial temp basal of 1U/hr
+        var tempBasalCallbackExpectation = expectation(description: "temp basal callbacks")
+        tempBasalCallbackExpectation.assertForOverFulfill = false
+        
+        pumpEventStorageExpectation = expectation(description: "pumpmanager dose storage")
+        pumpEventStorageExpectation?.assertForOverFulfill = false
+        
+        mockPodCommManager.preCommunicationCallback = {
+            self.timeTravel(.seconds(1))
+        }
+
+        pumpManager.enactTempBasal(unitsPerHour: 1, for: .minutes(30)) { (result) in
+            tempBasalCallbackExpectation.fulfill()
+        }
+        waitForExpectations(timeout: 3)
+
+        XCTAssertEqual(1, reportedPumpEvents.count)
+
+        // Five minutes later, schedule a second temp basal of 1.5U/hr
+        timeTravel(.minutes(5))
+
+        tempBasalCallbackExpectation = expectation(description: "temp basal callbacks")
+        pumpEventStorageExpectation = expectation(description: "pumpmanager dose storage")
+        pumpManager.enactTempBasal(unitsPerHour: 1.5, for: .minutes(30)) { (result) in
+            tempBasalCallbackExpectation.fulfill()
+        }
+        waitForExpectations(timeout: 3)
+        
+        XCTAssertEqual(3, reportedPumpEvents.count)
+        
+        let firstTemp = reportedPumpEvents[1]
+        let secondTemp = reportedPumpEvents[2]
+        
+        // Should be no gap between doses
+        XCTAssertEqual(firstTemp.dose?.endDate, secondTemp.dose?.startDate)
+    }
+    
+    // If the time betwen cancelling the previous temp basal and issuing the new temp basal is > 2s,
+    // pump events should be recorded reflecting the gap.
+    func testSlowTempBasalChangeHasGap() {
+        // Schedule an initial temp basal of 1U/hr
+        var tempBasalCallbackExpectation = expectation(description: "temp basal callbacks")
+        tempBasalCallbackExpectation.assertForOverFulfill = false
+        
+        pumpEventStorageExpectation = expectation(description: "pumpmanager dose storage")
+        pumpEventStorageExpectation?.assertForOverFulfill = false
+        
+        mockPodCommManager.preCommunicationCallback = {
+            self.timeTravel(.seconds(5))
+        }
+
+        pumpManager.enactTempBasal(unitsPerHour: 1, for: .minutes(30)) { (result) in
+            tempBasalCallbackExpectation.fulfill()
+        }
+        waitForExpectations(timeout: 3)
+
+        XCTAssertEqual(1, reportedPumpEvents.count)
+
+        // Five minutes later, schedule a second temp basal of 1.5U/hr
+        timeTravel(.minutes(5))
+
+        tempBasalCallbackExpectation = expectation(description: "temp basal callbacks")
+        pumpEventStorageExpectation = expectation(description: "pumpmanager dose storage")
+        pumpManager.enactTempBasal(unitsPerHour: 1.5, for: .minutes(30)) { (result) in
+            tempBasalCallbackExpectation.fulfill()
+        }
+        waitForExpectations(timeout: 3)
+        
+        XCTAssertEqual(3, reportedPumpEvents.count)
+        
+        let firstTemp = reportedPumpEvents[1]
+        let secondTemp = reportedPumpEvents[2]
+        
+        // Should be gap between doses
+        XCTAssertNotEqual(firstTemp.dose?.endDate, secondTemp.dose?.startDate)
+    }
 
     func testSuccessfulTempBasal() {
         XCTAssertEqual(pumpManager.hasActivePod, true)
@@ -229,7 +309,6 @@ class DashPumpManagerTests: XCTestCase {
         // Persistence updates
         pumpManagerDelegateStateUpdateExpectation = expectation(description: "pumpmanager delegate state updates")
         pumpManagerDelegateStateUpdateExpectation?.assertForOverFulfill = false
-//        pumpManagerDelegateStateUpdateExpectation?.expectedFulfillmentCount = 2
 
         // Set a new reservoir value to make sure the result of the set program is used (5U)
         let delivered = mockPodCommManager.podStatus!.initialInsulinAmount - 5.0
@@ -259,7 +338,6 @@ class DashPumpManagerTests: XCTestCase {
         // Sometimes, when a test is run in CI, this expectation is over-fulfilled.
         // When this happens, the test crashes.  This hopefully would at least avoid that crash.
         pumpEventStorageExpectation?.assertForOverFulfill = false
-        //pumpEventStorageExpectation?.expectedFulfillmentCount = 2
 
         pumpManager.ensureCurrentPumpData(completion: nil)
 

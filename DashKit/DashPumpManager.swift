@@ -975,7 +975,7 @@ open class DashPumpManager: PumpManager {
         }
     }
 
-    public func cancelTempBasal(completion: @escaping (DashPumpManagerError?) -> Void) {
+    func cancelTempBasal(completion: @escaping (Result<(endTime: Date, status: PodStatus), DashPumpManagerError>) -> Void) {
         let preflightError = self.setStateWithResult({ (state) -> DashPumpManagerError? in
             if state.activeTransition != nil {
                 return DashPumpManagerError.busy
@@ -986,7 +986,7 @@ open class DashPumpManager: PumpManager {
         })
         
         guard preflightError == nil else {
-            completion(preflightError!)
+            completion(.failure(preflightError!))
             return
         }
 
@@ -994,21 +994,22 @@ open class DashPumpManager: PumpManager {
             self.log.debug("stopProgram result: %{public}@", String(describing: result))
             switch result {
             case .success(let status):
+                let endTime = self.dateGenerator()
                 self.mutateState({ (state) in
                     if var canceledTempBasal = state.unfinalizedTempBasal {
-                        canceledTempBasal.cancel(at: self.dateGenerator())
+                        canceledTempBasal.cancel(at: endTime)
                         state.unfinalizedTempBasal = nil
                         state.finishedDoses.append(canceledTempBasal)
                     }
                     state.updateFromPodStatus(status: status)
                     state.activeTransition = nil
                 })
-                completion(nil)
+                completion(.success((endTime, status)))
             case .failure(let error):
                 self.mutateState({ (state) in
                     state.activeTransition = nil
                 })
-                completion(DashPumpManagerError(error))
+                completion(.failure(DashPumpManagerError(error)))
             }
         }
     }
@@ -1029,7 +1030,6 @@ open class DashPumpManager: PumpManager {
                 program = nil
             } else {
                 let tempBasal = try TempBasal(value: .flatRate(Int(round(enactRate * Pod.podSDKInsulinMultiplier))), duration: duration)
-                // secondsSinceMidnight not used for absolute rate temp basals; SDK api will change in future so this is only specified for percent value types
                 program = ProgramType.tempBasal(tempBasal: tempBasal)
             }
         } catch {
@@ -1037,38 +1037,40 @@ open class DashPumpManager: PumpManager {
             return
         }
         
-        let preflight: (_ completion: @escaping (DashPumpManagerError?) -> Void) -> Void
+        let preflight: (_ completion: @escaping (Result<(endTime: Date?, status: PodStatus), DashPumpManagerError>) -> Void) -> Void
         
+        // If current state indicates an ongoing temp basal, cancel it, otherwise just fetch status
         if case .tempBasal = status.basalDeliveryState {
-            preflight = { (_ completion: @escaping (DashPumpManagerError?) -> Void) in
-                self.cancelTempBasal { (error) in
-                    if let error = error {
+            preflight = { (_ completion: @escaping (Result<(endTime: Date?, status: PodStatus), DashPumpManagerError>) -> Void) in
+                self.cancelTempBasal { (result) in
+                    switch result {
+                    case .failure(let error):
                         self.log.error("cancelTempBasal error: %{public}@", String(describing: error))
-                        completion(error)
-                    } else {
-                        self.log.default("cancelTempBasal succeeded")
-                        completion(nil)
+                        completion(.failure(error))
+                    case .success(let (cancelDate, status)):
+                        completion(.success((cancelDate, status)))
                     }
                 }
             }
         } else {
-            preflight = { (_ completion: @escaping (DashPumpManagerError?) -> Void) in
+            preflight = { (_ completion: @escaping (Result<(endTime: Date?, status: PodStatus), DashPumpManagerError>) -> Void) in
                 self.podCommManager.getPodStatus(userInitiated: false) { (result) in
                     switch result {
                     case .failure(let error):
                         self.log.error("getPodStatus error: %{public}@", String(describing: error))
-                        completion(DashPumpManagerError(error))
-                    case .success:
-                        completion(nil)
+                        completion(.failure(DashPumpManagerError(error)))
+                    case .success(let status):
+                        completion(.success((nil, status)))
                     }
                 }
             }
         }
         
-        preflight { (error) in
-            if let error = error {
+        preflight { (result) in
+            switch result {
+            case .failure(let error):
                 completion(.configuration(error))
-            } else {
+            case .success(let (lastTempBasalCancelDate, initialStatus)):
                 self.log.default("preflight succeeded")
                 guard let program = program else {
                     // 0 duration temp basals are used to cancel any existing temp basal
@@ -1091,8 +1093,6 @@ open class DashPumpManager: PumpManager {
                     return
                 }
                 
-                let startDate = self.dateGenerator()
-                
                 // SDK not allowing us to make calls from a callback thread, so dispatch.
                 DispatchQueue.global(qos: .userInteractive).async {
                     self.sendProgram(programType: program, beepOption: .init(beepAtEnd: false)) { (result) in
@@ -1109,7 +1109,13 @@ open class DashPumpManager: PumpManager {
                             }
                         case .success(let podStatus):
                             self.mutateState({ (state) in
-                                state.unfinalizedTempBasal = UnfinalizedDose(tempBasalRate: enactRate, startTime: startDate, duration: duration, scheduledCertainty: .certain)
+                                var startTime = self.dateGenerator()
+                                // If last cancel was relatively recent (<2s), and no pulses were delivered between temp basals, then make the end time
+                                // of the previous temp basal the same time as the start time of the new temp basal.
+                                if let cancelTime = lastTempBasalCancelDate, startTime.timeIntervalSince(cancelTime) < TimeInterval(seconds: 2), podStatus.delivered == initialStatus.delivered {
+                                    startTime = cancelTime
+                                }
+                                state.unfinalizedTempBasal = UnfinalizedDose(tempBasalRate: enactRate, startTime: startTime, duration: duration, scheduledCertainty: .certain)
                                 state.updateFromPodStatus(status: podStatus)
                                 state.activeTransition = nil
                             })
