@@ -1869,3 +1869,13 @@ extension DashPumpManager {
     public func getSounds() -> [Alert.Sound] { return [] }
 }
 
+// MARK: - Mock/Demo extensions; only used in demo
+extension DashPumpManager {
+    func podClockMutated(newActivationDate: Date) {
+        self.mutateState { state in
+            state.podActivatedAt = newActivationDate
+            state.podExpiresAt = newActivationDate
+        }
+    }
+}
+

@@ -296,6 +296,7 @@ extension DashSettingsViewModel: PodStatusObserver {
         basalDeliveryState = self.pumpManager.status.basalDeliveryState
         basalDeliveryRate = self.pumpManager.basalDeliveryRate
         reservoirLevel = self.pumpManager.reservoirLevel
+        activatedAt = self.pumpManager.podActivatedAt
         reservoirLevelHighlightState = self.pumpManager.reservoirLevelHighlightState
         expirationReminderDate = self.pumpManager.scheduledExpirationReminder
     }
@@ -345,19 +346,6 @@ extension DashPumpManager {
 }
 
 extension PumpManagerStatus.BasalDeliveryState {
-    var headerText: String {
-        switch self {
-        case .active, .suspending:
-             return LocalizedString("Scheduled Basal", comment: "Header text for basal delivery view when scheduled basal active")
-        case .tempBasal:
-             return LocalizedString("Temporary Basal", comment: "Header text for basal delivery view when temporary basal running")
-        case .suspended, .resuming:
-            return LocalizedString("Basal Suspended", comment: "Header text for basal delivery view when basal is suspended")
-        default:
-            return ""
-        }
-    }
-    
     var suspendResumeActionText: String {
         switch self {
         case .active, .tempBasal, .cancelingTempBasal, .initiatingTempBasal:
