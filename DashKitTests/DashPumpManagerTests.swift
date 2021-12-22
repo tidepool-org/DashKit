@@ -228,7 +228,7 @@ class DashPumpManagerTests: XCTestCase {
         pumpEventStorageExpectation?.assertForOverFulfill = false
         
         mockPodCommManager.preCommunicationCallback = {
-            self.timeTravel(.seconds(1))
+            self.timeTravel(.seconds(2))
         }
 
         pumpManager.enactTempBasal(unitsPerHour: 1, for: .minutes(30)) { (result) in
@@ -268,7 +268,7 @@ class DashPumpManagerTests: XCTestCase {
         pumpEventStorageExpectation?.assertForOverFulfill = false
         
         mockPodCommManager.preCommunicationCallback = {
-            self.timeTravel(.seconds(5))
+            self.timeTravel(.seconds(7))
         }
 
         pumpManager.enactTempBasal(unitsPerHour: 1, for: .minutes(30)) { (result) in

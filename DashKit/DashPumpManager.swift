@@ -37,6 +37,8 @@ open class DashPumpManager: PumpManager {
         return Pod.maximumBasalScheduleEntryCount
     }
     
+    private static let MaxTempBasalGapFillDuration = TimeInterval(seconds: 6)
+    
     open var managerIdentifier: String {
         return "Omnipod"
     }
@@ -1110,9 +1112,9 @@ open class DashPumpManager: PumpManager {
                         case .success(let podStatus):
                             self.mutateState({ (state) in
                                 var startTime = self.dateGenerator()
-                                // If last cancel was relatively recent (<2s), and no pulses were delivered between temp basals, then make the end time
+                                // If last cancel was relatively recent, and no pulses were delivered between temp basals, then make the end time
                                 // of the previous temp basal the same time as the start time of the new temp basal.
-                                if let cancelTime = lastTempBasalCancelDate, startTime.timeIntervalSince(cancelTime) < TimeInterval(seconds: 2), podStatus.delivered == initialStatus.delivered {
+                                if let cancelTime = lastTempBasalCancelDate, startTime.timeIntervalSince(cancelTime) < DashPumpManager.MaxTempBasalGapFillDuration, podStatus.delivered == initialStatus.delivered {
                                     startTime = cancelTime
                                 }
                                 state.unfinalizedTempBasal = UnfinalizedDose(tempBasalRate: enactRate, startTime: startTime, duration: duration, scheduledCertainty: .certain)
