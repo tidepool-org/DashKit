@@ -285,7 +285,12 @@ public class MockPodCommManager: PodCommManagerProtocol {
             }
             
             podStatus.activeAlerts.insert(alerts)
+            
+            let clockMutated = podStatus.activationDate != self.podStatus?.activationDate
             self.podStatus = podStatus
+            if clockMutated {
+                self.dashPumpManager?.podClockMutated(newActivationDate: podStatus.activationDate)
+            }
             self.dashPumpManager?.podCommManagerHasAlerts(podStatus.activeAlerts)
         }
     }
