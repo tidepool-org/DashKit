@@ -96,7 +96,7 @@ public final class BasalStateView: UIView {
         return path.cgPath
     }
 
-    private static let AnimationKey = "com.loudnate.Naterade.shapePathAnimation"
+    private static let animationKey = "com.loudnate.Naterade.shapePathAnimation"
 
     private func animateToPath(_ path: CGPath) {
         // Do not animate first draw
@@ -107,7 +107,7 @@ public final class BasalStateView: UIView {
             animation.duration = 1
             animation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
 
-            shapeLayer.add(animation, forKey: type(of: self).AnimationKey)
+            shapeLayer.add(animation, forKey: type(of: self).animationKey)
         }
 
         // Do not draw when size is zero
