@@ -73,7 +73,8 @@ struct LowReservoirReminderEditView: View {
                     .actionButtonStyle()
                     .padding()
                     
-            }.disabled(saving || !valueChanged)
+            }
+            .disabled(saving || !valueChanged)
         }
         .navigationBarTitle("", displayMode: .inline)
         .alert(isPresented: $alertIsPresented, content: { alert(error: error) })
