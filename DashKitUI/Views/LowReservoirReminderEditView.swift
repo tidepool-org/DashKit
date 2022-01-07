@@ -72,7 +72,6 @@ struct LowReservoirReminderEditView: View {
                 Text(saveButtonText)
                     .actionButtonStyle()
                     .padding()
-                    
             }
             .disabled(saving || !valueChanged)
         }
