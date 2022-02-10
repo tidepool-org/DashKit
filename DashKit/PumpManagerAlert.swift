@@ -165,22 +165,12 @@ public enum PumpManagerAlert: Hashable {
         return alertIdentifier + "-repeating"
     }
 
-    private struct UserPodExpirationParameters: Codable {
-        let offset: TimeInterval
-    }
-
-    private struct LowReservoirParameters: Codable {
-        let lowReservoirReminderValue: Double
-    }
-
-    var parameters: String? {
+    var metadata: Alert.Metadata? {
         switch self {
         case .userPodExpiration(let offset):
-            let parameters = UserPodExpirationParameters(offset: offset)
-            return (try? JSONEncoder().encode(parameters)).flatMap { String(data: $0, encoding: .utf8) }
+            return ["offset": Alert.MetadataValue(offset)]
         case .lowReservoir(let lowReservoirReminderValue):
-            let parameters = LowReservoirParameters(lowReservoirReminderValue: lowReservoirReminderValue)
-            return (try? JSONEncoder().encode(parameters)).flatMap { String(data: $0, encoding: .utf8) }
+            return ["lowReservoirReminderValue": Alert.MetadataValue(lowReservoirReminderValue)]
         default:
             return nil
         }

@@ -1605,12 +1605,15 @@ extension DashPumpManager: PodCommManagerDelegate {
             let content = Alert.Content(title: LocalizedString("Pod System Error", comment: "Alert title for Pod System Error"),
                                         body: error.localizedDescription,
                                         acknowledgeActionButtonLabel: LocalizedString("OK", comment: "Alert acknowledgment OK button"))
-            let parameters = (try? JSONEncoder().encode(error)).flatMap { String(data: $0, encoding: .utf8) }
+            let metadata: Alert.Metadata = [
+                "errorCode": Alert.MetadataValue(error.errorCode.rawValue),
+                "referenceCode": Alert.MetadataValue(error.referenceCode)
+            ]
             delegate?.issueAlert(Alert(identifier: Alert.Identifier(managerIdentifier: self.managerIdentifier,
                                                                     alertIdentifier: DashPumpManager.systemErrorNotificationIdentifier),
                                        foregroundContent: content, backgroundContent: content,
                                        trigger: .immediate,
-                                       parameters: parameters))
+                                       metadata: metadata))
         }
     }
 
@@ -1652,7 +1655,7 @@ extension DashPumpManager: PodCommManagerDelegate {
     
     func issueAlert(alert: PumpManagerAlert) {
         let identifier = Alert.Identifier(managerIdentifier: self.managerIdentifier, alertIdentifier: alert.alertIdentifier)
-        let loopAlert = Alert(identifier: identifier, foregroundContent: alert.foregroundContent, backgroundContent: alert.backgroundContent, trigger: .immediate, parameters: alert.parameters)
+        let loopAlert = Alert(identifier: identifier, foregroundContent: alert.foregroundContent, backgroundContent: alert.backgroundContent, trigger: .immediate, metadata: alert.metadata)
         pumpDelegate.notify { (delegate) in
             delegate?.issueAlert(loopAlert)
         }
@@ -1660,7 +1663,7 @@ extension DashPumpManager: PodCommManagerDelegate {
         if let repeatInterval = alert.repeatInterval {
             // Schedule an additional repeating 15 minute reminder for suspend period ended.
             let repeatingIdentifier = Alert.Identifier(managerIdentifier: self.managerIdentifier, alertIdentifier: alert.repeatingAlertIdentifier)
-            let loopAlert = Alert(identifier: repeatingIdentifier, foregroundContent: alert.foregroundContent, backgroundContent: alert.backgroundContent, trigger: .repeating(repeatInterval: repeatInterval), parameters: alert.parameters)
+            let loopAlert = Alert(identifier: repeatingIdentifier, foregroundContent: alert.foregroundContent, backgroundContent: alert.backgroundContent, trigger: .repeating(repeatInterval: repeatInterval), metadata: alert.metadata)
             pumpDelegate.notify { (delegate) in
                 delegate?.issueAlert(loopAlert)
             }
