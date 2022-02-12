@@ -1605,10 +1605,10 @@ extension DashPumpManager: PodCommManagerDelegate {
             let content = Alert.Content(title: LocalizedString("Pod System Error", comment: "Alert title for Pod System Error"),
                                         body: error.localizedDescription,
                                         acknowledgeActionButtonLabel: LocalizedString("OK", comment: "Alert acknowledgment OK button"))
-            let metadata: Alert.Metadata = [
+            let metadata = Alert.Metadata(dict: [
                 "errorCode": Alert.MetadataValue(error.errorCode.rawValue),
                 "referenceCode": Alert.MetadataValue(error.referenceCode)
-            ]
+            ])
             delegate?.issueAlert(Alert(identifier: Alert.Identifier(managerIdentifier: self.managerIdentifier,
                                                                     alertIdentifier: DashPumpManager.systemErrorNotificationIdentifier),
                                        foregroundContent: content, backgroundContent: content,

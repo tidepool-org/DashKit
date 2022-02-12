@@ -168,9 +168,9 @@ public enum PumpManagerAlert: Hashable {
     var metadata: Alert.Metadata? {
         switch self {
         case .userPodExpiration(let offset):
-            return ["offset": Alert.MetadataValue(offset)]
+            return Alert.Metadata(dict: ["offset": offset])
         case .lowReservoir(let lowReservoirReminderValue):
-            return ["lowReservoirReminderValue": Alert.MetadataValue(lowReservoirReminderValue)]
+            return Alert.Metadata(dict: ["lowReservoirReminderValue": lowReservoirReminderValue])
         default:
             return nil
         }
