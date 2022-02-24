@@ -418,11 +418,11 @@ class DashPumpManagerTests: XCTestCase {
 
         XCTAssertEqual(3, reportedPumpEvents.count)
         let finalReportedTemp = reportedPumpEvents[1]
-        XCTAssertEqual(false, finalReportedTemp.isMutable)
+        XCTAssertEqual(false, finalReportedTemp.dose?.isMutable)
         XCTAssertEqual(0.05, finalReportedTemp.dose?.deliveredUnits)
         
         let finalSuspend = reportedPumpEvents.last!
-        XCTAssertEqual(false, finalSuspend.isMutable)
+        XCTAssertEqual(false, finalSuspend.dose?.isMutable)
         XCTAssertEqual(.suspend, finalSuspend.type)
 
         let lastPumpManagerStatus = pumpManagerStatusUpdates.last!
