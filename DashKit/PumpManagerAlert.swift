@@ -164,6 +164,17 @@ public enum PumpManagerAlert: Hashable {
     var repeatingAlertIdentifier: String {
         return alertIdentifier + "-repeating"
     }
+
+    var metadata: Alert.Metadata? {
+        switch self {
+        case .userPodExpiration(let offset):
+            return Alert.Metadata(dict: ["offset": offset])
+        case .lowReservoir(let lowReservoirReminderValue):
+            return Alert.Metadata(dict: ["lowReservoirReminderValue": lowReservoirReminderValue])
+        default:
+            return nil
+        }
+    }
 }
 
 extension Collection where Element == PumpManagerAlert {
