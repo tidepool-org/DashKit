@@ -264,7 +264,7 @@ extension NewPumpEvent {
     init(_ dose: UnfinalizedDose, at date: Date) {
         let title = String(describing: dose)
         let entry = DoseEntry(dose, at: date)
-        self.init(date: dose.startTime, dose: entry, isMutable: !dose.isFinished(at: date), raw: dose.uniqueKey, title: title)
+        self.init(date: dose.startTime, dose: entry, raw: dose.uniqueKey, title: title)
     }
 }
 
@@ -272,9 +272,9 @@ extension DoseEntry {
     init (_ dose: UnfinalizedDose, at date: Date) {
         switch dose.doseType {
         case .bolus:
-            self = DoseEntry(type: .bolus, startDate: dose.startTime, endDate: dose.endTime, value: dose.programmedUnits ?? dose.units, unit: .units, deliveredUnits: dose.finalizedUnits(at: date))
+            self = DoseEntry(type: .bolus, startDate: dose.startTime, endDate: dose.endTime, value: dose.programmedUnits ?? dose.units, unit: .units, deliveredUnits: dose.finalizedUnits(at: date), isMutable: !dose.isFinished(at: date))
         case .tempBasal:
-            self = DoseEntry(type: .tempBasal, startDate: dose.startTime, endDate: dose.endTime, value: dose.programmedRate ?? dose.rate, unit: .unitsPerHour, deliveredUnits: dose.finalizedUnits(at: date))
+            self = DoseEntry(type: .tempBasal, startDate: dose.startTime, endDate: dose.endTime, value: dose.programmedRate ?? dose.rate, unit: .unitsPerHour, deliveredUnits: dose.finalizedUnits(at: date), isMutable: !dose.isFinished(at: date))
         case .suspend:
             self = DoseEntry(suspendDate: dose.startTime)
         case .resume:
