@@ -53,7 +53,7 @@ internal class DashHUDProvider: NSObject, HUDProvider {
         self.pumpManager.addPodStatusObserver(self, queue: .main)
     }
 
-    public func createHUDView() -> LevelHUDView? {
+    public func createHUDView() -> BaseHUDView? {
         reservoirView = OmnipodReservoirView.instantiate()
         updateReservoirView()
 
