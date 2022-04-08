@@ -900,7 +900,6 @@ extension DashPumpManagerTests: PumpManagerStatusObserver {
 }
 
 extension DashPumpManagerTests: PumpManagerDelegate {
-        
     func issueAlert(_ alert: Alert) {
         pumpManagerAlertIssuanceExpectation?.fulfill()
         alertsIssued.append(alert)
@@ -910,7 +909,16 @@ extension DashPumpManagerTests: PumpManagerDelegate {
         pumpManagerAlertRetractionExpectation?.fulfill()
         alertsRetracted.append(identifier)
     }
-    
+
+    func doesIssuedAlertExist(identifier: Alert.Identifier, completion: @escaping (Result<Bool, Error>) -> Void) {
+        completion(.success(alertsIssued.contains(where: { $0.identifier == identifier })))
+    }
+
+    func recordRetractedAlert(_ alert: Alert, at date: Date) {
+        alertsRetracted.append(alert.identifier)
+        pumpManagerAlertRetractionExpectation?.fulfill()
+    }
+
     func pumpManagerBLEHeartbeatDidFire(_ pumpManager: PumpManager) {
     }
 
