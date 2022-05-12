@@ -388,14 +388,14 @@ class DashUICoordinator: UINavigationController, PumpManagerOnboarding, Completi
         }
         viewController.view.backgroundColor = UIColor.secondarySystemBackground
         if let currentScreen = screenStack.last {
-            setNavigationBarVisibilityFor(currentScreen)
+            workaroundNavigationBarConfigurationBug(currentScreen)
         }
     }
 
     // NOTE: This method is to deal with a bug in iOS 15 described here: https://github.com/ps2/navigation_bar_hiding_ios15
     // When the bug is fixed, this method (and the calls to it) should be removed, as the SwiftUI views already describe the
     // necessary navigation bar visibility/title
-    public func setNavigationBarVisibilityFor(_ screen: DashUIScreen) {
+    public func workaroundNavigationBarConfigurationBug(_ screen: DashUIScreen) {
         switch screen {
         case .podSetup:
             setNavigationBarHidden(true, animated: false)
