@@ -392,6 +392,9 @@ class DashUICoordinator: UINavigationController, PumpManagerOnboarding, Completi
         }
     }
 
+    // NOTE: This method is to deal with a bug in iOS 15 described here: https://github.com/ps2/navigation_bar_hiding_ios15
+    // When the bug is fixed, this method (and the calls to it) should be removed, as the SwiftUI views already describe the
+    // necessary navigation bar visibility/title
     public func setNavigationBarVisibilityFor(_ screen: DashUIScreen) {
         switch screen {
         case .podSetup:
