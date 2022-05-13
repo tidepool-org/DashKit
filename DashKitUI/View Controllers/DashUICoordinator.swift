@@ -17,7 +17,7 @@ import DashKit
 import PodSDK
 
 enum DashUIScreen {
-    case firstRunScreen
+    case podSetup
     case expirationReminderSetup
     case lowReservoirReminderSetup
     case deactivate
@@ -33,7 +33,7 @@ enum DashUIScreen {
     
     func next() -> DashUIScreen? {
         switch self {
-        case .firstRunScreen:
+        case .podSetup:
             return .expirationReminderSetup
         case .expirationReminderSetup:
             return .lowReservoirReminderSetup
@@ -96,7 +96,7 @@ class DashUICoordinator: UINavigationController, PumpManagerOnboarding, Completi
     
     private func viewControllerForScreen(_ screen: DashUIScreen) -> UIViewController {
         switch screen {
-        case .firstRunScreen:
+        case .podSetup:
             let view = PodSetupView(nextAction: stepFinished,
                                     allowDebugFeatures: allowDebugFeatures,
                                     skipOnboarding: {    // NOTE: DEBUG FEATURES - DEBUG AND TEST ONLY
@@ -342,7 +342,7 @@ class DashUICoordinator: UINavigationController, PumpManagerOnboarding, Completi
                 }
             } else if !pumpManager.isOnboarded {
                 if !pumpManager.initialConfigurationCompleted {
-                    return .firstRunScreen
+                    return .podSetup
                 }
                 return .pairPod
             } else {
@@ -387,6 +387,21 @@ class DashUICoordinator: UINavigationController, PumpManagerOnboarding, Completi
             let _ = screenStack.popLast()
         }
         viewController.view.backgroundColor = UIColor.secondarySystemBackground
+        if let currentScreen = screenStack.last {
+            workaroundNavigationBarConfigurationBug(currentScreen)
+        }
+    }
+
+    // NOTE: This method is to deal with a bug in iOS 15 described here: https://github.com/ps2/navigation_bar_hiding_ios15
+    // When the bug is fixed, this method (and the calls to it) should be removed, as the SwiftUI views already describe the
+    // necessary navigation bar visibility/title
+    public func workaroundNavigationBarConfigurationBug(_ screen: DashUIScreen) {
+        switch screen {
+        case .podSetup:
+            setNavigationBarHidden(true, animated: false)
+        default:
+            break
+        }
     }
         
     let appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as! String
