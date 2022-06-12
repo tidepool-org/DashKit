@@ -880,7 +880,7 @@ open class DashPumpManager: PumpManager {
         }
     }
 
-    public func  enactBolus(units: Double, automatic: Bool, completion: @escaping (PumpManagerError?) -> Void) {
+    public func  enactBolus(units: Double, activationType: BolusActivationType, completion: @escaping (PumpManagerError?) -> Void) {
         // Round to nearest supported volume
         let enactUnits = roundToSupportedBolusVolume(units: units)
 
