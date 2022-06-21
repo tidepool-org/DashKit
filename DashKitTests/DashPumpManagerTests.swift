@@ -919,6 +919,11 @@ extension DashPumpManagerTests: PumpManagerDelegate {
         pumpManagerAlertRetractionExpectation?.fulfill()
     }
 
+    func recordAcknowledgedAlert(_ alert: Alert, at date: Date) {
+        alertsIssued.append(alert)
+        pumpManagerAlertIssuanceExpectation?.fulfill()
+    }
+
     func pumpManagerBLEHeartbeatDidFire(_ pumpManager: PumpManager) {
     }
 
