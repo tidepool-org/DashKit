@@ -900,6 +900,9 @@ extension DashPumpManagerTests: PumpManagerStatusObserver {
 }
 
 extension DashPumpManagerTests: PumpManagerDelegate {
+    func pumpManagerPumpWasReplaced(_ pumpManager: PumpManager) {
+    }
+
     func issueAlert(_ alert: Alert) {
         pumpManagerAlertIssuanceExpectation?.fulfill()
         alertsIssued.append(alert)

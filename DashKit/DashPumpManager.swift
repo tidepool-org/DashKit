@@ -158,26 +158,26 @@ open class DashPumpManager: PumpManager {
         return try? BeepOption(beepAtBegining: confidenceRemindersEnabled, beepAtEnd: confidenceRemindersEnabled, beepInterval: 0)
     }
     
-    public func buildPumpStatusHighlight(for state: DashPumpManagerState) -> PumpManagerStatus.PumpStatusHighlight? {
+    public func buildPumpStatusHighlight(for state: DashPumpManagerState) -> PumpStatusHighlight? {
         if state.pendingCommand != nil {
-            return PumpManagerStatus.PumpStatusHighlight(localizedMessage: NSLocalizedString("Comms Issue", comment: "Status highlight that delivery is uncertain."),
+            return PumpStatusHighlight(localizedMessage: NSLocalizedString("Comms Issue", comment: "Status highlight that delivery is uncertain."),
                                                          imageName: "exclamationmark.circle.fill",
                                                          state: .critical)
         }
 
         switch state.lastPodCommState {
         case .activating:
-            return PumpManagerStatus.PumpStatusHighlight(
+            return PumpStatusHighlight(
                 localizedMessage: NSLocalizedString("Finish Pairing", comment: "Status highlight that when pod is activating."),
                 imageName: "exclamationmark.circle.fill",
                 state: .warning)
         case .deactivating:
-            return PumpManagerStatus.PumpStatusHighlight(
+            return PumpStatusHighlight(
                 localizedMessage: NSLocalizedString("Finish Deactivation", comment: "Status highlight that when pod is deactivating."),
                 imageName: "exclamationmark.circle.fill",
                 state: .warning)
         case .noPod:
-            return PumpManagerStatus.PumpStatusHighlight(
+            return PumpStatusHighlight(
                 localizedMessage: NSLocalizedString("No Pod", comment: "Status highlight that when no pod is paired."),
                 imageName: "exclamationmark.circle.fill",
                 state: .warning)
@@ -194,29 +194,29 @@ open class DashPumpManager: PumpManager {
                 default:
                     message = LocalizedString("Pod Error", comment: "Status highlight message for other alarm.")
                 }
-                return PumpManagerStatus.PumpStatusHighlight(
+                return PumpStatusHighlight(
                     localizedMessage: message,
                     imageName: "exclamationmark.circle.fill",
                     state: .critical)
             } else {
-                return PumpManagerStatus.PumpStatusHighlight(
+                return PumpStatusHighlight(
                     localizedMessage: NSLocalizedString("Pod Alarm", comment: "Status highlight for alarm without details."),
                     imageName: "exclamationmark.circle.fill",
                     state: .critical)
             }
         case .systemError:
-            return PumpManagerStatus.PumpStatusHighlight(
+            return PumpStatusHighlight(
                 localizedMessage: NSLocalizedString("System Error", comment: "Status highlight that when pod has a system error."),
                 imageName: "exclamationmark.circle.fill",
                 state: .critical)
         case .active:
             if let reservoirPercent = state.reservoirLevel?.percentage, reservoirPercent == 0 {
-                return PumpManagerStatus.PumpStatusHighlight(
+                return PumpStatusHighlight(
                     localizedMessage: NSLocalizedString("No Insulin", comment: "Status highlight that a pump is out of insulin."),
                     imageName: "exclamationmark.circle.fill",
                     state: .critical)
             } else if case .suspended = state.suspendState {
-                return PumpManagerStatus.PumpStatusHighlight(
+                return PumpStatusHighlight(
                     localizedMessage: NSLocalizedString("Insulin Suspended", comment: "Status highlight that insulin delivery was suspended."),
                     imageName: "pause.circle.fill",
                     state: .warning)
@@ -244,28 +244,28 @@ open class DashPumpManager: PumpManager {
         }
     }
     
-    public func buildPumpLifecycleProgress(for state: DashPumpManagerState) -> PumpManagerStatus.PumpLifecycleProgress? {
+    public func buildPumpLifecycleProgress(for state: DashPumpManagerState) -> PumpLifecycleProgress? {
         switch state.lastPodCommState {
         case .active:
             if shouldWarnPodEOL,
                let podTimeRemaining = podTimeRemaining
             {
                 let percentCompleted = max(0, min(1, (1 - (podTimeRemaining / Pod.lifetime))))
-                return PumpManagerStatus.PumpLifecycleProgress(percentComplete: percentCompleted, progressState: .warning)
+                return PumpLifecycleProgress(percentComplete: percentCompleted, progressState: .warning)
             } else if let podTimeRemaining = podTimeRemaining, podTimeRemaining <= 0 {
                 // Pod is expired
-                return PumpManagerStatus.PumpLifecycleProgress(percentComplete: 1, progressState: .critical)
+                return PumpLifecycleProgress(percentComplete: 1, progressState: .critical)
             }
             return nil
         case .alarm(let detail):
             if let detail = detail, detail.alarmCode == .podExpired {
-                return PumpManagerStatus.PumpLifecycleProgress(percentComplete: 100, progressState: .critical)
+                return PumpLifecycleProgress(percentComplete: 100, progressState: .critical)
             } else {
                 if shouldWarnPodEOL,
                    let durationBetweenLastPodCommAndActivation = durationBetweenLastPodCommAndActivation
                 {
                     let percentCompleted = max(0, min(1, durationBetweenLastPodCommAndActivation / Pod.lifetime))
-                    return PumpManagerStatus.PumpLifecycleProgress(percentComplete: percentCompleted, progressState: .dimmed)
+                    return PumpLifecycleProgress(percentComplete: percentCompleted, progressState: .dimmed)
                 }
             }
             return nil
@@ -274,7 +274,7 @@ open class DashPumpManager: PumpManager {
                let durationBetweenLastPodCommAndActivation = durationBetweenLastPodCommAndActivation
             {
                 let percentCompleted = max(0, min(1, durationBetweenLastPodCommAndActivation / Pod.lifetime))
-                return PumpManagerStatus.PumpLifecycleProgress(percentComplete: percentCompleted, progressState: .dimmed)
+                return PumpLifecycleProgress(percentComplete: percentCompleted, progressState: .dimmed)
             }
             return nil
         case .noPod, .activating, .deactivating:
