@@ -900,6 +900,8 @@ extension DashPumpManagerTests: PumpManagerStatusObserver {
 }
 
 extension DashPumpManagerTests: PumpManagerDelegate {
+    func pumpManagerPumpWasReplaced(_ pumpManager: PumpManager) { }
+
     func issueAlert(_ alert: Alert) {
         pumpManagerAlertIssuanceExpectation?.fulfill()
         alertsIssued.append(alert)
@@ -919,26 +921,23 @@ extension DashPumpManagerTests: PumpManagerDelegate {
         pumpManagerAlertRetractionExpectation?.fulfill()
     }
 
-    func recordAcknowledgedAlert(_ alert: Alert, at date: Date) {
-        alertsIssued.append(alert)
+    func recordIssued(alert: Alert, at date: Date, completion: ((Result<Void, Error>) -> Void)?) {
         pumpManagerAlertIssuanceExpectation?.fulfill()
+        alertsIssued.append(alert)
+        completion?(.success(()))
     }
 
-    func pumpManagerBLEHeartbeatDidFire(_ pumpManager: PumpManager) {
-    }
+    func pumpManagerBLEHeartbeatDidFire(_ pumpManager: PumpManager) { }
 
     func pumpManagerMustProvideBLEHeartbeat(_ pumpManager: PumpManager) -> Bool {
         return false
     }
 
-    func pumpManagerWillDeactivate(_ pumpManager: PumpManager) {
-    }
+    func pumpManagerWillDeactivate(_ pumpManager: PumpManager) { }
 
-    func pumpManager(_ pumpManager: PumpManager, didUpdatePumpRecordsBasalProfileStartEvents pumpRecordsBasalProfileStartEvents: Bool) {
-    }
+    func pumpManager(_ pumpManager: PumpManager, didUpdatePumpRecordsBasalProfileStartEvents pumpRecordsBasalProfileStartEvents: Bool) { }
 
-    func pumpManager(_ pumpManager: PumpManager, didError error: PumpManagerError) {
-    }
+    func pumpManager(_ pumpManager: PumpManager, didError error: PumpManagerError) { }
 
     func pumpManager(_ pumpManager: PumpManager, hasNewPumpEvents events: [NewPumpEvent], lastSync: Date?, completion: @escaping (Error?) -> Void) {
         pumpEventStorageExpectation?.fulfill()
@@ -946,29 +945,23 @@ extension DashPumpManagerTests: PumpManagerDelegate {
         completion(nil)
     }
 
-    func pumpManager(_ pumpManager: PumpManager, didReadReservoirValue units: Double, at date: Date, completion: @escaping (Result<(newValue: ReservoirValue, lastValue: ReservoirValue?, areStoredValuesContinuous: Bool), Error>) -> Void) {
-    }
+    func pumpManager(_ pumpManager: PumpManager, didReadReservoirValue units: Double, at date: Date, completion: @escaping (Result<(newValue: ReservoirValue, lastValue: ReservoirValue?, areStoredValuesContinuous: Bool), Error>) -> Void) { }
 
-    func pumpManager(_ pumpManager: PumpManager, didAdjustPumpClockBy adjustment: TimeInterval) {
-    }
+    func pumpManager(_ pumpManager: PumpManager, didAdjustPumpClockBy adjustment: TimeInterval) { }
 
     func pumpManagerDidUpdateState(_ pumpManager: PumpManager) {
         pumpManagerDelegateStateUpdateExpectation?.fulfill()
     }
 
-    func pumpManagerRecommendsLoop(_ pumpManager: PumpManager) {
-    }
+    func pumpManagerRecommendsLoop(_ pumpManager: PumpManager) { }
 
     func startDateToFilterNewPumpEvents(for manager: PumpManager) -> Date {
         return Date()
     }
 
-    func deviceManager(_ manager: DeviceManager, logEventForDeviceIdentifier deviceIdentifier: String?, type: DeviceLogEntryType, message: String, completion: ((Error?) -> Void)?) {
-    }
+    func deviceManager(_ manager: DeviceManager, logEventForDeviceIdentifier deviceIdentifier: String?, type: DeviceLogEntryType, message: String, completion: ((Error?) -> Void)?) { }
     
-    func lookupAllUnretracted(managerIdentifier: String, completion: @escaping (Result<[PersistedAlert], Error>) -> Void) {
-    }
+    func lookupAllUnretracted(managerIdentifier: String, completion: @escaping (Result<[PersistedAlert], Error>) -> Void) { }
     
-    func lookupAllUnacknowledgedUnretracted(managerIdentifier: String, completion: @escaping (Result<[PersistedAlert], Error>) -> Void) {
-    }
+    func lookupAllUnacknowledgedUnretracted(managerIdentifier: String, completion: @escaping (Result<[PersistedAlert], Error>) -> Void) { }
 }
