@@ -18,7 +18,7 @@ public protocol PodStatusObserver: AnyObject {
 }
 
 open class DashPumpManager: PumpManager {
-        
+
     public static var onboardingSupportedBolusVolumes: [Double] {
         // 0.05 units for rates between 0.05-30U
         return (1...600).map { Double($0) / Double(Pod.pulsesPerUnit) }
@@ -31,6 +31,10 @@ open class DashPumpManager: PumpManager {
     public static var onboardingSupportedBasalRates: [Double] {
         // 0.05 units for rates between 0.05-30U/hr
         return (1...600).map { Double($0) / Double(Pod.pulsesPerUnit) }
+    }
+
+    public func estimatedDuration(toBolus units: Double) -> TimeInterval {
+        TimeInterval(units / Pod.bolusDeliveryRate)
     }
 
     public static var onboardingMaximumBasalScheduleEntryCount: Int {
@@ -666,7 +670,7 @@ open class DashPumpManager: PumpManager {
 
         pumpDelegate.notify { (delegate) in
             let now = self.dateGenerator()
-            delegate?.pumpManager(self, hasNewPumpEvents: dosesToStore.map { NewPumpEvent($0, at: now) }, lastSync: self.state.lastStatusDate, completion: { (error) in
+            delegate?.pumpManager(self, hasNewPumpEvents: dosesToStore.map { NewPumpEvent($0, at: now) }, lastReconciliation: self.state.lastStatusDate, completion: { (error) in
                 if let error = error {
                     self.log.error("Error storing pod events: %@", String(describing: error))
                     completion?(error)
