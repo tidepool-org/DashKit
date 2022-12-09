@@ -935,7 +935,7 @@ extension DashPumpManagerTests: PumpManagerDelegate {
 
     func pumpManager(_ pumpManager: PumpManager, didError error: PumpManagerError) { }
 
-    func pumpManager(_ pumpManager: PumpManager, hasNewPumpEvents events: [NewPumpEvent], lastSync: Date?, completion: @escaping (Error?) -> Void) {
+    func pumpManager(_ pumpManager: PumpManager, hasNewPumpEvents events: [NewPumpEvent], lastReconciliation: Date?, completion: @escaping (Error?) -> Void) {
         pumpEventStorageExpectation?.fulfill()
         reportedPumpEvents.append(contentsOf: events)
         completion(nil)
