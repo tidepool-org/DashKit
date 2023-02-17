@@ -900,6 +900,8 @@ extension DashPumpManagerTests: PumpManagerStatusObserver {
 }
 
 extension DashPumpManagerTests: PumpManagerDelegate {
+    var automaticDosingEnabled: Bool { true }
+
     var detectedSystemTimeOffset: TimeInterval { 0 }
 
     func pumpManagerPumpWasReplaced(_ pumpManager: PumpManager) { }
